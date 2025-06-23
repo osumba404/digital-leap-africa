@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Leap Africa | Tech Community</title>
+    <style>
+        :root {
+            /* Dominant Blue Gradient */
+            --blue-primary: #2D74D2;
+            --blue-light: #5AA9F7;
+            --blue-dark: #1B4D8B;
+
+            /* Core White */
+            --white: #FFFFFF;
+
+            /* Text Colors */
+            --text-main: #CCCCCC;
+            --text-subtle: #888888;
+
+            /* Background */
+            --background-dark: #0A0F1A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Terminal-like styling */
+        .code-block {
+            background-color: rgba(10, 15, 26, 0.8);
+            border: 1px solid var(--blue-dark);
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 0 20px rgba(45, 116, 210, 0.2);
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .dot-red {
+            background-color: #ff5f56;
+        }
+
+        .dot-yellow {
+            background-color: #ffbd2e;
+        }
+
+        .dot-green {
+            background-color: #27c93f;
+        }
+
+        .code-line {
+            margin-bottom: 8px;
+        }
+
+        .comment {
+            color: var(--text-subtle);
+        }
+
+        .keyword {
+            color: var(--blue-light);
+        }
+
+        .string {
+            color: #7ec699;
+        }
+
+        .function {
+            color: #dd8a6f;
+        }
+
+        /* Main layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 30px 0;
+            border-bottom: 1px solid rgba(45, 116, 210, 0.2);
+            position: relative;
+        }
+
+        .header-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 70% 30%, rgba(45, 116, 210, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            margin-right: 10px;
+            color: var(--blue-primary);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--blue-light), var(--blue-primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--blue-light);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--blue-primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 50%, rgba(45, 116, 210, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--white), var(--blue-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: var(--text-main);
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--blue-primary), var(--blue-light));
+            color: var(--white);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(45, 116, 210, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--blue-light);
+            border: 2px solid var(--blue-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(45, 116, 210, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .features {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            font-size: 36px;
+            color: var(--white);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: rgba(27, 77, 139, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(45, 116, 210, 0.2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(45, 116, 210, 0.2);
+            background: rgba(27, 77, 139, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: var(--blue-primary);
+        }
+
+        .feature-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--white);
+        }
+
+        .feature-desc {
+            color: var(--text-subtle);
+        }
+
+        .about {
+            padding: 80px 0;
+            background: rgba(10, 15, 26, 0.5);
+            position: relative;
+        }
+
+        .about-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 70% 70%, rgba(45, 116, 210, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        .about-code {
+            flex: 1;
+        }
+
+        .community {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .community-stats {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 50px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--blue-light);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--text-subtle);
+            font-size: 18px;
+        }
+
+        .join-cta {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .join-cta h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+
+        .join-cta p {
+            margin-bottom: 30px;
+            color: var(--text-main);
+        }
+
+        footer {
+            padding: 50px 0 20px;
+            background: rgba(10, 15, 26, 0.8);
+            border-top: 1px solid rgba(45, 116, 210, 0.2);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            flex: 1;
+        }
+
+        .footer-links {
+            flex: 2;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .footer-links h4 {
+            color: var(--white);
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-subtle);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--blue-light);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(45, 116, 210, 0.1);
+            color: var(--text-subtle);
+        }
+
+        /* Animation classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .about-content {
+                flex-direction: column;
+            }
+
+            .community-stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+
+
+                /* Mobile-First Responsive Styles */
+        @media (max-width: 767px) {
+            /* Base Typography Adjustments */
+            body {
+                font-size: 16px;
+                line-height: 1.5;
+            }
+
+            /* Header & Navigation */
+            header {
+                padding: 20px 0;
+            }
+
+            .logo-text {
+                font-size: 20px;
+            }
+
+            .logo-icon {
+                font-size: 24px;
+            }
+
+            /* Mobile Navigation - Hamburger Menu */
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--background-dark);
+                flex-direction: column;
+                padding: 20px;
+                border-bottom: 1px solid var(--blue-dark);
+                z-index: 1000;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 10px 0;
+            }
+
+            .hamburger {
+                display: block;
+                width: 30px;
+                height: 20px;
+                position: relative;
+                cursor: pointer;
+            }
+
+            .hamburger span {
+                display: block;
+                position: absolute;
+                height: 3px;
+                width: 100%;
+                background: var(--blue-light);
+                border-radius: 3px;
+                transition: all 0.3s;
+            }
+
+            .hamburger span:nth-child(1) {
+                top: 0;
+            }
+
+            .hamburger span:nth-child(2) {
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .hamburger span:nth-child(3) {
+                bottom: 0;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                top: 50%;
+                transform: translateY(-50%) rotate(45deg);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                bottom: 50%;
+                transform: translateY(50%) rotate(-45deg);
+            }
+
+            /* Hero Section */
+            .hero {
+                padding: 60px 0;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+                line-height: 1.3;
+            }
+
+            .hero p {
+                font-size: 18px;
+                padding: 0 15px;
+            }
+
+            /* Features Grid */
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .feature-card {
+                padding: 20px;
+            }
+
+            /* About Section */
+            .about-content {
+                flex-direction: column;
+            }
+
+            .about-text, .about-code {
+                width: 100%;
+            }
+
+            .about-code {
+                margin-top: 30px;
+            }
+
+            /* Community Stats */
+            .community-stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .stat-item {
+                margin-bottom: 20px;
+            }
+
+            /* Footer */
+            .footer-content {
+                flex-direction: column;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                margin-top: 30px;
+            }
+
+            .footer-links > div {
+                margin-bottom: 30px;
+            }
+
+            /* Button Adjustments */
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            /* Section Titles */
+            .section-title {
+                font-size: 28px;
+                margin-bottom: 40px;
+            }
+
+            /* Code Blocks */
+            .code-block {
+                padding: 15px;
+                font-size: 14px;
+                overflow-x: auto;
+            }
+        }
+
+        /* Tablet Styles (768px - 1024px) */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .about-content {
+                flex-direction: column;
+            }
+
+            .about-code {
+                margin-top: 40px;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+        }
+
+        /* Small Mobile Devices (<= 480px) */
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                margin-bottom: 15px;
+            }
+
+            .code-block {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-bg"></div>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <span class="logo-icon">{...}</span>
+                    <span class="logo-text">DigitalLeapAfrica</span>
+                </div>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#community">Community</a></li>
+                    <li><a href="#resources">Resources</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <h1 class="fade-in">Empowering Africa's Digital Creators</h1>
+            <p class="fade-in">Join an open-source tech community dedicated to bridging the gap between ambition and opportunity through mentorship, collaboration, and accessible learning.</p>
+            <div class="cta-buttons fade-in">
+                <a href="#join" class="btn btn-primary">Join Community</a>
+                <a href="#learn" class="btn btn-secondary">Explore Resources</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title fade-in">Why Join Digital Leap?</h2>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">👨‍💻</div>
+                    <h3 class="feature-title">Hands-on Mentorship</h3>
+                    <p class="feature-desc">Learn from experienced developers and designers through structured mentorship programs and code reviews.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🤝</div>
+                    <h3 class="feature-title">Collaborative Projects</h3>
+                    <p class="feature-desc">Work on real-world projects with other members to build your portfolio and gain practical experience.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🌐</div>
+                    <h3 class="feature-title">Tech Networking</h3>
+                    <p class="feature-desc">Connect with like-minded individuals across Africa and expand your professional network.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="about-bg"></div>
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text fade-in">
+                    <h2>Our Mission</h2>
+                    <p>Digital Leap Africa is more than just a community - we're a movement to democratize tech education across the continent.</p>
+                    <p>We believe that with the right guidance, resources, and support system, anyone can become a skilled digital creator regardless of their background or starting point.</p>
+                    <p>Our approach combines open-source collaboration with structured learning paths to create a unique ecosystem where members can grow at their own pace while contributing to meaningful projects.</p>
+                </div>
+                <div class="about-code fade-in">
+                    <div class="code-block">
+                        <div class="code-header">
+                            <div class="code-dot dot-red"></div>
+                            <div class="code-dot dot-yellow"></div>
+                            <div class="code-dot dot-green"></div>
+                        </div>
+                        <div class="code-line"><span class="keyword">class</span> <span class="function">DigitalLeapMember</span> {</div>
+                        <div class="code-line">  <span class="keyword">constructor</span>(name, skills) {</div>
+                        <div class="code-line">    <span class="keyword">this</span>.name = name;</div>
+                        <div class="code-line">    <span class="keyword">this</span>.skills = skills;</div>
+                        <div class="code-line">    <span class="keyword">this</span>.level = <span class="string">'beginner'</span>;</div>
+                        <div class="code-line">  }</div>
+                        <div class="code-line"></div>
+                        <div class="code-line">  <span class="function">joinCommunity</span>() {</div>
+                        <div class="code-line">    <span class="keyword">this</span>.mentors = [];</div>
+                        <div class="code-line">    <span class="keyword">this</span>.projects = [];</div>
+                        <div class="code-line">  }</div>
+                        <div class="code-line"></div>
+                        <div class="code-line">  <span class="function">levelUp</span>() {</div>
+                        <div class="code-line">    <span class="keyword">this</span>.level = <span class="string">'intermediate'</span>;</div>
+                        <div class="code-line">    <span class="comment">// Soon: 'advanced' and 'expert'</span></div>
+                        <div class="code-line">  }</div>
+                        <div class="code-line">}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="community" class="community">
+        <div class="container">
+            <h2 class="section-title fade-in">Our Growing Community</h2>
+            <p class="fade-in">Join thousands of developers, designers, and digital creatives across Africa</p>
+            <div class="community-stats">
+                <div class="stat-item fade-in">
+                    <div class="stat-number" id="members-count">0</div>
+                    <div class="stat-label">Active Members</div>
+                </div>
+                <div class="stat-item fade-in">
+                    <div class="stat-number" id="projects-count">0</div>
+                    <div class="stat-label">Open Projects</div>
+                </div>
+                <div class="stat-item fade-in">
+                    <div class="stat-number" id="countries-count">0</div>
+                    <div class="stat-label">African Countries</div>
+                </div>
+            </div>
+            <div class="join-cta fade-in">
+                <h3>Ready to take your digital leap?</h3>
+                <p>Whether you're just starting out or looking to level up your skills, our community is here to support your journey into tech.</p>
+                <a href="#join" class="btn btn-primary">Join Now</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="logo">
+                        <span class="logo-icon">{...}</span>
+                        <span class="logo-text">DigitalLeapAfrica</span>
+                    </div>
+                    <p style="margin-top: 20px; color: var(--text-subtle);">Bridging the gap between ambition and opportunity in Africa's tech ecosystem.</p>
+                </div>
+                <div class="footer-links">
+                    <div>
+                        <h4>Community</h4>
+                        <ul>
+                            <li><a href="#">Events</a></li>
+                            <li><a href="#">Projects</a></li>
+                            <li><a href="#">Mentorship</a></li>
+                            <li><a href="#">Forum</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="#">Learning Paths</a></li>
+                            <li><a href="#">Documentation</a></li>
+                            <li><a href="#">Tutorials</a></li>
+                            <li><a href="#">Open Source</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Connect</h4>
+                        <ul>
+                            <li><a href="#">GitHub</a></li>
+                            <li><a href="#">Twitter</a></li>
+                            <li><a href="#">LinkedIn</a></li>
+                            <li><a href="#">Discord</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Digital Leap Africa. All code is open source under MIT License.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Animation on scroll
+        document.addEventListener('DOMContentLoaded', () => {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeObserver.observe(element);
+            });
+
+            // Animated counters
+            const animateCount = (element, target, duration = 2000) => {
+                const start = 0;
+                const increment = target / (duration / 16);
+                let current = start;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        clearInterval(timer);
+                        current = target;
+                    }
+                    element.textContent = Math.floor(current).toLocaleString();
+                }, 16);
+            };
+
+            const membersCount = document.getElementById('members-count');
+            const projectsCount = document.getElementById('projects-count');
+            const countriesCount = document.getElementById('countries-count');
+            
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCount(membersCount, 4500);
+                        animateCount(projectsCount, 120);
+                        animateCount(countriesCount, 28);
+                        counterObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            counterObserver.observe(document.querySelector('.community-stats'));
+        });
+
+
+
+
+
+        // Mobile menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
