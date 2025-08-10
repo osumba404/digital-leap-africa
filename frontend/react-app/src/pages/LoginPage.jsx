@@ -1,24 +1,29 @@
 import React, { useState } from 'react';
-import { login } from '../services/auth'; // Import our auth service
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { login as loginService } from '../services/auth'; // Renamed to avoid conflict
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const [message, setMessage] = useState('');
+  const navigate = useNavigate(); // Hook for navigation
+  const { login } = useAuth();    // Get the login function from our context
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     setError(null);
-    setMessage('');
 
     try {
-      const data = await login({ email, password });
-      console.log('Login Successful:', data);
-      setMessage(`Login successful! Received token: ${data.token}`);
-      // In a real app, you would save the token and redirect the user
-      // e.g., localStorage.setItem('authToken', data.token);
-      //       navigate('/dashboard');
+      // 1. Call the API service to get user data and token
+      const data = await loginService({ email, password });
+      
+      // 2. Pass the data to the context to update the global state
+      login(data.user, data.token);
+      
+      // 3. Redirect to the dashboard on success
+      navigate('/dashboard');
+
     } catch (err) {
       console.error('Login Failed:', err);
       setError('Failed to login. Please check your credentials.');
@@ -66,7 +71,6 @@ const LoginPage = () => {
           </div>
         </form>
         {error && <p className="mt-2 text-sm text-center text-red-600">{error}</p>}
-        {message && <p className="mt-2 text-sm text-center text-green-600">{message}</p>}
       </div>
     </div>
   );

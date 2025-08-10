@@ -10,11 +10,17 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run(): void
-{
-    $this->call([
-        SiteSettingsSeeder::class,
-        UserSeeder::class, // <-- Add this line
-    ]);
-}
+     public function run(): void
+    {
+        // Call all the seeders you have created
+        $this->call([
+            SiteSettingsSeeder::class,
+            UserSeeder::class,
+            GamificationSeeder::class,
+            CourseSeeder::class,
+            ProjectSeeder::class,
+            ELibrarySeeder::class,
+            ForumSeeder::class,
+        ]);
+    }
 }
