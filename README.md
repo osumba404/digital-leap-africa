@@ -133,6 +133,4 @@ After seeding the database, you can log in with the following default admin acco
 3. Push your branch to the repository and open a Pull Request (PR) against `develop`.
 4. All PRs require at least one review before they can be merged.
 
----
 
-If you need additional setup instructions (Docker, CI/CD, testing, or deployments), add them to this README in the relevant sections.
