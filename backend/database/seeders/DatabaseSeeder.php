@@ -11,10 +11,10 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void
-    {
-        // \App\Models\User::factory(10)->create();
-
-        // Add this line to call your new seeder
-        $this->call(SiteSettingsSeeder::class);
-    }
+{
+    $this->call([
+        SiteSettingsSeeder::class,
+        UserSeeder::class, // <-- Add this line
+    ]);
+}
 }
