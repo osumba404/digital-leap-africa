@@ -24,6 +24,8 @@
                         <div>
                             <a href="{{ route('admin.projects.index') }}" class="text-accent hover:text-white underline">Manage Projects</a>
                         </div>
+                        <div><a href="{{ route('admin.elibrary-resources.index') }}" class="text-accent hover:text-white underline">Manage eLibrary</a></div>
+
                     </div>
                     
                 </div>
