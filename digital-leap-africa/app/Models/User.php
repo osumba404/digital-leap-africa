@@ -51,13 +51,28 @@ class User extends Authenticatable
         return $this->belongsToMany(Course::class, 'course_enrollments')->withTimestamps();
     }
 
+    /**
+     * The points records for the user.
+     */
     public function points()
-{
-    return $this->hasMany(GamificationPoint::class);
-}
+    {
+        return $this->hasMany(GamificationPoint::class);
+    }
 
-public function badges()
-{
-    return $this->hasMany(Badge::class);
-}
+    /**
+     * The badges awarded to the user.
+     */
+    public function badges()
+    {
+        return $this->hasMany(Badge::class);
+    }
+
+    /**
+     * NEW: Calculate the user's total points.
+     */
+    public function getTotalPoints(): int
+    {
+        // This sums up the 'points' column from all related records
+        return $this->points()->sum('points');
+    }
 }
