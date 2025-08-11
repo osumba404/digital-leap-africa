@@ -11,6 +11,7 @@ use App\Http\Controllers\JobController;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
+use App\Http\Controllers\Admin\ELibraryResourceController as AdminELibraryResourceController;
 
 
 
@@ -72,6 +73,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/projects/{project}/edit', [AdminProjectController::class, 'edit'])->name('projects.edit');
     Route::patch('/projects/{project}', [AdminProjectController::class, 'update'])->name('projects.update');
     Route::delete('/projects/{project}', [AdminProjectController::class, 'destroy'])->name('projects.destroy');
+
+    Route::resource('elibrary-resources', AdminELibraryResourceController::class);
 
 });
 
