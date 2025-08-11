@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Course;
+use App\Models\Course; // Make sure this model is imported
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +18,8 @@ class CourseController extends Controller
 
     public function create()
     {
-        return view('admin.courses.create');
+        // Add this line to fix the "undefined variable" error on the create page
+        return view('admin.courses.create', ['course' => new Course()]);
     }
 
     public function store(Request $request)
@@ -59,7 +60,6 @@ class CourseController extends Controller
         $validated['slug'] = Str::slug($validated['title']);
 
         if ($request->hasFile('image_url')) {
-            // Optional: Delete old image
             if ($course->image_url) {
                 Storage::delete(str_replace('/storage', 'public', $course->image_url));
             }
@@ -74,11 +74,12 @@ class CourseController extends Controller
 
     public function destroy(Course $course)
     {
-        // Optional: Delete image from storage
         if ($course->image_url) {
             Storage::delete(str_replace('/storage', 'public', $course->image_url));
         }
         $course->delete();
         return redirect()->route('admin.courses.index')->with('success', 'Course deleted successfully.');
     }
+
+    // DO NOT ADD THE enroll() METHOD HERE
 }
