@@ -12,12 +12,18 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    {{-- This is a public link everyone can see --}}
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         {{ __('Home') }}
                     </x-nav-link>
 
-                    {{-- This link will only appear if the user is logged in --}}
+                    <x-nav-link :href="route('courses.index')" :active="request()->routeIs('courses.*')">
+                        {{ __('Courses') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
+                        {{ __('Projects') }}
+                    </x-nav-link>
+
                     @auth
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
@@ -26,7 +32,7 @@
                 </div>
             </div>
 
-            <!-- This section is for authenticated users (logged in) -->
+            <!-- Settings Dropdown -->
             @auth
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
                     <x-dropdown align="right" width="48">
@@ -61,7 +67,7 @@
                 </div>
             @endauth
 
-            <!-- This section is for guests (not logged in) -->
+            <!-- Guest Links -->
             @guest
                 <div class="hidden sm:flex sm:items-center sm:ml-6 space-x-4">
                     <a href="{{ route('login') }}" class="text-sm text-gray-300 hover:text-white underline">Log in</a>
@@ -87,6 +93,15 @@
             <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
                 {{ __('Home') }}
             </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('courses.index')" :active="request()->routeIs('courses.*')">
+                {{ __('Courses') }}
+            </x-responsive-nav-link>
+            
+            <x-responsive-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
+                {{ __('Projects') }}
+            </x-responsive-nav-link>
+
              @auth
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}

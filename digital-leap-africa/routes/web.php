@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,9 @@ use App\Http\Controllers\PageController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+Route::get('/projects/{project:slug}', [ProjectController::class, 'show'])->name('projects.show');
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 
@@ -30,5 +35,8 @@ Route::middleware('auth')->group(function () {
 Route::get('/admin', function () {
     return '<h1>Welcome to the Admin Panel</h1>';
 })->middleware(['auth', 'role:admin'])->name('admin.panel');
+
+Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
+Route::get('/courses/{course:slug}', [CourseController::class, 'show'])->name('courses.show');
 
 require __DIR__.'/auth.php';
