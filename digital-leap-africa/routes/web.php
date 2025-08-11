@@ -6,6 +6,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ELibraryController;
+use App\Http\Controllers\JobController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,8 @@ use App\Http\Controllers\ELibraryController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
 
 Route::get('/elibrary', [ELibraryController::class, 'index'])->name('elibrary.index');
 
