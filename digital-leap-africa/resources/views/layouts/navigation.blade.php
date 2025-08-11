@@ -23,6 +23,11 @@
                     <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
                         {{ __('Projects') }}
                     </x-nav-link>
+                    
+                    {{-- THIS IS THE MISSING LINK FOR DESKTOP VIEW --}}
+                    <x-nav-link :href="route('elibrary.index')" :active="request()->routeIs('elibrary.*')">
+                        {{ __('eLibrary') }}
+                    </x-nav-link>
 
                     @auth
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
@@ -100,6 +105,10 @@
             
             <x-responsive-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
                 {{ __('Projects') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('elibrary.index')" :active="request()->routeIs('elibrary.*')">
+                {{ __('eLibrary') }}
             </x-responsive-nav-link>
 
              @auth
