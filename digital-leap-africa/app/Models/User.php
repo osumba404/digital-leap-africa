@@ -50,4 +50,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Course::class, 'course_enrollments')->withTimestamps();
     }
+
+    public function points()
+{
+    return $this->hasMany(GamificationPoint::class);
+}
+
+public function badges()
+{
+    return $this->hasMany(Badge::class);
+}
 }
