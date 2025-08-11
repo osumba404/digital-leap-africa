@@ -24,7 +24,6 @@
                     <x-nav-link :href="route('elibrary.index')" :active="request()->routeIs('elibrary.*')">
                         {{ __('eLibrary') }}
                     </x-nav-link>
-                    {{-- NEW: Add the link to the Job Board page --}}
                     <x-nav-link :href="route('jobs.index')" :active="request()->routeIs('jobs.*')">
                         {{ __('Job Board') }}
                     </x-nav-link>
@@ -32,6 +31,13 @@
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
+
+                        {{-- NEW: Add the Admin Panel link for admins only --}}
+                        @if(Auth::user()->role === 'admin')
+                            <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
+                                {{ __('Admin Panel') }}
+                            </x-nav-link>
+                        @endif
                     @endauth
                 </div>
             </div>
@@ -50,7 +56,6 @@
                                 </div>
                             </button>
                         </x-slot>
-
                         <x-slot name="content">
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
@@ -103,7 +108,6 @@
             <x-responsive-nav-link :href="route('elibrary.index')" :active="request()->routeIs('elibrary.*')">
                 {{ __('eLibrary') }}
             </x-responsive-nav-link>
-            {{-- NEW: Add the link to the Job Board page for mobile --}}
             <x-responsive-nav-link :href="route('jobs.index')" :active="request()->routeIs('jobs.*')">
                 {{ __('Job Board') }}
             </x-responsive-nav-link>
@@ -111,6 +115,13 @@
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
                 </x-responsive-nav-link>
+                
+                {{-- NEW: Add the Admin Panel link for admins only in mobile menu --}}
+                @if(Auth::user()->role === 'admin')
+                    <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
+                        {{ __('Admin Panel') }}
+                    </x-responsive-nav-link>
+                @endif
             @endauth
         </div>
 
