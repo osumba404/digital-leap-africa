@@ -19,6 +19,7 @@ public function run(): void
         $this->call([
             CourseSeeder::class,
             ProjectSeeder::class,
+            ELibraryResourceSeeder::class,
         ]);
     }
 }
