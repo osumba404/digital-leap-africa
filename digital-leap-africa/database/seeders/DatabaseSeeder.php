@@ -20,6 +20,7 @@ public function run(): void
             CourseSeeder::class,
             ProjectSeeder::class,
             ELibraryResourceSeeder::class,
+            JobSeeder::class,
         ]);
     }
 }

@@ -15,20 +15,19 @@
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         {{ __('Home') }}
                     </x-nav-link>
-
                     <x-nav-link :href="route('courses.index')" :active="request()->routeIs('courses.*')">
                         {{ __('Courses') }}
                     </x-nav-link>
-
                     <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
                         {{ __('Projects') }}
                     </x-nav-link>
-                    
-                    {{-- THIS IS THE MISSING LINK FOR DESKTOP VIEW --}}
                     <x-nav-link :href="route('elibrary.index')" :active="request()->routeIs('elibrary.*')">
                         {{ __('eLibrary') }}
                     </x-nav-link>
-
+                    {{-- NEW: Add the link to the Job Board page --}}
+                    <x-nav-link :href="route('jobs.index')" :active="request()->routeIs('jobs.*')">
+                        {{ __('Job Board') }}
+                    </x-nav-link>
                     @auth
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
@@ -44,7 +43,6 @@
                         <x-slot name="trigger">
                             <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-300 bg-primary-light hover:text-white focus:outline-none transition ease-in-out duration-150">
                                 <div>{{ Auth::user()->name }}</div>
-
                                 <div class="ml-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -57,8 +55,6 @@
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
-
-                            <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <x-dropdown-link :href="route('logout')"
@@ -98,19 +94,19 @@
             <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
                 {{ __('Home') }}
             </x-responsive-nav-link>
-
             <x-responsive-nav-link :href="route('courses.index')" :active="request()->routeIs('courses.*')">
                 {{ __('Courses') }}
             </x-responsive-nav-link>
-            
             <x-responsive-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
                 {{ __('Projects') }}
             </x-responsive-nav-link>
-
             <x-responsive-nav-link :href="route('elibrary.index')" :active="request()->routeIs('elibrary.*')">
                 {{ __('eLibrary') }}
             </x-responsive-nav-link>
-
+            {{-- NEW: Add the link to the Job Board page for mobile --}}
+            <x-responsive-nav-link :href="route('jobs.index')" :active="request()->routeIs('jobs.*')">
+                {{ __('Job Board') }}
+            </x-responsive-nav-link>
              @auth
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
@@ -125,13 +121,10 @@
                     <div class="font-medium text-base text-gray-200">{{ Auth::user()->name }}</div>
                     <div class="font-medium text-sm text-gray-400">{{ Auth::user()->email }}</div>
                 </div>
-
                 <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('profile.edit')">
                         {{ __('Profile') }}
                     </x-responsive-nav-link>
-
-                    <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <x-responsive-nav-link :href="route('logout')"
