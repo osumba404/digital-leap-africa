@@ -13,19 +13,25 @@
                     <p class="mt-4">From here you can manage all aspects of the Digital Leap Africa platform.</p>
                     
                     <div class="mt-6 border-t border-gray-700 pt-4 space-y-4">
-                        <h4 class="text-lg font-semibold">Management Links</h4>
+                        <h4 class="text-lg font-semibold">Content Management</h4>
                         <div>
                             <a href="{{ route('admin.jobs.index') }}" class="text-accent hover:text-white underline">Manage Job Listings</a>
                         </div>
                         <div>
                             <a href="{{ route('admin.courses.index') }}" class="text-accent hover:text-white underline">Manage Courses</a>
                         </div>
-                        {{-- This is the new link --}}
                         <div>
                             <a href="{{ route('admin.projects.index') }}" class="text-accent hover:text-white underline">Manage Projects</a>
                         </div>
-                        <div><a href="{{ route('admin.elibrary-resources.index') }}" class="text-accent hover:text-white underline">Manage eLibrary</a></div>
+                        <div>
+                            <a href="{{ route('admin.elibrary-resources.index') }}" class="text-accent hover:text-white underline">Manage eLibrary</a>
+                        </div>
 
+                        {{-- Add a heading to separate the sections --}}
+                        <h4 class="text-lg font-semibold pt-4">Configuration</h4>
+                        <div>
+                            <a href="{{ route('admin.settings.index') }}" class="text-accent hover:text-white underline">Site Settings</a>
+                        </div>
                     </div>
                     
                 </div>

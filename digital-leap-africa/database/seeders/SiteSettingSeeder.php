@@ -9,9 +9,11 @@ class SiteSettingSeeder extends Seeder
 {
     public function run(): void
     {
-        SiteSetting::create([
-            'key' => 'logo_url',
-            'value' => 'https://via.placeholder.com/150x50.png/020b13/ffffff?text=DLA+Logo',
-        ]);
+        // Use updateOrCreate to avoid errors on reseeding
+        SiteSetting::updateOrCreate(['key' => 'site_name'], ['value' => 'Digital Leap Africa']);
+        SiteSetting::updateOrCreate(['key' => 'logo_url'], ['value' => '']); // Let admin upload the first one
+        SiteSetting::updateOrCreate(['key' => 'footer_text'], ['value' => '© ' . date('Y') . ' Digital Leap Africa. All Rights Reserved.']);
+        SiteSetting::updateOrCreate(['key' => 'privacy_policy_url'], ['value' => '#']);
+        SiteSetting::updateOrCreate(['key' => 'terms_of_service_url'], ['value' => '#']);
     }
 }
