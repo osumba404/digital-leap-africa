@@ -16,12 +16,25 @@
                     <p class="mt-6 text-lg text-gray-300">
                         {{ $course->description }}
                     </p>
+
+                    {{-- NEW: Progress Bar for Enrolled Users --}}
+                    @if(Auth::check() && Auth::user()->courses()->where('course_id', $course->id)->exists())
+                        @php
+                            $progress = Auth::user()->getCourseProgress($course);
+                        @endphp
+                        <div class="mt-6">
+                            <h4 class="text-sm font-semibold text-gray-300">YOUR PROGRESS</h4>
+                            <div class="mt-2 w-full bg-primary rounded-full h-2.5">
+                                <div class="bg-accent h-2.5 rounded-full" style="width: {{ $progress }}%"></div>
+                            </div>
+                            <p class="mt-1 text-xs text-gray-400">{{ round($progress) }}% Complete</p>
+                        </div>
+                    @endif
                     
                     {{-- Dynamic Enrollment Section --}}
                     <div class="mt-8">
                         @auth
                             @if(Auth::user()->courses()->where('course_id', $course->id)->exists())
-                                {{-- User is enrolled, so we don't need a button here. The curriculum will show below. --}}
                                 <p class="text-green-400 font-bold text-lg">You are enrolled in this course.</p>
                             @else
                                 <form method="POST" action="{{ route('courses.enroll', $course) }}">
@@ -41,33 +54,32 @@
                 </div>
             </div>
 
-            {{-- NEW: Course Curriculum Section --}}
-            {{-- This entire block will only be rendered if the user is logged in and enrolled. --}}
+            {{-- Course Curriculum Section --}}
             @if(Auth::check() && Auth::user()->courses()->where('course_id', $course->id)->exists())
                 <div class="bg-primary-light overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 md:p-10">
                         <h2 class="text-2xl font-bold text-white mb-6">Course Curriculum</h2>
                         <div class="space-y-8">
-                            {{-- Loop through each Topic --}}
                             @forelse ($course->topics as $topic)
                                 <div class="bg-primary p-4 rounded-lg">
                                     <h3 class="text-xl font-semibold text-accent">{{ $topic->title }}</h3>
                                     <ul class="mt-4 space-y-3">
-                                        {{-- Loop through each Lesson in the Topic --}}
                                         @forelse ($topic->lessons as $lesson)
                                             <li class="flex items-center text-gray-300">
-                                                {{-- Display an icon based on the lesson type --}}
-                                                @if($lesson->type == 'video')
-                                                    <svg class="w-6 h-6 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                                @elseif($lesson->type == 'assignment')
-                                                    <svg class="w-6 h-6 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                                @else {{-- Default to 'note' icon --}}
-                                                    <svg class="w-6 h-6 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                                {{-- ... icon ... --}}
+
+                                                {{-- NEW: Turn the lesson title into a clickable link --}}
+                                                <a href="{{ route('lessons.show', $lesson) }}" class="flex-grow ml-3 hover:text-accent hover:underline">
+                                                    {{ $lesson->title }}
+                                                </a>
+
+                                                {{-- NEW: Show a checkmark if the lesson is complete --}}
+                                                @if(Auth::user()->lessons()->where('lesson_id', $lesson->id)->exists())
+                                                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                                 @endif
-                                                <span>{{ $lesson->title }}</span>
                                             </li>
                                         @empty
-                                            <li class="text-gray-400">No lessons have been added to this topic yet.</li>
+                                            <li class="text-gray-400 ml-9">No lessons have been added to this topic yet.</li>
                                         @endforelse
                                     </ul>
                                 </div>

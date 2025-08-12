@@ -23,4 +23,11 @@ class Course extends Model
     // Order topics by their 'order' column by default
     return $this->hasMany(Topic::class)->orderBy('order');
 }
+
+public function lessons()
+{
+    return $this->hasManyThrough(Lesson::class, Topic::class);
+}
+
+
 }

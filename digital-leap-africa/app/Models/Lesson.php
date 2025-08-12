@@ -14,4 +14,10 @@ class Lesson extends Model
     {
         return $this->belongsTo(Topic::class);
     }
+
+    public function users()
+{
+    return $this->belongsToMany(User::class, 'lesson_user')->withTimestamps();
+}
+
 }
