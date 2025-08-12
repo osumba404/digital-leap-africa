@@ -75,4 +75,25 @@ class User extends Authenticatable
         // This sums up the 'points' column from all related records
         return $this->points()->sum('points');
     }
+
+    public function lessons()
+{
+    return $this->belongsToMany(Lesson::class, 'lesson_user')->withTimestamps();
+}
+
+public function getCourseProgress(Course $course): int
+{
+    $totalLessons = $course->lessons()->count();
+    if ($totalLessons === 0) {
+        return 0;
+    }
+
+    $completedLessonIds = $this->lessons()->pluck('lessons.id');
+    $courseLessonIds = $course->lessons()->pluck('lessons.id');
+    
+    $completedInThisCourse = $completedLessonIds->intersect($courseLessonIds)->count();
+
+    return ($completedInThisCourse / $totalLessons) * 100;
+}
+
 }
