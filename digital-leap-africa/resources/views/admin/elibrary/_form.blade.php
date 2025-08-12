@@ -12,7 +12,7 @@
 <!-- Description -->
 <div>
 <x-input-label for="description" value="Description" />
-<textarea id="description" name="description" class="mt-1 block w-full border-gray-600 bg-primary-light rounded-md shadow-sm text-gray-200" rows="5">{{ old('description', $item->description ?? '') }}</textarea>
+<textarea id="description" name="description" class="mt-1 block w-full border-gray-600 bg-primary-light text-gray-200 focus:border-accent focus:ring-accent rounded-md shadow-sm">{{ old('description', $item->description ?? '') }}</textarea>
 </div>
 <!-- File URL -->
 <div>

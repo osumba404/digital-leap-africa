@@ -21,6 +21,7 @@ public function run(): void
             ProjectSeeder::class,
             ELibraryResourceSeeder::class,
             JobSeeder::class,
+            SiteSettingSeeder::class,
         ]);
     }
 }
