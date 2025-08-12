@@ -27,7 +27,7 @@
     <!-- Description -->
     <div>
         <x-input-label for="description" value="Job Description" />
-        <textarea id="description" name="description" class="mt-1 block w-full border-gray-600 bg-primary-light focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-gray-200">{{ old('description', $job->description ?? '') }}</textarea>
+        <textarea id="description" name="description" class="mt-1 block w-full border-gray-600 bg-primary-light text-gray-200 focus:border-accent focus:ring-accent rounded-md shadow-sm">{{ old('description', $job->description ?? '') }}</textarea>
         <x-input-error :messages="$errors->get('description')" class="mt-2" />
     </div>
     <x-primary-button>{{ isset($job) ? 'Update Job' : 'Create Job' }}</x-primary-button>

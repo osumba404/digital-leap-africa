@@ -12,7 +12,7 @@ class CourseController extends Controller
 {
     public function index(): View
     {
-        $courses = Course::latest()->get();
+        $courses = Course::latest()->paginate(9);
         return view('pages.courses.index', ['courses' => $courses]);
     }
 
@@ -21,7 +21,6 @@ class CourseController extends Controller
         return view('pages.courses.show', ['course' => $course]);
     }
 
-    // ADD THE enroll() METHOD HERE
     public function enroll(Request $request, Course $course)
     {
         $user = Auth::user();

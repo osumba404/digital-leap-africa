@@ -31,6 +31,9 @@
                         </div>
                     </div>
                 @endforeach
+
+                {{ $courses->links() }}
+
             </div>
         </div>
     </div>
