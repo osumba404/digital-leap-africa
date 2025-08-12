@@ -17,4 +17,10 @@ class Course extends Model
         'image_url',
         'is_free',
     ];
+
+    public function topics()
+{
+    // Order topics by their 'order' column by default
+    return $this->hasMany(Topic::class)->orderBy('order');
+}
 }

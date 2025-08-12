@@ -11,6 +11,9 @@ use App\Http\Controllers\Admin\JobController as AdminJobController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\ELibraryResourceController as AdminELibraryResourceController;
+use App\Http\Controllers\Admin\SiteSettingController as AdminSiteSettingController;
+use App\Http\Controllers\Admin\TopicController as AdminTopicController;
+use App\Http\Controllers\Admin\LessonController as AdminLessonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,12 +58,31 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Course Management
     Route::resource('courses', AdminCourseController::class)->except(['show']);
+    Route::resource('courses.topics', AdminTopicController::class)->except(['index', 'show']);
 
     // Project Management
     Route::resource('projects', AdminProjectController::class)->except(['show']);
 
     // eLibrary Management
     Route::resource('elibrary-resources', AdminELibraryResourceController::class);
+
+        // --- NEW: Site Settings Routes ---
+    Route::get('/settings', [AdminSiteSettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [AdminSiteSettingController::class, 'update'])->name('settings.update');
+
+     // --- NEW: Course Topics Management ---
+    // This page will show a course and list its topics
+    Route::get('/courses/{course}/topics', [AdminTopicController::class, 'index'])->name('courses.topics.index');
+    // This handles the form submission for creating a new topic
+    Route::post('/courses/{course}/topics', [AdminTopicController::class, 'store'])->name('courses.topics.store');
+    // This handles deleting a topic
+    Route::delete('/topics/{topic}', [AdminTopicController::class, 'destroy'])->name('topics.destroy');
+
+        // --- NEW: Topic Lessons Management ---
+    // This creates all the necessary routes for lesson CRUD under a topic
+    Route::resource('topics.lessons', AdminLessonController::class)->except(['show']);
+
+    
 });
 
 

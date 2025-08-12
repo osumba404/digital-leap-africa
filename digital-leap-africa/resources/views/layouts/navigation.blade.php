@@ -6,8 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('home') }}">
-        {{-- REPLACE the <x-application-logo> component with this <img> tag --}}
-        <img src="{{ $logoUrl ?? '' }}" alt="Site Logo" class="block h-9 w-auto">
+        <img src="{{ $siteSettings['logo_url'] ?? '' }}" alt="{{ $siteSettings['site_name'] ?? 'Site Logo' }}" class="block h-9 w-auto">
     </a>
 
                 </div>
