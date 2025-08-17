@@ -7,6 +7,10 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ELibraryController;
 use App\Http\Controllers\JobController;
+
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\ForumController;
+
 use App\Http\Controllers\LessonController; // The public lesson controller
 use App\Http\Controllers\Admin\JobController as AdminJobController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
@@ -30,6 +34,9 @@ Route::get('/projects', [ProjectController::class, 'index'])->name('projects.ind
 Route::get('/projects/{project:slug}', [ProjectController::class, 'show'])->name('projects.show');
 Route::get('/elibrary', [ELibraryController::class, 'index'])->name('elibrary.index');
 Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
+
+Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
+Route::get('/forum/{id}', [ForumController::class, 'show'])->name('forum.show');
 
 
 // --- AUTHENTICATED USER ROUTES ---

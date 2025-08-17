@@ -26,6 +26,13 @@
                         <div>
                             <a href="{{ route('admin.elibrary-resources.index') }}" class="text-accent hover:text-white underline">Manage eLibrary</a>
                         </div>
+                        <div>
+                            <a href="{{ route('admin.events.index') }}" class="text-accent hover:text-white underline">Manage eLibrary</a>
+                        </div>
+                        <div>
+                            <a href="{{ route('admin.forum.index') }}" class="text-accent hover:text-white underline">Manage eLibrary</a>
+                        </div>
+                       
 
                         {{-- Add a heading to separate the sections --}}
                         <h4 class="text-lg font-semibold pt-4">Configuration</h4>
