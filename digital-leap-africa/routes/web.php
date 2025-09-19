@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\ELibraryResourceController as AdminELibraryResour
 use App\Http\Controllers\Admin\SiteSettingController as AdminSiteSettingController;
 use App\Http\Controllers\Admin\TopicController as AdminTopicController;
 use App\Http\Controllers\Admin\LessonController as AdminLessonController;
+use App\Http\Controllers\Admin\EventController as AdminEventController;
+use App\Http\Controllers\Admin\ForumController as AdminForumController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,21 +70,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('projects', AdminProjectController::class)->except(['show']);
     Route::resource('elibrary-resources', AdminELibraryResourceController::class);
     Route::resource('events', AdminEventController::class)->except(['show']);
-
-    // Minimal Events index route (closure) until Admin controller is added
-    // Route::get('/events', function () {
-    //     $events = \App\Models\Event::latest()->paginate(20);
-    //     return view('admin.events.index', compact('events'));
-    // })->name('events.index');
-
-    // Minimal Forum index route (closure) until Admin controller is added
-    Route::get('/forum', function () {
-        // Provide an empty collection if Thread model is unavailable
-        $threads = class_exists('App\\Models\\Thread')
-            ? \App\Models\Thread::withCount('replies')->with('latestReply','user')->latest()->paginate(20)
-            : collect();
-        return view('admin.forum.index', compact('threads'));
-    })->name('forum.index');
+    Route::resource('forum', AdminForumController::class)->except(['show']);
 
     // Nested Course Content Routes
     Route::get('/courses/{course}/topics', [AdminTopicController::class, 'index'])->name('courses.topics.index');
