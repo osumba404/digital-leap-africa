@@ -67,12 +67,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('courses', AdminCourseController::class)->except(['show']);
     Route::resource('projects', AdminProjectController::class)->except(['show']);
     Route::resource('elibrary-resources', AdminELibraryResourceController::class);
+    Route::resource('events', AdminEventController::class)->except(['show']);
 
     // Minimal Events index route (closure) until Admin controller is added
-    Route::get('/events', function () {
-        $events = \App\Models\Event::latest()->paginate(20);
-        return view('admin.events.index', compact('events'));
-    })->name('events.index');
+    // Route::get('/events', function () {
+    //     $events = \App\Models\Event::latest()->paginate(20);
+    //     return view('admin.events.index', compact('events'));
+    // })->name('events.index');
 
     // Minimal Forum index route (closure) until Admin controller is added
     Route::get('/forum', function () {
