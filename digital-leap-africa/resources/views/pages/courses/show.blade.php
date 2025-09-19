@@ -1,85 +1,81 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-100 leading-tight">
+        <h2 class="fw-semibold fs-4 text-gray-100 m-0">
             {{ $course->title }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div class="py-5">
+        <div class="container">
             {{-- Main Course Info Card --}}
-            <div class="bg-primary-light overflow-hidden shadow-sm sm:rounded-lg">
-                <img src="{{ $course->image_url ?? 'https://via.placeholder.com/1280x720.png/020b13/ffffff?text=DLA' }}" alt="{{ $course->title }}" class="w-full h-96 object-cover">
-                <div class="p-6 md:p-10">
-                    <p class="text-base text-gray-400">Instructor: {{ $course->instructor }}</p>
-                    <h1 class="mt-2 text-3xl md:text-5xl font-bold text-white">{{ $course->title }}</h1>
-                    <p class="mt-6 text-lg text-gray-300">
+            <div class="bg-primary-light shadow-sm rounded overflow-hidden mb-4">
+                <img src="{{ $course->image_url ?? 'https://via.placeholder.com/1280x720.png/020b13/ffffff?text=DLA' }}" alt="{{ $course->title }}" class="w-100" style="height: 24rem; object-fit: cover;">
+                <div class="p-4 p-md-5">
+                    <p class="mb-1 text-gray-400">Instructor: {{ $course->instructor }}</p>
+                    <h1 class="display-5 fw-bold text-white mb-3">{{ $course->title }}</h1>
+                    <p class="fs-5 text-gray-300 mb-0">
                         {{ $course->description }}
                     </p>
 
-                    {{-- NEW: Progress Bar for Enrolled Users --}}
+                    {{-- Progress Bar for Enrolled Users --}}
                     @if(Auth::check() && Auth::user()->courses()->where('course_id', $course->id)->exists())
                         @php
                             $progress = Auth::user()->getCourseProgress($course);
                         @endphp
-                        <div class="mt-6">
-                            <h4 class="text-sm font-semibold text-gray-300">YOUR PROGRESS</h4>
-                            <div class="mt-2 w-full bg-primary rounded-full h-2.5">
-                                <div class="bg-accent h-2.5 rounded-full" style="width: {{ $progress }}%"></div>
+                        <div class="mt-4">
+                            <h4 class="small fw-semibold text-gray-300 mb-1">YOUR PROGRESS</h4>
+                            <div class="progress bg-primary" style="height: 10px;">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: {{ $progress }}%" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
-                            <p class="mt-1 text-xs text-gray-400">{{ round($progress) }}% Complete</p>
+                            <p class="mt-1 small text-gray-400 mb-0">{{ round($progress) }}% Complete</p>
                         </div>
                     @endif
                     
                     {{-- Dynamic Enrollment Section --}}
-                    <div class="mt-8">
+                    <div class="mt-4">
                         @auth
                             @if(Auth::user()->courses()->where('course_id', $course->id)->exists())
-                                <p class="text-green-400 font-bold text-lg">You are enrolled in this course.</p>
+                                <p class="text-success fw-bold fs-5 mb-0">You are enrolled in this course.</p>
                             @else
                                 <form method="POST" action="{{ route('courses.enroll', $course) }}">
                                     @csrf
-                                    <button type="submit" class="inline-flex items-center px-8 py-4 bg-accent hover:bg-secondary-dark text-white text-base font-semibold rounded-md transition ease-in-out duration-150">
+                                    <button type="submit" class="btn btn-info text-white fw-semibold px-4 py-2">
                                         Enroll Now (+50 Points)
                                     </button>
                                 </form>
                             @endif
                         @endauth
                         @guest
-                            <a href="{{ route('login') }}"><button class="inline-flex items-center px-8 py-4 bg-gray-600 text-white text-base font-semibold rounded-md">Log In to Enroll</button></a>
+                            <a href="{{ route('login') }}" class="btn btn-secondary text-white fw-semibold px-4 py-2">Log In to Enroll</a>
                         @endguest
-                        @if(session('success')) <p class="mt-4 text-green-400">{{ session('success') }}</p> @endif
-                        @if(session('error')) <p class="mt-4 text-red-500">{{ session('error') }}</p> @endif
+                        @if(session('success')) <p class="mt-3 text-success">{{ session('success') }}</p> @endif
+                        @if(session('error')) <p class="mt-3 text-danger">{{ session('error') }}</p> @endif
                     </div>
                 </div>
             </div>
 
             {{-- Course Curriculum Section --}}
             @if(Auth::check() && Auth::user()->courses()->where('course_id', $course->id)->exists())
-                <div class="bg-primary-light overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 md:p-10">
-                        <h2 class="text-2xl font-bold text-white mb-6">Course Curriculum</h2>
-                        <div class="space-y-8">
+                <div class="bg-primary-light shadow-sm rounded">
+                    <div class="p-4 p-md-5">
+                        <h2 class="h3 fw-bold text-white mb-4">Course Curriculum</h2>
+                        <div class="d-flex flex-column gap-4">
                             @forelse ($course->topics as $topic)
-                                <div class="bg-primary p-4 rounded-lg">
-                                    <h3 class="text-xl font-semibold text-accent">{{ $topic->title }}</h3>
-                                    <ul class="mt-4 space-y-3">
+                                <div class="bg-primary p-3 rounded">
+                                    <h3 class="h5 fw-semibold" style="color: var(--bs-info);">{{ $topic->title }}</h3>
+                                    <ul class="list-unstyled mt-3 mb-0 d-flex flex-column gap-2">
                                         @forelse ($topic->lessons as $lesson)
-                                            <li class="flex items-center text-gray-300">
-                                                {{-- ... icon ... --}}
-
-                                                {{-- NEW: Turn the lesson title into a clickable link --}}
-                                                <a href="{{ route('lessons.show', $lesson) }}" class="flex-grow ml-3 hover:text-accent hover:underline">
+                                            <li class="d-flex align-items-center text-gray-300">
+                                                {{-- Icon placeholder can be added here if needed --}}
+                                                <a href="{{ route('lessons.show', $lesson) }}" class="flex-grow-1 ms-2 link-info text-decoration-none">
                                                     {{ $lesson->title }}
                                                 </a>
-
-                                                {{-- NEW: Show a checkmark if the lesson is complete --}}
                                                 @if(Auth::user()->lessons()->where('lesson_id', $lesson->id)->exists())
-                                                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                    <svg class="ms-2" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                                 @endif
                                             </li>
                                         @empty
-                                            <li class="text-gray-400 ml-9">No lessons have been added to this topic yet.</li>
+                                            <li class="ms-4 text-gray-400">No lessons have been added to this topic yet.</li>
                                         @endforelse
                                     </ul>
                                 </div>

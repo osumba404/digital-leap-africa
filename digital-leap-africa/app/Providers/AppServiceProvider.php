@@ -23,20 +23,20 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-public function boot(): void
-{
-    Paginator::useTailwind();
+    public function boot(): void
+    {
+        Paginator::useBootstrapFive();
 
-    // Share all site settings with all views
-    if (Schema::hasTable('site_settings') && !$this->app->runningInConsole()) {
-        try {
-            $settings = SiteSetting::pluck('value', 'key')->all();
-            View::share('siteSettings', $settings);
-        } catch (\Exception $e) {
-            View::share('siteSettings', []); // Share an empty array on error
+        // Share all site settings with all views
+        if (Schema::hasTable('site_settings') && !$this->app->runningInConsole()) {
+            try {
+                $settings = SiteSetting::pluck('value', 'key')->all();
+                View::share('siteSettings', $settings);
+            } catch (\Exception $e) {
+                View::share('siteSettings', []); // Share an empty array on error
+            }
+        } else {
+            View::share('siteSettings', []);
         }
-    } else {
-        View::share('siteSettings', []);
     }
-}
 }

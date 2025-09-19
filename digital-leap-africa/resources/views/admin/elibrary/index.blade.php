@@ -1,36 +1,34 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-100 leading-tight">{{ __('Manage eLibrary') }}</h2>
-            <a href="{{ route('admin.elibrary-resources.create') }}">
-                <x-primary-button>+ Add New Resource</x-primary-button>
-            </a>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fw-semibold fs-4 text-gray-100 m-0">{{ __('Manage eLibrary') }}</h2>
+            <a href="{{ route('admin.elibrary-resources.create') }}" class="btn btn-primary btn-sm">+ Add New Resource</a>
         </div>
     </x-slot>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-primary-light shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-100">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left">
+    <div class="py-5">
+        <div class="container">
+            <div class="bg-primary-light shadow-sm rounded">
+                <div class="p-4 text-gray-200">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-borderless align-middle text-gray-200 mb-0">
                             <thead>
-                                <tr class="border-b border-gray-700">
-                                    <th class="p-2">Title</th>
-                                    <th class="p-2">Type</th>
-                                    <th class="p-2">Actions</th>
+                                <tr class="border-bottom border-dark-subtle">
+                                    <th class="py-2">Title</th>
+                                    <th class="py-2">Type</th>
+                                    <th class="py-2">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($elibraryItems as $item)
-                                    <tr class="border-b border-gray-700">
-                                        <td class="p-2">{{ $item->title }}</td>
-                                        <td class="p-2">{{ $item->type }}</td>
-                                        <td class="p-2">
-                                            <a href="{{ route('admin.elibrary-resources.edit', $item) }}" class="text-accent hover:text-white">Edit</a>
-                                            <form method="POST" action="{{ route('admin.elibrary-resources.destroy', $item) }}" class="inline-block ml-4" onsubmit="return confirm('Are you sure?');">
+                                    <tr class="border-bottom border-dark-subtle">
+                                        <td class="py-2">{{ $item->title }}</td>
+                                        <td class="py-2">{{ $item->type }}</td>
+                                        <td class="py-2">
+                                            <a href="{{ route('admin.elibrary-resources.edit', $item) }}" class="link-info text-decoration-none">Edit</a>
+                                            <form method="POST" action="{{ route('admin.elibrary-resources.destroy', $item) }}" class="d-inline ms-3" onsubmit="return confirm('Are you sure?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="text-red-500 hover:text-red-400">Delete</button>
+                                                <button type="submit" class="btn btn-link link-danger p-0 align-baseline">Delete</button>
                                             </form>
                                         </td>
                                     </tr>

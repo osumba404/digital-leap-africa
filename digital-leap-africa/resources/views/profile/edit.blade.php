@@ -1,40 +1,40 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-100 leading-tight">
+        <h2 class="fw-semibold fs-4 text-gray-100 m-0">
             {{ __('My Profile') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div class="py-5">
+        <div class="container d-flex flex-column gap-3">
 
             {{-- THIS IS THE NEW GAMIFICATION SECTION --}}
-            <div class="p-4 sm:p-8 bg-secondary-dark shadow sm:rounded-lg">
-                <h3 class="text-lg font-medium text-white">Gamification Stats</h3>
-                <div class="mt-4 text-5xl font-bold text-accent">
+            <div class="p-3 bg-primary-light shadow rounded">
+                <h3 class="h5 fw-medium text-white mb-2">Gamification Stats</h3>
+                <div class="mt-1 display-5 fw-bold" style="color: var(--bs-info);">
                     {{ Auth::user()->getTotalPoints() }}
-                    <span class="text-xl font-medium text-gray-300 ml-2">Points</span>
+                    <span class="fs-6 fw-medium text-gray-300 ms-2">Points</span>
                 </div>
-                <p class="mt-2 text-sm text-gray-400">Keep participating to earn more points and unlock badges!</p>
+                <p class="mt-2 small text-gray-400 mb-0">Keep participating to earn more points and unlock badges!</p>
             </div>
 
             {{-- Existing Profile Information Section --}}
-            <div class="p-4 sm:p-8 bg-primary-light shadow sm:rounded-lg">
-                <div class="max-w-xl">
+            <div class="p-3 bg-primary-light shadow rounded">
+                <div style="max-width: 40rem;">
                     @include('profile.partials.update-profile-information-form')
                 </div>
             </div>
 
             {{-- Existing Update Password Section --}}
-            <div class="p-4 sm:p-8 bg-primary-light shadow sm:rounded-lg">
-                <div class="max-w-xl">
+            <div class="p-3 bg-primary-light shadow rounded">
+                <div style="max-width: 40rem;">
                     @include('profile.partials.update-password-form')
                 </div>
             </div>
 
             {{-- Existing Delete Account Section --}}
-            <div class="p-4 sm:p-8 bg-primary-light shadow sm:rounded-lg">
-                <div class="max-w-xl">
+            <div class="p-3 bg-primary-light shadow rounded">
+                <div style="max-width: 40rem;">
                     @include('profile.partials.delete-user-form')
                 </div>
             </div>
