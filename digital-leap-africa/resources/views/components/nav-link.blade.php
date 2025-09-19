@@ -2,8 +2,8 @@
 
 @php
 $classes = ($active ?? false)
-            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-accent text-sm font-medium leading-5 text-white focus:outline-none focus:border-accent transition duration-150 ease-in-out'
-            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-400 hover:text-white hover:border-gray-100 focus:outline-none focus:text-gray-300 focus:border-gray-300 transition duration-150 ease-in-out';
+            ? 'nav-link active'
+            : 'nav-link';
 @endphp
 
 <a {{ $attributes->merge(['class' => $classes]) }}>
