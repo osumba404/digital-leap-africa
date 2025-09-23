@@ -21,6 +21,9 @@ use App\Http\Controllers\Admin\TopicController as AdminTopicController;
 use App\Http\Controllers\Admin\LessonController as AdminLessonController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\ForumController as AdminForumController;
+use App\Http\Controllers\ArticlesController; // Public articles/blog
+use App\Http\Controllers\Admin\ArticleController as AdminArticleController; // Admin articles CRUD
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +43,13 @@ Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
 Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
 Route::get('/forum/{id}', [ForumController::class, 'show'])->name('forum.show');
 
+// Public Articles/Blog
+Route::get('/articles', [ArticlesController::class, 'index'])->name('articles.index');
+Route::get('/articles/{article:slug}', [ArticlesController::class, 'show'])->name('articles.show');
+Route::post('/articles/{article}/comments', [ArticlesController::class, 'storeComment'])
+    ->middleware(['auth', 'verified'])
+    ->name('articles.comments.store');
+
 
 // --- AUTHENTICATED USER ROUTES ---
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -58,7 +68,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // --- ADMIN ROUTES ---
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () { return view('admin.dashboard'); })->name('dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Site Settings
     Route::get('/settings', [AdminSiteSettingController::class, 'index'])->name('settings.index');
@@ -71,6 +81,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('elibrary-resources', AdminELibraryResourceController::class);
     Route::resource('events', AdminEventController::class)->except(['show']);
     Route::resource('forum', AdminForumController::class)->except(['show']);
+    Route::resource('articles', AdminArticleController::class)->except(['show']);
 
     // Nested Course Content Routes
     Route::get('/courses/{course}/topics', [AdminTopicController::class, 'index'])->name('courses.topics.index');

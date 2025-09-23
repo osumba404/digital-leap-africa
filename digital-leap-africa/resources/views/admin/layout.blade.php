@@ -1,34 +1,39 @@
 @extends('layouts.app')
 
-@section('styles')
+@push('styles')
 <style>
     /* ========== Admin Layout ========== */
     .admin-container {
-        display: flex;
+        display: block;
         min-height: calc(100vh - 80px);
     }
 
     /* Sidebar */
     .admin-sidebar {
-        width: 260px;
+        width: 240px;
         background: rgba(12, 18, 28, 0.9);
         backdrop-filter: blur(6px);
         border-right: 1px solid rgba(255, 255, 255, 0.05);
-        padding: 1.5rem 0;
-        position: sticky;
+        padding: 1rem 0.5rem;
+        position: fixed;
         top: 80px;
+        left: 0;
         height: calc(100vh - 80px);
         overflow-y: auto;
+        z-index: 20;
     }
 
     .admin-sidebar-header {
-        padding: 0 1.5rem 1.5rem;
+        padding: 0 0.75rem 0.75rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 
     .admin-sidebar-header h2 {
-        font-size: 1.1rem;
+        font-size: 0.95rem;
         font-weight: 600;
         margin: 0;
         color: var(--diamond-white);
@@ -37,42 +42,54 @@
         gap: 0.5rem;
     }
 
-    .admin-sidebar-header h2 i {
-        color: var(--cyan-accent);
+    .sidebar-toggle {
+        background: none;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--diamond-white);
+        width: 34px;
+        height: 28px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0.85;
     }
 
+    .sidebar-toggle:hover { opacity: 1; }
+
     .admin-nav {
-        padding: 0 1rem;
+        padding: 0 0.5rem;
     }
 
     .nav-section {
-        margin-bottom: 1.5rem;
+        margin-bottom: 0.75rem;
     }
 
     .nav-section h3 {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         color: var(--cool-gray);
-        margin: 0 0 0.75rem 0.5rem;
+        margin: 0 0 0.5rem 0.5rem;
         font-weight: 600;
     }
 
     .nav-link {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        padding: 0.6rem 1rem;
+        gap: 0.5rem;
+        padding: 0.45rem 0.65rem;
         color: var(--diamond-white);
         text-decoration: none;
         border-radius: 8px;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.2rem;
         transition: all 0.2s;
         font-size: 0.9rem;
     }
 
     .nav-link i {
-        width: 20px;
+        width: 18px;
         text-align: center;
         opacity: 0.8;
     }
@@ -84,8 +101,8 @@
 
     .nav-link.active {
         font-weight: 500;
-        border-left: 3px solid var(--cyan-accent);
-        padding-left: calc(1rem - 3px);
+        border-left: 2px solid var(--cyan-accent);
+        padding-left: calc(0.65rem - 2px);
     }
 
     .nav-link.active i {
@@ -94,130 +111,51 @@
 
     /* Main Content */
     .admin-main {
-        flex: 1;
-        padding: 2rem;
+        margin-left: 240px;
+        padding: 1.25rem 1.5rem;
         background: linear-gradient(180deg, #0a111a 0%, #0c121c 100%);
+        min-height: calc(100vh - 80px);
     }
+
+    /* Collapsed sidebar state */
+    body.sidebar-collapsed .admin-sidebar { width: 72px; }
+    body.sidebar-collapsed .admin-main { margin-left: 72px; }
+    body.sidebar-collapsed .admin-sidebar-header h2 span.label { display: none; }
+    body.sidebar-collapsed .nav-section h3 { display: none; }
+    body.sidebar-collapsed .nav-link span { display: none; }
+    body.sidebar-collapsed .nav-link { justify-content: center; }
 
     .admin-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 2rem;
-        padding-bottom: 1.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .admin-header h1 {
-        font-size: 1.75rem;
-        font-weight: 700;
-        margin: 0;
-        color: var(--diamond-white);
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-
-    .admin-header-actions {
-        display: flex;
-        gap: 1rem;
-    }
-
-    /* Cards */
-    .admin-card {
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: var(--radius);
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .admin-card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .admin-card-header h2 {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin: 0;
-        color: var(--diamond-white);
-    }
-
-    /* Tables */
-    .admin-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .admin-table th {
-        text-align: left;
-        padding: 0.75rem 1rem;
-        font-weight: 600;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--cool-gray);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .admin-table td {
-        padding: 1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        vertical-align: middle;
-        color: var(--diamond-white);
-        font-size: 0.95rem;
-    }
-
-    .admin-table tr:last-child td {
-        border-bottom: none;
-    }
-
-    .admin-table tr:hover td {
-        background: rgba(255, 255, 255, 0.02);
-    }
-
-    /* Forms */
-    .form-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 1rem;
-        margin-top: 2rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    /* Responsive */
     @media (max-width: 992px) {
         .admin-sidebar {
-            width: 220px;
+            width: 200px;
         }
         
         .admin-main {
-            padding: 1.5rem;
+            padding: 1rem;
         }
     }
 
     @media (max-width: 768px) {
-        .admin-container {
-            flex-direction: column;
-        }
-        
         .admin-sidebar {
             width: 100%;
             height: auto;
             position: static;
             border-right: none;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 1rem 0;
+            padding: 0.75rem 0;
         }
         
         .admin-sidebar-header {
-            padding: 0 1rem 1rem;
+            padding: 0 1rem 0.75rem;
         }
         
         .admin-nav {
@@ -233,12 +171,11 @@
             margin-bottom: 0;
         }
         
-        .nav-section h3 {
-            display: none;
-        }
+        .nav-section h3 { display: none; }
         
         .admin-main {
-            padding: 1.25rem;
+            padding: 1rem;
+            margin-left: 0;
         }
         
         .admin-header {
@@ -273,14 +210,15 @@
         background: rgba(255, 255, 255, 0.15);
     }
 </style>
-@append
+@endpush
 
 @section('content')
 <div class="admin-container">
     <!-- Sidebar -->
     <aside class="admin-sidebar">
         <div class="admin-sidebar-header">
-            <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
+            <h2><i class="fas fa-shield-alt"></i> <span class="label">Admin Panel</span></h2>
+            <button class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar"><i class="fas fa-bars"></i></button>
         </div>
         
         <nav class="admin-nav">
@@ -290,7 +228,7 @@
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ route('admin.settings') }}" class="nav-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
+                <a href="{{ route('admin.settings.index') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
                 </a>
@@ -302,7 +240,7 @@
                     <i class="fas fa-graduation-cap"></i>
                     <span>Courses</span>
                 </a>
-                <a href="{{ route('admin.lessons.index') }}" class="nav-link {{ request()->routeIs('admin.lessons.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.courses.index') }}" class="nav-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
                     <i class="fas fa-book"></i>
                     <span>Lessons</span>
                 </a>
@@ -314,7 +252,11 @@
                     <i class="fas fa-briefcase"></i>
                     <span>Jobs</span>
                 </a>
-                <a href="{{ route('admin.elibrary.index') }}" class="nav-link {{ request()->routeIs('admin.elibrary.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.articles.index') }}" class="nav-link {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Articles</span>
+                </a>
+                <a href="{{ route('admin.elibrary-resources.index') }}" class="nav-link {{ request()->routeIs('admin.elibrary-resources.*') ? 'active' : '' }}">
                     <i class="fas fa-book-reader"></i>
                     <span>eLibrary</span>
                 </a>
@@ -357,3 +299,26 @@
     </main>
 </div>
 @overwrite
+
+@push('scripts')
+<script>
+    (function() {
+        const body = document.body;
+        const toggle = document.getElementById('sidebarToggle');
+        const key = 'adminSidebarCollapsed';
+        const apply = (collapsed) => {
+            if (collapsed) body.classList.add('sidebar-collapsed');
+            else body.classList.remove('sidebar-collapsed');
+        };
+        // Init from storage
+        apply(localStorage.getItem(key) === '1');
+        if (toggle) {
+            toggle.addEventListener('click', () => {
+                const collapsed = !body.classList.contains('sidebar-collapsed');
+                apply(collapsed);
+                localStorage.setItem(key, collapsed ? '1' : '0');
+            });
+        }
+    })();
+</script>
+@endpush
