@@ -9,6 +9,8 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Styles -->
     <style>
@@ -349,6 +351,7 @@
                 <li><a href="{{ route('projects.index') }}">Projects</a></li>
                 <li><a href="{{ route('jobs.index') }}">Jobs</a></li>
                 <li><a href="{{ route('elibrary.index') }}">eLibrary</a></li>
+                <li><a href="{{ route('articles.index') }}">Blog</a></li>
                 
                 @auth
                     @if(auth()->user()->role === 'admin')
@@ -390,7 +393,11 @@
             </div>
         @endif
 
-        {{ $slot ?? '' }}
+        @if (View::hasSection('content'))
+            @yield('content')
+        @else
+            {{ $slot ?? '' }}
+        @endif
     </main>
 
     <footer class="mt-auto py-4 border-top border-dark">

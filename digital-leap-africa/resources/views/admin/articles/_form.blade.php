@@ -1,0 +1,36 @@
+@csrf
+<div class="mb-3">
+    <label class="form-label">Title</label>
+    <input type="text" name="title" value="{{ old('title', $article->title) }}" class="form-control @error('title') is-invalid @enderror" required>
+    @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Excerpt</label>
+    <textarea name="excerpt" rows="2" class="form-control @error('excerpt') is-invalid @enderror" placeholder="Short summary (optional)">{{ old('excerpt', $article->excerpt) }}</textarea>
+    @error('excerpt')<div class="invalid-feedback">{{ $message }}</div>@enderror
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Content</label>
+    <textarea name="content" rows="10" class="form-control @error('content') is-invalid @enderror" required>{{ old('content', $article->content) }}</textarea>
+    @error('content')<div class="invalid-feedback">{{ $message }}</div>@enderror
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Cover Image URL</label>
+    <input type="text" name="cover_image" value="{{ old('cover_image', $article->cover_image) }}" class="form-control @error('cover_image') is-invalid @enderror" placeholder="https://...">
+    @error('cover_image')<div class="invalid-feedback">{{ $message }}</div>@enderror
+</div>
+
+<div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" name="published" id="published" value="1" {{ old('published', $article->published_at ? 1 : 0) ? 'checked' : '' }}>
+    <label class="form-check-label" for="published">
+        Publish immediately
+    </label>
+</div>
+
+<div class="d-flex gap-2">
+    <x-primary-button type="submit">Save</x-primary-button>
+    <a href="{{ route('admin.articles.index') }}" class="btn btn-outline-secondary">Cancel</a>
+</div>
