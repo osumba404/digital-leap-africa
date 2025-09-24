@@ -1,16 +1,16 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="d-flex justify-content-between align-items-center">
-            <h2 class="fw-semibold fs-4 text-gray-100 m-0">
-                {{ __('Manage Courses') }}
-            </h2>
-            <a href="{{ route('admin.courses.create') }}" class="btn btn-primary btn-sm">+ Add New Course</a>
-        </div>
-    </x-slot>
+@extends('admin.layout')
+
+@section('title', 'Manage Courses')
+
+@section('admin-content')
     <div class="py-5">
         <div class="container">
             <div class="bg-primary-light shadow-sm rounded">
                 <div class="p-4 text-gray-200">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="h5 m-0">Manage Courses</h2>
+                        <a href="{{ route('admin.courses.create') }}" class="btn btn-primary btn-sm">+ Add New Course</a>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-sm table-borderless align-middle text-gray-200 mb-0">
                             <thead>
@@ -48,4 +48,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection
