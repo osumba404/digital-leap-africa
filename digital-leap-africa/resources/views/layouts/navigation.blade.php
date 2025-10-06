@@ -1,92 +1,58 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary-light border-bottom border-dark-subtle">
-    <div class="container">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #020b13;">
+    <div class="container-fluid">
         <!-- Logo -->
-        <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
-            @if(!empty($siteSettings['logo_url']))
-                <img src="{{ $siteSettings['logo_url'] }}" alt="{{ $siteSettings['site_name'] ?? 'Site Logo' }}" class="me-2" style="height: 36px; width: auto;">
+        <a class="navbar-brand" href="{{ route('home') }}">
+             @if(!empty($siteSettings['logo_url']))
+                <img src="{{ $siteSettings['logo_url'] }}" alt="{{ $siteSettings['site_name'] ?? 'Site Logo' }}" style="height: 40px;">
+            @else
+                {{ $siteSettings['site_name'] ?? config('app.name') }}
             @endif
-            <span class="fw-semibold">{{ $siteSettings['site_name'] ?? config('app.name', 'Laravel') }}</span>
         </a>
 
-        <!-- Toggler -->
+        <!-- Hamburger Toggler -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
+        <!-- Collapsible Content -->
         <div class="collapse navbar-collapse" id="mainNavbar">
-            <!-- Left Nav -->
+            <!-- Main Nav -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
-                        {{ __('Home') }}
-                    </x-nav-link>
-                </li>
-                <li class="nav-item">
-                    <x-nav-link :href="route('courses.index')" :active="request()->routeIs('courses.*')">
-                        {{ __('Courses') }}
-                    </x-nav-link>
-                </li>
-                <li class="nav-item">
-                    <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
-                        {{ __('Projects') }}
-                    </x-nav-link>
-                </li>
-                <li class="nav-item">
-                    <x-nav-link :href="route('elibrary.index')" :active="request()->routeIs('elibrary.*')">
-                        {{ __('eLibrary') }}
-                    </x-nav-link>
-                </li>
-                <li class="nav-item">
-                    <x-nav-link :href="route('articles.index')" :active="request()->routeIs('articles.*')">
-                        {{ __('Blog') }}
-                    </x-nav-link>
-                </li>
-                <li class="nav-item">
-                    <x-nav-link :href="route('jobs.index')" :active="request()->routeIs('jobs.*')">
-                        {{ __('Job Board') }}
-                    </x-nav-link>
-                </li>
-                @auth
-                    <li class="nav-item">
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                            {{ __('Dashboard') }}
-                        </x-nav-link>
-                    </li>
-                    @if(Auth::user()->role === 'admin')
-                        <li class="nav-item">
-                            <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
-                                {{ __('Admin Panel') }}
-                            </x-nav-link>
-                        </li>
-                    @endif
-                @endauth
+                <li class="nav-item"><x-nav-link :href="route('home')" :active="request()->routeIs('home')">Home</x-nav-link></li>
+                <li class="nav-item"><x-nav-link :href="route('courses.index')" :active="request()->routeIs('courses.*')">Courses</x-nav-link></li>
+                <li class="nav-item"><x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">Projects</x-nav-link></li>
+                <li class="nav-item"><x-nav-link :href="route('elibrary.index')" :active="request()->routeIs('elibrary.*')">eLibrary</x-nav-link></li>
+                <li class="nav-item"><x-nav-link :href="route('jobs.index')" :active="request()->routeIs('jobs.*')">Job Board</x-nav-link></li>
             </ul>
 
-            <!-- Right Nav (Auth) -->
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                @auth
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-gray-300" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ Auth::user()->name }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __('Profile') }}</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}" class="m-0">
-                                    @csrf
-                                    <button class="dropdown-item" type="submit">{{ __('Log Out') }}</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                @endauth
-
+            <!-- Auth Nav -->
+            <div class="d-flex">
                 @guest
-                    <li class="nav-item"><a href="{{ route('login') }}" class="nav-link">{{ __('Log in') }}</a></li>
-                    <li class="nav-item"><a href="{{ route('register') }}" class="nav-link">{{ __('Register') }}</a></li>
+                    <a href="{{ route('login') }}" class="btn btn-outline-light me-2">Log in</a>
+                    <a href="{{ route('register') }}" class="btn" style="background-color: #2e67b2; color: white;">Sign up</a>
+                @else
+                    <x-dropdown>
+                        <x-slot name="trigger">
+                           <span class="text-white">{{ Auth::user()->name }}</span>
+                        </x-slot>
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('dashboard')">Dashboard</x-dropdown-link>
+                            <x-dropdown-link :href="route('profile.edit')">Profile</x-dropdown-link>
+                            @if(Auth::user()->role === 'admin')
+                                <div class="dropdown-divider"></div>
+                                <x-dropdown-link :href="route('admin.dashboard')">Admin Panel</x-dropdown-link>
+                            @endif
+                            <div class="dropdown-divider"></div>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                                    Log Out
+                                </x-dropdown-link>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
                 @endguest
-            </ul>
+            </div>
         </div>
     </div>
 </nav>

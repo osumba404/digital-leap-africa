@@ -1,22 +1,18 @@
-@props(['align' => 'right', 'width' => '48', 'contentClasses' => ''])
+@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'dropdown-menu-dark'])
 
 @php
-    // Map alignment to Bootstrap classes
-    $menuAlignClass = match($align) {
-        'left' => '',
-        'top' => '', // not applicable in Bootstrap; fallback to default
-        'right' => 'dropdown-menu-end',
+    $alignmentClasses = match ($align) {
+        'left' => 'dropdown-menu-start',
+        'top' => 'dropdown-menu-start',
         default => 'dropdown-menu-end',
     };
-
-    $dropdownId = 'dd_' . uniqid();
 @endphp
 
 <div class="dropdown">
-    <button class="btn btn-link nav-link dropdown-toggle text-decoration-none" type="button" id="{{ $dropdownId }}" data-bs-toggle="dropdown" aria-expanded="false">
+    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         {{ $trigger }}
     </button>
-    <ul class="dropdown-menu {{ $menuAlignClass }} {{ $contentClasses }}" aria-labelledby="{{ $dropdownId }}">
+    <div class="dropdown-menu {{ $alignmentClasses }} {{ $contentClasses }}">
         {{ $content }}
-    </ul>
+    </div>
 </div>
