@@ -6,7 +6,7 @@
         <h5 class="m-0">Create New Section</h5>
     </div>
     <div class="card-body">
-        <form action="{{ route('admin.about.sections.store') }}" method="POST">
+        <form action="{{ route('admin.about.sections.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             
             <div class="mb-3">
@@ -30,6 +30,12 @@
                 <label for="subtitle" class="form-label text-gray-200">Subtitle</label>
                 <input type="text" class="form-control bg-primary-light border-0 text-gray-200" id="subtitle" 
                        name="subtitle" value="{{ old('subtitle') }}">
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label text-gray-200">Image</label>
+                <input class="form-control bg-primary-light border-0 text-gray-200" type="file"
+                    id="image" name="image" accept="image/*">
+                <small class="text-gray-400">Optional. Max 4MB. Formats: JPEG, PNG, JPG, GIF, WEBP</small>
             </div>
             
             <div class="mb-3">

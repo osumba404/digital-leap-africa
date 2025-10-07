@@ -1,4 +1,8 @@
 @extends('layouts.app')
+@push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+@endpush
 
 @section('content')
     <!-- Hero Section -->
@@ -28,9 +32,11 @@
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8">
-                    @if($about->image_path)
-                        <img src="{{ asset('storage/' . $about->image_path) }}" alt="{{ $about->title }}" class="rounded-lg shadow-lg w-full h-auto">
-                    @endif
+                @if($about->image_path)
+                    <img src="{{ Storage::url($about->image_path) }}" alt="{{ $about->title }}"
+                        class="rounded-lg shadow-lg w-full h-auto object-cover"
+                        style="aspect-ratio: 16/10; background:#f5f7fb;">
+                @endif
                 </div>
                 <div class="md:w-1/2">
                     @if($about->mini_title)
@@ -99,7 +105,8 @@
                 @forelse($teamMembers as $member)
                     <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
                         @if($member->image_path)
-                            <img src="{{ asset('storage/' . $member->image_path) }}" alt="{{ $member->name }}" class="w-full h-64 object-cover">
+                        <img src="{{ $member->image_url }}" alt="{{ $member->name }}"
+                        class="w-full h-64 object-cover" style="background:#f5f7fb;">
                         @endif
                         <div class="p-6">
                             <h3 class="text-xl font-bold mb-1">{{ $member->name }}</h3>
@@ -157,9 +164,10 @@
                 
                 @forelse($partners as $partner)
                     <a href="{{ $partner->website_url }}" target="_blank" class="block bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 h-full flex items-center justify-center">
-                        @if($partner->logo_path)
-                            <img src="{{ asset('storage/' . $partner->logo_path) }}" alt="{{ $partner->name }}" class="h-16 w-auto object-contain">
-                        @else
+                    @if($partner->logo_path)
+                        <img src="{{ Storage::url($partner->logo_path) }}" alt="{{ $partner->name }}"
+                            class="h-16 w-auto object-contain" style="max-width: 180px;">
+                    @else
                             <span class="text-gray-700 font-medium">{{ $partner->name }}</span>
                         @endif
                     </a>

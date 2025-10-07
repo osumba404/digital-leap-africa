@@ -12,6 +12,7 @@ class TeamMember extends Model
         'role',
         'bio',
         'image_path',
+        'email',
         'facebook_url',
         'twitter_url',
         'instagram_url',

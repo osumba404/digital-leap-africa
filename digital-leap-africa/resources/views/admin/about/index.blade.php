@@ -43,4 +43,106 @@
             </tbody>
         </table>
     </div>
+
+    <div class="page-header" style="margin-top: 2rem;">
+        <h2 class="page-title">Team Members</h2>
+        <div class="page-actions">
+            <a href="{{ route('admin.about.team.create') }}" class="status-badge status-active" title="Add a new team member">Add Team Member</a>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th style="width: 220px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @forelse($teamMembers as $member)
+                <tr>
+                    <td>{{ $member->name }}</td>
+                    <td>{{ $member->role }}</td>
+                    <td>{{ $member->email }}</td>
+                    <td>
+                        @if($member->is_active)
+                            <span class="status-badge status-active">Active</span>
+                        @else
+                            <span class="status-badge">Inactive</span>
+                        @endif
+                    </td>
+                    <td>
+                        <div class="page-actions">
+                            <a href="{{ route('admin.about.team.edit', $member) }}" class="status-badge">Edit</a>
+                            <form action="{{ route('admin.about.team.destroy', $member) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="status-badge status-draft" onclick="return confirm('Delete this team member?')">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5">No team members found.</td>
+                </tr>
+            @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <div class="page-header" style="margin-top: 2rem;">
+        <h2 class="page-title">Partners</h2>
+        <div class="page-actions">
+            <a href="{{ route('admin.about.partners.create') }}" class="status-badge status-active" title="Add a new partner">Add Partner</a>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Website</th>
+                    <th>Status</th>
+                    <th style="width: 220px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @forelse($partners as $partner)
+                <tr>
+                    <td>{{ $partner->name }}</td>
+                    <td>
+                        @if($partner->website_url)
+                            <a href="{{ $partner->website_url }}" target="_blank">{{ $partner->website_url }}</a>
+                        @endif
+                    </td>
+                    <td>
+                        @if($partner->is_active)
+                            <span class="status-badge status-active">Active</span>
+                        @else
+                            <span class="status-badge">Inactive</span>
+                        @endif
+                    </td>
+                    <td>
+                        <div class="page-actions">
+                            <a href="{{ route('admin.about.partners.edit', $partner) }}" class="status-badge">Edit</a>
+                            <form action="{{ route('admin.about.partners.destroy', $partner) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="status-badge status-draft" onclick="return confirm('Delete this partner?')">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="4">No partners found.</td>
+                </tr>
+            @endforelse
+            </tbody>
+        </table>
+    </div>
 @endsection
