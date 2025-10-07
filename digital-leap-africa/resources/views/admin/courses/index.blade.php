@@ -1,51 +1,86 @@
 @extends('admin.layout')
 
-@section('title', 'Manage Courses')
-
 @section('admin-content')
-    <div class="py-5">
-        <div class="container">
-            <div class="bg-primary-light shadow-sm rounded">
-                <div class="p-4 text-gray-200">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2 class="h5 m-0">Manage Courses</h2>
-                        <a href="{{ route('admin.courses.create') }}" class="btn btn-primary btn-sm">+ Add New Course</a>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-sm table-borderless align-middle text-gray-200 mb-0">
-                            <thead>
-                                <tr class="border-bottom border-dark-subtle">
-                                    <th class="py-2">Title</th>
-                                    <th class="py-2">Instructor</th>
-                                    <th class="py-2 text-center">Content / Topics</th>
-                                    <th class="py-2">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($courses as $course)
-                                    <tr class="border-bottom border-dark-subtle">
-                                        <td class="py-2">{{ $course->title }}</td>
-                                        <td class="py-2">{{ $course->instructor }}</td>
-                                        <td class="py-2 text-center">
-                                            <a href="{{ route('admin.courses.topics.index', $course) }}" class="link-info text-decoration-none fw-semibold">
-                                                Manage ({{ $course->topics->count() }})
-                                            </a>
-                                        </td>
-                                        <td class="py-2">
-                                            <a href="{{ route('admin.courses.edit', $course) }}" class="link-info text-decoration-none">Edit</a>
-                                            <form method="POST" action="{{ route('admin.courses.destroy', $course) }}" class="d-inline ms-3" onsubmit="return confirm('Are you sure you want to delete this course?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-link link-danger p-0 align-baseline">Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+<div class="page-header">
+    <h1 class="page-title">Manage Courses</h1>
+    <div class="page-actions">
+        <a href="{{ route('admin.courses.create') }}" class="btn-primary">
+            <i class="fas fa-plus me-2"></i>Add New Course
+        </a>
+    </div>
+</div>
+
+@if($courses->count() > 0)
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Course</th>
+            <th>Instructor</th>
+            <th>Level</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($courses as $course)
+        <tr>
+            <td>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    @if($course->image_url)
+                        <img src="{{ $course->image_url }}" alt="{{ $course->title }}" 
+                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;">
+                    @else
+                        <div style="width: 50px; height: 50px; background: rgba(0, 201, 255, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-graduation-cap" style="color: var(--cyan-accent);"></i>
+                        </div>
+                    @endif
+                    <div>
+                        <div style="font-weight: 600;">{{ $course->title }}</div>
+                        <div style="font-size: 0.9rem; color: var(--cool-gray);">{{ Str::limit($course->description, 50) }}</div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+            </td>
+            <td>{{ $course->instructor ?? 'Not assigned' }}</td>
+            <td>
+                @if($course->level)
+                    <span class="status-badge status-{{ $course->level }}">{{ ucfirst($course->level) }}</span>
+                @endif
+            </td>
+            <td>
+                <span class="status-badge status-active">Active</span>
+            </td>
+            <td>{{ $course->created_at->format('M j, Y') }}</td>
+            <td>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="{{ route('admin.courses.edit', $course) }}" class="btn btn-sm btn-outline" style="padding: 0.5rem 1rem;">
+                        <i class="fas fa-edit me-1"></i>Edit
+                    </a>
+                    <form method="POST" action="{{ route('admin.courses.destroy', $course) }}" style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm" style="background: #dc3545; color: white; padding: 0.5rem 1rem; border: 1px solid #dc3545;" 
+                                onclick="return confirm('Are you sure you want to delete this course?')">
+                            <i class="fas fa-trash me-1"></i>Delete
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+
+
+
+@else
+<div style="text-align: center; padding: 4rem 0;">
+    <i class="fas fa-graduation-cap" style="font-size: 4rem; color: var(--cool-gray); opacity: 0.5; margin-bottom: 1rem;"></i>
+    <h3 style="color: var(--cool-gray); margin-bottom: 1rem;">No Courses Yet</h3>
+    <p style="color: var(--cool-gray); margin-bottom: 2rem;">Start building your course catalog by adding your first course.</p>
+    <a href="{{ route('admin.courses.create') }}" class="btn-primary">
+        <i class="fas fa-plus me-2"></i>Create First Course
+    </a>
+</div>
+@endif
 @endsection

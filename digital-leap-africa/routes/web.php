@@ -32,7 +32,6 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 */
 
 // --- PUBLIC ROUTES ---
-Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 Route::get('/courses/{course:slug}', [CourseController::class, 'show'])->name('courses.show');
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
@@ -41,7 +40,11 @@ Route::get('/elibrary', [ELibraryController::class, 'index'])->name('elibrary.in
 Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
 
 Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
+Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
+Route::get('/forum/create', [ForumController::class, 'create'])->middleware(['auth', 'verified'])->name('forum.create');
+Route::post('/forum', [ForumController::class, 'store'])->middleware(['auth', 'verified'])->name('forum.store');
 Route::get('/forum/{id}', [ForumController::class, 'show'])->name('forum.show');
+Route::post('/forum/{thread}/reply', [ForumController::class, 'storeReply'])->middleware(['auth', 'verified'])->name('forum.reply');
 
 // Public Articles/Blog
 Route::get('/articles', [ArticlesController::class, 'index'])->name('articles.index');
@@ -51,9 +54,24 @@ Route::post('/articles/{article}/comments', [ArticlesController::class, 'storeCo
     ->name('articles.comments.store');
 
 
+// --- DASHBOARD ROUTE (PUBLIC/AUTHENTICATED) ---
+Route::get('/dashboard', function () {
+    if (auth()->check()) {
+        return view('dashboard');
+    }
+    return redirect()->route('home');
+})->name('dashboard');
+
+// --- HOME ROUTE (CONDITIONAL) ---
+Route::get('/', function() {
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    return app(\App\Http\Controllers\PageController::class)->home();
+})->name('home');
+
 // --- AUTHENTICATED USER ROUTES ---
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () { return view('dashboard'); })->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -1,79 +1,264 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="fw-semibold fs-4 text-gray-800 m-0">
-            {{ __('My Learning Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-5">
-        <div class="container">
-            {{-- Personalized Welcome and Progress Status --}}
-            <div class="mb-4">
-                {{-- Assumes you are using Laravel Auth and the Auth facade is available --}}
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">
-                    Welcome back, {{ Auth::user()->name ?? 'Learner' }}!
-                </h1>
-                <p class="text-gray-600">
-                    Keep up the great work! Ready to take the next **Leap**?
-                </p>
-            </div>
+@section('content')
+<style>
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
 
-            {{-- Key Learning Metrics (Stat Cards) --}}
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                {{-- Card 1: Courses Enrolled --}}
-                <div class="bg-white p-5 shadow-lg rounded-xl border-l-4 border-indigo-500">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <p class="text-sm font-semibold text-gray-500 uppercase">Courses Enrolled</p>
-                            {{-- Replace '5' with actual dynamic data (e.g., $coursesEnrolled) --}}
-                            <p class="h2 font-bold text-gray-900 mt-1">5</p>
-                        </div>
-                        <i class="bi bi-book-fill fs-3 text-indigo-400"></i>
-                    </div>
-                </div>
+.stat-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius);
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
 
-                {{-- Card 2: Modules Completed --}}
-                <div class="bg-white p-5 shadow-lg rounded-xl border-l-4 border-green-500">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <p class="text-sm font-semibold text-gray-500 uppercase">Modules Completed</p>
-                            {{-- Replace '42' with actual dynamic data (e.g., $modulesCompleted) --}}
-                            <p class="h2 font-bold text-gray-900 mt-1">42</p>
-                        </div>
-                        <i class="bi bi-check-circle-fill fs-3 text-green-400"></i>
-                    </div>
-                </div>
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--cyan-accent);
+}
 
-                {{-- Card 3: Next Certification --}}
-                <div class="bg-white p-5 shadow-lg rounded-xl border-l-4 border-yellow-500">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <p class="text-sm font-semibold text-gray-500 uppercase">Certification Progress</p>
-                            {{-- Replace '75%' with actual dynamic data (e.g., $certProgress) --}}
-                            <p class="h2 font-bold text-gray-900 mt-1">75%</p>
-                        </div>
-                        <i class="bi bi-patch-check-fill fs-3 text-yellow-400"></i>
-                    </div>
-                </div>
-            </div>
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--cyan-accent);
+    display: block;
+    margin-bottom: 0.5rem;
+}
 
-            {{-- Main Content Area: Quick Access to Courses or Progress Chart --}}
-            <div class="bg-white overflow-hidden shadow-xl rounded-xl">
-                <div class="p-6 text-gray-900">
-                    <h3 class="fw-semibold text-xl mb-3 border-bottom pb-2">Continue Learning</h3>
-                    
-                    {{-- This section can show the last course the user was on --}}
-                    <div class="d-flex align-items-center justify-content-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                            <p class="text-lg font-medium text-gray-800">Introduction to Digital Marketing</p>
-                            <p class="text-sm text-gray-500">Module 3: SEO Basics (70% Complete)</p>
-                        </div>
-                        <a href="/courses/123/module/3" class="btn btn-primary">
-                            Resume Course
-                        </a>
-                    </div>
-                </div>
-            </div>
+.stat-label {
+    color: var(--cool-gray);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.course-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.course-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.progress-bar {
+    background: rgba(255, 255, 255, 0.1);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.progress-fill {
+    background: var(--cyan-accent);
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.section-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.action-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: inherit;
+}
+
+.action-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+    color: inherit;
+}
+
+.action-icon {
+    font-size: 2rem;
+    color: var(--cyan-accent);
+    margin-bottom: 1rem;
+}
+</style>
+
+<div class="container">
+    {{-- Welcome Section --}}
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(90deg, var(--cyan-accent), var(--purple-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            Welcome back, {{ Auth::user()->name }}!
+        </h1>
+        <p style="color: var(--cool-gray); font-size: 1.1rem;">Ready to continue your digital learning journey?</p>
+    </div>
+
+    {{-- Stats Dashboard --}}
+    <div class="dashboard-grid">
+        <div class="stat-card">
+            <span class="stat-number">{{ Auth::user()->courses()->count() }}</span>
+            <div class="stat-label">Courses Enrolled</div>
+        </div>
+        
+        <div class="stat-card">
+            <span class="stat-number">{{ Auth::user()->lessons()->count() }}</span>
+            <div class="stat-label">Lessons Completed</div>
+        </div>
+        
+        <div class="stat-card">
+            @php
+                $points = Auth::user()->gamificationPoints()->sum('points') ?? 0;
+            @endphp
+            <span class="stat-number">{{ $points }}</span>
+            <div class="stat-label">Points Earned</div>
+        </div>
+        
+        <div class="stat-card">
+            <span class="stat-number">{{ Auth::user()->created_at->diffInDays(now()) }}</span>
+            <div class="stat-label">Days Active</div>
         </div>
     </div>
-</x-app-layout>
+
+    {{-- My Courses Section --}}
+    @if(Auth::user()->courses()->count() > 0)
+        <div class="section-card">
+            <h2 style="font-size: 1.5rem; font-weight: 600; color: var(--diamond-white); margin-bottom: 1.5rem;">
+                <i class="fas fa-graduation-cap me-2"></i>My Courses
+            </h2>
+            
+            @foreach(Auth::user()->courses()->take(3)->get() as $course)
+                @php
+                    $totalLessons = $course->topics->sum(function($topic) { return $topic->lessons->count(); });
+                    $completedLessons = Auth::user()->lessons()->whereIn('lesson_id', 
+                        $course->topics->flatMap->lessons->pluck('id')
+                    )->count();
+                    $progress = $totalLessons > 0 ? ($completedLessons / $totalLessons) * 100 : 0;
+                @endphp
+                
+                <div class="course-card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                        <div style="flex-grow: 1;">
+                            <h3 style="color: var(--diamond-white); font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">
+                                <a href="{{ route('courses.show', $course) }}" style="color: inherit; text-decoration: none;">
+                                    {{ $course->title }}
+                                </a>
+                            </h3>
+                            @if($course->instructor)
+                                <p style="color: var(--cyan-accent); font-size: 0.9rem; margin-bottom: 1rem;">
+                                    <i class="fas fa-user-tie me-1"></i>{{ $course->instructor }}
+                                </p>
+                            @endif
+                        </div>
+                        
+                        <a href="{{ route('courses.show', $course) }}" class="btn-primary" style="padding: 0.5rem 1rem;">
+                            Continue
+                        </a>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span style="color: var(--cool-gray); font-size: 0.9rem;">Progress</span>
+                        <span style="color: var(--cyan-accent); font-weight: 600;">{{ round($progress) }}%</span>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ $progress }}%;"></div>
+                    </div>
+                </div>
+            @endforeach
+            
+            @if(Auth::user()->courses()->count() > 3)
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <a href="{{ route('courses.index') }}" class="btn-outline" style="padding: 0.75rem 1.5rem;">
+                        View All My Courses
+                    </a>
+                </div>
+            @endif
+        </div>
+    @endif
+
+    {{-- Quick Actions --}}
+    <div class="section-card">
+        <h2 style="font-size: 1.5rem; font-weight: 600; color: var(--diamond-white); margin-bottom: 1.5rem;">
+            <i class="fas fa-bolt me-2"></i>Quick Actions
+        </h2>
+        
+        <div class="quick-actions">
+            <a href="{{ route('courses.index') }}" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Browse Courses</h3>
+                <p style="color: var(--cool-gray); font-size: 0.9rem; margin: 0;">Discover new learning opportunities</p>
+            </a>
+            
+            <a href="{{ route('projects.index') }}" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">View Projects</h3>
+                <p style="color: var(--cool-gray); font-size: 0.9rem; margin: 0;">Explore community projects</p>
+            </a>
+            
+            <a href="{{ route('forum.index') }}" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Join Forum</h3>
+                <p style="color: var(--cool-gray); font-size: 0.9rem; margin: 0;">Connect with the community</p>
+            </a>
+            
+            <a href="{{ route('jobs.index') }}" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Find Jobs</h3>
+                <p style="color: var(--cool-gray); font-size: 0.9rem; margin: 0;">Discover career opportunities</p>
+            </a>
+        </div>
+    </div>
+
+    {{-- Recent Activity or Recommendations --}}
+    @if(Auth::user()->courses()->count() == 0)
+        <div class="section-card">
+            <div style="text-align: center; padding: 2rem 0;">
+                <i class="fas fa-rocket" style="font-size: 4rem; color: var(--cyan-accent); margin-bottom: 1.5rem;"></i>
+                <h3 style="color: var(--diamond-white); font-size: 1.5rem; margin-bottom: 1rem;">Ready to Start Learning?</h3>
+                <p style="color: var(--cool-gray); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    You haven't enrolled in any courses yet. Explore our catalog and begin your digital transformation journey today!
+                </p>
+                <a href="{{ route('courses.index') }}" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
+                    <i class="fas fa-graduation-cap me-2"></i>Browse Courses
+                </a>
+            </div>
+        </div>
+    @endif
+</div>
+@endsection

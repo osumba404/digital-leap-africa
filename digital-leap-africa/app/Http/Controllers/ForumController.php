@@ -1,65 +1,58 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Thread;
+use App\Models\Reply;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class ForumController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         $threads = Thread::withCount('replies')->with('latestReply','user')->latest()->paginate(20);
-        return view('admin.forum.index', compact('threads'));
+        return view('pages.forum.index', compact('threads'));
     }
 
-    public function create()
+    public function show($id): View
     {
-        return view('admin.forum.create');
+        $thread = Thread::with(['replies.user', 'user'])->findOrFail($id);
+        return view('pages.forum.show', compact('thread'));
+    }
+
+    public function create(): View
+    {
+        return view('pages.forum.create');
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'title' => ['required','string','max:255'],
-            'body' => ['required','string'],
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string', 'max:5000'],
         ]);
 
         Thread::create([
-            'user_id' => Auth::id(),
+            'user_id' => $request->user()->id,
             'title' => $data['title'],
-            'content' => $data['body'], // maps to 'content' column
+            'content' => $data['content'],
         ]);
 
-        return redirect()->route('admin.forum.index')->with('success', 'Thread created.');
+        return redirect()->route('forum.index')->with('success', 'Discussion started successfully!');
     }
 
-    public function edit(Thread $forum) // route-model bind param 'forum' => Thread
-    {
-        $thread = $forum;
-        return view('admin.forum.edit', compact('thread'));
-    }
-
-    public function update(Request $request, Thread $forum)
+    public function storeReply(Request $request, Thread $thread)
     {
         $data = $request->validate([
-            'title' => ['required','string','max:255'],
-            'body' => ['required','string'],
+            'content' => ['required', 'string', 'max:2000'],
         ]);
 
-        $forum->update([
-            'title' => $data['title'],
-            'content' => $data['body'],
+        $thread->replies()->create([
+            'user_id' => $request->user()->id,
+            'content' => $data['content'],
         ]);
 
-        return redirect()->route('admin.forum.index')->with('success','Thread updated.');
-    }
-
-    public function destroy(Thread $forum)
-    {
-        $forum->delete();
-        return back()->with('success','Thread deleted.');
+        return redirect()->route('forum.show', $thread->id)->with('success', 'Reply posted successfully!');
     }
 }

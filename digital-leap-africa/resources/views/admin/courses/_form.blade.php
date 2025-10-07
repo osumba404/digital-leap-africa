@@ -1,34 +1,63 @@
-@csrf
-<div class="space-y-6">
-    <!-- Title -->
-    <div>
-        <x-input-label for="title" value="Course Title" />
-        <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" :value="old('title', $course->title ?? '')" required />
-        <x-input-error :messages="$errors->get('title')" class="mt-2" />
-    </div>
-    <!-- Instructor -->
-    <div>
-        <x-input-label for="instructor" value="Instructor Name" />
-        <x-text-input id="instructor" name="instructor" type="text" class="mt-1 block w-full" :value="old('instructor', $course->instructor ?? '')" required />
-        <x-input-error :messages="$errors->get('instructor')" class="mt-2" />
-    </div>
-    <!-- Description -->
-    <div>
-        <x-input-label for="description" value="Course Description" />
-        <textarea id="description" name="description" class="mt-1 block w-full border-gray-600 bg-primary-light text-gray-200 focus:border-accent focus:ring-accent rounded-md shadow-sm">{{ old('description', $course->description ?? '') }}</textarea>
-        <x-input-error :messages="$errors->get('description')" class="mt-2" />
-    </div>
-    <!-- Image Upload -->
-    <div>
-        <x-input-label for="image_url" value="Course Image" />
-        <input id="image_url" name="image_url" type="file" class="mt-1 block w-full text-gray-300">
-        <x-input-error :messages="$errors->get('image_url')" class="mt-2" />
-        @if (isset($course) && $course->image_url)
-            <div class="mt-4">
-                <p class="text-sm text-gray-400">Current Image:</p>
-                <img src="{{ $course->image_url }}" alt="Current Image" class="w-48 h-auto rounded-md mt-2">
+<div class="admin-form">
+    <div class="form-section">
+        <h3 class="form-section-title">Course Information</h3>
+        
+        <div class="form-group">
+            <label for="title" class="form-label">Course Title</label>
+            <input type="text" id="title" name="title" class="form-control" 
+                   value="{{ old('title', $course->title ?? '') }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="slug" class="form-label">URL Slug</label>
+            <input type="text" id="slug" name="slug" class="form-control" 
+                   value="{{ old('slug', $course->slug ?? '') }}" required>
+            <small style="color: var(--cool-gray); font-size: 0.85rem;">
+                Used in the course URL. Leave blank to auto-generate from title.
+            </small>
+        </div>
+
+        <div class="form-group">
+            <label for="description" class="form-label">Description</label>
+            <textarea id="description" name="description" class="form-control" rows="4" required>{{ old('description', $course->description ?? '') }}</textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="instructor" class="form-label">Instructor</label>
+                <input type="text" id="instructor" name="instructor" class="form-control" 
+                       value="{{ old('instructor', $course->instructor ?? '') }}">
             </div>
-        @endif
+
+            <div class="form-group">
+                <label for="level" class="form-label">Difficulty Level</label>
+                <select id="level" name="level" class="form-control">
+                    <option value="">Select Level</option>
+                    <option value="beginner" {{ old('level', $course->level ?? '') === 'beginner' ? 'selected' : '' }}>Beginner</option>
+                    <option value="intermediate" {{ old('level', $course->level ?? '') === 'intermediate' ? 'selected' : '' }}>Intermediate</option>
+                    <option value="advanced" {{ old('level', $course->level ?? '') === 'advanced' ? 'selected' : '' }}>Advanced</option>
+                </select>
+            </div>
+        </div>
     </div>
-    <x-primary-button>{{ isset($course) ? 'Update Course' : 'Create Course' }}</x-primary-button>
+
+    <div class="form-section">
+        <h3 class="form-section-title">Media & Resources</h3>
+        
+        <div class="form-group">
+            <label for="image_url" class="form-label">Course Image URL</label>
+            <input type="url" id="image_url" name="image_url" class="form-control" 
+                   value="{{ old('image_url', $course->image_url ?? '') }}">
+            <small style="color: var(--cool-gray); font-size: 0.85rem;">
+                Enter a URL to an image that represents this course.
+            </small>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+        <a href="{{ route('admin.courses.index') }}" class="btn-outline">Cancel</a>
+        <button type="submit" class="btn-primary">
+            <i class="fas fa-save me-2"></i>{{ isset($course) ? 'Update Course' : 'Create Course' }}
+        </button>
+    </div>
 </div>
