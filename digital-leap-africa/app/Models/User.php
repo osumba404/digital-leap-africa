@@ -69,6 +69,14 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    /**
+     * Lessons the user has completed (lesson_user pivot).
+     */
+    public function lessons()
+    {
+        return $this->belongsToMany(Lesson::class, 'lesson_user')->withTimestamps();
+    }
+
     // Add any other methods you had before here
     // such as points(), badges(), getTotalPoints(), lessons(), getCourseProgress(), etc.
 }
