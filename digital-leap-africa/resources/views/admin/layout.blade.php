@@ -2,323 +2,400 @@
 
 @push('styles')
 <style>
-    /* ========== Admin Layout ========== */
+.admin-layout {
+    background: linear-gradient(135deg, var(--navy-bg) 0%, var(--charcoal) 100%);
+    min-height: calc(100vh - var(--header-height));
+    padding: 2rem 0;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.admin-header {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.admin-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--cyan-accent), var(--purple-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+}
+
+.admin-subtitle {
+    color: var(--cool-gray);
+    font-size: 1.1rem;
+}
+
+.admin-nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.admin-nav-item {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    color: var(--diamond-white);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-nav-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 201, 255, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.admin-nav-item:hover::before {
+    left: 100%;
+}
+
+.admin-nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(0, 201, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.admin-nav-icon {
+    font-size: 2rem;
+    color: var(--cyan-accent);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.admin-nav-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.admin-nav-desc {
+    font-size: 0.9rem;
+    color: var(--cool-gray);
+    margin: 0;
+}
+
+.admin-content {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius);
+    padding: 2rem;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--diamond-white);
+    margin: 0;
+}
+
+.page-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.data-table th {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--cool-gray);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.data-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--diamond-white);
+}
+
+.data-table tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+}
+
+.status-inactive {
+    background: rgba(156, 163, 175, 0.2);
+    color: #9ca3af;
+}
+
+.status-draft {
+    background: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+}
+
+.admin-form {
+    max-width: 600px;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.form-section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--diamond-white);
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .admin-layout {
+        padding: 1rem 0;
+    }
+    
     .admin-container {
-        display: block;
-        min-height: calc(100vh - 80px);
-    }
-
-    /* Sidebar */
-    .admin-sidebar {
-        width: 240px;
-        background: rgba(15, 23, 42, 0.9);
-        backdrop-filter: blur(6px);
-        border-right: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 1rem 0.5rem;
-        position: fixed;
-        top: 80px;
-        left: 0;
-        height: calc(100vh - 80px);
-        overflow-y: auto;
-        z-index: 20;
-    }
-
-    .admin-sidebar-header {
-        padding: 0 0.75rem 0.75rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .admin-sidebar-header h2 {
-        font-size: 0.95rem;
-        font-weight: 600;
-        margin: 0;
-        color: #e0e7ff;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .sidebar-toggle {
-        background: none;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        color: #e0e7ff;
-        width: 34px;
-        height: 28px;
-        border-radius: 6px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        opacity: 0.85;
-    }
-
-    .sidebar-toggle:hover { opacity: 1; }
-
-    .admin-nav {
         padding: 0 0.5rem;
     }
-
-    .nav-section {
-        margin-bottom: 0.75rem;
+    
+    .admin-header {
+        padding: 1.5rem;
     }
-
-    .nav-section h3 {
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: #94a3b8;
-        margin: 0 0 0.5rem 0.5rem;
-        font-weight: 600;
+    
+    .admin-title {
+        font-size: 2rem;
     }
+    
+    .admin-content {
+        padding: 1.5rem;
+    }
+    
+    .admin-nav {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .admin-nav-item {
+        padding: 1rem;
+    }
+    
+    .admin-nav-icon {
+        font-size: 1.5rem;
+    }
+    
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .page-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .data-table {
+        font-size: 0.85rem;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 0.5rem 0.25rem;
+        min-width: 80px;
+    }
+    
+    .data-table th:first-child,
+    .data-table td:first-child {
+        min-width: 120px;
+    }
+    
+    .admin-form {
+        max-width: 100%;
+    }
+    
+    .form-section {
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
 
-    .nav-link {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.45rem 0.65rem;
-        color: #e0e7ff;
-        text-decoration: none;
-        border-radius: 8px;
-        margin-bottom: 0.2rem;
-        transition: all 0.2s;
+@media (max-width: 480px) {
+    .admin-container {
+        padding: 0 0.25rem;
+    }
+    
+    .admin-header {
+        padding: 1rem;
+    }
+    
+    .admin-title {
+        font-size: 1.75rem;
+    }
+    
+    .admin-content {
+        padding: 1rem;
+    }
+    
+    .page-title {
+        font-size: 1.25rem;
+    }
+    
+    .data-table {
+        font-size: 0.8rem;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 0.4rem 0.2rem;
+        min-width: 70px;
+    }
+    
+    .btn-primary,
+    .btn-outline {
+        padding: 0.5rem 0.75rem;
         font-size: 0.9rem;
     }
-
-    .nav-link i {
-        width: 18px;
-        text-align: center;
-        opacity: 0.8;
+    
+    .status-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
     }
-
-    .nav-link:hover, .nav-link.active {
-        background: rgba(255, 255, 255, 0.08);
-        color: #93c5fd;
-    }
-
-    .nav-link.active {
-        font-weight: 500;
-        border-left: 2px solid #93c5fd;
-        padding-left: calc(0.65rem - 2px);
-    }
-
-    .nav-link.active i {
-        opacity: 1;
-    }
-
-    /* Main Content */
-    .admin-main {
-        margin-left: 240px;
-        padding: 1.25rem 1.5rem;
-        background: linear-gradient(180deg, #0e1a2b 0%, #0f172a 100%);
-        min-height: calc(100vh - 80px);
-    }
-
-    /* Collapsed sidebar state */
-    body.sidebar-collapsed .admin-sidebar { width: 72px; }
-    body.sidebar-collapsed .admin-main { margin-left: 72px; }
-    body.sidebar-collapsed .admin-sidebar-header h2 span.label { display: none; }
-    body.sidebar-collapsed .nav-section h3 { display: none; }
-    body.sidebar-collapsed .nav-link span { display: none; }
-    body.sidebar-collapsed .nav-link { justify-content: center; }
-
-    .admin-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-        padding-bottom: 0.75rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    @media (max-width: 992px) {
-        .admin-sidebar {
-            width: 200px;
-        }
-        
-        .admin-main {
-            padding: 1rem;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .admin-sidebar {
-            width: 100%;
-            height: auto;
-            position: static;
-            border-right: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 0.75rem 0;
-        }
-        
-        .admin-sidebar-header {
-            padding: 0 1rem 0.75rem;
-        }
-        
-        .admin-nav {
-            padding: 0 1rem;
-            display: flex;
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
-        }
-        
-        .nav-section {
-            min-width: max-content;
-            margin-right: 2rem;
-            margin-bottom: 0;
-        }
-        
-        .nav-section h3 { display: none; }
-        
-        .admin-main {
-            padding: 1rem;
-            margin-left: 0;
-        }
-        
-        .admin-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-        
-        .admin-header-actions {
-            width: 100%;
-            justify-content: space-between;
-        }
-    }
-
-    /* Dark mode scrollbar */
-    ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.12);
-        border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.18);
-    }
+}
 </style>
 @endpush
 
 @section('content')
-<div class="admin-container">
-    <!-- Sidebar -->
-    <aside class="admin-sidebar">
-        <div class="admin-sidebar-header">
-            <h2><i class="fas fa-shield-alt"></i> <span class="label">Admin Panel</span></h2>
-            <button class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar"><i class="fas fa-bars"></i></button>
-        </div>
-        
-        <nav class="admin-nav">
-            <div class="nav-section">
-                <h3>Main</h3>
-                <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="{{ route('admin.settings.index') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
-                    <i class="fas fa-cog"></i>
-                    <span>Settings</span>
-                </a>
-            </div>
-            
-            <div class="nav-section">
-                <h3>Content</h3>
-                <a href="{{ route('admin.courses.index') }}" class="nav-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>Courses</span>
-                </a>
-                <a href="{{ route('admin.courses.index') }}" class="nav-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
-                    <i class="fas fa-book"></i>
-                    <span>Lessons</span>
-                </a>
-                <a href="{{ route('admin.projects.index') }}" class="nav-link {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
-                    <i class="fas fa-project-diagram"></i>
-                    <span>Projects</span>
-                </a>
-                <a href="{{ route('admin.jobs.index') }}" class="nav-link {{ request()->routeIs('admin.jobs.*') ? 'active' : '' }}">
-                    <i class="fas fa-briefcase"></i>
-                    <span>Jobs</span>
-                </a>
-                <a href="{{ route('admin.articles.index') }}" class="nav-link {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}">
-                    <i class="fas fa-newspaper"></i>
-                    <span>Articles</span>
-                </a>
-                <a href="{{ route('admin.elibrary-resources.index') }}" class="nav-link {{ request()->routeIs('admin.elibrary-resources.*') ? 'active' : '' }}">
-                    <i class="fas fa-book-reader"></i>
-                    <span>eLibrary</span>
-                </a>
-                <a href="{{ route('admin.events.index') }}" class="nav-link {{ request()->routeIs('admin.events.*') ? 'active' : '' }}">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>Events</span>
-                </a>
-                <a href="{{ route('admin.forum.index') }}" class="nav-link {{ request()->routeIs('admin.forum.*') ? 'active' : '' }}">
-                    <i class="fas fa-comments"></i>
-                    <span>Forum</span>
-                </a>
-            </div>
-            
-            <div class="nav-section">
-                <h3>Users</h3>
-                <a href="#" class="nav-link">
-                    <i class="fas fa-users"></i>
-                    <span>Manage Users</span>
-                </a>
-                <a href="#" class="nav-link">
-                    <i class="fas fa-user-shield"></i>
-                    <span>Roles & Permissions</span>
-                </a>
-            </div>
-        </nav>
-    </aside>
-    
-    <!-- Main Content -->
-    <main class="admin-main">
+<div class="admin-layout">
+    <div class="admin-container">
+        @if(!isset($hideAdminHeader))
         <div class="admin-header">
-            <h1>@yield('title', 'Dashboard')</h1>
-            <div class="admin-header-actions">
-                @hasSection('header-actions')
-                    @yield('header-actions')
-                @endif
-            </div>
+            <h1 class="admin-title">
+                <i class="fas fa-shield-alt me-2"></i>Admin Panel
+            </h1>
+            <p class="admin-subtitle">Manage your Digital Leap Africa platform</p>
         </div>
-        
-        @yield('admin-content')
-    </main>
-</div>
-@overwrite
+        @endif
 
-@push('scripts')
-<script>
-    (function() {
-        const body = document.body;
-        const toggle = document.getElementById('sidebarToggle');
-        const key = 'adminSidebarCollapsed';
-        const apply = (collapsed) => {
-            if (collapsed) body.classList.add('sidebar-collapsed');
-            else body.classList.remove('sidebar-collapsed');
-        };
-        // Init from storage
-        apply(localStorage.getItem(key) === '1');
-        if (toggle) {
-            toggle.addEventListener('click', () => {
-                const collapsed = !body.classList.contains('sidebar-collapsed');
-                apply(collapsed);
-                localStorage.setItem(key, collapsed ? '1' : '0');
-            });
-        }
-    })();
-</script>
-@endpush
+        @hasSection('admin-nav')
+            @yield('admin-nav')
+        @else
+            @if(!isset($hideAdminNav))
+            <div class="admin-nav">
+                <a href="{{ route('admin.dashboard') }}" class="admin-nav-item">
+                    <i class="fas fa-tachometer-alt admin-nav-icon"></i>
+                    <div class="admin-nav-title">Dashboard</div>
+                    <p class="admin-nav-desc">Overview & Analytics</p>
+                </a>
+                
+                <a href="{{ route('admin.courses.index') }}" class="admin-nav-item">
+                    <i class="fas fa-graduation-cap admin-nav-icon"></i>
+                    <div class="admin-nav-title">Courses</div>
+                    <p class="admin-nav-desc">Manage Learning Content</p>
+                </a>
+                
+                <a href="{{ route('admin.projects.index') }}" class="admin-nav-item">
+                    <i class="fas fa-project-diagram admin-nav-icon"></i>
+                    <div class="admin-nav-title">Projects</div>
+                    <p class="admin-nav-desc">Community Showcases</p>
+                </a>
+                
+                <a href="{{ route('admin.jobs.index') }}" class="admin-nav-item">
+                    <i class="fas fa-briefcase admin-nav-icon"></i>
+                    <div class="admin-nav-title">Jobs</div>
+                    <p class="admin-nav-desc">Career Opportunities</p>
+                </a>
+                
+                <a href="{{ route('admin.articles.index') }}" class="admin-nav-item">
+                    <i class="fas fa-newspaper admin-nav-icon"></i>
+                    <div class="admin-nav-title">Articles</div>
+                    <p class="admin-nav-desc">Blog & News Content</p>
+                </a>
+                
+                <a href="{{ route('admin.elibrary-resources.index') }}" class="admin-nav-item">
+                    <i class="fas fa-book-reader admin-nav-icon"></i>
+                    <div class="admin-nav-title">eLibrary</div>
+                    <p class="admin-nav-desc">Digital Resources</p>
+                </a>
+                
+                <a href="{{ route('admin.events.index') }}" class="admin-nav-item">
+                    <i class="fas fa-calendar-alt admin-nav-icon"></i>
+                    <div class="admin-nav-title">Events</div>
+                    <p class="admin-nav-desc">Community Events</p>
+                </a>
+                
+                <a href="{{ route('admin.settings.index') }}" class="admin-nav-item">
+                    <i class="fas fa-cog admin-nav-icon"></i>
+                    <div class="admin-nav-title">Settings</div>
+                    <p class="admin-nav-desc">Site Configuration</p>
+                </a>
+            </div>
+            @endif
+        @endif
+
+        <div class="admin-content">
+            @yield('admin-content')
+        </div>
+    </div>
+</div>
+@endsection

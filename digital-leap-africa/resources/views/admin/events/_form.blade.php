@@ -15,7 +15,7 @@
   <div>
     <x-input-label for="date" value="Date & Time" />
     <x-text-input id="date" name="date" type="datetime-local" class="mt-1"
-      :value="old('date', isset($event) ? $event->date->format('Y-m-d\TH:i') : '')" required />
+      :value="old('date', isset($event) && $event->date ? (is_string($event->date) ? \Carbon\Carbon::parse($event->date)->format('Y-m-d\TH:i') : $event->date->format('Y-m-d\TH:i')) : '')" required />
     <x-input-error :messages="$errors->get('date')" class="mt-1" />
   </div>
   <div>
