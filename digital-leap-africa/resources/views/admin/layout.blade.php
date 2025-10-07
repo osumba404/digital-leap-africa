@@ -1,64 +1,221 @@
 @extends('layouts.app')
 
 @push('styles')
+
 <style>
 .admin-layout {
     background: linear-gradient(135deg, var(--navy-bg) 0%, var(--charcoal) 100%);
     min-height: calc(100vh - var(--header-height));
-    padding: 2rem 0;
+    padding: 1rem 0;
 }
 
 .admin-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 1rem;
 }
 
-.table-responsive {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+.admin-shell {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: start;
 }
 
+/* Enhanced Sidebar */
+.admin-sidebar {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    height: fit-content;
+    position: sticky;
+    top: calc(var(--header-height) + 16px);
+    padding: 0.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 400px;
+    backdrop-filter: blur(10px);
+}
+
+.admin-sidebar.collapsed {
+    width: 60px;
+}
+
+.admin-sidebar.collapsed .sidebar-header {
+    justify-content: center;
+    padding: 0.5rem;
+}
+
+.admin-sidebar.collapsed .sidebar-header strong {
+    display: none;
+}
+
+.admin-sidebar.collapsed .sidebar-label {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+.admin-sidebar.collapsed .sidebar-link {
+    justify-content: center;
+    padding: 0.75rem;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0.5rem 0.75rem 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-header strong {
+    color: var(--diamond-white);
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.toggle-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--diamond-white);
+    border-radius: 8px;
+    height: 32px;
+    width: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+}
+
+.admin-sidebar.collapsed .toggle-btn i {
+    transform: rotate(180deg);
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0.25rem 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    color: var(--diamond-white);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 201, 255, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.sidebar-link:hover::before {
+    left: 100%;
+}
+
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(0, 201, 255, 0.2);
+    transform: translateX(2px);
+}
+
+.sidebar-link.active {
+    background: rgba(0, 201, 255, 0.12);
+    border-color: rgba(0, 201, 255, 0.35);
+    box-shadow: 0 2px 8px rgba(0, 201, 255, 0.2);
+}
+
+.sidebar-link i {
+    color: var(--cyan-accent);
+    width: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.sidebar-label {
+    white-space: nowrap;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+/* Enhanced Content Area */
+.admin-content {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    min-height: 600px;
+    backdrop-filter: blur(10px);
+}
+
+/* Compact Header */
 .admin-header {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius);
-    padding: 2rem;
-    margin-bottom: 2rem;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
     text-align: center;
 }
 
 .admin-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     background: linear-gradient(90deg, var(--cyan-accent), var(--purple-accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
 .admin-subtitle {
     color: var(--cool-gray);
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
+/* Compact Navigation Grid */
 .admin-nav {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 2rem;
 }
 
 .admin-nav-item {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: var(--radius);
-    padding: 1.5rem;
+    border-radius: 10px;
+    padding: 1.25rem;
     text-align: center;
     text-decoration: none;
     color: var(--diamond-white);
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
 }
@@ -82,45 +239,81 @@
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(0, 201, 255, 0.3);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .admin-nav-icon {
-    font-size: 2rem;
+    font-size: 1.75rem;
     color: var(--cyan-accent);
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     display: block;
 }
 
 .admin-nav-title {
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
 }
 
 .admin-nav-desc {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: var(--cool-gray);
     margin: 0;
+    line-height: 1.3;
 }
 
-.admin-content {
-    background: rgba(255, 255, 255, 0.02);
+/* Enhanced Tables */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: var(--radius);
-    padding: 2rem;
 }
 
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.data-table th {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.875rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--cool-gray);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+}
+
+.data-table td {
+    padding: 0.875rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--diamond-white);
+    vertical-align: middle;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Enhanced Page Header */
 .page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .page-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 600;
     color: var(--diamond-white);
     margin: 0;
@@ -128,64 +321,46 @@
 
 .page-actions {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
     align-items: center;
+    flex-wrap: wrap;
 }
 
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-.data-table th {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 1rem;
-    text-align: left;
-    font-weight: 600;
-    color: var(--cool-gray);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.data-table td {
-    padding: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    color: var(--diamond-white);
-}
-
-.data-table tr:hover {
-    background: rgba(255, 255, 255, 0.02);
-}
-
+/* Status Badges */
 .status-badge {
-    padding: 0.25rem 0.75rem;
+    padding: 0.25rem 0.625rem;
     border-radius: 999px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 500;
+    white-space: nowrap;
 }
 
 .status-active {
     background: rgba(34, 197, 94, 0.2);
     color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
 .status-inactive {
     background: rgba(156, 163, 175, 0.2);
     color: #9ca3af;
+    border: 1px solid rgba(156, 163, 175, 0.3);
 }
 
 .status-draft {
     background: rgba(251, 191, 36, 0.2);
     color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.3);
 }
 
+/* Enhanced Forms */
 .admin-form {
     max-width: 600px;
 }
 
 .form-section {
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -196,15 +371,51 @@
 }
 
 .form-section-title {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--diamond-white);
     margin-bottom: 1rem;
 }
 
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .admin-shell {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .admin-sidebar {
+        position: static;
+        width: 100% !important;
+        height: auto;
+    }
+    
+    .admin-sidebar.collapsed .sidebar-label {
+        opacity: 1;
+        width: auto;
+        overflow: visible;
+    }
+    
+    .admin-sidebar.collapsed .sidebar-link {
+        justify-content: flex-start;
+    }
+    
+    .sidebar-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+    
+    .sidebar-link {
+        flex-shrink: 0;
+        min-width: fit-content;
+    }
+}
+
 @media (max-width: 768px) {
     .admin-layout {
-        padding: 1rem 0;
+        padding: 0.5rem 0;
     }
     
     .admin-container {
@@ -212,20 +423,21 @@
     }
     
     .admin-header {
-        padding: 1.5rem;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
     }
     
     .admin-title {
-        font-size: 2rem;
+        font-size: 1.75rem;
     }
     
     .admin-content {
-        padding: 1.5rem;
+        padding: 1.25rem;
     }
     
     .admin-nav {
         grid-template-columns: 1fr;
-        gap: 0.75rem;
+        gap: 0.5rem;
     }
     
     .admin-nav-item {
@@ -240,11 +452,11 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
     }
     
     .page-title {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
     }
     
     .page-actions {
@@ -253,30 +465,12 @@
     }
     
     .data-table {
-        font-size: 0.85rem;
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
+        font-size: 0.8rem;
     }
     
     .data-table th,
     .data-table td {
-        padding: 0.5rem 0.25rem;
-        min-width: 80px;
-    }
-    
-    .data-table th:first-child,
-    .data-table td:first-child {
-        min-width: 120px;
-    }
-    
-    .admin-form {
-        max-width: 100%;
-    }
-    
-    .form-section {
-        padding-bottom: 1.5rem;
-        margin-bottom: 1.5rem;
+        padding: 0.75rem 0.5rem;
     }
 }
 
@@ -290,7 +484,7 @@
     }
     
     .admin-title {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
     }
     
     .admin-content {
@@ -298,28 +492,16 @@
     }
     
     .page-title {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
     }
     
     .data-table {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
     }
     
     .data-table th,
     .data-table td {
-        padding: 0.4rem 0.2rem;
-        min-width: 70px;
-    }
-    
-    .btn-primary,
-    .btn-outline {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.9rem;
-    }
-    
-    .status-badge {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.5rem;
+        padding: 0.5rem 0.25rem;
     }
 }
 </style>
@@ -337,69 +519,148 @@
         </div>
         @endif
 
-        @hasSection('admin-nav')
-            @yield('admin-nav')
-        @else
-            @if(!isset($hideAdminNav))
-            <div class="admin-nav">
-                <a href="{{ route('admin.dashboard') }}" class="admin-nav-item">
-                    <i class="fas fa-tachometer-alt admin-nav-icon"></i>
-                    <div class="admin-nav-title">Dashboard</div>
-                    <p class="admin-nav-desc">Overview & Analytics</p>
-                </a>
+
+
+        <div class="admin-shell">
+            <aside class="admin-sidebar" id="adminSidebar">
+                <div class="sidebar-header">
+                    <strong>Menu</strong>
+                    <button class="toggle-btn" id="sidebarToggle" title="Toggle menu">
+                        <i class="fas fa-angles-left"></i>
+                    </button>
+                </div>
+                <ul class="sidebar-nav">
+                    <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                            <i class="fas fa-gauge"></i><span class="sidebar-label">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.content.*') ? 'active' : '' }}" href="{{ route('admin.content.index') }}">
+                            <i class="fas fa-layer-group"></i><span class="sidebar-label">Content</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.about.*') ? 'active' : '' }}" href="{{ route('admin.about.index') }}">
+                            <i class="fas fa-circle-info"></i><span class="sidebar-label">About</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}" href="{{ route('admin.articles.index') }}">
+                            <i class="fas fa-newspaper"></i><span class="sidebar-label">Articles</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}" href="{{ route('admin.courses.index') }}">
+                            <i class="fas fa-graduation-cap"></i><span class="sidebar-label">Courses</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}" href="{{ route('admin.projects.index') }}">
+                            <i class="fas fa-diagram-project"></i><span class="sidebar-label">Projects</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.jobs.*') ? 'active' : '' }}" href="{{ route('admin.jobs.index') }}">
+                            <i class="fas fa-briefcase"></i><span class="sidebar-label">Jobs</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.events.*') ? 'active' : '' }}" href="{{ route('admin.events.index') }}">
+                            <i class="fas fa-calendar-days"></i><span class="sidebar-label">Events</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.forum.*') ? 'active' : '' }}" href="{{ route('admin.forum.index') }}">
+                            <i class="fas fa-comments"></i><span class="sidebar-label">Forum</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.elibrary-resources.*') ? 'active' : '' }}" href="{{ route('admin.elibrary-resources.index') }}">
+                            <i class="fas fa-book"></i><span class="sidebar-label">eLibrary</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">
+                            <i class="fas fa-gear"></i><span class="sidebar-label">Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+            <div class="admin-content">
+                @yield('admin-content')
             </div>
-            
-            <div class="nav-section">
-                <h3>Content</h3>
-                <a href="{{ route('admin.courses.index') }}" class="nav-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>Courses</span>
-                </a>
-                <a href="{{ route('admin.courses.index') }}" class="nav-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
-                    <i class="fas fa-book"></i>
-                    <span>Lessons</span>
-                </a>
-                <a href="{{ route('admin.projects.index') }}" class="nav-link {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
-                    <i class="fas fa-project-diagram"></i>
-                    <span>Projects</span>
-                </a>
-                
-                <a href="{{ route('admin.jobs.index') }}" class="admin-nav-item">
-                    <i class="fas fa-briefcase admin-nav-icon"></i>
-                    <div class="admin-nav-title">Jobs</div>
-                    <p class="admin-nav-desc">Career Opportunities</p>
-                </a>
-                
-                <a href="{{ route('admin.articles.index') }}" class="admin-nav-item">
-                    <i class="fas fa-newspaper admin-nav-icon"></i>
-                    <div class="admin-nav-title">Articles</div>
-                    <p class="admin-nav-desc">Blog & News Content</p>
-                </a>
-                
-                <a href="{{ route('admin.elibrary-resources.index') }}" class="admin-nav-item">
-                    <i class="fas fa-book-reader admin-nav-icon"></i>
-                    <div class="admin-nav-title">eLibrary</div>
-                    <p class="admin-nav-desc">Digital Resources</p>
-                </a>
-                
-                <a href="{{ route('admin.events.index') }}" class="admin-nav-item">
-                    <i class="fas fa-calendar-alt admin-nav-icon"></i>
-                    <div class="admin-nav-title">Events</div>
-                    <p class="admin-nav-desc">Community Events</p>
-                </a>
-                
-                <a href="{{ route('admin.settings.index') }}" class="admin-nav-item">
-                    <i class="fas fa-cog admin-nav-icon"></i>
-                    <div class="admin-nav-title">Settings</div>
-                    <p class="admin-nav-desc">Site Configuration</p>
-                </a>
-            </div>
-            @endif
-        @endif
+        </div>
 
         <div class="admin-content">
             @yield('admin-content')
         </div>
     </div>
 </div>
+
+<script>
+    (function(){
+        const toggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('adminSidebar');
+        if (toggle && sidebar) {
+            toggle.addEventListener('click', function(){
+                sidebar.classList.toggle('collapsed');
+            });
+        }
+    })();
+</script>
+
+<script>
+(function(){
+    const toggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('adminSidebar');
+    
+    // Check for saved state in localStorage
+    const savedState = localStorage.getItem('adminSidebarCollapsed');
+    
+    if (savedState === 'true') {
+        sidebar.classList.add('collapsed');
+    }
+    
+    if (toggle && sidebar) {
+        toggle.addEventListener('click', function(){
+            sidebar.classList.toggle('collapsed');
+            
+            // Save state to localStorage
+            const isCollapsed = sidebar.classList.contains('collapsed');
+            localStorage.setItem('adminSidebarCollapsed', isCollapsed);
+            
+            // Update icon
+            const icon = toggle.querySelector('i');
+            if (icon) {
+                icon.className = isCollapsed ? 'fas fa-angles-right' : 'fas fa-angles-left';
+            }
+        });
+    }
+    
+    // Enhanced hover effects for sidebar
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    sidebarLinks.forEach(link => {
+        link.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(4px)';
+        });
+        
+        link.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0)';
+        });
+    });
+    
+    // Auto-collapse sidebar on very small screens
+    function handleResize() {
+        if (window.innerWidth < 1024) {
+            sidebar.classList.remove('collapsed');
+        }
+    }
+    
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+})();
+</script>
+
 @endsection
