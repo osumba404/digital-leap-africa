@@ -49,31 +49,28 @@ Route::get('/forum/create', [ForumController::class, 'create'])->middleware(['au
 Route::post('/forum', [ForumController::class, 'store'])->middleware(['auth', 'verified'])->name('forum.store');
 Route::get('/forum/{id}', [ForumController::class, 'show'])->name('forum.show');
 Route::post('/forum/{thread}/reply', [ForumController::class, 'storeReply'])->middleware(['auth', 'verified'])->name('forum.reply');
-
-// Public Articles/Blog
-// Route::get('/blog', [ArticlesController::class, 'index'])->name('blog.index');
-// Route::get('/blog/{article:slug}', [ArticlesController::class, 'show'])->name('blog.show');
-// Public Articles/Blog
 Route::get('/blog', [ArticlesController::class, 'index'])->name('blog.index');
 Route::get('/blog/{article:slug}', [ArticlesController::class, 'show'])->name('blog.show');
 Route::post('/blog/{article:slug}/comments', [ArticlesController::class, 'storeComment'])->middleware(['auth', 'verified'])->name('blog.comments.store');
+Route::view('/contact', 'contact')->name('contact');
+Route::view('/donate', 'donate')->name('donate');
 
 
-// --- DASHBOARD ROUTE (PUBLIC/AUTHENTICATED) ---
+
+
+// --- DASHBOARD ROUTE (AUTHENTICATED) ---
 Route::get('/dashboard', function () {
-    if (auth()->check()) {
-        return view('dashboard');
-    }
-    return redirect()->route('home');
-})->name('dashboard');
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
 
 // --- HOME ROUTE (CONDITIONAL) ---
-Route::get('/', function() {
-    if (auth()->check()) {
-        return redirect()->route('dashboard');
-    }
-    return app(\App\Http\Controllers\PageController::class)->home();
-})->name('home');
+// Route::get('/', function() {
+//     if (auth()->check()) {
+//         return redirect()->route('dashboard');
+//     }
+//     return app(\App\Http\Controllers\PageController::class)->home();
+// })->name('home');
 
 // --- AUTHENTICATED USER ROUTES ---
 Route::middleware(['auth', 'verified'])->group(function () {

@@ -6,13 +6,13 @@
 .admin-layout {
     background: linear-gradient(135deg, var(--navy-bg) 0%, var(--charcoal) 100%);
     min-height: calc(100vh - var(--header-height));
-    padding: 1rem 0;
+    padding: 0;
 }
 
 .admin-container {
     max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 1rem;
+    margin: 0;
+    padding: 0;
 }
 
 .admin-shell {

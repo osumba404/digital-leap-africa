@@ -13,6 +13,14 @@ class PageController extends Controller
     public function home(): View
     {
         // We will fetch dynamic data here later
-        return view('pages.home');
+        return view('index');
+    }
+
+    /**
+     * Display the public About page.
+     */
+    public function about(): View
+    {
+        return view('about');
     }
 }
