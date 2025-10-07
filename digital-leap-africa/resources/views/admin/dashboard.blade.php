@@ -251,12 +251,22 @@
                 // Get the first course to link to its lessons
                 $firstCourse = \App\Models\Course::first();
             @endphp
-            @if($firstCourse)
+            
+            @isset($courses)
+                @foreach($courses as $course)
+                    <a href="{{ route('admin.courses.topics.index', $course) }}" class="btn btn-primary">
+                        View Topics
+                    </a>
+                @endforeach
+            @else
+                <p>No courses available</p>
+            @endisset
+            <!-- @if($firstCourse)
             <a href="{{ route('admin.courses.topics.index', $firstCourse) }}" class="quick-action-link">
                 <i class="fas fa-book"></i>
                 <span>Manage Lessons</span>
             </a>
-            @endif
+            @endif -->
         </div>
     </div>
     

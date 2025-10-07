@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -44,56 +44,23 @@ class User extends Authenticatable
     ];
 
     /**
-     * The courses that the user is enrolled in.
+     * Get the enrollments for the user.
+     */
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    /**
+     * Get the courses that the user is enrolled in.
      */
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'course_enrollments')->withTimestamps();
+        return $this->belongsToMany(Course::class, 'enrollments')
+            ->withPivot(['status', 'enrolled_at', 'completed_at'])
+            ->withTimestamps();
     }
 
-    /**
-     * The points records for the user.
-     */
-    public function points()
-    {
-        return $this->hasMany(GamificationPoint::class);
-    }
-
-    /**
-     * The badges awarded to the user.
-     */
-    public function badges()
-    {
-        return $this->hasMany(Badge::class);
-    }
-
-    /**
-     * NEW: Calculate the user's total points.
-     */
-    public function getTotalPoints(): int
-    {
-        // This sums up the 'points' column from all related records
-        return $this->points()->sum('points');
-    }
-
-    public function lessons()
-{
-    return $this->belongsToMany(Lesson::class, 'lesson_user')->withTimestamps();
-}
-
-public function getCourseProgress(Course $course): int
-{
-    $totalLessons = $course->lessons()->count();
-    if ($totalLessons === 0) {
-        return 0;
-    }
-
-    $completedLessonIds = $this->lessons()->pluck('lessons.id');
-    $courseLessonIds = $course->lessons()->pluck('lessons.id');
-    
-    $completedInThisCourse = $completedLessonIds->intersect($courseLessonIds)->count();
-
-    return ($completedInThisCourse / $totalLessons) * 100;
-}
-
+    // Add any other methods you had before here
+    // such as points(), badges(), getTotalPoints(), lessons(), getCourseProgress(), etc.
 }
