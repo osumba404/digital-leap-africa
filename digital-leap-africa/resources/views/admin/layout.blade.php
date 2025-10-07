@@ -11,9 +11,9 @@
     /* Sidebar */
     .admin-sidebar {
         width: 240px;
-        background: rgba(12, 18, 28, 0.9);
+        background: rgba(15, 23, 42, 0.9);
         backdrop-filter: blur(6px);
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
         padding: 1rem 0.5rem;
         position: fixed;
         top: 80px;
@@ -25,7 +25,7 @@
 
     .admin-sidebar-header {
         padding: 0 0.75rem 0.75rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         margin-bottom: 0.5rem;
         display: flex;
         align-items: center;
@@ -36,7 +36,7 @@
         font-size: 0.95rem;
         font-weight: 600;
         margin: 0;
-        color: var(--diamond-white);
+        color: #e0e7ff;
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -44,8 +44,8 @@
 
     .sidebar-toggle {
         background: none;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--diamond-white);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #e0e7ff;
         width: 34px;
         height: 28px;
         border-radius: 6px;
@@ -70,7 +70,7 @@
         font-size: 0.65rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        color: var(--cool-gray);
+        color: #94a3b8;
         margin: 0 0 0.5rem 0.5rem;
         font-weight: 600;
     }
@@ -80,7 +80,7 @@
         align-items: center;
         gap: 0.5rem;
         padding: 0.45rem 0.65rem;
-        color: var(--diamond-white);
+        color: #e0e7ff;
         text-decoration: none;
         border-radius: 8px;
         margin-bottom: 0.2rem;
@@ -95,13 +95,13 @@
     }
 
     .nav-link:hover, .nav-link.active {
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--cyan-accent);
+        background: rgba(255, 255, 255, 0.08);
+        color: #93c5fd;
     }
 
     .nav-link.active {
         font-weight: 500;
-        border-left: 2px solid var(--cyan-accent);
+        border-left: 2px solid #93c5fd;
         padding-left: calc(0.65rem - 2px);
     }
 
@@ -113,7 +113,7 @@
     .admin-main {
         margin-left: 240px;
         padding: 1.25rem 1.5rem;
-        background: linear-gradient(180deg, #0a111a 0%, #0c121c 100%);
+        background: linear-gradient(180deg, #0e1a2b 0%, #0f172a 100%);
         min-height: calc(100vh - 80px);
     }
 
@@ -131,7 +131,7 @@
         align-items: center;
         margin-bottom: 1rem;
         padding-bottom: 0.75rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     @media (max-width: 992px) {
@@ -150,7 +150,7 @@
             height: auto;
             position: static;
             border-right: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             padding: 0.75rem 0;
         }
         
@@ -197,17 +197,17 @@
     }
 
     ::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.03);
+        background: rgba(255, 255, 255, 0.05);
         border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.12);
         border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.18);
     }
 </style>
 @endpush
