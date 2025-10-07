@@ -1087,8 +1087,7 @@
                     <li><a href="{{ route('elibrary.index') }}" class="@if(request()->routeIs('elibrary.*')) active @endif">eLibrary</a></li>
                     <li><a href="{{ route('jobs.index') }}" class="@if(request()->routeIs('jobs.*')) active @endif">Jobs</a></li>
                     <li><a href="{{ route('forum.index') }}" class="@if(request()->routeIs('forum.*')) active @endif">Forum</a></li>
-                    <li><a href="{{ route('articles.index') }}" class="@if(request()->routeIs('articles.*')) active @endif">Blog</a></li>
-                </ul>
+                    <li><a href="{{ route('blog.index') }}" class="@if(request()->routeIs('blog.*')) active @endif">Blog</a></li>                </ul>
 
                 <div class="nav-actions-group">
                     @auth
@@ -1135,7 +1134,7 @@
                 <li><a href="{{ route('courses.index') }}">Courses</a></li>
                 <li><a href="{{ route('projects.index') }}">Projects</a></li>
                 <li><a href="{{ route('elibrary.index') }}">eLibrary</a></li>
-                <li><a href="{{ route('articles.index') }}">Blog</a></li>
+                <li><a href="{{ route('blog.index') }}">Blog</a></li>
                 
                 @auth
                     @if(auth()->user()->role === 'admin')

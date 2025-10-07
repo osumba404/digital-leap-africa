@@ -133,47 +133,11 @@
 
 <h2 style="color: var(--diamond-white); margin: 2rem 0 1rem;">Quick Actions</h2>
 <div class="quick-actions">
-<<<<<<< HEAD
-    <div class="quick-action-card">
-        <h3><i class="fas fa-graduation-cap"></i> Courses</h3>
-        <div class="quick-action-links">
-            <a href="{{ route('admin.courses.create') }}" class="quick-action-link">
-                <i class="fas fa-plus"></i>
-                <span>Add New Course</span>
-            </a>
-            <a href="{{ route('admin.courses.index') }}" class="quick-action-link">
-                <i class="fas fa-list"></i>
-                <span>View All Courses</span>
-            </a>
-            @php
-                // Get the first course to link to its lessons
-                $firstCourse = \App\Models\Course::first();
-            @endphp
-            
-            @isset($courses)
-                @foreach($courses as $course)
-                    <a href="{{ route('admin.courses.topics.index', $course) }}" class="btn btn-primary">
-                        View Topics
-                    </a>
-                @endforeach
-            @else
-                <p>No courses available</p>
-            @endisset
-            <!-- @if($firstCourse)
-            <a href="{{ route('admin.courses.topics.index', $firstCourse) }}" class="quick-action-link">
-                <i class="fas fa-book"></i>
-                <span>Manage Lessons</span>
-            </a>
-            @endif -->
-        </div>
-    </div>
-=======
     <a href="{{ route('admin.courses.create') }}" class="action-card">
         <div class="action-icon"><i class="fas fa-plus"></i></div>
         <div class="action-title">Add Course</div>
         <div class="action-desc">Create new learning content</div>
     </a>
->>>>>>> 17c2e63b65ba1ec5c3a6bebff75d45a339e96061
     
     <a href="{{ route('admin.articles.create') }}" class="action-card">
         <div class="action-icon"><i class="fas fa-pen"></i></div>

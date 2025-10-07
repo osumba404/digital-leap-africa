@@ -51,8 +51,13 @@ Route::get('/forum/{id}', [ForumController::class, 'show'])->name('forum.show');
 Route::post('/forum/{thread}/reply', [ForumController::class, 'storeReply'])->middleware(['auth', 'verified'])->name('forum.reply');
 
 // Public Articles/Blog
+// Route::get('/blog', [ArticlesController::class, 'index'])->name('blog.index');
+// Route::get('/blog/{article:slug}', [ArticlesController::class, 'show'])->name('blog.show');
+// Public Articles/Blog
 Route::get('/blog', [ArticlesController::class, 'index'])->name('blog.index');
 Route::get('/blog/{article:slug}', [ArticlesController::class, 'show'])->name('blog.show');
+Route::post('/blog/{article:slug}/comments', [ArticlesController::class, 'storeComment'])->middleware(['auth', 'verified'])->name('blog.comments.store');
+
 
 // --- DASHBOARD ROUTE (PUBLIC/AUTHENTICATED) ---
 Route::get('/dashboard', function () {

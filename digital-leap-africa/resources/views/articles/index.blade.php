@@ -20,7 +20,7 @@
                             <p class="card-text text-muted">{{ $article->excerpt ?? Str::limit(strip_tags($article->content), 120) }}</p>
                             <div class="mt-auto d-flex justify-content-between align-items-center">
                                 <small class="text-secondary">{{ optional($article->published_at)->diffForHumans() }}</small>
-                                <a href="{{ route('articles.show', $article) }}" class="btn btn-outline-primary btn-sm">Read</a>
+                                <a href="{{ route('blog.show', $article) }}" class="btn btn-outline-primary btn-sm">Read</a>
                             </div>
                         </div>
                     </div>

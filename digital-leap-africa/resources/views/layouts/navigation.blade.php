@@ -37,7 +37,7 @@
                     </x-nav-link>
                 </li>
                 <li class="nav-item">
-                    <x-nav-link :href="route('articles.index')" :active="request()->routeIs('articles.*')">
+                    <x-nav-link :href="route('blog.index')" :active="request()->routeIs('blog.*')">
                         {{ __('Blog') }}
                     </x-nav-link>
                 </li>
