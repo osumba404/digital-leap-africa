@@ -70,4 +70,9 @@ class DashboardController extends Controller
             'coursesSeries' => $coursesSeries,
         ]);
     }
+
+    public function content()
+    {
+        return view('admin.content.index');
+    }
 }

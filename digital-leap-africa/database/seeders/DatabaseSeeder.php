@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-public function run(): void
+    public function run(): void
     {
         // ... other seeders
 
@@ -23,7 +23,9 @@ public function run(): void
             JobSeeder::class,
             SiteSettingSeeder::class,
             EventsTableSeeder::class,
-            
+            AboutSectionsTableSeeder::class,
+            TeamMembersTableSeeder::class,
+            PartnersTableSeeder::class,
         ]);
     }
 }

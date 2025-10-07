@@ -240,10 +240,10 @@
                     <i class="fas fa-graduation-cap"></i>
                     <span>Courses</span>
                 </a>
-                <a href="{{ route('admin.courses.index') }}" class="nav-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
+                <!-- <a href="{{ route('admin.articles.index') }}" class="nav-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
                     <i class="fas fa-book"></i>
-                    <span>Lessons</span>
-                </a>
+                    <span>Articles</span>
+                </a> -->
                 <a href="{{ route('admin.projects.index') }}" class="nav-link {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
                     <i class="fas fa-project-diagram"></i>
                     <span>Projects</span>

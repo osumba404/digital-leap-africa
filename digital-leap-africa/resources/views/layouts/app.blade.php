@@ -351,7 +351,7 @@
                 <li><a href="{{ route('projects.index') }}">Projects</a></li>
                 <li><a href="{{ route('jobs.index') }}">Jobs</a></li>
                 <li><a href="{{ route('elibrary.index') }}">eLibrary</a></li>
-                <li><a href="{{ route('articles.index') }}">Blog</a></li>
+                <li><a href="{{ route('admin.articles.index') }}">Blog</a></li>
                 
                 @auth
                     @if(auth()->user()->role === 'admin')
