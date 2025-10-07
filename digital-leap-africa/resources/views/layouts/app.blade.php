@@ -1087,6 +1087,9 @@
                     <li><a href="{{ route('jobs.index') }}" class="@if(request()->routeIs('jobs.*')) active @endif">Jobs</a></li>
                     <li><a href="{{ route('forum.index') }}" class="@if(request()->routeIs('forum.*')) active @endif">Forum</a></li>
                     <li><a href="{{ route('blog.index') }}" class="@if(request()->routeIs('blog.*')) active @endif">Blog</a></li>   
+                    <li><a href="{{ route('contact') }}" class="@if(request()->routeIs('contact')) active @endif">Contact</a></li>
+                    <li><a href="{{ route('donate') }}" class="@if(request()->routeIs('donate')) active @endif">Donate</a></li>
+                
                     @auth
                         <li><a href="{{ route('dashboard') }}" class="@if(request()->routeIs('dashboard')) active @endif">Dashboard</a></li>
                     @endauth             
@@ -1140,6 +1143,8 @@
                 <li><a href="{{ route('projects.index') }}">Projects</a></li>
                 <li><a href="{{ route('elibrary.index') }}">eLibrary</a></li>
                 <li><a href="{{ route('blog.index') }}">Blog</a></li>
+                <li><a href="{{ route('contact') }}">Contact</a></li>
+                <li><a href="{{ route('donate') }}">Donate</a></li>
                 
                 @auth
                     @if(auth()->user()->role === 'admin')
