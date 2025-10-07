@@ -1,19 +1,22 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-100 leading-tight">
-            {{ __('Edit Course') }}
-        </h2>
-    </x-slot>
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-primary-light shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-100">
-                    <form method="POST" action="{{ route('admin.courses.update', $course) }}" enctype="multipart/form-data">
-                        @method('PATCH')
-                        @include('admin.courses._form')
-                    </form>
-                </div>
-            </div>
-        </div>
+@extends('admin.layout')
+
+@php
+$hideAdminNav = true;
+@endphp
+
+@section('admin-content')
+<div class="page-header">
+    <h1 class="page-title">Edit Course: {{ $course->title }}</h1>
+    <div class="page-actions">
+        <a href="{{ route('admin.courses.index') }}" class="btn-outline">
+            <i class="fas fa-arrow-left me-2"></i>Back to Courses
+        </a>
     </div>
-</x-app-layout>
+</div>
+
+<form method="POST" action="{{ route('admin.courses.update', $course) }}">
+    @csrf
+    @method('PUT')
+    @include('admin.courses._form')
+</form>
+@endsection

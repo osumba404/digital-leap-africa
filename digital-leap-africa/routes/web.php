@@ -33,8 +33,10 @@ use App\Http\Controllers\Admin\{
 require __DIR__.'/auth.php';
 
 // --- PUBLIC ROUTES ---
+
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');
+
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 Route::get('/courses/{course:slug}', [CourseController::class, 'show'])->name('courses.show');
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
@@ -42,18 +44,35 @@ Route::get('/projects/{project:slug}', [ProjectController::class, 'show'])->name
 Route::get('/elibrary', [ELibraryController::class, 'index'])->name('elibrary.index');
 Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
 Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
+Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
+Route::get('/forum/create', [ForumController::class, 'create'])->middleware(['auth', 'verified'])->name('forum.create');
+Route::post('/forum', [ForumController::class, 'store'])->middleware(['auth', 'verified'])->name('forum.store');
 Route::get('/forum/{id}', [ForumController::class, 'show'])->name('forum.show');
+Route::post('/forum/{thread}/reply', [ForumController::class, 'storeReply'])->middleware(['auth', 'verified'])->name('forum.reply');
 
 // Public Articles/Blog
 Route::get('/blog', [ArticlesController::class, 'index'])->name('blog.index');
 Route::get('/blog/{article:slug}', [ArticlesController::class, 'show'])->name('blog.show');
 
+// --- DASHBOARD ROUTE (PUBLIC/AUTHENTICATED) ---
+Route::get('/dashboard', function () {
+    if (auth()->check()) {
+        return view('dashboard');
+    }
+    return redirect()->route('home');
+})->name('dashboard');
+
+// --- HOME ROUTE (CONDITIONAL) ---
+Route::get('/', function() {
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    return app(\App\Http\Controllers\PageController::class)->home();
+})->name('home');
+
 // --- AUTHENTICATED USER ROUTES ---
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Dashboard
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

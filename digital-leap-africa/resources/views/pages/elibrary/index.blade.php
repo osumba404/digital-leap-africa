@@ -1,35 +1,191 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-100 leading-tight">
-            {{ __('eLibrary Resources') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach ($elibraryItems as $item)
-                    <div class="bg-primary-light overflow-hidden shadow-sm sm:rounded-lg flex flex-col">
-                        <img src="{{ $item->image_url }}" alt="{{ $item->title }}" class="w-full h-48 object-cover">
-                        <div class="p-6 flex flex-col flex-grow">
-                            <span class="text-xs font-semibold uppercase text-accent">{{ $item->type }}</span>
-                            <h3 class="mt-2 text-xl font-bold text-white">
-                                {{ $item->title }}
-                            </h3>
-                            <p class="mt-4 text-gray-300 flex-grow">
-                                {{ $item->description }}
-                            </p>
-                            <div class="mt-6">
-                                <a href="{{ $item->file_url }}" target="_blank">
-                                    <button class="w-full text-center px-4 py-2 bg-secondary hover:bg-secondary-dark text-white text-sm font-semibold rounded-md">
-                                        Access Resource
-                                    </button>
+@section('content')
+<style>
+.library-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.resource-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.resource-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.resource-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: linear-gradient(135deg, var(--primary-blue), var(--deep-blue));
+}
+
+.resource-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.resource-type {
+    background: rgba(122, 95, 255, 0.2);
+    color: var(--purple-accent);
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    width: fit-content;
+    margin-bottom: 1rem;
+}
+
+.resource-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--diamond-white);
+}
+
+.resource-description {
+    color: var(--cool-gray);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.resource-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.filter-tab {
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--cool-gray);
+    text-decoration: none;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.filter-tab:hover,
+.filter-tab.active {
+    background: var(--cyan-accent);
+    color: var(--navy-bg);
+    border-color: var(--cyan-accent);
+}
+</style>
+
+<div class="container">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">Digital Library</h1>
+        <p style="color: var(--cool-gray); font-size: 1.1rem;">Access a vast collection of learning resources, books, and materials</p>
+    </div>
+
+    {{-- Filter Tabs --}}
+    <div class="filter-tabs">
+        <a href="?type=all" class="filter-tab {{ request('type', 'all') === 'all' ? 'active' : '' }}">
+            <i class="fas fa-th me-2"></i>All Resources
+        </a>
+        <a href="?type=book" class="filter-tab {{ request('type') === 'book' ? 'active' : '' }}">
+            <i class="fas fa-book me-2"></i>Books
+        </a>
+        <a href="?type=video" class="filter-tab {{ request('type') === 'video' ? 'active' : '' }}">
+            <i class="fas fa-video me-2"></i>Videos
+        </a>
+        <a href="?type=article" class="filter-tab {{ request('type') === 'article' ? 'active' : '' }}">
+            <i class="fas fa-newspaper me-2"></i>Articles
+        </a>
+        <a href="?type=tutorial" class="filter-tab {{ request('type') === 'tutorial' ? 'active' : '' }}">
+            <i class="fas fa-chalkboard-teacher me-2"></i>Tutorials
+        </a>
+    </div>
+
+    @if($elibraryItems->count() > 0)
+        <div class="library-grid">
+            @foreach ($elibraryItems as $item)
+                <div class="resource-card">
+                    @if($item->image_url)
+                        <img src="{{ $item->image_url }}" alt="{{ $item->title }}" class="resource-image">
+                    @else
+                        <div class="resource-image" style="display: flex; align-items: center; justify-content: center;">
+                            @switch($item->type)
+                                @case('book')
+                                    <i class="fas fa-book" style="font-size: 3rem; color: var(--diamond-white); opacity: 0.3;"></i>
+                                    @break
+                                @case('video')
+                                    <i class="fas fa-video" style="font-size: 3rem; color: var(--diamond-white); opacity: 0.3;"></i>
+                                    @break
+                                @case('article')
+                                    <i class="fas fa-newspaper" style="font-size: 3rem; color: var(--diamond-white); opacity: 0.3;"></i>
+                                    @break
+                                @default
+                                    <i class="fas fa-file-alt" style="font-size: 3rem; color: var(--diamond-white); opacity: 0.3;"></i>
+                            @endswitch
+                        </div>
+                    @endif
+                    
+                    <div class="resource-content">
+                        @if($item->type)
+                            <span class="resource-type">{{ $item->type }}</span>
+                        @endif
+                        
+                        <h3 class="resource-title">{{ $item->title }}</h3>
+                        
+                        <p class="resource-description">
+                            {{ Str::limit($item->description, 120) }}
+                        </p>
+                        
+                        <div class="resource-meta">
+                            @if($item->author)
+                                <span style="color: var(--cool-gray); font-size: 0.9rem;">
+                                    <i class="fas fa-user me-1"></i>{{ $item->author }}
+                                </span>
+                            @endif
+                            
+                            @if($item->file_url)
+                                <a href="{{ $item->file_url }}" target="_blank" class="btn-primary" style="padding: 0.5rem 1rem;">
+                                    <i class="fas fa-external-link-alt me-2"></i>Access
                                 </a>
-                            </div>
+                            @endif
                         </div>
                     </div>
-                @endforeach
-            </div>
+                </div>
+            @endforeach
         </div>
-    </div>
-</x-app-layout>
+    @else
+        <div style="text-align: center; padding: 4rem 0;">
+            <i class="fas fa-book-open" style="font-size: 4rem; color: var(--cool-gray); opacity: 0.5; margin-bottom: 1rem;"></i>
+            <h3 style="color: var(--cool-gray); margin-bottom: 1rem;">No Resources Available</h3>
+            <p style="color: var(--cool-gray); margin-bottom: 2rem;">We're working on adding more resources to our library. Check back soon!</p>
+            <a href="{{ route('courses.index') }}" class="btn-primary" style="padding: 0.75rem 1.5rem;">
+                <i class="fas fa-graduation-cap me-2"></i>Explore Courses
+            </a>
+        </div>
+    @endif
+</div>
+@endsection
