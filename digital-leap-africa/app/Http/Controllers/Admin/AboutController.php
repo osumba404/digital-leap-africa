@@ -34,9 +34,15 @@ class AboutController extends Controller
             'subtitle' => 'nullable|string|max:255',
             'content' => 'required|string',
             'section_type' => 'required|in:about,mission,vision,values',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'is_active' => 'boolean',
             'order' => 'integer',
         ]);
+        
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('public/about');
+            $validated['image_path'] = $path;
+        }
 
         AboutSection::create($validated);
 
@@ -56,10 +62,19 @@ class AboutController extends Controller
             'subtitle' => 'nullable|string|max:255',
             'content' => 'required|string',
             'section_type' => 'required|in:about,mission,vision,values',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'is_active' => 'boolean',
             'order' => 'integer',
         ]);
-
+        
+        if ($request->hasFile('image')) {
+            if ($section->image_path) {
+                Storage::delete($section->image_path);
+            }
+            $path = $request->file('image')->store('public/about');
+            $validated['image_path'] = $path;
+        }
+        
         $section->update($validated);
 
         return redirect()->route('admin.about.index')
@@ -68,6 +83,9 @@ class AboutController extends Controller
 
     public function destroySection(AboutSection $section)
     {
+        if ($section->image_path) {
+            Storage::delete($section->image_path);
+        }
         $section->delete();
         return back()->with('success', 'Section deleted successfully.');
     }
@@ -82,7 +100,7 @@ class AboutController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'position' => 'required|string|max:255',
+            'role' => 'required|string|max:255',
             'bio' => 'nullable|string',
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'email' => 'nullable|email',
@@ -94,7 +112,7 @@ class AboutController extends Controller
 
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('public/team');
-            $validated['photo_path'] = $path;
+            $validated['image_path'] = $path;
         }
 
         TeamMember::create($validated);
@@ -112,7 +130,7 @@ class AboutController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'position' => 'required|string|max:255',
+            'role' => 'required|string|max:255',
             'bio' => 'nullable|string',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'email' => 'nullable|email',
@@ -128,7 +146,7 @@ class AboutController extends Controller
                 Storage::delete($teamMember->photo_path);
             }
             $path = $request->file('photo')->store('public/team');
-            $validated['photo_path'] = $path;
+            $validated['image_path'] = $path;
         }
 
         $teamMember->update($validated);

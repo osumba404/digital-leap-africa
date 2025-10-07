@@ -6,7 +6,7 @@
         <h5 class="m-0">Edit Section</h5>
     </div>
     <div class="card-body">
-        <form action="{{ route('admin.about.sections.update', $section) }}" method="POST">
+        <form action="{{ route('admin.about.sections.update', $section) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             
@@ -31,6 +31,19 @@
                 <label for="subtitle" class="form-label text-gray-200">Subtitle</label>
                 <input type="text" class="form-control bg-primary-light border-0 text-gray-200" id="subtitle" 
                        name="subtitle" value="{{ old('subtitle', $section->subtitle) }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="image" class="form-label text-gray-200">Image</label>
+                @if($section->image_path)
+                    <div class="mb-2">
+                        <img src="{{ Storage::url($section->image_path) }}" alt="{{ $section->title }}"
+                            class="img-thumbnail" style="max-width: 300px; background: white; padding: 8px;">
+                    </div>
+                @endif
+                <input class="form-control bg-primary-light border-0 text-gray-200" type="file"
+                    id="image" name="image" accept="image/*">
+                <small class="text-gray-400">Leave empty to keep the current image. Max 4MB.</small>
             </div>
             
             <div class="mb-3">
