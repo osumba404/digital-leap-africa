@@ -8,7 +8,7 @@ use Illuminate\Pagination\Paginator;
 // Add these new 'use' statements
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
-use App\Models\SiteSetting;
+use App\Helpers\SettingsHelper;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
         // Share all site settings with all views
         if (Schema::hasTable('site_settings') && !$this->app->runningInConsole()) {
             try {
-                $settings = SiteSetting::pluck('value', 'key')->all();
+                $settings = SettingsHelper::all();
                 View::share('siteSettings', $settings);
             } catch (\Exception $e) {
                 View::share('siteSettings', []); // Share an empty array on error

@@ -52,6 +52,14 @@ class User extends Authenticatable
     }
 
     /**
+     * The gamification points records for the user.
+     */
+    public function gamificationPoints()
+    {
+        return $this->hasMany(GamificationPoint::class);
+    }
+
+    /**
      * Get the courses that the user is enrolled in.
      */
     public function courses()
