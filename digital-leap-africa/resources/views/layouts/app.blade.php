@@ -1079,15 +1079,18 @@
 
             <div class="nav-main-group"> 
                 <ul class="nav-links">
-                    @auth
-                        <li><a href="{{ route('dashboard') }}" class="@if(request()->routeIs('dashboard')) active @endif">Dashboard</a></li>
-                    @endauth
+                    <li><a href="{{ route('home') }}" class="@if(request()->routeIs('home')) active @endif">Home</a></li>
+                    <li><a href="{{ route('about') }}" class="@if(request()->routeIs('about')) active @endif">About</a></li>                    
                     <li><a href="{{ route('courses.index') }}" class="@if(request()->routeIs('courses.*')) active @endif">Courses</a></li>
                     <li><a href="{{ route('projects.index') }}" class="@if(request()->routeIs('projects.*')) active @endif">Projects</a></li>
                     <li><a href="{{ route('elibrary.index') }}" class="@if(request()->routeIs('elibrary.*')) active @endif">eLibrary</a></li>
                     <li><a href="{{ route('jobs.index') }}" class="@if(request()->routeIs('jobs.*')) active @endif">Jobs</a></li>
                     <li><a href="{{ route('forum.index') }}" class="@if(request()->routeIs('forum.*')) active @endif">Forum</a></li>
-                    <li><a href="{{ route('blog.index') }}" class="@if(request()->routeIs('blog.*')) active @endif">Blog</a></li>                </ul>
+                    <li><a href="{{ route('blog.index') }}" class="@if(request()->routeIs('blog.*')) active @endif">Blog</a></li>   
+                    @auth
+                        <li><a href="{{ route('dashboard') }}" class="@if(request()->routeIs('dashboard')) active @endif">Dashboard</a></li>
+                    @endauth             
+                </ul>
 
                 <div class="nav-actions-group">
                     @auth
@@ -1131,6 +1134,8 @@
                 @auth
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
                 @endauth
+                <li><a href="{{ route('home') }}">Home</a></li>
+                <li><a href="{{ route('about') }}">About</a></li>
                 <li><a href="{{ route('courses.index') }}">Courses</a></li>
                 <li><a href="{{ route('projects.index') }}">Projects</a></li>
                 <li><a href="{{ route('elibrary.index') }}">eLibrary</a></li>
