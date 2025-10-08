@@ -18,7 +18,7 @@ return new class extends Migration {
                 $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
                 $table->foreignId('author_id')->constrained('users');
                 $table->timestamps();
-                $table->enum('status', ['draft', 'published', 'archived'])->default('draft')->after('content');
+                //$table->enum('status', ['draft', 'published', 'archived'])->default('draft');
 
             });
         }
