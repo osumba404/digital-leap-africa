@@ -12,8 +12,8 @@
                 @foreach($articles as $article)
                 <div class="col-md-4">
                     <div class="card h-100 bg-primary-light border-dark-subtle">
-                        @if($article->cover_image)
-                            <img src="{{ $article->cover_image }}" class="card-img-top" alt="{{ $article->title }}">
+                        @if($article->featured_image_url)
+                            <img src="{{ $article->featured_image_url }}" class="card-img-top" alt="{{ $article->title }}">
                         @endif
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">{{ $article->title }}</h5>
