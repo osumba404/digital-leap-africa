@@ -13,19 +13,23 @@
 
 <div class="mb-3">
     <label class="form-label">Content</label>
-    <textarea name="content" rows="10" class="form-control @error('content') is-invalid @enderror" required>{{ old('content', $article->content) }}</textarea>
+    <!-- add an id to hook the editor -->
+    <textarea id="article-editor" name="content" rows="10" class="form-control @error('content') is-invalid @enderror" required>{{ old('content', $article->content) }}</textarea>
     @error('content')<div class="invalid-feedback">{{ $message }}</div>@enderror
 </div>
 
 <div class="mb-3">
-  <label class="form-label">Featured Image</label>
-  <input type="file" name="featured_image" accept="image/*" class="form-control @error('featured_image') is-invalid @enderror">
-  @error('featured_image')<div class="invalid-feedback">{{ $message }}</div>@enderror
-  @if(!empty($article->featured_image))
+    <label class="form-label">Featured Image</label>
+    <input id="featured_image_input" type="file" name="featured_image" accept="image/*" class="form-control @error('featured_image') is-invalid @enderror">
+    @error('featured_image')<div class="invalid-feedback">{{ $message }}</div>@enderror
+
     <div class="mt-2">
-      <img src="{{ $article->featured_image_url }}" alt="{{ $article->title }}" style="max-height: 140px; border-radius: 8px; background: #fff;">
+        @if(!empty($article->featured_image))
+            <img id="featured_image_preview" src="{{ $article->featured_image_url }}" alt="{{ $article->title }}" style="max-height: 140px; border-radius: 8px; background: #fff;">
+        @else
+            <img id="featured_image_preview" src="#" alt="Preview" style="display:none; max-height: 140px; border-radius: 8px; background: #fff;">
+        @endif
     </div>
-  @endif
 </div>
 
 <div class="form-check mb-3">
@@ -35,7 +39,12 @@
     </label>
 </div>
 
-<div class="d-flex gap-2">
+<!-- <div class="d-flex gap-2">
     <x-primary-button type="submit">Save</x-primary-button>
+    <a href="{{ route('admin.articles.index') }}" class="btn btn-outline-secondary">Cancel</a>
+</div> -->
+
+<div class="d-flex gap-2">
+    <button type="submit" class="btn btn-primary">Save</button>
     <a href="{{ route('admin.articles.index') }}" class="btn btn-outline-secondary">Cancel</a>
 </div>

@@ -535,11 +535,11 @@
                             <i class="fas fa-gauge"></i><span class="sidebar-label">Dashboard</span>
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a class="sidebar-link {{ request()->routeIs('admin.content.*') ? 'active' : '' }}" href="{{ route('admin.content.index') }}">
                             <i class="fas fa-layer-group"></i><span class="sidebar-label">Content</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li>
                         <a class="sidebar-link {{ request()->routeIs('admin.about.*') ? 'active' : '' }}" href="{{ route('admin.about.index') }}">
                             <i class="fas fa-circle-info"></i><span class="sidebar-label">About</span>
@@ -593,9 +593,6 @@
             </div>
         </div>
 
-        <div class="admin-content">
-            @yield('admin-content')
-        </div>
     </div>
 </div>
 
