@@ -34,6 +34,39 @@ class SiteSettingController extends Controller
             'favicon' => 'nullable|image|mimes:ico,png|max:1024',
             'hero_banner' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'opengraph_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+
+            // Hero slides (images)
+            'hero_slide_1_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'hero_slide_2_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'hero_slide_3_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+
+            // Hero slides (text + ctas)
+            'hero_slide_1_mini' => 'nullable|string|max:120',
+            'hero_slide_1_title' => 'nullable|string|max:160',
+            'hero_slide_1_sub' => 'nullable|string|max:300',
+            'hero_slide_1_cta1_label' => 'nullable|string|max:60',
+            'hero_slide_1_cta1_route' => 'nullable|string|max:120',
+            'hero_slide_1_cta2_label' => 'nullable|string|max:60',
+            'hero_slide_1_cta2_route' => 'nullable|string|max:120',
+            'hero_slide_1_enabled' => 'nullable|boolean',
+
+            'hero_slide_2_mini' => 'nullable|string|max:120',
+            'hero_slide_2_title' => 'nullable|string|max:160',
+            'hero_slide_2_sub' => 'nullable|string|max:300',
+            'hero_slide_2_cta1_label' => 'nullable|string|max:60',
+            'hero_slide_2_cta1_route' => 'nullable|string|max:120',
+            'hero_slide_2_cta2_label' => 'nullable|string|max:60',
+            'hero_slide_2_cta2_route' => 'nullable|string|max:120',
+            'hero_slide_2_enabled' => 'nullable|boolean',
+
+            'hero_slide_3_mini' => 'nullable|string|max:120',
+            'hero_slide_3_title' => 'nullable|string|max:160',
+            'hero_slide_3_sub' => 'nullable|string|max:300',
+            'hero_slide_3_cta1_label' => 'nullable|string|max:60',
+            'hero_slide_3_cta1_route' => 'nullable|string|max:120',
+            'hero_slide_3_cta2_label' => 'nullable|string|max:60',
+            'hero_slide_3_cta2_route' => 'nullable|string|max:120',
+            'hero_slide_3_enabled' => 'nullable|boolean',
             
             // Appearance
             'primary_color' => 'nullable|string|max:7',
@@ -76,7 +109,11 @@ class SiteSettingController extends Controller
         ]);
 
         // Handle file uploads
-        $fileFields = ['logo_url', 'favicon', 'hero_banner', 'opengraph_image'];
+        $fileFields = [
+            'logo_url', 'favicon', 'hero_banner', 'opengraph_image',
+            // hero slides
+            'hero_slide_1_image', 'hero_slide_2_image', 'hero_slide_3_image',
+        ];
         foreach ($fileFields as $field) {
             if ($request->hasFile($field)) {
                 $setting = SiteSetting::where('key', $field)->first();
@@ -90,7 +127,8 @@ class SiteSettingController extends Controller
         }
 
         // Handle boolean fields
-        $booleanFields = ['maintenance_mode', 'allow_registration', 'google_login', 'github_login'];
+        $booleanFields = ['maintenance_mode', 'allow_registration', 'google_login', 'github_login',
+            'hero_slide_1_enabled','hero_slide_2_enabled','hero_slide_3_enabled'];
         foreach ($booleanFields as $field) {
             $validated[$field] = $request->has($field) ? 1 : 0;
         }
