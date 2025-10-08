@@ -18,19 +18,21 @@
 .admin-shell {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 1rem;
+    gap: 0.2rem;
     align-items: start;
+    padding-left: -200px;
 }
 
 /* Enhanced Sidebar */
 .admin-sidebar {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    border-radius: 6px;
     height: fit-content;
     position: sticky;
     top: calc(var(--header-height) + 16px);
-    padding: 0.5rem;
+    padding: 0.2rem;
+    
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     min-height: 400px;
     backdrop-filter: blur(10px);
@@ -168,8 +170,8 @@
 .admin-content {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 1.5rem;
+    border-radius: 6px;
+    padding: 0.8rem;
     min-height: 600px;
     backdrop-filter: blur(10px);
 }
@@ -511,12 +513,12 @@
 <div class="admin-layout">
     <div class="admin-container">
         @if(!isset($hideAdminHeader))
-        <div class="admin-header">
+        {{-- <div class="admin-header">
             <h1 class="admin-title">
                 <i class="fas fa-shield-alt me-2"></i>Admin Panel
             </h1>
             <p class="admin-subtitle">Manage your Digital Leap Africa platform</p>
-        </div>
+        </div> --}}
         @endif
 
 
@@ -524,7 +526,8 @@
         <div class="admin-shell">
             <aside class="admin-sidebar" id="adminSidebar">
                 <div class="sidebar-header">
-                    <strong>Menu</strong>
+                    <i class="fas fa-shield-alt me-2"></i>Admin Panel
+                   
                     <button class="toggle-btn" id="sidebarToggle" title="Toggle menu">
                         <i class="fas fa-angles-left"></i>
                     </button>

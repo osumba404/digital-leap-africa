@@ -1,5 +1,7 @@
 @extends('admin.layout')
 
+@section('title', 'Event Management')
+
 @section('admin-content')
 <div class="page-header">
     <h1 class="page-title">Manage Events</h1>

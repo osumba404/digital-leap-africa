@@ -1,19 +1,20 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-100 leading-tight">
-            {{ __('Add New Job Listing') }}
-        </h2>
-    </x-slot>
+@extends('admin.layout')
+@section('title', 'Job Management')
 
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-primary-light shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-100">
-                    <form method="POST" action="{{ route('admin.jobs.store') }}">
-                        @include('admin.jobs._form')
-                    </form>
-                </div>
-            </div>
-        </div>
+@section('admin-content')
+<div class="page-header">
+    <h1 class="page-title">Add New Job Listing</h1>
+</div>
+
+<div class="py-5">
+  <div class="container" style="max-width: 48rem;">
+    <div class="bg-primary-light shadow-sm rounded">
+      <div class="p-4 text-gray-200">
+        <form method="POST" action="{{ route('admin.jobs.store') }}">
+          @include('admin.jobs._form')
+        </form>
+      </div>
     </div>
-</x-app-layout>
+  </div>
+</div>
+@endsection

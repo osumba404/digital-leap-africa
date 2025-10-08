@@ -1,19 +1,21 @@
-<x-app-layout>
-<x-slot name="header">
-<h2 class="font-semibold text-xl text-gray-100 leading-tight">
-{{ __('Edit Job Listing') }}
-</h2>
-</x-slot>
-<div class="py-12">
-    <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-primary-light shadow-sm sm:rounded-lg">
-            <div class="p-6 text-gray-100">
-                <form method="POST" action="{{ route('admin.jobs.update', $job) }}">
-                    @method('PATCH')
-                    @include('admin.jobs._form')
-                </form>
-            </div>
-        </div>
-    </div>
+@extends('admin.layout')
+@section('title', 'Job Management')
+
+@section('admin-content')
+<div class="page-header">
+    <h1 class="page-title">Edit Job Listing</h1>
 </div>
-</x-app-layout>
+
+<div class="py-5">
+  <div class="container" style="max-width: 48rem;">
+    <div class="bg-primary-light shadow-sm rounded">
+      <div class="p-4 text-gray-200">
+        <form method="POST" action="{{ route('admin.jobs.update', $job) }}">
+          @method('PATCH')
+          @include('admin.jobs._form')
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
