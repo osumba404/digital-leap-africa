@@ -18,9 +18,14 @@
 </div>
 
 <div class="mb-3">
-    <label class="form-label">Cover Image URL</label>
-    <input type="text" name="cover_image" value="{{ old('cover_image', $article->cover_image) }}" class="form-control @error('cover_image') is-invalid @enderror" placeholder="https://...">
-    @error('cover_image')<div class="invalid-feedback">{{ $message }}</div>@enderror
+  <label class="form-label">Featured Image</label>
+  <input type="file" name="featured_image" accept="image/*" class="form-control @error('featured_image') is-invalid @enderror">
+  @error('featured_image')<div class="invalid-feedback">{{ $message }}</div>@enderror
+  @if(!empty($article->featured_image))
+    <div class="mt-2">
+      <img src="{{ $article->featured_image_url }}" alt="{{ $article->title }}" style="max-height: 140px; border-radius: 8px; background: #fff;">
+    </div>
+  @endif
 </div>
 
 <div class="form-check mb-3">
