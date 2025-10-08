@@ -19,6 +19,7 @@ class SiteSettingController extends Controller
 
     public function update(Request $request)
     {
+        
         $validated = $request->validate([
             // Basic Information
             'site_name' => 'required|string|max:255',
@@ -35,38 +36,18 @@ class SiteSettingController extends Controller
             'hero_banner' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'opengraph_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
 
-            // Hero slides (images)
-            'hero_slide_1_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'hero_slide_2_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'hero_slide_3_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-
-            // Hero slides (text + ctas)
-            'hero_slide_1_mini' => 'nullable|string|max:120',
-            'hero_slide_1_title' => 'nullable|string|max:160',
-            'hero_slide_1_sub' => 'nullable|string|max:300',
-            'hero_slide_1_cta1_label' => 'nullable|string|max:60',
-            'hero_slide_1_cta1_route' => 'nullable|string|max:120',
-            'hero_slide_1_cta2_label' => 'nullable|string|max:60',
-            'hero_slide_1_cta2_route' => 'nullable|string|max:120',
-            'hero_slide_1_enabled' => 'nullable|boolean',
-
-            'hero_slide_2_mini' => 'nullable|string|max:120',
-            'hero_slide_2_title' => 'nullable|string|max:160',
-            'hero_slide_2_sub' => 'nullable|string|max:300',
-            'hero_slide_2_cta1_label' => 'nullable|string|max:60',
-            'hero_slide_2_cta1_route' => 'nullable|string|max:120',
-            'hero_slide_2_cta2_label' => 'nullable|string|max:60',
-            'hero_slide_2_cta2_route' => 'nullable|string|max:120',
-            'hero_slide_2_enabled' => 'nullable|boolean',
-
-            'hero_slide_3_mini' => 'nullable|string|max:120',
-            'hero_slide_3_title' => 'nullable|string|max:160',
-            'hero_slide_3_sub' => 'nullable|string|max:300',
-            'hero_slide_3_cta1_label' => 'nullable|string|max:60',
-            'hero_slide_3_cta1_route' => 'nullable|string|max:120',
-            'hero_slide_3_cta2_label' => 'nullable|string|max:60',
-            'hero_slide_3_cta2_route' => 'nullable|string|max:120',
-            'hero_slide_3_enabled' => 'nullable|boolean',
+            // Unlimited Hero Slides (array)
+            'hero_slides' => 'required|array|min:1',
+            'hero_slides.*.enabled' => 'nullable|boolean',
+            'hero_slides.*.mini' => 'nullable|string|max:120',
+            'hero_slides.*.title' => 'nullable|string|max:180',
+            'hero_slides.*.sub' => 'nullable|string|max:500',
+            'hero_slides.*.cta1_label' => 'nullable|string|max:60',
+            'hero_slides.*.cta1_route' => 'nullable|string|max:120',
+            'hero_slides.*.cta2_label' => 'nullable|string|max:60',
+            'hero_slides.*.cta2_route' => 'nullable|string|max:120',
+            'hero_slides.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'hero_slides.*.existing_image' => 'nullable|string',
             
             // Appearance
             'primary_color' => 'nullable|string|max:7',
@@ -108,12 +89,8 @@ class SiteSettingController extends Controller
             'webhook_url' => 'nullable|url',
         ]);
 
-        // Handle file uploads
-        $fileFields = [
-            'logo_url', 'favicon', 'hero_banner', 'opengraph_image',
-            // hero slides
-            'hero_slide_1_image', 'hero_slide_2_image', 'hero_slide_3_image',
-        ];
+        // Handle single-file settings uploads
+        $fileFields = ['logo_url', 'favicon', 'hero_banner', 'opengraph_image'];
         foreach ($fileFields as $field) {
             if ($request->hasFile($field)) {
                 $setting = SiteSetting::where('key', $field)->first();
@@ -126,14 +103,50 @@ class SiteSettingController extends Controller
             }
         }
 
+        // Handle Hero Slides (array + per-slide file uploads)
+        $incomingSlides = $request->input('hero_slides', []);
+        $normalizedSlides = [];
+        foreach ($incomingSlides as $idx => $slide) {
+            $enabled = isset($slide['enabled']) && (int)$slide['enabled'] === 1 ? 1 : 0;
+
+            // carry existing image if any, can be replaced by new upload
+            $imageUrl = $slide['existing_image'] ?? null;
+            if ($request->hasFile("hero_slides.$idx.image")) {
+                if (!empty($imageUrl)) {
+                    Storage::delete(str_replace('/storage', 'public', $imageUrl));
+                }
+                $stored = $request->file("hero_slides.$idx.image")->store('public/site');
+                $imageUrl = Storage::url($stored);
+            }
+
+            $normalizedSlides[] = [
+                'enabled' => $enabled,
+                'image' => $imageUrl,
+                'mini' => $slide['mini'] ?? '',
+                'title' => $slide['title'] ?? '',
+                'sub' => $slide['sub'] ?? '',
+                'cta1_label' => $slide['cta1_label'] ?? '',
+                'cta1_route' => $slide['cta1_route'] ?? '',
+                'cta2_label' => $slide['cta2_label'] ?? '',
+                'cta2_route' => $slide['cta2_route'] ?? '',
+            ];
+        }
+        if (empty($normalizedSlides)) {
+            $normalizedSlides = [[
+                'enabled' => 1, 'image' => null, 'mini' => '', 'title' => '', 'sub' => '',
+                'cta1_label' => '', 'cta1_route' => '', 'cta2_label' => '', 'cta2_route' => '',
+            ]];
+        }
+        SiteSetting::updateOrCreate(['key' => 'hero_slides'], ['value' => json_encode($normalizedSlides)]);
+        unset($validated['hero_slides']);
+ 
         // Handle boolean fields
-        $booleanFields = ['maintenance_mode', 'allow_registration', 'google_login', 'github_login',
-            'hero_slide_1_enabled','hero_slide_2_enabled','hero_slide_3_enabled'];
+        $booleanFields = ['maintenance_mode', 'allow_registration', 'google_login', 'github_login'];
         foreach ($booleanFields as $field) {
             $validated[$field] = $request->has($field) ? 1 : 0;
         }
-
-        // Update all other settings
+ 
+        // Update all other (scalar) settings
         foreach ($validated as $key => $value) {
             SiteSetting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
