@@ -153,7 +153,7 @@ Route::prefix('admin')
         Route::resource('elibrary-resources', AdminELibraryResourceController::class);
         Route::resource('events', AdminEventController::class)->except(['show']);
         Route::resource('forum', AdminForumController::class)->except(['show']);
-        Route::resource('articles', AdminArticleController::class)->except(['show']);
+        //Route::resource('articles', AdminArticleController::class)->except(['show']);
 
          // Courses
          Route::resource('courses', AdminCourseController::class)->except(['show']);

@@ -1,5 +1,15 @@
 @extends('layouts.app')
 
+
+<style>
+.article-content p { margin-bottom: 0.6rem; }
+.article-content h1 { margin: 1.1rem 0 0.6rem; }
+.article-content h2 { margin: 1rem 0 0.55rem; }
+.article-content h3 { margin: 0.9rem 0 0.5rem; }
+.article-content h4 { margin: 0.8rem 0 0.45rem; }
+.article-content h5 { margin: 0.7rem 0 0.4rem; }
+.article-content h6 { margin: 0.6rem 0 0.35rem; }
+</style>
 @section('content')
 <div class="py-5">
     <div class="container">
@@ -20,9 +30,58 @@
                         <img class="img-fluid rounded mb-3" src="{{ $article->featured_image_url }}" alt="{{ $article->title }}">
                     @endif
 
+                    <!-- <div class="article-content">
+                        {!! nl2br(e(strip_tags($article->content))) !!}
+                    </div> -->
                     <div class="article-content">
-                        {!! nl2br(e($article->content)) !!}
-                    </div>
+                    @php
+    $html = $article->content ?? '';
+
+    // Normalize HTML into text with structural newlines
+    $html = preg_replace('/<br\s*\/?>/i', "\n", $html);
+    for ($i = 1; $i <= 6; $i++) {
+        $hashes = str_repeat('#', $i) . ' ';
+        $html = preg_replace('/<h' . $i . '\b[^>]*>/i', "\n\n{$hashes}", $html);
+    }
+    $html = preg_replace('/<\/(p|div|h[1-6]|blockquote)>/i', "\n\n", $html);
+    $html = preg_replace('/<li\b[^>]*>/i', "- ", $html);
+    $html = preg_replace('/<\/li>/i', "\n", $html);
+    $html = preg_replace('/<\/(ul|ol)>/i', "\n", $html);
+    $html = preg_replace('/<(ul|ol)\b[^>]*>/i', "\n", $html);
+
+    // Keep ONLY basic inline formatting: strong/b + em/i
+    $allowedInline = '<strong><b><em><i>';
+    $text = strip_tags($html, $allowedInline);
+
+    // Collapse excessive blank lines
+    $text = preg_replace("/\n{3,}/", "\n\n", $text);
+
+    // Build safe HTML: convert markdown-style headings to <h1>-<h6>, others to <p>
+    $lines = preg_split("/\r\n|\n|\r/", trim($text));
+    $out = '';
+    foreach ($lines as $line) {
+        $trim = trim($line);
+        if ($trim === '') {
+            continue; // spacing handled by CSS
+        }
+
+        if (preg_match('/^(#{1,6})\s+(.*)$/', $trim, $m)) {
+            $level = strlen($m[1]);
+            // Sanitize heading text but allow strong/em
+            $headingText = strip_tags($m[2], $allowedInline);
+            $out .= "<h{$level}>{$headingText}</h{$level}>\n";
+        } else {
+            // Sanitize paragraph but allow strong/em
+            $para = strip_tags($trim, $allowedInline);
+            $out .= '<p class="mb-2">' . $para . "</p>\n";
+        }
+    }
+@endphp
+
+{!! $out !!}
+</div>
+
+
                 </article>
 
                 <section class="mt-5">

@@ -87,7 +87,7 @@
 
 @section('admin-content')
 <div class="page-header">
-    <h1 class="page-title">Dashboard Overview</h1>
+    <h1 class="page-title">Administrator Dashboard Overview</h1>
     <div class="page-actions">
         <span style="color: var(--cool-gray);">Welcome back, {{ Auth::user()->name }}!</span>
     </div>
