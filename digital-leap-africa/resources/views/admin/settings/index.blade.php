@@ -88,6 +88,160 @@
             </div>
         </div>
 
+        <!-- Homepage Hero (Carousel) -->
+        <div class="settings-card">
+            <div class="settings-card-header" onclick="toggleSection('hero')">
+                <h3><i class="fas fa-images me-2"></i>Homepage Hero (Carousel)</h3>
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </div>
+            <div class="settings-card-content" id="hero">
+                @php
+                    $existingSlides = [];
+                    if (!empty($settings['hero_slides'])) {
+                        $decoded = json_decode($settings['hero_slides'], true);
+                        if (is_array($decoded)) { $existingSlides = $decoded; }
+                    }
+                    if (empty($existingSlides)) {
+                        $existingSlides = [[
+                            'enabled' => 1,
+                            'image' => null,
+                            'mini' => '', 'title' => '', 'sub' => '',
+                            'cta1_label' => '', 'cta1_route' => '',
+                            'cta2_label' => '', 'cta2_route' => '',
+                        ]];
+                    }
+                @endphp
+
+                <div id="hero-slides-list">
+                    @foreach($existingSlides as $i => $s)
+                        <div class="border rounded p-3 mb-3 hero-slide-item" data-index="{{ $i }}" style="border-color: rgba(255,255,255,0.1);">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h4 class="h6 m-0">Slide <span class="hero-slide-number">{{ $i + 1 }}</span></h4>
+                                <button type="button" class="btn-outline btn-sm" onclick="removeHeroSlide(this)">Remove</button>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group" style="align-self:center;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="hero_slides[{{ $i }}][enabled]" value="1" {{ !empty($s['enabled']) ? 'checked' : '' }}>
+                                        <label class="form-check-label">Enable this slide</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Slide Image</label>
+                                    <input type="file" name="hero_slides[{{ $i }}][image]" class="form-control" accept="image/*">
+                                    @if(!empty($s['image']))
+                                        <input type="hidden" name="hero_slides[{{ $i }}][existing_image]" value="{{ $s['image'] }}">
+                                        <div class="mt-2">
+                                            <img src="{{ $s['image'] }}" alt="Slide {{ $i+1 }}" style="max-height:120px;border-radius:8px;background:#fff;">
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Mini Title</label>
+                                    <input type="text" name="hero_slides[{{ $i }}][mini]" class="form-control" value="{{ $s['mini'] ?? '' }}" placeholder="e.g., New">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Main Title</label>
+                                    <input type="text" name="hero_slides[{{ $i }}][title]" class="form-control" value="{{ $s['title'] ?? '' }}" placeholder="Main headline">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Sub Text</label>
+                                <textarea name="hero_slides[{{ $i }}][sub]" class="form-control" rows="2" placeholder="Short supporting text">{{ $s['sub'] ?? '' }}</textarea>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Primary CTA Label</label>
+                                    <input type="text" name="hero_slides[{{ $i }}][cta1_label]" class="form-control" value="{{ $s['cta1_label'] ?? '' }}" placeholder="e.g., Get Started">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Primary CTA Route Name</label>
+                                    <input type="text" name="hero_slides[{{ $i }}][cta1_route]" class="form-control" value="{{ $s['cta1_route'] ?? '' }}" placeholder="e.g., courses.index">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Secondary CTA Label</label>
+                                    <input type="text" name="hero_slides[{{ $i }}][cta2_label]" class="form-control" value="{{ $s['cta2_label'] ?? '' }}" placeholder="e.g., Learn More">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Secondary CTA Route Name</label>
+                                    <input type="text" name="hero_slides[{{ $i }}][cta2_route]" class="form-control" value="{{ $s['cta2_route'] ?? '' }}" placeholder="e.g., projects.index">
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <button type="button" class="btn-primary" onclick="addHeroSlide()"><i class="fas fa-plus me-1"></i>Add Slide</button>
+                <div class="text-muted mt-2">
+                    Enter Laravel route names for CTAs (e.g., <code>courses.index</code>). Leave CTA fields empty to hide buttons.
+                </div>
+
+                <template id="hero-slide-template">
+                    <div class="border rounded p-3 mb-3 hero-slide-item" data-index="__IDX__" style="border-color: rgba(255,255,255,0.1);">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h4 class="h6 m-0">Slide <span class="hero-slide-number"></span></h4>
+                            <button type="button" class="btn-outline btn-sm" onclick="removeHeroSlide(this)">Remove</button>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="align-self:center;">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="hero_slides[__IDX__][enabled]" value="1" checked>
+                                    <label class="form-check-label">Enable this slide</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Slide Image</label>
+                                <input type="file" name="hero_slides[__IDX__][image]" class="form-control" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Mini Title</label>
+                                <input type="text" name="hero_slides[__IDX__][mini]" class="form-control" placeholder="e.g., New">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Main Title</label>
+                                <input type="text" name="hero_slides[__IDX__][title]" class="form-control" placeholder="Main headline">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Sub Text</label>
+                            <textarea name="hero_slides[__IDX__][sub]" class="form-control" rows="2" placeholder="Short supporting text"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Primary CTA Label</label>
+                                <input type="text" name="hero_slides[__IDX__][cta1_label]" class="form-control" placeholder="e.g., Get Started">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Primary CTA Route Name</label>
+                                <input type="text" name="hero_slides[__IDX__][cta1_route]" class="form-control" placeholder="e.g., courses.index">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Secondary CTA Label</label>
+                                <input type="text" name="hero_slides[__IDX__][cta2_label]" class="form-control" placeholder="e.g., Learn More">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Secondary CTA Route Name</label>
+                                <input type="text" name="hero_slides[__IDX__][cta2_route]" class="form-control" placeholder="e.g., projects.index">
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
         <!-- Appearance -->
         <div class="settings-card">
             <div class="settings-card-header" onclick="toggleSection('appearance')">
@@ -482,6 +636,39 @@ function toggleSection(sectionId) {
 document.addEventListener('DOMContentLoaded', function() {
     toggleSection('basic');
 });
+
+
+
+function addHeroSlide() {
+    const list = document.getElementById('hero-slides-list');
+    const tmpl = document.getElementById('hero-slide-template').innerHTML;
+    const idx = list.querySelectorAll('.hero-slide-item').length;
+    const html = tmpl.replaceAll('__IDX__', idx);
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = html.trim();
+    const node = wrapper.firstChild;
+    list.appendChild(node);
+    renumberHeroSlides();
+}
+
+function removeHeroSlide(btn) {
+    const item = btn.closest('.hero-slide-item');
+    if (!item) return;
+    item.parentNode.removeChild(item);
+    renumberHeroSlides();
+}
+
+function renumberHeroSlides() {
+    const items = document.querySelectorAll('#hero-slides-list .hero-slide-item');
+    items.forEach((el, i) => {
+        el.dataset.index = i;
+        const num = el.querySelector('.hero-slide-number');
+        if (num) num.textContent = (i + 1);
+        el.querySelectorAll('[name]').forEach(inp => {
+            inp.name = inp.name.replace(/hero_slides\[[0-9]+\]/, `hero_slides[${i}]`);
+        });
+    });
+}
 </script>
 @endpush
 @endsection
