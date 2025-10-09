@@ -21,7 +21,7 @@ use App\Http\Controllers\Admin\{
     ProjectController as AdminProjectController,
     ELibraryResourceController as AdminELibraryResourceController,
     SiteSettingController as AdminSiteSettingController,
-    TopicController as AdminTopicController,
+    AdminTopicController,
     LessonController as AdminLessonController,
     EventController as AdminEventController,
     ForumController as AdminForumController,
@@ -162,8 +162,14 @@ Route::prefix('admin')
 
         Route::get('/courses/{course}/manage', [AdminCourseController::class, 'manage'])->name('courses.manage');
         Route::get('courses/{course}/lessons', function(\App\Models\Course $course) {
-            // e.g., redirect to topics index or render a custom page
-            return redirect()->route('admin.courses.topics.index', $course);
+            $topic = $course->topics()->orderBy('created_at')->first();
+            if (!$topic) {
+                return redirect()
+                    ->route('admin.courses.topics.index', $course)
+                    ->with('error', 'Create a topic first to manage lessons.');
+            }
+            // Render the existing view that expects $topic
+            return view('admin.courses.lessons.index', compact('topic'));
         })->name('courses.lessons.index');
 
         Route::prefix('courses/{course}')->group(function () {
@@ -180,7 +186,7 @@ Route::prefix('admin')
         Route::get('topics/{topic}/lessons', [AdminLessonController::class, 'index'])
         ->name('topics.lessons.index');
         
-       
+        Route::get('courses/{course}/topics/create', [AdminTopicController::class, 'create'])->name('courses.topics.create');
 
                 // Nested Topics under Courses
         Route::prefix('courses/{course}')->group(function () {

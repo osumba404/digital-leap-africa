@@ -8,10 +8,10 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-primary-light shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-100">
-                    <form method="POST" action="{{ route('admin.topics.lessons.update', [$topic, $lesson]) }}">
+                    <form method="POST" action="{{ route('admin.topics.lessons.update', [$topic, $lesson]) }}" enctype="multipart/form-data">
                         @method('PATCH')
                         @csrf
-                        @include('admin.lessons._form')
+                        @include('admin.courses.lessons._form')
                     </form>
                 </div>
             </div>

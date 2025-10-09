@@ -12,7 +12,7 @@ class TopicController extends Controller
     // Display the list of topics for a specific course
     public function index(Course $course)
     {
-        return view('admin.topics.index', compact('course'));
+        return view('admin.courses.topics.index', compact('course'));
     }
 
     // Store a new topic for a specific course
