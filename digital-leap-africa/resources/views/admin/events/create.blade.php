@@ -9,7 +9,7 @@
   <div class="container" style="max-width: 48rem;">
     <div class="bg-primary-light shadow-sm rounded">
       <div class="p-4 text-gray-200">
-        <form method="POST" action="{{ route('admin.events.store') }}">
+        <form method="POST" action="{{ route('admin.events.store') }}" enctype="multipart/form-data">
           @include('admin.events._form')
         </form>
       </div>

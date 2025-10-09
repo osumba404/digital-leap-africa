@@ -12,6 +12,7 @@ use App\Http\Controllers\{
     ForumController,
     LessonController,
     ArticlesController
+   
 };
 
 use App\Http\Controllers\Admin\{
@@ -26,7 +27,9 @@ use App\Http\Controllers\Admin\{
     ForumController as AdminForumController,
     ArticleController as AdminArticleController,
     DashboardController as AdminDashboardController,
-    AboutController as AdminAboutController
+    AboutController as AdminAboutController,
+    AssignmentController as AdminAssignmentController
+   
 };
 
 // Authentication Routes
@@ -56,6 +59,10 @@ Route::view('/contact', 'contact')->name('contact');
 Route::view('/donate', 'donate')->name('donate');
 
 
+Route::get('/events', [EventController::class, 'index'])->name('events.index');
+Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
+
+
 
 
 // --- DASHBOARD ROUTE (AUTHENTICATED) ---
@@ -64,18 +71,9 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-// --- HOME ROUTE (CONDITIONAL) ---
-// Route::get('/', function() {
-//     if (auth()->check()) {
-//         return redirect()->route('dashboard');
-//     }
-//     return app(\App\Http\Controllers\PageController::class)->home();
-// })->name('home');
 
 // --- AUTHENTICATED USER ROUTES ---
 Route::middleware(['auth', 'verified'])->group(function () {
-
-
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -85,6 +83,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
     Route::post('/lessons/{lesson}/complete', [LessonController::class, 'complete'])->name('lessons.complete');
 });
+
+
+
 
 // --- ADMIN ROUTES ---
 Route::prefix('admin')
@@ -156,7 +157,29 @@ Route::prefix('admin')
         //Route::resource('articles', AdminArticleController::class)->except(['show']);
 
          // Courses
-         Route::resource('courses', AdminCourseController::class)->except(['show']);
+        Route::resource('courses', AdminCourseController::class)->except(['show']);
+
+
+        Route::get('/courses/{course}/manage', [AdminCourseController::class, 'manage'])->name('courses.manage');
+        Route::get('courses/{course}/lessons', function(\App\Models\Course $course) {
+            // e.g., redirect to topics index or render a custom page
+            return redirect()->route('admin.courses.topics.index', $course);
+        })->name('courses.lessons.index');
+
+        Route::prefix('courses/{course}')->group(function () {
+            Route::resource('assignments', AdminAssignmentController::class)
+                ->names([
+                    'index' => 'courses.assignments.index',
+                    'create' => 'courses.assignments.create',
+                    'store' => 'courses.assignments.store',
+                    'edit' => 'courses.assignments.edit',
+                    'update' => 'courses.assignments.update',
+                    'destroy' => 'courses.assignments.destroy',
+                ])->except(['show']);
+        });
+        Route::get('topics/{topic}/lessons', [AdminLessonController::class, 'index'])
+        ->name('topics.lessons.index');
+        
        
 
                 // Nested Topics under Courses
@@ -182,11 +205,6 @@ Route::prefix('admin')
         });
 
 
-        // Settings
-        // Route::prefix('settings')->name('settings.')->group(function () {
-        //     Route::get('/', [AdminSiteSettingController::class, 'index'])->name('index');
-        //     Route::post('/', [AdminSiteSettingController::class, 'update'])->name('update');
-        // });
 
         
 

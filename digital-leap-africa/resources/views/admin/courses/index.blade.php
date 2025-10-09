@@ -66,6 +66,11 @@
                     </form>
                 </div>
             </td>
+            <td>
+            <a href="{{ route('admin.courses.manage', $course) }}" class="btn btn-sm btn-primary">
+                <i class="fas fa-sitemap me-1"></i>Manage
+            </a>
+            </td>
         </tr>
         @endforeach
     </tbody>
