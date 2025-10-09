@@ -1,33 +1,35 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-100 leading-tight">
-            {{ __('Event Details') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-primary-light overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    <h1 class="text-2xl font-bold text-white">{{ $event->title }}</h1>
-                    <p class="mt-2 text-gray-400 text-sm">
-                        {{ $event->location }} &middot; 
-                        <span class="text-accent">{{ $event->date->format('F j, Y, g:i a') }}</span>
-                    </p>
+@section('title', $event->title ?? 'Event')
 
-                    <div class="mt-6 text-gray-300 leading-relaxed">
-                        {!! nl2br(e($event->description)) !!}
-                    </div>
-
-                    <div class="mt-6">
-                        <a href="{{ route('events.index') }}">
-                            <button class="px-4 py-2 bg-secondary-dark hover:bg-accent text-white text-xs font-semibold rounded-md">
-                                ← Back to Events
-                            </button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+@section('content')
+<section class="container">
+    <div class="mb-3">
+        <a class="btn-outline btn-sm" href="{{ route('events.index') }}">&larr; Back to Events</a>
     </div>
-</x-app-layout>
+
+    <div class="card">
+        <h1 class="m-0">{{ $event->title }}</h1>
+        <div class="text-muted mt-1">
+            {{ optional($event->date)->format('M j, Y g:ia') }} • {{ $event->location }}
+        </div>
+
+        @if(!empty($event->image_path))
+            <img class="mt-3" src="{{ $event->image_path }}" alt="{{ $event->title }}"
+                 style="width:100%;max-height:420px;object-fit:cover;border-radius:12px;">
+        @endif
+
+        @if(!empty($event->registration_url))
+            <div class="mt-3">
+                <a class="btn-primary" href="{{ $event->registration_url }}" target="_blank" rel="noopener">Register</a>
+            </div>
+        @endif
+
+        @if(!empty($event->description))
+            <div class="mt-3" style="color:var(--diamond-white);">
+                {!! nl2br(e($event->description)) !!}
+            </div>
+        @endif
+    </div>
+</section>
+@endsection

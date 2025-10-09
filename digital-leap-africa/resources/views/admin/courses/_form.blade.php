@@ -25,8 +25,16 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div class="form-group">
                 <label for="instructor" class="form-label">Instructor</label>
-                <input type="text" id="instructor" name="instructor" class="form-control" 
-                       value="{{ old('instructor', $course->instructor ?? '') }}">
+                <select id="instructor" name="instructor" class="form-control" required>
+                    <option value="">Select Instructor</option>
+                    @foreach(($instructors ?? []) as $instructor)
+                        <option value="{{ $instructor->name }}" 
+                            {{ old('instructor', $course->instructor ?? '') === $instructor->name ? 'selected' : '' }}>
+                            {{ $instructor->name }}
+                        </option>
+                    @endforeach
+                </select>
+                <small style="color: var(--cool-gray); font-size: 0.85rem;">Sourced from users with role "admin".</small>
             </div>
 
             <div class="form-group">
@@ -39,18 +47,30 @@
                 </select>
             </div>
         </div>
+
+        <div class="form-group" style="margin-top: 0.5rem;">
+            <label class="form-label" for="active">Active</label>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+                <input type="checkbox" id="active" name="active" value="1" 
+                       {{ old('active', isset($course) ? (int)($course->active ?? 1) : 1) ? 'checked' : '' }}>
+                <span style="color: var(--cool-gray);">Toggle to make this course active/inactive</span>
+            </div>
+        </div>
     </div>
 
     <div class="form-section">
         <h3 class="form-section-title">Media & Resources</h3>
         
         <div class="form-group">
-            <label for="image_url" class="form-label">Course Image URL</label>
-            <input type="url" id="image_url" name="image_url" class="form-control" 
-                   value="{{ old('image_url', $course->image_url ?? '') }}">
-            <small style="color: var(--cool-gray); font-size: 0.85rem;">
-                Enter a URL to an image that represents this course.
-            </small>
+            <label for="image_url" class="form-label">Course Image</label>
+            <input type="file" id="image_url" name="image_url" accept="image/*" class="form-control">
+            <small style="color: var(--cool-gray); font-size: 0.85rem;">Upload an image from your computer.</small>
+            @if(!empty($course?->image_url))
+                <div style="margin-top:0.5rem;">
+                    <div class="text-muted small">Current image:</div>
+                    <img src="{{ $course->image_url }}" alt="Course image" style="max-height:140px;border-radius:8px;">
+                </div>
+            @endif
         </div>
     </div>
 

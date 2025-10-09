@@ -1,5 +1,7 @@
 @extends('admin.layout')
 
+@section('admin-content')
+
 @php
 $hideAdminNav = true;
 @endphp
@@ -14,7 +16,7 @@ $hideAdminNav = true;
     </div>
 </div>
 
-<form method="POST" action="{{ route('admin.courses.store') }}">
+<form method="POST" action="{{ route('admin.courses.store') }}" enctype="multipart/form-data">
     @csrf
     @include('admin.courses._form')
 </form>

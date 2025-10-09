@@ -9,7 +9,7 @@
   <div class="container" style="max-width: 48rem;">
     <div class="bg-primary-light shadow-sm rounded">
       <div class="p-4 text-gray-200">
-        <form method="POST" action="{{ route('admin.events.update', $event) }}">
+        <form method="POST" action="{{ route('admin.events.update', $event) }}" enctype="multipart/form-data">
           @method('PATCH')
           @include('admin.events._form')
         </form>
