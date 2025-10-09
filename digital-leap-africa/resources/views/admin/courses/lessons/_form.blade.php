@@ -1,44 +1,95 @@
 @php
-    $currentType = old('type', $lesson->type ?? 'note');
+    // Ensure $lesson variable exists; in index it's provided as new Lesson()
 @endphp
 
-<div class="d-flex flex-column gap-3">
-    <!-- Title -->
+<div class="space-y-4">
     <div>
         <x-input-label for="title" value="Lesson Title" />
-        <x-text-input id="title" name="title" type="text" class="mt-1" :value="old('title', $lesson->title)" required />
+        <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" value="{{ old('title', $lesson->title ?? '') }}" required />
+        <x-input-error :messages="$errors->get('title')" class="mt-2" />
     </div>
 
-    <!-- Lesson Type -->
     <div>
         <x-input-label for="type" value="Lesson Type" />
-        <select id="type" name="type" class="form-select bg-primary-light text-gray-200 border-0 mt-1">
-            <option value="note" {{ $currentType === 'note' ? 'selected' : '' }}>Note / Article</option>
-            <option value="video" {{ $currentType === 'video' ? 'selected' : '' }}>Video</option>
-            <option value="assignment" {{ $currentType === 'assignment' ? 'selected' : '' }}>Assignment</option>
-            <option value="quiz" {{ $currentType === 'quiz' ? 'selected' : '' }}>Quiz</option>
+        <select id="type" name="type" class="mt-1 block w-full">
+            @php $selectedType = old('type', $lesson->type ?? 'note'); @endphp
+            <option value="note" {{ $selectedType === 'note' ? 'selected' : '' }}>Note</option>
+            <option value="video" {{ $selectedType === 'video' ? 'selected' : '' }}>Video</option>
+            <option value="assignment" {{ $selectedType === 'assignment' ? 'selected' : '' }}>Assignment</option>
+            <option value="quiz" {{ $selectedType === 'quiz' ? 'selected' : '' }}>Quiz</option>
         </select>
+        <x-input-error :messages="$errors->get('type')" class="mt-2" />
     </div>
 
-    <!-- Content (for Notes/Assignments) -->
-    <div id="group-content" class="{{ in_array($currentType, ['note','assignment']) ? '' : 'd-none' }}">
-        <x-input-label for="content" value="Content / Instructions" />
-        <textarea id="content" name="content" class="form-control bg-primary-light text-gray-200 border-0 mt-1" rows="10">{{ old('content', $lesson->content) }}</textarea>
+    <div id="group-content">
+        <x-input-label for="content" value="Content / Description" />
+        <textarea id="content" name="content" rows="5" class="mt-1 block w-full">{{ old('content', $lesson->content ?? '') }}</textarea>
+        <x-input-error :messages="$errors->get('content')" class="mt-2" />
     </div>
 
-    <!-- Video URL (for Videos) -->
-    <div id="group-video" class="{{ $currentType === 'video' ? '' : 'd-none' }}">
-        <x-input-label for="video_url" value="Video URL (e.g., YouTube, Vimeo)" />
-        <x-text-input id="video_url" name="video_url" type="url" class="mt-1" :value="old('video_url', $lesson->video_url)" />
+    <div id="group-code">
+        <div class="flex items-center justify-between">
+            <x-input-label value="Code Snippets" />
+            <button type="button" id="add-code-snippet" class="btn btn-sm btn-outline">+ Add snippet</button>
+        </div>
+        <div id="code-snippets-container" class="mt-2 space-y-2">
+            @foreach ($lesson->code_snippets ?? [] as $code_snippet)
+                <textarea name="code_snippet[]" rows="6" class="block w-full font-mono" placeholder="Paste code here...">{{ $code_snippet }}</textarea>
+            @endforeach
+            {{-- Initial snippet field --}}
+            <textarea name="code_snippet[]" rows="6" class="block w-full font-mono" placeholder="Paste code here...">{{ old('code_snippet.0') }}</textarea>
+        </div>
+        <small class="text-muted">You can paste multiple code snippets. No limit.</small>
+        <x-input-error :messages="$errors->get('code_snippet')" class="mt-2" />
     </div>
 
-    <!-- Resource URL (for Assignments, etc.) -->
-    <div id="group-resource" class="{{ $currentType === 'assignment' ? '' : 'd-none' }}">
-        <x-input-label for="resource_url" value="Downloadable Resource URL (e.g., PDF)" />
-        <x-text-input id="resource_url" name="resource_url" type="url" class="mt-1" :value="old('resource_url', $lesson->resource_url)" />
+    <div id="group-video" class="d-none">
+        <x-input-label for="video_url" value="Video URL (optional)" />
+        <x-text-input id="video_url" name="video_url" type="url" class="mt-1 block w-full" value="{{ old('video_url', $lesson->video_url ?? '') }}" />
+        <x-input-error :messages="$errors->get('video_url')" class="mt-2" />
     </div>
 
-    <x-primary-button>{{ $lesson->exists ? 'Update Lesson' : 'Create Lesson' }}</x-primary-button>
+    <div id="group-resource" class="mt-2">
+        <x-input-label value="Resource Files (any type)" />
+        <input type="file" name="resource_files[]" class="mt-1 block w-full" multiple>
+        <small class="text-muted">Upload one or more resource files. No limit.</small>
+        <x-input-error :messages="$errors->get('resource_files')" class="mt-2" />
+    </div>
+
+    @if(!empty($lesson->resource_paths))
+    <div class="mt-2">
+        <div class="text-sm text-gray-400">Existing resources:</div>
+        <ul class="list-disc pl-5">
+        @foreach($lesson->resource_paths as $path)
+            <li><a class="text-accent" href="{{ $path }}" target="_blank" rel="noopener">{{ basename($path) }}</a></li>
+        @endforeach
+        </ul>
+    </div>
+    @endif
+
+    <div id="group-attachments" class="mt-2">
+        <x-input-label value="Image Attachments" />
+        <input type="file" name="attachment_images[]" accept="image/*" class="mt-1 block w-full" multiple>
+        <small class="text-muted">Upload one or more images. No limit.</small>
+        <x-input-error :messages="$errors->get('attachment_images')" class="mt-2" />
+    </div>
+
+    @if(!empty($lesson->attachment_paths))
+    <div class="mt-2">
+        <div class="text-sm text-gray-400">Existing images:</div>
+        <div class="flex flex-wrap gap-2 mt-1">
+        @foreach($lesson->attachment_paths as $img)
+            <a href="{{ $img }}" target="_blank" rel="noopener">
+            <img src="{{ $img }}" alt="Attachment" style="height:70px;border-radius:6px;">
+            </a>
+        @endforeach
+        </div>
+    </div>
+    @endif
+
+    <div class="mt-4">
+        <x-primary-button>{{ $lesson->exists ? 'Update Lesson' : 'Create Lesson' }}</x-primary-button>
+    </div>
 </div>
 
 <script>
@@ -47,13 +98,35 @@
     const grpContent = document.getElementById('group-content');
     const grpVideo = document.getElementById('group-video');
     const grpResource = document.getElementById('group-resource');
+    const grpAttachments = document.getElementById('group-attachments');
+    const grpCode = document.getElementById('group-code');
 
     function updateVisibility() {
       const t = typeSelect.value;
-      grpContent.classList.toggle('d-none', !(t === 'note' || t === 'assignment'));
+      // Show content and code for note/assignment; optional for others but keep available
+      const showTextual = (t === 'note' || t === 'assignment');
+      grpContent.classList.toggle('d-none', !showTextual);
+      grpCode.classList.toggle('d-none', !showTextual);
+      // Video URL only for video type
       grpVideo.classList.toggle('d-none', t !== 'video');
-      grpResource.classList.toggle('d-none', t !== 'assignment');
+      // Always allow uploads
+      grpResource.classList.remove('d-none');
+      grpAttachments.classList.remove('d-none');
     }
+
     typeSelect.addEventListener('change', updateVisibility);
+    updateVisibility();
+
+    // Add more code snippet blocks
+    const addBtn = document.getElementById('add-code-snippet');
+    const container = document.getElementById('code-snippets-container');
+    addBtn.addEventListener('click', function(){
+      const ta = document.createElement('textarea');
+      ta.name = 'code_snippets[]';
+      ta.rows = 6;
+      ta.className = 'block w-full font-mono';
+      ta.placeholder = 'Paste code here...';
+      container.appendChild(ta);
+    });
   });
 </script>

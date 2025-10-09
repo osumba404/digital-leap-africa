@@ -1,47 +1,40 @@
 @extends('admin.layout')
 
-@section('title', 'Edit Topic')
+@section('admin-content')
+<div class="page-header">
+  <h1 class="page-title">
+    {{-- For create --}}
+    New Topic for: {{ $course->title }}
+    {{-- For edit --}}
+    Edit Topic: {{ $topic->title }}
+  </h1>
+  <div class="page-actions">
+    <a href="{{ route('admin.courses.topics.index', $course) }}" class="btn-outline">
+      <i class="fas fa-arrow-left me-2"></i>Back to Topics
+    </a>
+  </div>
+</div>
 
-@section('content')
-    <div class="p-6">
-        <h2 class="text-2xl font-semibold mb-4">Edit Topic: {{ $topic->title }}</h2>
-        
-        <form action="{{ route('admin.courses.topics.update', [$course, $topic]) }}" method="POST">
-            @csrf
-            @method('PUT')
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
-                    Title
-                </label>
-                <input type="text" name="title" id="title" value="{{ old('title', $topic->title) }}" required
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            </div>
-            
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
-                    Description
-                </label>
-                <textarea name="description" id="description" rows="3"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('description', $topic->description) }}</textarea>
-            </div>
-            
-            <div class="mb-4">
-                <label class="flex items-center">
-                    <input type="checkbox" name="is_active" value="1" 
-                        {{ $topic->is_active ? 'checked' : '' }}
-                        class="form-checkbox">
-                    <span class="ml-2 text-gray-700">Active</span>
-                </label>
-            </div>
-            
-            <div class="flex items-center justify-between">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Update Topic
-                </button>
-                <a href="{{ route('admin.courses.edit', $course) }}" class="text-gray-600 hover:text-gray-800">
-                    Cancel
-                </a>
-            </div>
-        </form>
+<div class="admin-content">
+  <div class="card">
+    <div class="card-body">
+    
+
+      
+      <form method="POST" action="{{ route('admin.courses.topics.update', [$course, $topic]) }}">
+        @csrf @method('PUT')
+        <div class="form-group">
+          <label class="form-label">Title</label>
+          <input type="text" name="title" class="form-control" value="{{ old('title', $topic->title) }}" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea name="description" class="form-control" rows="3">{{ old('description', $topic->description) }}</textarea>
+        </div>
+        <button class="btn-primary">Save Changes</button>
+      </form>
+    
     </div>
+  </div>
+</div>
 @endsection

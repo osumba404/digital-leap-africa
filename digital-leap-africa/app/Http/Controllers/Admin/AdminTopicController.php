@@ -31,7 +31,7 @@ class AdminTopicController extends Controller
 
         $course->topics()->create($validated);
 
-        return redirect()->route('admin.courses.edit', $course)
+        return redirect()->route('admin.courses.topics.index', $course)
             ->with('success', 'Topic created successfully.');
     }
 
