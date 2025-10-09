@@ -20,10 +20,10 @@
           <input type="text" name="title" id="title" value="{{ old('title') }}" class="form-control" required>
         </div>
 
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label class="form-label" for="description">Description</label>
           <textarea name="description" id="description" rows="3" class="form-control">{{ old('description') }}</textarea>
-        </div>
+        </div> -->
 
         <div class="d-flex align-items-center gap-2">
           <button type="submit" class="btn-primary">Create Topic</button>
