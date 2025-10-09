@@ -12,6 +12,7 @@ use App\Http\Controllers\{
     ForumController,
     LessonController,
     ArticlesController
+    
    
 };
 
@@ -63,6 +64,15 @@ Route::get('/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
 
 
+// View a lesson
+Route::get('/lessons/{lesson}', [LessonController::class, 'show'])
+    ->middleware('auth') // optional but recommended, since show() accesses Auth::user()
+    ->name('lessons.show');
+
+// Mark a lesson as complete
+Route::post('/lessons/{lesson}/complete', [LessonController::class, 'complete'])
+    ->middleware('auth')
+    ->name('lessons.complete');
 
 
 // --- DASHBOARD ROUTE (AUTHENTICATED) ---
@@ -183,9 +193,16 @@ Route::prefix('admin')
                     'destroy' => 'courses.assignments.destroy',
                 ])->except(['show']);
         });
+ 
         Route::get('topics/{topic}/lessons', [AdminLessonController::class, 'index'])
         ->name('topics.lessons.index');
         
+
+
+ 
+
+
+
         Route::get('courses/{course}/topics/create', [AdminTopicController::class, 'create'])->name('courses.topics.create');
 
                 // Nested Topics under Courses
@@ -199,6 +216,16 @@ Route::prefix('admin')
                     'update' => 'courses.topics.update',
                     'destroy' => 'courses.topics.destroy'
                 ]);
+
+                    Route::get('topics/{topic}/lessons', [AdminLessonController::class, 'index'])
+                    ->name('topics.lessons.index');
+                    // Delete a single resource file by index
+                    Route::delete('topics/{topic}/lessons/{lesson}/resources/{index}', [AdminLessonController::class, 'destroyResource'])
+                        ->name('topics.lessons.resources.destroy');
+                    // Delete a single attachment image by index
+                    Route::delete('topics/{topic}/lessons/{lesson}/attachments/{index}', [AdminLessonController::class, 'destroyAttachment'])
+                        ->name('topics.lessons.attachments.destroy');
+                
         });
 
             Route::resource('topics.lessons', AdminLessonController::class)->except(['index', 'show']);

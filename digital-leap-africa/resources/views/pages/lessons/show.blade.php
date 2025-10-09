@@ -167,9 +167,63 @@
             </div>
         @endif
 
+        {{-- Code Snippets --}}
+        @php $snippets = (array) ($lesson->code_snippet ?? []); @endphp
+        @if(!empty($snippets))
+            <div class="lesson-content">
+                <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Code Snippets</h3>
+                <div class="d-flex flex-column gap-3">
+                    @foreach($snippets as $i => $snippet)
+                        @if(filled($snippet))
+                            <div>
+                                <div style="color: var(--cool-gray); font-weight: 600; margin-bottom: .5rem;">Snippet {{ $i+1 }}</div>
+                                <pre style="background: #0b1220; color: #cbd5e1; padding: 1rem; border-radius: 8px; overflow:auto;"><code>{{ $snippet }}</code></pre>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        {{-- Resource Files --}}
+        @php $resources = (array) ($lesson->resource_url ?? []); @endphp
+        @if(!empty($resources))
+            <div class="lesson-content">
+                <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Resources</h3>
+                <ul style="list-style: disc; padding-left: 1.25rem; color: var(--cool-gray);">
+                    @foreach($resources as $url)
+                        @if(filled($url))
+                            <li>
+                                <a href="{{ $url }}" target="_blank" rel="noopener" class="lesson-link">
+                                    <i class="fas fa-file-arrow-down me-2"></i>{{ basename(parse_url($url, PHP_URL_PATH) ?? $url) }}
+                                </a>
+                            </li>
+                        @endif
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        {{-- Attachments (Images) --}}
+        @php $attachments = (array) ($lesson->attachment_path ?? []); @endphp
+        @if(!empty($attachments))
+            <div class="lesson-content">
+                <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Attachments</h3>
+                <div style="display:flex; flex-wrap: wrap; gap: .75rem;">
+                    @foreach($attachments as $img)
+                        @if(filled($img))
+                            <a href="{{ $img }}" target="_blank" rel="noopener">
+                                <img src="{{ $img }}" alt="Attachment" style="height:120px; border-radius: 8px;">
+                            </a>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         {{-- Completion Section --}}
         <div class="completion-section">
-            @if(Auth::user()->lessons()->where('lesson_id', $lesson->id)->exists())
+            @if(Auth::check() && Auth::user()->lessons()->where('lesson_id', $lesson->id)->exists())
                 <div class="completed-badge">
                     <i class="fas fa-check-circle"></i>
                     <span>Lesson Completed!</span>
@@ -178,12 +232,18 @@
             @else
                 <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Ready to mark this lesson as complete?</h3>
                 <p style="color: var(--cool-gray); margin-bottom: 2rem;">Once you've finished reviewing the content, mark it as complete to track your progress.</p>
-                <form method="POST" action="{{ route('lessons.complete', $lesson) }}" style="display: inline;">
-                    @csrf
-                    <button type="submit" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
-                        <i class="fas fa-check me-2"></i>Mark as Complete
-                    </button>
-                </form>
+                @auth
+                    <form method="POST" action="{{ route('lessons.complete', $lesson) }}" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
+                            <i class="fas fa-check me-2"></i>Mark as Complete
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
+                        <i class="fas fa-sign-in-alt me-2"></i>Log in to mark complete
+                    </a>
+                @endauth
             @endif
             
             <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">

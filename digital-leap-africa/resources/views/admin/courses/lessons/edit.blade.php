@@ -1,20 +1,25 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-100 leading-tight">
-            Edit Lesson: <span class="text-accent">{{ $lesson->title }}</span>
-        </h2>
-    </x-slot>
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-primary-light shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-100">
-                    <form method="POST" action="{{ route('admin.topics.lessons.update', [$topic, $lesson]) }}" enctype="multipart/form-data">
-                        @method('PATCH')
-                        @csrf
-                        @include('admin.courses.lessons._form')
-                    </form>
-                </div>
-            </div>
-        </div>
+@extends('admin.layout')
+
+@section('admin-content')
+
+<div class="page-header">
+  <h1 class="page-title">Edit Lesson: <span class="text-accent">{{ $lesson->title }}</span></h1>
+  <div class="page-actions">
+    <a href="{{ route('admin.topics.lessons.index', [$topic->course, $topic]) }}" class="btn-outline">
+      <i class="fas fa-arrow-left me-2"></i>Back to Lessons
+    </a>
+  </div>
+</div>
+
+<div class="admin-content">
+  <div class="card">
+    <div class="card-body">
+      <form method="POST" action="{{ route('admin.topics.lessons.update', [$topic, $lesson]) }}" enctype="multipart/form-data">
+        @method('PATCH')
+        @csrf
+        @include('admin.courses.lessons._form')
+      </form>
     </div>
-</x-app-layout>
+  </div>
+</div>
+@endsection
