@@ -27,10 +27,10 @@
           <label class="form-label">Title</label>
           <input type="text" name="title" class="form-control" value="{{ old('title', $topic->title) }}" required>
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label class="form-label">Description</label>
           <textarea name="description" class="form-control" rows="3">{{ old('description', $topic->description) }}</textarea>
-        </div>
+        </div> -->
         <button class="btn-primary">Save Changes</button>
       </form>
     
