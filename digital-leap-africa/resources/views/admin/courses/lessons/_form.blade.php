@@ -1,7 +1,3 @@
-@php
-    // Ensure $lesson variable exists; in index it's provided as new Lesson()
-@endphp
-
 <div class="space-y-4">
     <div>
         <x-input-label for="title" value="Lesson Title" />
@@ -33,7 +29,7 @@
             <button type="button" id="add-code-snippet" class="btn btn-sm btn-outline">+ Add snippet</button>
         </div>
         <div id="code-snippets-container" class="mt-2 space-y-2">
-            @foreach ($lesson->code_snippets ?? [] as $code_snippet)
+            @foreach (($lesson->code_snippet ?? []) as $code_snippet)
                 <textarea name="code_snippet[]" rows="6" class="block w-full font-mono" placeholder="Paste code here...">{{ $code_snippet }}</textarea>
             @endforeach
             {{-- Initial snippet field --}}
@@ -56,13 +52,13 @@
         <x-input-error :messages="$errors->get('resource_files')" class="mt-2" />
     </div>
 
-    @if(!empty($lesson->resource_paths))
+    @if(!empty($lesson->resource_url))
     <div class="mt-2">
         <div class="text-sm text-gray-400">Existing resources:</div>
         <ul class="list-disc pl-5">
-        @foreach($lesson->resource_paths as $path)
-            <li><a class="text-accent" href="{{ $path }}" target="_blank" rel="noopener">{{ basename($path) }}</a></li>
-        @endforeach
+            @foreach (($lesson->resource_url ?? []) as $path)
+                <li><a class="text-accent" href="{{ $path }}" target="_blank" rel="noopener">{{ basename($path) }}</a></li>
+            @endforeach
         </ul>
     </div>
     @endif
@@ -74,21 +70,21 @@
         <x-input-error :messages="$errors->get('attachment_images')" class="mt-2" />
     </div>
 
-    @if(!empty($lesson->attachment_paths))
+    @if(!empty($lesson->attachment_path))
     <div class="mt-2">
         <div class="text-sm text-gray-400">Existing images:</div>
         <div class="flex flex-wrap gap-2 mt-1">
-        @foreach($lesson->attachment_paths as $img)
-            <a href="{{ $img }}" target="_blank" rel="noopener">
-            <img src="{{ $img }}" alt="Attachment" style="height:70px;border-radius:6px;">
-            </a>
-        @endforeach
+            @foreach (($lesson->attachment_path ?? []) as $img)
+                <a href="{{ $img }}" target="_blank" rel="noopener">
+                <img src="{{ $img }}" alt="Attachment" style="height:70px;border-radius:6px;">
+                </a>
+            @endforeach
         </div>
     </div>
     @endif
 
     <div class="mt-4">
-        <x-primary-button>{{ $lesson->exists ? 'Update Lesson' : 'Create Lesson' }}</x-primary-button>
+        <x-primary-button>{{ ($lesson && $lesson->exists) ? 'Update Lesson' : 'Create Lesson' }}</x-primary-button>
     </div>
 </div>
 
@@ -103,26 +99,22 @@
 
     function updateVisibility() {
       const t = typeSelect.value;
-      // Show content and code for note/assignment; optional for others but keep available
       const showTextual = (t === 'note' || t === 'assignment');
       grpContent.classList.toggle('d-none', !showTextual);
       grpCode.classList.toggle('d-none', !showTextual);
-      // Video URL only for video type
       grpVideo.classList.toggle('d-none', t !== 'video');
-      // Always allow uploads
       grpResource.classList.remove('d-none');
       grpAttachments.classList.remove('d-none');
     }
 
-    typeSelect.addEventListener('change', updateVisibility);
+    typeSelect && typeSelect.addEventListener('change', updateVisibility);
     updateVisibility();
 
-    // Add more code snippet blocks
     const addBtn = document.getElementById('add-code-snippet');
     const container = document.getElementById('code-snippets-container');
-    addBtn.addEventListener('click', function(){
+    addBtn && addBtn.addEventListener('click', function(){
       const ta = document.createElement('textarea');
-      ta.name = 'code_snippets[]';
+      ta.name = 'code_snippet[]';
       ta.rows = 6;
       ta.className = 'block w-full font-mono';
       ta.placeholder = 'Paste code here...';

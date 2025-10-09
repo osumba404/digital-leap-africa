@@ -8,8 +8,24 @@ use Illuminate\Database\Eloquent\Model;
 class Lesson extends Model
 {
     use HasFactory;
-    protected $fillable = ['topic_id', 'title', 'type', 'content', 'video_url', 'resource_url', 'order'];
 
+    protected $fillable = [
+        'topic_id',
+        'title',
+        'type',
+        'content',
+        'video_url',
+        'code_snippet',
+        'resource_url',
+        'attachment_path',
+        'order',
+    ];
+    
+    protected $casts = [
+        'code_snippet' => 'array',
+        'resource_url' => 'array',
+        'attachment_path' => 'array',
+    ];
     public function topic()
     {
         return $this->belongsTo(Topic::class);

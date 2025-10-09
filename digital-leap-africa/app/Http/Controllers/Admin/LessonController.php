@@ -26,13 +26,12 @@ class LessonController extends Controller
             'type' => 'required|in:note,video,assignment,quiz',
             'content' => 'nullable|string',
             'video_url' => 'nullable|url',
-            // new:
-            'code_snippet' => 'array',
-            'code_snippet.*' => 'string',
-            'resource_url' => 'array',
-            'resource_url.*' => 'file',
-            'attachment_path' => 'array',
-            'attachment_path.*' => 'image',
+            'code_snippet' => 'nullable|array',
+            'code_snippet.*' => 'nullable|string',
+            'resource_files' => 'nullable|array',
+            'resource_files.*' => 'nullable|file',
+            'attachment_images' => 'nullable|array',
+            'attachment_images.*' => 'nullable|image',
         ]);
         
         $data = [
@@ -40,7 +39,10 @@ class LessonController extends Controller
             'type' => $validated['type'],
             'content' => $validated['content'] ?? null,
             'video_url' => $validated['video_url'] ?? null,
-            'code_snippet' => $validated['code_snippet'] ?? [],
+            'code_snippet' => collect($request->input('code_snippet', []))
+            ->filter(fn ($v) => filled($v))
+            ->values()
+            ->all(),
         ];
         
         $resourcePaths = [];
@@ -50,21 +52,22 @@ class LessonController extends Controller
                 $resourcePaths[] = \Illuminate\Support\Facades\Storage::url($path);
             }
         }
+      
         $data['resource_url'] = $resourcePaths;
         
         $attachmentPaths = [];
-        if ($request->hasFile('attachment_path')) {
-            foreach ($request->file('attachment_path') as $file) {
+        if ($request->hasFile('attachment_images')) {
+            foreach ($request->file('attachment_images') as $file) {
                 $path = $file->store('public/lessons/attachments');
                 $attachmentPaths[] = \Illuminate\Support\Facades\Storage::url($path);
             }
         }
-        $data['attachment_paths'] = $attachmentPaths;
-        
-        // store:
+        $data['attachment_path'] = $attachmentPaths;
+       
+        // Persist the lesson
         $topic->lessons()->create($data);
 
-        return redirect()->route('admin.topics.lessons.index', $topic)->with('success', 'Lesson added successfully.');
+        return redirect()->route('admin.topics.lessons.index', [$topic->course, $topic])->with('success', 'Lesson added successfully.');
     }
 
     // Show the form for editing the specified lesson.
@@ -81,13 +84,12 @@ class LessonController extends Controller
             'type' => 'required|in:note,video,assignment,quiz',
             'content' => 'nullable|string',
             'video_url' => 'nullable|url',
-            // new:
-            'code_snippet' => 'array',
-            'code_snippet.*' => 'string',
-            'resource_url' => 'array',
-            'resource_url.*' => 'file',
-            'attachment_path' => 'array',
-            'attachment_path.*' => 'image',
+            'code_snippet' => 'nullable|array',
+            'code_snippet.*' => 'nullable|string',
+            'resource_files' => 'nullable|array',
+            'resource_files.*' => 'nullable|file',
+            'attachment_images' => 'nullable|array',
+            'attachment_images.*' => 'nullable|image',
         ]);
         
         $data = [
@@ -95,37 +97,66 @@ class LessonController extends Controller
             'type' => $validated['type'],
             'content' => $validated['content'] ?? null,
             'video_url' => $validated['video_url'] ?? null,
-            'code_snippet' => $validated['code_snippet'] ?? [],
+            'code_snippet' => collect($request->input('code_snippet', []))
+                ->filter(fn ($v) => filled($v))
+                ->values()
+                ->all(),
         ];
         
         $resourcePaths = [];
-        if ($request->hasFile('resource_url')) {
-            foreach ($request->file('resource_url') as $file) {
+        if ($request->hasFile('resource_files')) {
+            foreach ($request->file('resource_files') as $file) {
                 $path = $file->store('public/lessons/resources');
                 $resourcePaths[] = \Illuminate\Support\Facades\Storage::url($path);
             }
         }
-        $data['resource_url'] = array_values(array_merge($lesson->resource_paths ?? [], $resourcePaths));
+
+        $data['resource_url'] = array_values(array_merge((array)($lesson->resource_url ?? []), $resourcePaths));
         
         $attachmentPaths = [];
-        if ($request->hasFile('attachment_path')) {
-            foreach ($request->file('attachment_path') as $file) {
+        if ($request->hasFile('attachment_images')) {
+            foreach ($request->file('attachment_images') as $file) {
                 $path = $file->store('public/lessons/attachments');
                 $attachmentPaths[] = \Illuminate\Support\Facades\Storage::url($path);
             }
         }
-        $data['attachment_paths'] = array_values(array_merge($lesson->attachment_paths ?? [], $attachmentPaths));
-
+       
+        $data['attachment_path'] = array_values(array_merge((array)($lesson->attachment_path ?? []), $attachmentPaths));
         
+        // Persist updates
         $lesson->update($data);
 
-        return redirect()->route('admin.topics.lessons.index', $topic)->with('success', 'Lesson updated successfully.');
+        return redirect()->route('admin.topics.lessons.index', [$topic->course, $topic])->with('success', 'Lesson updated successfully.');
     }
 
     // Remove the specified lesson from storage.
     public function destroy(Topic $topic, Lesson $lesson)
     {
         $lesson->delete();
-        return redirect()->route('admin.topics.lessons.index', $topic)->with('success', 'Lesson deleted successfully.');
+        return redirect()->route('admin.topics.lessons.index', [$topic->course, $topic])->with('success', 'Lesson deleted successfully.');
+    }
+
+    // Delete a single resource by index from JSON array
+    public function destroyResource(Topic $topic, Lesson $lesson, int $index)
+    {
+        $resources = (array) ($lesson->resource_url ?? []);
+        if (array_key_exists($index, $resources)) {
+            // Optionally: delete file from storage if it maps to local path
+            array_splice($resources, $index, 1);
+            $lesson->update(['resource_url' => array_values($resources)]);
+        }
+        return back()->with('success', 'Resource removed.');
+    }
+
+    // Delete a single attachment by index from JSON array
+    public function destroyAttachment(Topic $topic, Lesson $lesson, int $index)
+    {
+        $attachments = (array) ($lesson->attachment_path ?? []);
+        if (array_key_exists($index, $attachments)) {
+            // Optionally: delete file from storage if it maps to local path
+            array_splice($attachments, $index, 1);
+            $lesson->update(['attachment_path' => array_values($attachments)]);
+        }
+        return back()->with('success', 'Attachment removed.');
     }
 }
