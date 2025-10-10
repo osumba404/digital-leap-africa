@@ -119,7 +119,7 @@
       ['label'=>'Courses',  'value'=> \App\Models\Course::count(),      'icon'=>'fa-book-open'],
       ['label'=>'Projects', 'value'=> \App\Models\Project::count(),     'icon'=>'fa-diagram-project'],
       ['label'=>'Partners', 'value'=> \App\Models\Partner::count(),     'icon'=>'fa-handshake'],
-      ['label'=>'Team',     'value'=> \App\Models\TeamMember::count(),  'icon'=>'fa-users'],
+      ['label'=>'Members',     'value'=> \App\Models\User::count(),  'icon'=>'fa-users'],
     ];
   @endphp
   <section class="section">
