@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Topic;
 use App\Models\Lesson;
 use Illuminate\Http\Request;
+use App\Models\Course;
 
 class LessonController extends Controller
 {
     // Display a list of the lessons for a specific topic.
-    public function index(Topic $topic)
+    public function index(Course $course, Topic $topic)
     {
         return view('admin.courses.lessons.index', [
             'topic' => $topic,

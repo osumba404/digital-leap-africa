@@ -15,32 +15,50 @@
 <div class="admin-content">
   <div class="card">
     <div class="card-body">
-      <h3 class="h5">Topics</h3>
+      <h3 class="h5 mb-3">Topics</h3>
+
       @if(isset($topics) && $topics->count())
-        @foreach($topics as $topic)
-          <div class="d-flex justify-content-between align-items-center bg-primary p-3 rounded @if(!$loop->last) mb-2 @endif">
-            <div>
-              <span class="fw-semibold">{{ $topic->title }}</span>
-              @if(!empty($topic->type))
-                <span class="ms-3 badge bg-info text-dark text-uppercase">{{ $topic->type }}</span>
-              @endif
-              @if(!empty($topic->description))
-                <div class="text-muted small">{{ \Illuminate\Support\Str::limit($topic->description, 140) }}</div>
-              @endif
-              <div class="text-muted small">Created {{ optional($topic->created_at)->diffForHumans() }}</div>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-              <a href="{{ route('admin.courses.lessons.index', $course) }}" class="btn btn-sm btn-edit">
-                <i class="fas fa-book-open me-1"></i>Manage Lessons
-              </a>
-              <a href="{{ route('admin.courses.topics.edit', [$course, $topic]) }}" class="btn btn-sm btn-outline">Edit</a>
-              <form method="POST" action="{{ route('admin.courses.topics.destroy', [$course, $topic]) }}" onsubmit="return confirm('Are you sure?');" class="m-0">
-                @csrf @method('DELETE')
-                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-              </form>
-            </div>
-          </div>
-        @endforeach
+        <div class="table-responsive">
+          <table class="table table-striped align-middle">
+            <thead>
+              <tr>
+                <th style="width:30%">Title</th>
+                <th style="width:12%">Type</th>
+                <th>Description</th>
+                <th style="width:15%">Created</th>
+                <th style="width:25%" class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($topics as $topic)
+                <tr>
+                  <td class="fw-semibold">{{ $topic->title }}</td>
+                  <td>
+                    @if(!empty($topic->type))
+                      <span class="badge bg-info text-dark text-uppercase">{{ $topic->type }}</span>
+                    @else
+                      <span class="text-muted">—</span>
+                    @endif
+                  </td>
+                  <td class="text-muted">{{ \Illuminate\Support\Str::limit($topic->description ?? '', 140) }}</td>
+                  <td class="text-muted">{{ optional($topic->created_at)->diffForHumans() }}</td>
+                  <td class="text-end">
+                    <div class="d-inline-flex gap-2">
+                      <a href="{{ route('admin.courses.lessons.index', $course) }}" class="btn btn-sm btn-edit">
+                        <i class="fas fa-book-open me-1"></i>Lessons
+                      </a>
+                      <a href="{{ route('admin.courses.topics.edit', [$course, $topic]) }}" class="btn btn-sm btn-outline">Edit</a>
+                      <form method="POST" action="{{ route('admin.courses.topics.destroy', [$course, $topic]) }}" onsubmit="return confirm('Are you sure?');" class="m-0">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
       @else
         <div class="text-muted">No topics yet. Create your first topic.</div>
       @endif
