@@ -192,14 +192,7 @@ Route::prefix('admin')
                     'update' => 'courses.assignments.update',
                     'destroy' => 'courses.assignments.destroy',
                 ])->except(['show']);
-        });
- 
-        Route::get('topics/{topic}/lessons', [AdminLessonController::class, 'index'])
-        ->name('topics.lessons.index');
-        
-
-
- 
+        }); 
 
 
 
