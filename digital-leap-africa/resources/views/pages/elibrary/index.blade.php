@@ -117,9 +117,9 @@
         <a href="?type=video" class="filter-tab {{ request('type') === 'video' ? 'active' : '' }}">
             <i class="fas fa-video me-2"></i>Videos
         </a>
-        <a href="?type=article" class="filter-tab {{ request('type') === 'article' ? 'active' : '' }}">
+        <!-- <a href="?type=article" class="filter-tab {{ request('type') === 'article' ? 'active' : '' }}">
             <i class="fas fa-newspaper me-2"></i>Articles
-        </a>
+        </a> -->
         <a href="?type=tutorial" class="filter-tab {{ request('type') === 'tutorial' ? 'active' : '' }}">
             <i class="fas fa-chalkboard-teacher me-2"></i>Tutorials
         </a>

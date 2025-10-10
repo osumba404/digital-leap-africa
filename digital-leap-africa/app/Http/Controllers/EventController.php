@@ -26,8 +26,8 @@ class EventController extends Controller
             ->orderBy('date', 'desc')
             ->paginate(12);
 
-        $lessons = $topic->lessons()->latest()->paginate(20);
-        return view('admin.lessons.index', compact('topic','lessons'));
+        // $lessons = $topic->lessons()->latest()->paginate(20);
+        // return view('admin.lessons.index', compact('topic','lessons'));
 
         return view('pages.events.index', compact('upcoming', 'ongoing', 'past'));
     }
