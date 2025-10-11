@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\{
     ProfileController,
     PageController,
@@ -94,6 +95,38 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/lessons/{lesson}/complete', [LessonController::class, 'complete'])->name('lessons.complete');
 });
 
+Route::get('/me/photo', function () {
+    $user = auth()->user();
+    if (!$user) {
+        abort(401);
+    }
+
+    $path = (string) ($user->profile_photo ?? '');
+
+    // Normalize: remove accidental leading 'storage/' and leading slashes
+    $path = ltrim(preg_replace('#^storage/#', '', $path), '/');
+
+    // If path is just a filename with no directory, assume 'profile-photos/'
+    if ($path !== '' && strpos($path, '/') === false) {
+        $candidate = 'profile-photos/' . $path;
+        if (Storage::disk('public')->exists($candidate)) {
+            $path = $candidate;
+        }
+    }
+
+    // Final existence check
+    if ($path === '' || !Storage::disk('public')->exists($path)) {
+        // Serve a local fallback avatar without needing storage symlink
+        $fallback = public_path('images/default-avatar.png');
+        if (is_file($fallback)) {
+            return response()->file($fallback);
+        }
+        abort(404);
+    }
+
+    return Storage::disk('public')->response($path);
+})->middleware('auth')->name('me.photo');
+
 
 
 
@@ -160,6 +193,8 @@ Route::prefix('admin')
         // Resource Routes
         Route::resource('jobs', AdminJobController::class)->except(['show']);
         Route::resource('courses', AdminCourseController::class)->except(['show']);
+        Route::get('/courses/{course}/enrollments', [AdminCourseController::class, 'enrollments'])->name('courses.enrollments');
+
         Route::resource('projects', AdminProjectController::class)->except(['show']);
         Route::resource('elibrary-resources', AdminELibraryResourceController::class);
         Route::resource('events', AdminEventController::class)->except(['show']);

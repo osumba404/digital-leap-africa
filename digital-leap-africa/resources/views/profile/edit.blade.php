@@ -276,116 +276,101 @@
 <div class="profile-container">
     <div class="profile-header">
         <h1 class="profile-title">My Profile</h1>
-        <p class="profile-subtitle">Manage your account settings and preferences</p>
+        
+ 
     </div>
 
-    {{-- Gamification Stats --}}
+
+{{-- Gamification Stats --}}
     <div class="profile-section gamification-card">
-        <h2 class="section-title">
-            <i class="fas fa-trophy section-icon"></i>
-            Your Progress
-        </h2>
+      
+        <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1.25rem; align-items: center;">
+            <div>
+
+    <img src="{{ route('me.photo') }}" alt="{{ $user->name }}" style="width:120px;height:120px;object-fit:cover;border-radius:50%;border:3px solid rgba(0,201,255,0.4);" />        
+
+    </div>
+    <div>
+                <div style="font-size: 1.25rem; font-weight: 600;">{{ $user->name }}</div>
+                <div style="color: var(--cool-gray);">{{ $user->email }}</div>
+                <div style="margin-top: 0.5rem; display:flex; gap:0.75rem; flex-wrap: wrap;">
+                    <span class="reply-count"><i class="fas fa-user-tag" style="margin-right:6px;"></i>{{ $user->role ?? 'user' }}</span>
+                    <span class="reply-count"><i class="fas fa-calendar-alt" style="margin-right:6px;"></i>Joined {{ $user->created_at?->format('M d, Y') }}</span>
+                    <span class="reply-count"><i class="fas fa-check" style="margin-right:6px;"></i>{{ $user->email_verified_at ? 'Verified' : 'Not verified' }}</span>
+                    <span class="reply-count"><i class="fas fa-book" style="margin-right:6px;"></i>{{ $user->lessons()->count() }} lessons completed</span>
+                </div>
+            </div>
+        </div>
         <div class="points-display">
-            {{ Auth::user()->getTotalPoints() ?? 0 }}
+            {{ $totalPoints ?? 0 }}
             <span class="points-label">Points</span>
+        </div>
+        <div style="display:flex; gap:0.75rem; flex-wrap:wrap; justify-content:flex-end; margin-top: 0.5rem;">
+            <button type="button" class="btn-primary" style="padding: 0.6rem 1rem;" onclick="document.getElementById('updateProfileModal').style.display='flex'">
+                <i class="fas fa-user-edit" style="margin-right:8px;"></i>Update Profile
+            </button>
+            <button type="button" class="btn-outline" style="padding: 0.6rem 1rem;" onclick="document.getElementById('changePasswordModal').style.display='flex'">
+                <i class="fas fa-key" style="margin-right:8px;"></i>Change Password
+            </button>
         </div>
         <p class="section-description">
             Keep participating in courses, completing projects, and engaging with the community to earn more points and unlock exclusive badges!
         </p>
     </div>
 
-    {{-- Profile Information --}}
     <div class="profile-section">
         <h2 class="section-title">
             <i class="fas fa-user section-icon"></i>
             Profile Information
         </h2>
-        <p class="section-description">
-            Update your account's profile information and email address.
-        </p>
-
+        <div class="section-description">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+                <div>
+                    <div style="color: var(--cool-gray);">Full name</div>
+                    <div style="font-weight:600;">{{ $user->name }}</div>
+                </div>
+                <div>
+                    <div style="color: var(--cool-gray);">Email</div>
+                    <div style="font-weight:600;">{{ $user->email }}</div>
+                </div>
+                <div>
+                    <div style="color: var(--cool-gray);">Role</div>
+                    <div style="font-weight:600;">{{ $user->role ?? 'user' }}</div>
+                </div>
+                <div>
+                    <div style="color: var(--cool-gray);">Member since</div>
+                    <div style="font-weight:600;">{{ $user->created_at?->format('M d, Y') }}</div>
+                </div>
+            </div>
+        </div>
         @if (session('status') === 'profile-updated')
             <div class="success-message">
                 <i class="fas fa-check-circle me-2"></i>Profile updated successfully!
             </div>
         @endif
-
-        <form method="POST" action="{{ route('profile.update') }}">
-            @csrf
-            @method('patch')
-
-            <div class="form-group">
-                <label for="name" class="form-label">Name</label>
-                <input id="name" name="name" type="text" class="form-control" 
-                       value="{{ old('name', $user->name) }}" required autofocus>
-                @error('name')
-                    <div class="error-message">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="email" class="form-label">Email</label>
-                <input id="email" name="email" type="email" class="form-control" 
-                       value="{{ old('email', $user->email) }}" required>
-                @error('email')
-                    <div class="error-message">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <button type="submit" class="btn-save">
-                <i class="fas fa-save me-2"></i>Save Changes
+        <div style="display:flex; justify-content:flex-end;">
+            <button type="button" class="btn-primary" onclick="document.getElementById('updateProfileModal').style.display='flex'">
+                <i class="fas fa-user-edit" style="margin-right:8px;"></i>Update Profile
             </button>
-        </form>
+        </div>
     </div>
 
-    {{-- Update Password --}}
     <div class="profile-section">
         <h2 class="section-title">
             <i class="fas fa-lock section-icon"></i>
-            Update Password
+            Security
         </h2>
-        <p class="section-description">
-            Ensure your account is using a long, random password to stay secure.
-        </p>
-
+        <div class="section-description">Manage your password and account security.</div>
         @if (session('status') === 'password-updated')
             <div class="success-message">
                 <i class="fas fa-check-circle me-2"></i>Password updated successfully!
             </div>
         @endif
-
-        <form method="POST" action="{{ route('password.update') }}">
-            @csrf
-            @method('put')
-
-            <div class="form-group">
-                <label for="current_password" class="form-label">Current Password</label>
-                <input id="current_password" name="current_password" type="password" class="form-control" required>
-                @error('current_password')
-                    <div class="error-message">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="password" class="form-label">New Password</label>
-                <input id="password" name="password" type="password" class="form-control" required>
-                @error('password')
-                    <div class="error-message">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="password_confirmation" class="form-label">Confirm Password</label>
-                <input id="password_confirmation" name="password_confirmation" type="password" class="form-control" required>
-                @error('password_confirmation')
-                    <div class="error-message">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <button type="submit" class="btn-save">
-                <i class="fas fa-key me-2"></i>Update Password
+        <div style="display:flex; justify-content:flex-end;">
+            <button type="button" class="btn-outline" onclick="document.getElementById('changePasswordModal').style.display='flex'">
+                <i class="fas fa-key" style="margin-right:8px;"></i>Change Password
             </button>
-        </form>
+        </div>
     </div>
 
     {{-- Delete Account --}}
@@ -401,6 +386,118 @@
         <button type="button" class="btn-danger" onclick="document.getElementById('deleteModal').style.display='block'">
             <i class="fas fa-trash me-2"></i>Delete Account
         </button>
+    </div>
+    <div class="profile-section">
+        <h2 class="section-title">
+            <i class="fas fa-award section-icon"></i>
+            Achievements
+        </h2>
+        <div class="section-description">
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                @forelse($user->badges as $badge)
+                    <span class="reply-count"><i class="fas fa-medal" style="margin-right:6px;"></i>{{ $badge->badge_name }}</span>
+                @empty
+                    <div style="color: var(--cool-gray);">No achievements yet.</div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-section">
+        <h2 class="section-title">
+            <i class="fas fa-book-open section-icon"></i>
+            Enrolled Courses
+        </h2>
+        <div class="section-description">
+            @if($user->courses->count())
+                <div class="table" style="border-spacing:0;">
+                    <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:0.5rem; padding:0.75rem 0; color: var(--cool-gray); border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <div>Course</div>
+                        <div>Status</div>
+                        <div>Enrolled</div>
+                    </div>
+                    @foreach($user->courses as $course)
+                        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:0.5rem; padding:0.9rem 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight:600;">{{ $course->title ?? $course->name ?? 'Course' }}</div>
+                            <div><span class="reply-count">{{ ucfirst($course->pivot->status ?? 'enrolled') }}</span></div>
+                            <div>{{ optional($course->pivot->enrolled_at)->format('M d, Y') }}</div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div style="color: var(--cool-gray);">No enrollments yet.</div>
+            @endif
+        </div>
+    </div>
+</div>
+
+<div id="updateProfileModal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: var(--charcoal); padding: 2rem; border-radius: var(--radius); max-width: 640px; width: 92%;">
+        <h3 style="margin-top:0; margin-bottom:1rem;">Update Profile</h3>
+        <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+            @csrf
+            @method('patch')
+            <div class="form-group">
+                <label for="name" class="form-label">Name</label>
+                <input id="name" name="name" type="text" class="form-control" value="{{ old('name', $user->name) }}" required>
+                @error('name')
+                    <div class="error-message">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input id="email" name="email" type="email" class="form-control" value="{{ old('email', $user->email) }}" required>
+                @error('email')
+                    <div class="error-message">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label for="profile_photo" class="form-label">Profile Photo</label>
+                <input id="profile_photo" name="profile_photo" type="file" class="form-control" accept="image/*">
+                @error('profile_photo')
+                    <div class="error-message">{{ $message }}</div>
+                @enderror
+            </div>
+            <div style="display:flex; gap: 0.75rem; justify-content:flex-end; margin-top:1rem;">
+                <button type="button" class="btn-outline" onclick="document.getElementById('updateProfileModal').style.display='none'">Cancel</button>
+                <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="changePasswordModal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: var(--charcoal); padding: 2rem; border-radius: var(--radius); max-width: 640px; width: 92%;">
+        <h3 style="margin-top:0; margin-bottom:1rem;">Change Password</h3>
+        <form method="POST" action="{{ route('password.update') }}">
+            @csrf
+            @method('put')
+            <div class="form-group">
+                <label for="current_password" class="form-label">Current Password</label>
+                <input id="current_password" name="current_password" type="password" class="form-control" required>
+                @error('current_password')
+                    <div class="error-message">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">New Password</label>
+                <input id="password" name="password" type="password" class="form-control" required>
+                @error('password')
+                    <div class="error-message">{{ $message }}</div>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                <input id="password_confirmation" name="password_confirmation" type="password" class="form-control" required>
+                @error('password_confirmation')
+                    <div class="error-message">{{ $message }}</div>
+                @enderror
+            </div>
+            <div style="display:flex; gap: 0.75rem; justify-content:flex-end; margin-top:1rem;">
+                <button type="button" class="btn-outline" onclick="document.getElementById('changePasswordModal').style.display='none'">Cancel</button>
+                <button type="submit" class="btn-save">Update Password</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -434,11 +531,11 @@
 </div>
 
 <script>
-// Close modal when clicking outside
-document.getElementById('deleteModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        this.style.display = 'none';
-    }
-});
+var up = document.getElementById('updateProfileModal');
+if (up) up.addEventListener('click', function(e){ if (e.target === this) this.style.display='none'; });
+var cp = document.getElementById('changePasswordModal');
+if (cp) cp.addEventListener('click', function(e){ if (e.target === this) this.style.display='none'; });
+var dm = document.getElementById('deleteModal');
+if (dm) dm.addEventListener('click', function(e){ if (e.target === this) this.style.display='none'; });
 </script>
 @endsection

@@ -19,6 +19,7 @@
             <th>Level</th>
             <th>Status</th>
             <th>Created</th>
+            <th>View</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -52,6 +53,11 @@
             </td>
             <td>{{ $course->created_at->format('M j, Y') }}</td>
             <td>
+                <a href="{{ route('admin.courses.manage', $course) }}" class="btn btn-sm btn-primary" style="padding: 0.5rem 1rem;">
+                    <i class="fas fa-eye me-1"></i>View
+                </a>
+            </td>
+            <td>
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                     <a href="{{ route('admin.courses.edit', $course) }}" class="btn btn-sm btn-outline" style="padding: 0.5rem 1rem;">
                         <i class="fas fa-edit me-1"></i>Edit
@@ -66,16 +72,10 @@
                     </form>
                 </div>
             </td>
-            <td>
-            <a href="{{ route('admin.courses.manage', $course) }}" class="btn btn-sm btn-primary">
-                <i class="fas fa-sitemap me-1"></i>Manage
-            </a>
-            </td>
         </tr>
         @endforeach
     </tbody>
 </table>
-
 
 
 @else

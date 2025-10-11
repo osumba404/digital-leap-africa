@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Enrollment;
 
 class CourseController extends Controller
 {
@@ -83,11 +84,29 @@ class CourseController extends Controller
 
     public function manage(Course $course)
     {
-        // you can load topics/lessons here or just link to their pages
-        return view('admin.courses.manage', compact('course'));
+        $course->load('lessons');
+        $totalLessons = $course->lessons->count();
+
+        $enrollments = \App\Models\Enrollment::with('user')
+            ->where('course_id', $course->id)
+            ->orderByDesc('enrolled_at')
+            ->get();
+
+        return view('admin.courses.manage', compact('course', 'enrollments', 'totalLessons'));
     }
 
-    
+    public function enrollments(Course $course)
+    {
+        $course->load('lessons');
+        $totalLessons = $course->lessons->count();
+
+        $enrollments = Enrollment::with('user')
+            ->where('course_id', $course->id)
+            ->orderByDesc('enrolled_at')
+            ->get();
+
+        return view('admin.courses.enrollments', compact('course', 'enrollments', 'totalLessons'));
+    }
 
     // DO NOT ADD THE enroll() METHOD HERE
 }
