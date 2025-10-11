@@ -1088,25 +1088,51 @@
                     <li><a href="{{ route('home') }}" class="@if(request()->routeIs('home')) active @endif">Home</a></li>
                     <li><a href="{{ route('about') }}" class="@if(request()->routeIs('about')) active @endif">About</a></li>                    
                     <li><a href="{{ route('courses.index') }}" class="@if(request()->routeIs('courses.*')) active @endif">Courses</a></li>
-                    <li><a href="{{ route('projects.index') }}" class="@if(request()->routeIs('projects.*')) active @endif">Projects</a></li>
-                    <li><a href="{{ route('elibrary.index') }}" class="@if(request()->routeIs('elibrary.*')) active @endif">eLibrary</a></li>
-                    <li><a href="{{ route('events.index') }}" class="@if(request()->routeIs('events.*')) active @endif">Events</a></li>
-                    <li><a href="{{ route('jobs.index') }}" class="@if(request()->routeIs('jobs.*')) active @endif">Jobs</a></li>
-                    <li><a href="{{ route('forum.index') }}" class="@if(request()->routeIs('forum.*')) active @endif">Forum</a></li>
-                    <li><a href="{{ route('blog.index') }}" class="@if(request()->routeIs('blog.*')) active @endif">Blog</a></li>   
-                    <li><a href="{{ route('contact') }}" class="@if(request()->routeIs('contact')) active @endif">Contact</a></li>
-                    <li><a href="{{ route('donate') }}" class="@if(request()->routeIs('donate')) active @endif">Donate</a></li>
+                    <li><a href="{{ route('blog.index') }}" class="@if(request()->routeIs('blog.*')) active @endif">Blog</a></li>
+                    
+
+                    <li class="dropdown" onmouseenter="this.querySelector('.dropdown-menu').style.display='block'" onmouseleave="this.querySelector('.dropdown-menu').style.display='none'">
+                        <a href="#" class="@if(request()->routeIs('elibrary.*') || request()->routeIs('events.*') || request()->routeIs('jobs.*') || request()->routeIs('forum.*')) active @endif" style="display:flex;align-items:center;gap:.35rem;">
+                            Resources▾<i class="fas fa-chevron-down" style="font-size:.75rem;"></i>
+                        </a>
+                        <ul class="dropdown-menu" style="display:none;position:absolute;margin-top:.5rem;background:#0d47a1;border:1px solid rgba(255,255,255,.15);border-radius:8px;min-width:220px;box-shadow:0 10px 20px rgba(0,0,0,.35);padding:.4rem 0;z-index:1002;">
+                            <li><a href="{{ route('elibrary.index') }}" class="@if(request()->routeIs('elibrary.*')) active @endif" style="display:block;padding:.5rem 1rem;">eLibrary</a></li>
+                            <li><a href="{{ route('events.index') }}" class="@if(request()->routeIs('events.*')) active @endif" style="display:block;padding:.5rem 1rem;">Events</a></li>
+                            
+                            
+                        </ul>
+                    </li>
+
+                    <li class="dropdown" onmouseenter="this.querySelector('.dropdown-menu').style.display='block'" onmouseleave="this.querySelector('.dropdown-menu').style.display='none'">
+                        <a href="#" class="@if(request()->routeIs('blog.*') || request()->routeIs('contact') || request()->routeIs('donate')) active @endif" style="display:flex;align-items:center;gap:.35rem;">
+                            More▾<i class="fas fa-chevron-down" style="font-size:.75rem;"></i>
+                        </a>
+                        <ul class="dropdown-menu" style="display:none;position:absolute;margin-top:.5rem;background:#0d47a1;border:1px solid rgba(255,255,255,.15);border-radius:8px;min-width:200px;box-shadow:0 10px 20px rgba(0,0,0,.35);padding:.4rem 0;z-index:1002;">
+                            <li><a href="{{ route('projects.index') }}" class="@if(request()->routeIs('projects.*')) active @endif" style="display:block;padding:.5rem 1rem;">Projects</a></li>
+                            <li><a href="{{ route('jobs.index') }}" class="@if(request()->routeIs('jobs.*')) active @endif" style="display:block;padding:.5rem 1rem;">Jobs</a></li>
+                            <li><a href="{{ route('forum.index') }}" class="@if(request()->routeIs('forum.*')) active @endif" style="display:block;padding:.5rem 1rem;">Forum</a></li>
+                            <li><a href="{{ route('contact') }}" class="@if(request()->routeIs('contact')) active @endif" style="display:block;padding:.5rem 1rem;">Contact</a></li>
+                            <li><a href="{{ route('donate') }}" class="@if(request()->routeIs('donate')) active @endif" style="display:block;padding:.5rem 1rem;">Donate</a></li>
+                            
+                        </ul>
+                    </li>
                 
-                    @auth
+                    <!-- @auth
                         <li><a href="{{ route('dashboard') }}" class="@if(request()->routeIs('dashboard')) active @endif">Dashboard</a></li>
-                    @endauth             
+                    @endauth   -->
+                     
                 </ul>
 
                 <div class="nav-actions-group">
+                    @auth                       
+                            <a href="{{ route('dashboard') }}" class="btn-outline btn-sm is-admin">
+                                <i class="fas fa-screwdriver-wrench me-1"></i> Dashboard
+                            </a>
+                     @endauth 
                     @auth
                         @if(auth()->user()->role === 'admin')
                             <a href="{{ route('admin.dashboard') }}" class="btn-outline btn-sm is-admin">
-                                <i class="fas fa-screwdriver-wrench me-1"></i> Admin
+                                <i class="fas fa-screwdriver-wrench me-1"></i> Admin Dash
                             </a>
                         @endif
                         

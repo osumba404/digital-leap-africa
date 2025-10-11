@@ -17,62 +17,43 @@
     @endphp
 
     @if(count($slides))
-        <div id="homeHeroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel" data-bs-interval="6000" data-bs-touch="true" data-bs-pause="hover">
-            <div class="carousel-indicators">
+        <div class="hero-rtl" data-interval="6000">
+            <div class="hero-track" style="display:flex; width:100%; transform: translateX(0); transition: transform .7s ease;">
                 @foreach($slides as $idx => $s)
-                    <button type="button" data-bs-target="#homeHeroCarousel" data-bs-slide-to="{{ $idx }}" class="{{ $idx===0 ? 'active' : '' }}" aria-current="{{ $idx===0 ? 'true' : 'false' }}" aria-label="Slide {{ $idx+1 }}"></button>
-                @endforeach
-            </div>
-
-            <div class="carousel-inner">
-                @foreach($slides as $idx => $s)
-                    <div class="carousel-item {{ $idx===0 ? 'active' : '' }} hero-slide">
+                    <div class="hero-item hero-slide" style="min-width:100%;">
                         @if(!empty($s['image']))
                             <img src="{{ $s['image'] }}" class="hero-img" alt="Hero {{ $idx+1 }}">
                         @endif
                         <div class="hero-overlay" aria-hidden="true"></div>
-
-                        <div class="carousel-caption d-md-block hero-caption">
+                        <div class="hero-caption">
                             @if(!empty($s['mini']))
                                 <div class="badge bg-primary mb-2">{{ $s['mini'] }}</div>
                             @endif
-
                             @if(!empty($s['title']))
                                 <h1 class="mb-2">{{ $s['title'] }}</h1>
                             @endif
-
                             @if(!empty($s['sub']))
                                 <p class="mb-3 hero-sub">{{ $s['sub'] }}</p>
                             @endif
-
                             <div class="d-flex gap-2 flex-wrap">
                                 @if(!empty($s['cta1_label']))
-                                    <a class="btn-primary"
-                                       href="{{ !empty($s['cta1_route']) && Route::has($s['cta1_route']) ? route($s['cta1_route']) : '#' }}">
-                                        {{ $s['cta1_label'] }}
-                                    </a>
+                                    <a class="btn-primary" href="{{ !empty($s['cta1_route']) && Route::has($s['cta1_route']) ? route($s['cta1_route']) : '#' }}">{{ $s['cta1_label'] }}</a>
                                 @endif
-
                                 @if(!empty($s['cta2_label']))
-                                    <a class="btn-outline"
-                                       href="{{ !empty($s['cta2_route']) && Route::has($s['cta2_route']) ? route($s['cta2_route']) : '#' }}">
-                                        {{ $s['cta2_label'] }}
-                                    </a>
+                                    <a class="btn-outline" href="{{ !empty($s['cta2_route']) && Route::has($s['cta2_route']) ? route($s['cta2_route']) : '#' }}">{{ $s['cta2_label'] }}</a>
                                 @endif
                             </div>
                         </div>
                     </div>
                 @endforeach
             </div>
-
-            <button class="carousel-control-prev" type="button" data-bs-target="#homeHeroCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#homeHeroCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+            <button class="hero-prev" type="button" aria-label="Previous" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);z-index:5;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">&#10094;</button>
+            <button class="hero-next" type="button" aria-label="Next" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);z-index:5;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">&#10095;</button>
+            <div class="hero-dots" style="position:absolute;left:0;right:0;bottom:14px;display:flex;gap:8px;justify-content:center;z-index:5;">
+                @foreach($slides as $idx => $s)
+                    <button class="hero-dot{{ $idx===0 ? ' is-active' : '' }}" data-index="{{ $idx }}" style="width:9px;height:9px;border-radius:50%;border:none;background:{{ $idx===0 ? '#64b5f6' : 'rgba(255,255,255,.6)' }};cursor:pointer; padding:0;"></button>
+                @endforeach
+            </div>
         </div>
     @else
         <div class="container" style="padding:3rem 0;">
@@ -593,4 +574,34 @@
   text-shadow: 0 2px 8px rgba(0,0,0,.25);
 }
 </style>
+@endpush
+
+@push('scripts')
+<script>
+(function(){
+    var root = document.querySelector('.hero-rtl');
+    if(!root) return;
+    var track = root.querySelector('.hero-track');
+    var items = root.querySelectorAll('.hero-item');
+    var prev = root.querySelector('.hero-prev');
+    var next = root.querySelector('.hero-next');
+    var dots = root.querySelectorAll('.hero-dot');
+    var count = items.length;
+    var idx = 0;
+    var intv = parseInt(root.getAttribute('data-interval')||'6000',10);
+    function go(i){
+        idx = (i+count)%count;
+        track.style.transform = 'translateX(' + (-idx*100) + '%)';
+        dots.forEach(function(d,j){ d.style.background = j===idx ? '#64b5f6' : 'rgba(255,255,255,.6)'; d.classList.toggle('is-active', j===idx); });
+    }
+    function nextSlide(){ go(idx+1); }
+    function prevSlide(){ go(idx-1); }
+    var timer = setInterval(nextSlide, intv);
+    [prev, next].forEach(function(btn){ if(btn){ btn.addEventListener('click', function(){ clearInterval(timer); btn===next?nextSlide():prevSlide(); timer=setInterval(nextSlide,intv); }); }});
+    dots.forEach(function(d){ d.addEventListener('click', function(){ clearInterval(timer); go(parseInt(d.getAttribute('data-index'),10)); timer=setInterval(nextSlide,intv); }); });
+    var startX = null;
+    root.addEventListener('touchstart', function(e){ startX = e.touches[0].clientX; }, {passive:true});
+    root.addEventListener('touchend', function(e){ if(startX===null) return; var dx = e.changedTouches[0].clientX - startX; if(Math.abs(dx)>40){ clearInterval(timer); if(dx>0){ prevSlide(); } else { nextSlide(); } timer=setInterval(nextSlide,intv); } startX=null; }, {passive:true});
+})();
+</script>
 @endpush
