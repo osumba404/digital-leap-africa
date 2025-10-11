@@ -16,8 +16,17 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user()->load([
+            'courses' => function ($q) {
+                $q->withPivot(['status', 'enrolled_at', 'completed_at']);
+            },
+            'badges',
+            'gamificationPoints',
+        ]);
+
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
+            'totalPoints' => $user->getTotalPoints(),
         ]);
     }
 
@@ -27,6 +36,12 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
+
+        if ($request->hasFile('profile_photo')) {
+            $path = $request->file('profile_photo')->store('profile-photos', 'public');
+            // Save only the relative path (e.g., 'profile-photos/xyz.jpg')
+            $request->user()->profile_photo = basename($path);
+        }
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
