@@ -1062,10 +1062,14 @@
     <header class="site-header">
         <nav class="nav">
             <a href="{{ url('/') }}" class="brand">
-                <img 
-                    src="{{ $siteSettings['logo_url'] ?? asset('images/logo.png') }}" 
-                    alt="{{ $siteSettings['site_name'] ?? config('app.name') }} Logo"
-                >
+            @if(!empty($siteSettings['logo_url']))
+            <img
+                src="{{ $siteSettings['logo_url'] }}"
+                alt="{{ $siteSettings['site_name'] ?? 'Site Logo' }}"
+                class="site-logo"
+                style="height:44px;width:44px;object-fit:cover;border-radius:50%;box-shadow:0 2px 10px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,0.2);"
+            >
+            @endif
                 <div>
                     <h1>{{ $siteSettings['site_name'] ?? config('app.name') }}</h1>
                     <span class="tagline">{{ $siteSettings['tagline'] ?? 'Digital Leap Africa' }}</span>
@@ -1076,6 +1080,8 @@
                     onclick="document.querySelector('.off-canvas-sidebar').classList.add('is-open'); document.querySelector('.sidebar-overlay').classList.add('is-open')">
                 <i class="fas fa-bars"></i>
             </button>
+
+            
 
             <div class="nav-main-group"> 
                 <ul class="nav-links">

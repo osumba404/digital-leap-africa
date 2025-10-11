@@ -116,9 +116,22 @@
 
 <div class="container">
     <div class="forum-container">
-        <div style="text-align: center; margin-bottom: 3rem;">
-            <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">Community Forum</h1>
-            <p style="color: var(--cool-gray); font-size: 1.1rem;">Connect, discuss, and learn with fellow community members</p>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap;">
+            <div style="text-align: left;">
+                <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">Community Forum</h1>
+                <p style="color: var(--cool-gray); font-size: 1.1rem; margin: 0;">Connect, discuss, and learn with fellow community members</p>
+            </div>
+            <div>
+                @auth
+                    <a href="{{ route('forum.create') }}" class="btn-primary" style="padding: 0.75rem 1.5rem; white-space: nowrap;">
+                        <i class="fas fa-plus me-2"></i>Start Discussion
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="btn-primary" style="padding: 0.75rem 1.5rem; white-space: nowrap;">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login to Participate
+                    </a>
+                @endauth
+            </div>
         </div>
 
         {{-- Forum Stats --}}
