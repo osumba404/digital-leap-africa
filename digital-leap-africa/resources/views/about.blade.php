@@ -6,7 +6,7 @@
   /* Page sections */
   .section { padding: 2.5rem 0; }
   .section-title { text-align:center; margin-bottom: 2.5rem; }
-  .section-title h1, .section-title h2 { font-weight: 700; color: var(--diamond-white); }
+  .section-title h1, .section-title h2 { font-weight: 700; color: #64b5f6; }
   .section-title p { color: var(--cool-gray); }
 
   /* Grid & cards (aligned to Courses page style) */
@@ -21,13 +21,14 @@
   .card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius);
+    border-radius: 100px 16px 100px 16px;
     overflow: hidden;
     transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: -2px 0 16px rgba(59,130,246,.35), 0 6px 18px rgba(59,130,246,.25);
   }
-  .card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+  .card:hover { transform: translateY(-5px); box-shadow: 0 12px 34px rgba(0, 0, 0, 0.35); }
   .card-body { padding: 1.5rem; }
-  .card-title { font-size: 1.25rem; font-weight: 600; color: var(--diamond-white); margin-bottom: .75rem; }
+  .card-title { font-size: 1.35rem; font-weight: 700; color: var(--diamond-white); margin-bottom: .75rem; }
   .card-text { color: var(--cool-gray); line-height: 1.6; }
 
   .media {
@@ -35,6 +36,8 @@
     height: 240px;
     object-fit: cover;
     background: linear-gradient(135deg, var(--primary-blue), var(--deep-blue));
+    border-radius: 100px 16px 100px 16px;
+    box-shadow: -8px 12px 28px rgba(37,99,235,.35);
   }
 
   /* Stats */
@@ -70,12 +73,52 @@
   /* Subtle in-view animation (optional) */
   .fade-in-up { opacity: 0; transform: translateY(12px); transition: opacity .4s ease, transform .4s ease; }
   .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+  /* Accent mini labels */
+  .muted { color: var(--cool-gray); }
+  .section-title p { color: var(--cool-gray); }
+
+  /* Responsive tweaks to keep cards elegant on small screens */
+  @media (max-width: 767.98px){
+    .media{ height: 220px; }
+    .card-title{ font-size: 1.25rem; }
+  }
+  /* Tighten About header spacing */
+  .about-hero{padding: .75rem 0 .75rem !important}
+  .about-hero .section-title{margin: 0 0 .75rem 0 !important}
+  .about-hero .section-title h1{margin:0 !important}
+
+  /* About split card with edge-to-edge media */
+  .about-card{display:flex;flex-direction:row;align-items:stretch;border:1px solid rgba(255,255,255,0.08);border-radius:100px 16px 100px 16px;overflow:hidden;background:rgba(255,255,255,0.03)}
+  .about-media{position:relative;flex:0 0 48% !important;max-width:48% !important}
+  .about-visual{position:relative;height:100%;width:100% !important;margin:0 !important;border-radius:100px 16px 100px 16px;overflow:hidden;background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));border-top:3px solid var(--primary-blue);border-left:3px solid var(--primary-blue);border-bottom:3px solid var(--primary-blue);box-shadow:-2px 0 16px rgba(59,130,246,.35),0 -6px 18px rgba(59,130,246,.25),0 6px 18px rgba(59,130,246,.25)}
+  .about-img{display:block;width:100% !important;height:100% !important;object-fit:cover}
+  .about-content{flex:1 1 auto !important;display:flex}
+
+  @media (max-width: 768px){
+    .about-card{flex-direction:column}
+    .about-media,.about-content{max-width:100% !important;flex-basis:100% !important}
+    .about-visual{border-radius:24px}
+  }
+
+  /* Creative team card */
+  .team-card{position:relative;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:24px;overflow:hidden;transition:transform .3s, box-shadow .3s}
+  .team-card:hover{transform:translateY(-6px);box-shadow:0 14px 34px rgba(0,0,0,.35)}
+  .team-hero{position:relative;height:110px;background:linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);}
+  .team-avatar{position:absolute;left:50%;top:100%;transform:translate(-50%, -50%);width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.9);box-shadow:0 6px 18px rgba(0,0,0,.35)}
+  .team-avatar--fallback{display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25);color:#fff;font-size:1.5rem}
+  .team-body{padding:3.25rem 1rem 1.25rem 1rem;text-align:center}
+  .team-name{font-weight:800;color:var(--diamond-white);margin-bottom:.25rem}
+  .team-role{color:#9ecbff;margin-bottom:.5rem}
+  .team-bio{color:var(--cool-gray)}
+
+  /* Make images truly flush with the card edges */
+  .media{border-radius:0 !important;margin:0 !important}
 </style>
 @endpush
 
 @section('content')
   {{-- Header --}}
-  <section class="section">
+  <section class="section about-hero">
     <div class="container">
       <div class="section-title">
         <h1 style="font-size: 2.5rem;">About Us</h1>
@@ -89,23 +132,27 @@
   @if($about)
   <section class="section">
     <div class="container">
-      <div class="about-grid">
-        <div class="card fade-in-up">
-          @if($about->image_path)
-            <img class="media" src="{{ Storage::url($about->image_path) }}" alt="{{ $about->title }}">
-          @else
-            <div class="media" style="display:flex;align-items:center;justify-content:center;">
-              <i class="fas fa-users" style="font-size:3rem;color:var(--diamond-white);opacity:.3;"></i>
-            </div>
-          @endif
-        </div>
-        <div class="card fade-in-up">
-          <div class="card-body">
-            @if($about->mini_title)
-              <div class="muted" style="margin-bottom:.5rem;">{{ $about->mini_title }}</div>
+      <div class="about-card fade-in-up">
+        <div class="about-media">
+          <div class="about-visual">
+            @if($about->image_path)
+              <img class="about-img" src="{{ Storage::url($about->image_path) }}" alt="{{ $about->title }}">
+            @else
+              <div class="about-img d-flex align-items-center justify-content-center" style="background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));">
+                <i class="fas fa-users" style="font-size:3rem;color:var(--diamond-white);opacity:.35"></i>
+              </div>
             @endif
-            <h2 class="card-title" style="font-size:1.75rem;">{{ $about->title }}</h2>
-            <div class="card-text">{!! nl2br(e($about->content)) !!}</div>
+          </div>
+        </div>
+        <div class="about-content">
+          <div class="card h-100" style="border:0;background:transparent;">
+            <div class="card-body d-flex flex-column">
+              @if($about->mini_title)
+                <div class="muted" style="margin-bottom:.5rem;">{{ $about->mini_title }}</div>
+              @endif
+              <h2 class="card-title" style="font-size:1.75rem;">{{ $about->title }}</h2>
+              <div class="card-text">{!! nl2br(e($about->content)) !!}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -219,18 +266,20 @@
       @if($teamMembers->count())
       <div class="team-grid">
         @foreach($teamMembers as $member)
-        <div class="card fade-in-up">
-          @if($member->image_path)
-            <img class="media" src="{{ $member->image_url }}" alt="{{ $member->name }}">
-          @else
-            <div class="media" style="display:flex;align-items:center;justify-content:center;">
-              <i class="fas fa-user" style="font-size:3rem;color:var(--diamond-white);opacity:.3;"></i>
-            </div>
-          @endif
-          <div class="card-body">
-            <h3 class="card-title">{{ $member->name }}</h3>
-            <div class="muted" style="margin-bottom:.75rem;">{{ $member->role }}</div>
-            <div class="card-text">{{ Str::limit($member->bio, 130) }}</div>
+        <div class="team-card fade-in-up">
+          <div class="team-hero">
+            @if($member->image_path)
+              <img class="team-avatar" src="{{ $member->image_url }}" alt="{{ $member->name }}">
+            @else
+              <div class="team-avatar team-avatar--fallback">
+                <i class="fas fa-user"></i>
+              </div>
+            @endif
+          </div>
+          <div class="team-body">
+            <h3 class="team-name">{{ $member->name }}</h3>
+            <div class="team-role">{{ $member->role }}</div>
+            <div class="team-bio">{{ Str::limit($member->bio, 130) }}</div>
           </div>
         </div>
         @endforeach

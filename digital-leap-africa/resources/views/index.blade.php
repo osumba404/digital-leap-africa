@@ -119,7 +119,7 @@
     /* Inner visual clamps the image with rounded corners */
     #about-section .about-visual{
       position:relative;
-      border-radius:16px;
+      border-radius: 100px 16px 100px 16px;;
       overflow:hidden;
       background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));
       /* Blue line on top/left/bottom with glow */
@@ -164,7 +164,7 @@
       #about-section .about-row{overflow-x:auto;}
     }
     /* Unified card visuals */
-    #about-section .about-card{display:flex !important; flex-direction:row !important; align-items:stretch !important; border:1px solid rgba(255,255,255,0.08); border-radius:16px; overflow:hidden; background:rgba(255,255,255,0.03);}
+    #about-section .about-card{display:flex !important; flex-direction:row !important; align-items:stretch !important; border:1px solid rgba(255,255,255,0.08); border-radius: 100px 16px 100px 16px; overflow:hidden; background:rgba(255,255,255,0.03);}
     #about-section .about-media{position:relative; flex:0 0 44% !important; max-width:44% !important;}
     #about-section .about-media .about-visual{height:100%;}
     #about-section .about-content{flex:1 1 auto !important; display:flex;}
@@ -201,7 +201,9 @@
 
 /* Ensure media flush to card edges */
 .post-thumb,.course-thumb,.event-thumb{display:block;width:100%;max-width:100%;margin: 0; padding: 0; border-radius: 0;}
-.post-card{margin:0; padding:0;}
+.post-card{
+  margin: 0; 
+  padding: 0;}
 
 .post-card-out{margin:0; padding:0;}
 /* Section titles centered forcefully */
@@ -246,13 +248,14 @@
 @if($mission || $vision)
 <section class="section" style="padding:2rem 0;">
   <style>
-    .mv-card{display:flex;flex-direction:row;align-items:stretch;border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;background:rgba(255,255,255,0.03);margin-bottom:1rem}
+    .mv-card{display:flex;flex-direction:row;align-items:stretch;border:1px solid rgba(255,255,255,0.08);border-radius: 100px 16px 100px 16px;overflow:hidden;background:rgba(255,255,255,0.03);margin-bottom:1rem}
     .mv-card.is-reverse{flex-direction:row-reverse}
     .mv-media{position:relative;flex:0 0 44%;max-width:44%}
-    .mv-visual{position:relative;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));border-top:3px solid var(--primary-blue);border-left:3px solid var(--primary-blue);border-bottom:3px solid var(--primary-blue);box-shadow:-2px 0 16px rgba(59,130,246,.45),0 -6px 18px rgba(59,130,246,.35),0 6px 18px rgba(59,130,246,.35);width:92%;margin:auto 0 auto 12px;height:100%}
+    .mv-visual{position:relative;border-radius: 100px 16px 100px 16px;overflow:hidden;background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));border-top:3px solid var(--primary-blue);border-left:3px solid var(--primary-blue);border-bottom:3px solid var(--primary-blue);box-shadow:-2px 0 16px rgba(59,130,246,.45),0 -6px 18px rgba(59,130,246,.35),0 6px 18px rgba(59,130,246,.35);width:92%;margin:auto 0 auto 12px;height:100%}
     .is-reverse .mv-visual{border-left:none;border-right:3px solid var(--primary-blue);box-shadow:2px 0 16px rgba(59,130,246,.45),0 -6px 18px rgba(59,130,246,.35),0 6px 18px rgba(59,130,246,.35);margin:auto 12px auto 0}
     .mv-img{display:block;width:100%;height:100%;object-fit:cover;position:relative;z-index:1;filter:drop-shadow(-8px 12px 28px rgba(37,99,235,.35))}
     @media (min-width:768px){ .mv-visual{height:300px} }
+    @media (max-width:768px){.mv-media{display: none}  .about-media{display: none} }
     @media (max-width:767.98px){ .mv-visual{height:260px;margin-bottom:.5rem} }
     .mv-content{flex:1 1 auto;display:flex}
     .mv-content .card{border:0;background:transparent}
@@ -275,8 +278,8 @@
         <div class="mv-content">
           <div class="card h-100">
             <div class="card-body">
-              <h3 class="card-title">{{ $mission->title }}</h3>
-              <div class="card-text">{{ $mission->content }}</div>
+              <h2 class="card-title" style="color: #64b5f6; font-size: 2rem;" >{{ $mission->title }}</h2>
+              <div class="card-text" style="font-size: 1.1rem;">{{ $mission->content }}</div>
             </div>
           </div>
         </div>
@@ -299,8 +302,8 @@
         <div class="mv-content">
           <div class="card h-100">
             <div class="card-body">
-              <h3 class="card-title">{{ $vision->title }}</h3>
-              <div class="card-text">{{ $vision->content }}</div>
+              <h2 class="card-title" style="color: #64b5f6; font-size: 2rem;">{{ $vision->title }}</h2>
+              <div class="card-text" style="font-size: 1.1rem;">{{ $vision->content }}</div>
             </div>
           </div>
         </div>
@@ -352,7 +355,7 @@
     </div>
 
     @if($latestArticles->count())
-      <div class="row g-0 cards-rail" class="post-card-out">
+      <div class="row g-0 cards-rail" class="post-card-out" style="margin: 0; padding: 0;">
         @foreach($latestArticles as $post)
           @php
             $image = $pickImage($post);
@@ -363,7 +366,7 @@
               : (\Illuminate\Support\Str::limit(strip_tags($post->content ?? $post->body ?? ''), 140));
           @endphp
 
-          <div class="col-12 col-md-6">
+          <div class="col-12 col-md-6" style="margin: 0; padding: 0;">
             <div class="card h-100" class="post-card">
               @if($image)
                 <img src="{{ $image }}" alt="{{ $title }}" class="post-thumb">
@@ -374,7 +377,7 @@
               @endif
 
               <div class="card-body">
-                <h3 class="h5">{{ $title }}</h3>
+                <h3 class="h5" style="color: #64b5f6">{{ $title }}</h3>
                 @if(!empty($post->created_at))
                   <div class="text-muted small mb-2">{{ $post->created_at->format('M j, Y') }}</div>
                 @endif
@@ -448,7 +451,8 @@
               @endif
 
               <div class="card-body d-flex flex-column align-items-center text-center">
-                <h3 class="h5">{{ $courseTitle }}</h3>
+                <h3 class="h5" style="color: #64b5f6">{{ $courseTitle }}</h3>
+                
                 @if(!empty($course->created_at))
                   <div class="text-muted small mb-2">{{ $course->created_at->format('M j, Y') }}</div>
                 @endif
@@ -528,7 +532,8 @@
                 </div>
               @endif
               <div class="card-body d-flex flex-column">
-                <h3 class="h5">{{ $title }}</h3>
+               
+                 <h3 class="h5" style="color: #64b5f6">{{ $title }}</h3>
                 <div class="text-muted small mb-2">
                   <i class="far fa-calendar-alt me-1"></i>{{ $when }}
                 </div>
