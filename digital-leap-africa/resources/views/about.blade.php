@@ -5,7 +5,7 @@
 <style>
   /* Page sections */
   .section { padding: 2.5rem 0; }
-  .section-title { text-align:center; margin-bottom: 2.5rem; }
+  .section-title { text-align:center; margin-bottom: 0 !important; }
   .section-title h1, .section-title h2 { font-weight: 700; color: #64b5f6; }
   .section-title p { color: var(--cool-gray); }
 
@@ -122,7 +122,7 @@
     <div class="container">
       <div class="section-title">
         <h1 style="font-size: 2.5rem;">About Us</h1>
-        <p>Building skills, community and opportunity across Africa’s digital economy.</p>
+        
       </div>
     </div>
   </section>
@@ -164,9 +164,9 @@
   @php
     $stats = [
       ['label'=>'Courses',  'value'=> \App\Models\Course::count(),      'icon'=>'fa-book-open'],
-      ['label'=>'Projects', 'value'=> \App\Models\Project::count(),     'icon'=>'fa-diagram-project'],
+      ['label'=>'Articles', 'value'=> \App\Models\Article::count(),     'icon'=>'fa-diagram-project'],
       ['label'=>'Partners', 'value'=> \App\Models\Partner::count(),     'icon'=>'fa-handshake'],
-      ['label'=>'Members',     'value'=> \App\Models\User::count(),  'icon'=>'fa-users'],
+      ['label'=>'Members',  'value'=> \App\Models\User::count(),        'icon'=>'fa-users'],
     ];
   @endphp
   <section class="section">
