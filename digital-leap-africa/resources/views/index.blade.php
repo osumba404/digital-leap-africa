@@ -18,9 +18,9 @@
 
     @if(count($slides))
         <div class="hero-rtl" data-interval="6000">
-            <div class="hero-track" style="display:flex; width:100%; transform: translateX(0); transition: transform .7s ease;">
+            <div class="hero-fader" style="position:relative;width:100%;height:100%;">
                 @foreach($slides as $idx => $s)
-                    <div class="hero-item hero-slide" style="min-width:100%;">
+                    <div class="hero-item hero-slide fade-slide{{ $idx===0 ? ' is-active' : '' }}" style="position:absolute;inset:0;">
                         @if(!empty($s['image']))
                             <img src="{{ $s['image'] }}" class="hero-img" alt="Hero {{ $idx+1 }}">
                         @endif
@@ -30,7 +30,7 @@
                                 <div class="badge bg-primary mb-2">{{ $s['mini'] }}</div>
                             @endif
                             @if(!empty($s['title']))
-                                <h1 class="mb-2">{{ $s['title'] }}</h1>
+                                <h1 class="mb-2 hero-title">{{ $s['title'] }}</h1>
                             @endif
                             @if(!empty($s['sub']))
                                 <p class="mb-3 hero-sub">{{ $s['sub'] }}</p>
@@ -46,9 +46,8 @@
                         </div>
                     </div>
                 @endforeach
+                <div class="hero-stars" aria-hidden="true"></div>
             </div>
-            <button class="hero-prev" type="button" aria-label="Previous" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);z-index:5;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">&#10094;</button>
-            <button class="hero-next" type="button" aria-label="Next" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);z-index:5;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">&#10095;</button>
             <div class="hero-dots" style="position:absolute;left:0;right:0;bottom:14px;display:flex;gap:8px;justify-content:center;z-index:5;">
                 @foreach($slides as $idx => $s)
                     <button class="hero-dot{{ $idx===0 ? ' is-active' : '' }}" data-index="{{ $idx }}" style="width:9px;height:9px;border-radius:50%;border:none;background:{{ $idx===0 ? '#64b5f6' : 'rgba(255,255,255,.6)' }};cursor:pointer; padding:0;"></button>
@@ -69,21 +68,24 @@
         </div>
     @endif
 </section>
-
-
+<style>
+  
+    .hero-title{font-size:3rem; color:rgb(132, 180, 231) !important;}.
+    .hero-sub{font-size:1.25rem;}
+    .hero-img{
+      opacity: 0.3 !important; 
+    }
+</style>
 
 {{-- Stats strip --}}
   @php
     $stats = [
       ['label'=>'Courses',  'value'=> \App\Models\Course::count(),      'icon'=>'fa-book-open'],
-      ['label'=>'Projects', 'value'=> \App\Models\Project::count(),     'icon'=>'fa-diagram-project'],
+      ['label'=>'Articles', 'value'=> \App\Models\Article::count(),     'icon'=>'fa-diagram-project'],
       ['label'=>'Partners', 'value'=> \App\Models\Partner::count(),     'icon'=>'fa-handshake'],
-      ['label'=>'Members',     'value'=> \App\Models\User::count(),  'icon'=>'fa-users'],
+      ['label'=>'Members',  'value'=> \App\Models\User::count(),  'icon'=>'fa-users'],
     ];
   @endphp
-
-
-
 
 <!-- About, Mission & Vision, Stats -->
 @php
@@ -145,7 +147,7 @@
     @media (min-width: 768px){ #about-section .about-visual{height:300px;} }
     @media (max-width: 767.98px){ #about-section .about-visual{height:260px;margin-bottom:0.5rem;} }
 
-    #about-section .about-copy .card-title{font-size:2rem;margin-bottom:.5rem;color:var(--diamond-white)}
+    #about-section .about-copy .card-title{font-size:2rem;margin-bottom:.5rem;color: #64b5f6;}
     #about-section .about-mini{color:var(--cool-gray)}
 
     /* side-by-side layout */
@@ -188,12 +190,20 @@
 .cards-rail .card .btn-primary,
 .cards-rail .card .btn-outline{width:100% !important;width:100%;align-self:flex-start}
 
+.cards-rail {
+  --bs-gutter-x: 0;
+  --bs-gutter-y: 0;
+}
+
+
 /* Make section bottom buttons full width */
 .btn-wide{display:block;width:100%;}
 
 /* Ensure media flush to card edges */
-.post-thumb,.course-thumb,.event-thumb{display:block;width:100%;max-width:100%;margin:0}
+.post-thumb,.course-thumb,.event-thumb{display:block;width:100%;max-width:100%;margin: 0; padding: 0; border-radius: 0;}
+.post-card{margin:0; padding:0;}
 
+.post-card-out{margin:0; padding:0;}
 /* Section titles centered forcefully */
 .section h2{ text-align:center !important; margin-left:auto !important; margin-right:auto !important; }
 </style>
@@ -317,8 +327,6 @@
   </div>
 </section>
 
-
-
 <!-- Latest Articles -->
 <section style="padding:2rem 0;">
   @php
@@ -339,12 +347,12 @@
   @endphp
 
   <div class="container">
-    <div class="text-center mb-3">
+    <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
       <h2 class="m-0">Latest Articles</h2>
     </div>
 
     @if($latestArticles->count())
-      <div class="row g-3 cards-rail">
+      <div class="row g-0 cards-rail" class="post-card-out">
         @foreach($latestArticles as $post)
           @php
             $image = $pickImage($post);
@@ -356,7 +364,7 @@
           @endphp
 
           <div class="col-12 col-md-6">
-            <div class="card h-100">
+            <div class="card h-100" class="post-card">
               @if($image)
                 <img src="{{ $image }}" alt="{{ $title }}" class="post-thumb">
               @else
@@ -390,8 +398,6 @@
   </div>
 </section>
 
-
-
 <!-- Latest Courses -->
 <section style="padding:2rem 0;">
   @php
@@ -412,7 +418,7 @@
   @endphp
 
   <div class="container">
-    <div class="text-center mb-3">
+    <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
       <h2 class="m-0">Available Courses</h2>
     </div>
 
@@ -464,7 +470,6 @@
   </div>
 </section>
 
-
 <!-- Upcoming Events -->
 <section style="padding:2rem 0;">
   @php
@@ -494,7 +499,7 @@
   @endphp
 
   <div class="container">
-    <div class="text-center mb-3">
+    <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
       <h2 class="m-0">Upcoming Events</h2>
     </div>
 
@@ -583,8 +588,26 @@
 .hero-caption h1 { color: #fff; }
 .hero-sub { max-width: 760px; color: #f1f3f5; }
 
+/* Fade slider */
+.fade-slide{opacity:0;transition:opacity .8s ease;}
+.fade-slide.is-active{opacity:1}
+/* Ensure hero reserves height */
+.hero-rtl{position:relative; height: min(75vh, 720px); min-height:420px}
+.hero-fader{position:relative; width:100%; height:100%}
+.hero-stars{position:absolute;inset:0;pointer-events:none;z-index:3;opacity:0;transition:opacity .6s ease;background-image:
+  radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.9) 40%, transparent 41%),
+  radial-gradient(1.5px 1.5px at 60% 20%, rgba(255,255,255,.8) 40%, transparent 41%),
+  radial-gradient(2.5px 2.5px at 80% 70%, rgba(255,255,255,.85) 40%, transparent 41%),
+  radial-gradient(1.2px 1.2px at 35% 75%, rgba(255,255,255,.7) 40%, transparent 41%),
+  radial-gradient(1.8px 1.8px at 70% 55%, rgba(255,255,255,.75) 40%, transparent 41%);
+animation: twinkle 2s infinite ease-in-out;
+}
+.hero-rtl.is-transitioning .hero-stars{opacity:.85}
+@keyframes twinkle{0%,100%{filter:brightness(1)}50%{filter:brightness(1.6)}}
+
 @media (max-width: 768px) {
   .hero-slide { height: 56vh; min-height: 320px; }
+  .hero-rtl, .hero-fader { height:56vh; min-height:320px }
   .hero-caption { bottom: 6%; }
   .hero-caption h1 { font-size: 1.75rem; }
 }
@@ -700,29 +723,26 @@
 @push('scripts')
 <script>
 (function(){
-    var root = document.querySelector('.hero-rtl');
-    if(!root) return;
-    var track = root.querySelector('.hero-track');
-    var items = root.querySelectorAll('.hero-item');
-    var prev = root.querySelector('.hero-prev');
-    var next = root.querySelector('.hero-next');
-    var dots = root.querySelectorAll('.hero-dot');
-    var count = items.length;
-    var idx = 0;
-    var intv = parseInt(root.getAttribute('data-interval')||'6000',10);
-    function go(i){
-        idx = (i+count)%count;
-        track.style.transform = 'translateX(' + (-idx*100) + '%)';
-        dots.forEach(function(d,j){ d.style.background = j===idx ? '#64b5f6' : 'rgba(255,255,255,.6)'; d.classList.toggle('is-active', j===idx); });
-    }
-    function nextSlide(){ go(idx+1); }
-    function prevSlide(){ go(idx-1); }
-    var timer = setInterval(nextSlide, intv);
-    [prev, next].forEach(function(btn){ if(btn){ btn.addEventListener('click', function(){ clearInterval(timer); btn===next?nextSlide():prevSlide(); timer=setInterval(nextSlide,intv); }); }});
-    dots.forEach(function(d){ d.addEventListener('click', function(){ clearInterval(timer); go(parseInt(d.getAttribute('data-index'),10)); timer=setInterval(nextSlide,intv); }); });
-    var startX = null;
-    root.addEventListener('touchstart', function(e){ startX = e.touches[0].clientX; }, {passive:true});
-    root.addEventListener('touchend', function(e){ if(startX===null) return; var dx = e.changedTouches[0].clientX - startX; if(Math.abs(dx)>40){ clearInterval(timer); if(dx>0){ prevSlide(); } else { nextSlide(); } timer=setInterval(nextSlide,intv); } startX=null; }, {passive:true});
+  var root = document.querySelector('.hero-rtl');
+  if(!root) return;
+  var slides = root.querySelectorAll('.fade-slide');
+  var dots = root.querySelectorAll('.hero-dot');
+  var count = slides.length;
+  var idx = 0;
+  var intv = parseInt(root.getAttribute('data-interval')||'6000',10);
+  function show(i){
+    var nextIdx = (i+count)%count;
+    if(nextIdx===idx) return;
+    root.classList.add('is-transitioning');
+    slides[idx].classList.remove('is-active');
+    slides[nextIdx].classList.add('is-active');
+    dots.forEach(function(d,j){ d.style.background = j===nextIdx ? '#64b5f6' : 'rgba(255,255,255,.6)'; d.classList.toggle('is-active', j===nextIdx); });
+    idx = nextIdx;
+    setTimeout(function(){ root.classList.remove('is-transitioning'); }, 700);
+  }
+  function nextSlide(){ show(idx+1); }
+  var timer = setInterval(nextSlide, intv);
+  dots.forEach(function(d){ d.addEventListener('click', function(){ clearInterval(timer); show(parseInt(d.getAttribute('data-index'),10)); timer=setInterval(nextSlide,intv); }); });
 })();
 </script>
 @endpush
