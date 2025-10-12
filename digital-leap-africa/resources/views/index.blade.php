@@ -107,30 +107,124 @@
 @endphp
 
 @if($about)
-<section class="section" style="padding:2rem 0;">
+<section id="about-section" class="section" style="padding:2.5rem 0;">
+  <style>
+    /* Outer wrap shows ambient glow beyond bounds */
+    #about-section .about-visual-wrap{position:relative;overflow:visible}
+    #about-section .about-visual-wrap::before{content:"";position:absolute;top:-22%;left:-22%;width:65%;height:65%;background:radial-gradient(closest-side, rgba(59,130,246,.55), transparent 70%);filter: blur(18px);z-index:0;pointer-events:none}
+    #about-section .about-visual-wrap::after{content:"";position:absolute;bottom:-25%;left:-25%;width:75%;height:75%;background:radial-gradient(closest-side, rgba(37,99,235,.35), transparent 70%);filter: blur(22px);z-index:0;pointer-events:none}
+
+    /* Inner visual clamps the image with rounded corners */
+    #about-section .about-visual{
+      position:relative;
+      border-radius:16px;
+      overflow:hidden;
+      background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));
+      /* Blue line on top/left/bottom with glow */
+      border-top:3px solid var(--primary-blue);
+      border-left:3px solid var(--primary-blue);
+      border-bottom:3px solid var(--primary-blue);
+      box-shadow:
+        -2px 0 16px rgba(59,130,246,.45),
+         0 -6px 18px rgba(59,130,246,.35),
+         0  6px 18px rgba(59,130,246,.35);
+      /* Slightly reduce visual footprint */
+      width:92%;
+      margin: auto 0 auto 12px;
+    }
+    #about-section .about-img{
+      display:block;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      position:relative;
+      z-index:1;      
+      filter: drop-shadow(-8px 12px 28px rgba(37,99,235,.35));
+    }
+
+    @media (min-width: 768px){ #about-section .about-visual{height:300px;} }
+    @media (max-width: 767.98px){ #about-section .about-visual{height:260px;margin-bottom:0.5rem;} }
+
+    #about-section .about-copy .card-title{font-size:2rem;margin-bottom:.5rem;color:var(--diamond-white)}
+    #about-section .about-mini{color:var(--cool-gray)}
+
+    /* side-by-side layout */
+    #about-section .about-row{
+      display:flex !important; 
+      flex-wrap:nowrap !important; 
+      align-items:center !important;
+    }
+    #about-section .about-col{flex:0 0 50% !important; max-width:50% !important; width:50% !important;}
+    #about-section .about-col:first-child{padding-right:0.75rem;}
+    #about-section .about-col:last-child{padding-left:0.75rem;}
+    @media (max-width: 575.98px){
+      /* Optional: allow tiny screens to scroll horizontally rather than stack */
+      #about-section .about-row{overflow-x:auto;}
+    }
+    /* Unified card visuals */
+    #about-section .about-card{display:flex !important; flex-direction:row !important; align-items:stretch !important; border:1px solid rgba(255,255,255,0.08); border-radius:16px; overflow:hidden; background:rgba(255,255,255,0.03);}
+    #about-section .about-media{position:relative; flex:0 0 44% !important; max-width:44% !important;}
+    #about-section .about-media .about-visual{height:100%;}
+    #about-section .about-content{flex:1 1 auto !important; display:flex;}
+    #about-section .about-content .card{border:0; background:transparent;}
+    #about-section .about-content .card-body{display:flex; flex-direction:column;}
+
+    /* Ambient blue glow tied to media side */
+    #about-section .about-media::before{content:""; position:absolute; top:-18%; left:-18%; width:70%; height:70%; background:radial-gradient(closest-side, rgba(59,130,246,.6), transparent 72%); filter:blur(22px); z-index:0; pointer-events:none}
+    #about-section .about-media::after{content:""; position:absolute; bottom:-22%; left:-22%; width:80%; height:80%; background:radial-gradient(closest-side, rgba(37,99,235,.4), transparent 72%); filter:blur(26px); z-index:0; pointer-events:none}
+  
+/* Fixed-width centered rails for cards */
+.cards-rail{display:grid;grid-template-columns:repeat(3, 320px);gap:1rem;justify-content:center;align-items:stretch}
+@media (max-width: 992px){ .cards-rail{grid-template-columns:repeat(2, 320px)} }
+@media (max-width: 576px){ .cards-rail{grid-template-columns:repeat(1, 320px)} }
+
+/* Equal-height cards and centered content */
+.cards-rail > *{display:flex}
+.cards-rail .card{display:flex;flex-direction:column;height:100%;min-height:460px}
+@media (max-width: 576px){ .cards-rail .card{min-height:420px} }
+.cards-rail .card-body{flex:1 1 auto;display:flex;flex-direction:column;align-items:stretch;text-align:left !important;padding-top:0 !important}
+
+/* Buttons inside cards: limit width and align left */
+.cards-rail .card .btn-primary,
+.cards-rail .card .btn-outline{width:100% !important;width:100%;align-self:flex-start}
+
+/* Make section bottom buttons full width */
+.btn-wide{display:block;width:100%;}
+
+/* Ensure media flush to card edges */
+.post-thumb,.course-thumb,.event-thumb{display:block;width:100%;max-width:100%;margin:0}
+
+/* Section titles centered forcefully */
+.section h2{ text-align:center !important; margin-left:auto !important; margin-right:auto !important; }
+</style>
   <div class="container">
-    <div class="row g-4 align-items-start">
-      <div class="col-12 col-lg-6">
-        <div class="card h-100">
-          @if($about->image_path)
-            <img class="w-100" style="height:240px;object-fit:cover;"
-                 src="{{ Storage::url($about->image_path) }}"
-                 alt="{{ $about->title }}">
-          @else
-            <div class="w-100" style="height:240px;background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));display:flex;align-items:center;justify-content:center;">
-              <i class="fas fa-users" style="font-size:3rem;color:var(--diamond-white);opacity:.3;"></i>
+    <div class="row g-4 align-items-center about-row">
+      <div class="col-12">
+        <div class="about-card">
+          <div class="about-media">
+            <div class="about-visual">
+              @if($about->image_path)
+                <img class="about-img" src="{{ Storage::url($about->image_path) }}" alt="{{ $about->title }}">
+              @else
+                <div class="d-flex align-items-center justify-content-center about-img" style="background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));">
+                  <i class="fas fa-users" style="font-size:3rem;color:var(--diamond-white);opacity:.35"></i>
+                </div>
+              @endif
             </div>
-          @endif
-        </div>
-      </div>
-      <div class="col-12 col-lg-6">
-        <div class="card h-100">
-          <div class="card-body">
-            @if($about->mini_title)
-              <div class="text-muted mb-2">{{ $about->mini_title }}</div>
-            @endif
-            <h2 class="card-title" style="font-size:1.75rem;">{{ $about->title }}</h2>
-            <div class="card-text">{!! nl2br(e($about->content)) !!}</div>
+          </div>
+          <div class="about-content">
+            <div class="card h-100 about-copy">
+              <div class="card-body d-flex flex-column">
+                @if($about->mini_title)
+                  <div class="about-mini mb-2">{{ $about->mini_title }}</div>
+                @endif
+                <h2 class="card-title">{{ $about->title }}</h2>
+                <div class="card-text mb-3">{!! nl2br(e($about->content)) !!}</div>
+                <a href="{{ route('about') }}" class="btn-primary">
+                  <i class="fas fa-arrow-right me-2"></i>Learn more
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -141,40 +235,67 @@
 
 @if($mission || $vision)
 <section class="section" style="padding:2rem 0;">
+  <style>
+    .mv-card{display:flex;flex-direction:row;align-items:stretch;border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;background:rgba(255,255,255,0.03);margin-bottom:1rem}
+    .mv-card.is-reverse{flex-direction:row-reverse}
+    .mv-media{position:relative;flex:0 0 44%;max-width:44%}
+    .mv-visual{position:relative;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));border-top:3px solid var(--primary-blue);border-left:3px solid var(--primary-blue);border-bottom:3px solid var(--primary-blue);box-shadow:-2px 0 16px rgba(59,130,246,.45),0 -6px 18px rgba(59,130,246,.35),0 6px 18px rgba(59,130,246,.35);width:92%;margin:auto 0 auto 12px;height:100%}
+    .is-reverse .mv-visual{border-left:none;border-right:3px solid var(--primary-blue);box-shadow:2px 0 16px rgba(59,130,246,.45),0 -6px 18px rgba(59,130,246,.35),0 6px 18px rgba(59,130,246,.35);margin:auto 12px auto 0}
+    .mv-img{display:block;width:100%;height:100%;object-fit:cover;position:relative;z-index:1;filter:drop-shadow(-8px 12px 28px rgba(37,99,235,.35))}
+    @media (min-width:768px){ .mv-visual{height:300px} }
+    @media (max-width:767.98px){ .mv-visual{height:260px;margin-bottom:.5rem} }
+    .mv-content{flex:1 1 auto;display:flex}
+    .mv-content .card{border:0;background:transparent}
+    .mv-content .card-body{display:flex;flex-direction:column}
+  </style>
   <div class="container">
-    <div class="row g-4">
-      @if($mission)
-        <div class="col-12 col-lg-6">
-          <div class="card h-100">
+    @if($mission)
+      <div class="mv-card">
+        <div class="mv-media">
+          <div class="mv-visual">
             @if($mission->image_path)
-              <img class="w-100" style="height:240px;object-fit:cover;"
-                   src="{{ Storage::url($mission->image_path) }}"
-                   alt="{{ $mission->title }}">
+              <img class="mv-img" src="{{ Storage::url($mission->image_path) }}" alt="{{ $mission->title }}">
+            @else
+              <div class="d-flex align-items-center justify-content-center mv-img" style="background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));">
+                <i class="fas fa-bullseye" style="font-size:3rem;color:var(--diamond-white);opacity:.35"></i>
+              </div>
             @endif
+          </div>
+        </div>
+        <div class="mv-content">
+          <div class="card h-100">
             <div class="card-body">
               <h3 class="card-title">{{ $mission->title }}</h3>
               <div class="card-text">{{ $mission->content }}</div>
             </div>
           </div>
         </div>
-      @endif
+      </div>
+    @endif
 
-      @if($vision)
-        <div class="col-12 col-lg-6">
-          <div class="card h-100">
+    @if($vision)
+      <div class="mv-card is-reverse">
+        <div class="mv-media">
+          <div class="mv-visual">
             @if($vision->image_path)
-              <img class="w-100" style="height:240px;object-fit:cover;"
-                   src="{{ Storage::url($vision->image_path) }}"
-                   alt="{{ $vision->title }}">
+              <img class="mv-img" src="{{ Storage::url($vision->image_path) }}" alt="{{ $vision->title }}">
+            @else
+              <div class="d-flex align-items-center justify-content-center mv-img" style="background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));">
+                <i class="fas fa-eye" style="font-size:3rem;color:var(--diamond-white);opacity:.35"></i>
+              </div>
             @endif
+          </div>
+        </div>
+        <div class="mv-content">
+          <div class="card h-100">
             <div class="card-body">
               <h3 class="card-title">{{ $vision->title }}</h3>
               <div class="card-text">{{ $vision->content }}</div>
             </div>
           </div>
         </div>
-      @endif
-    </div>
+      </div>
+    @endif
   </div>
 
 @endif
@@ -218,15 +339,12 @@
   @endphp
 
   <div class="container">
-    <div class="d-flex justify-content-between align-items-end mb-3">
+    <div class="text-center mb-3">
       <h2 class="m-0">Latest Articles</h2>
-      <a class="btn-outline" href="{{ \Illuminate\Support\Facades\Route::has('articles.index') ? route('articles.index') : url('/articles') }}">
-        View all articles
-      </a>
     </div>
 
     @if($latestArticles->count())
-      <div class="row g-3">
+      <div class="row g-3 cards-rail">
         @foreach($latestArticles as $post)
           @php
             $image = $pickImage($post);
@@ -256,7 +374,7 @@
 
                 {{-- Force the Read button to specific URL as requested --}}
                 <a class="btn-primary" href="http://127.0.0.1:8000/blog/cybersecurity-in-2025-safeguarding-your-digital-life">
-                  Read
+                  Read Article
                 </a>
               </div>
             </div>
@@ -266,10 +384,11 @@
     @else
       <div class="text-muted">No articles published yet.</div>
     @endif
+    <div class="text-center mt-3" style="padding-top:1rem !important">
+      <a class="btn-outline btn-wide" href="{{ \Illuminate\Support\Facades\Route::has('articles.index') ? route('articles.index') : url('/articles') }}">View all articles</a>
+    </div>
   </div>
 </section>
-
-
 
 
 
@@ -293,15 +412,12 @@
   @endphp
 
   <div class="container">
-    <div class="d-flex justify-content-between align-items-end mb-3">
-      <h2 class="m-0">Latest Courses</h2>
-      <a class="btn-outline" href="{{ \Illuminate\Support\Facades\Route::has('courses.index') ? route('courses.index') : url('/courses') }}">
-        View all courses
-      </a>
+    <div class="text-center mb-3">
+      <h2 class="m-0">Available Courses</h2>
     </div>
 
     @if($latestCourses->count())
-      <div class="row g-3">
+      <div class="row g-3 cards-rail">
         @foreach($latestCourses as $course)
           @php
             $courseImage = $pickCourseImage($course);
@@ -325,7 +441,7 @@
                 </div>
               @endif
 
-              <div class="card-body d-flex flex-column">
+              <div class="card-body d-flex flex-column align-items-center text-center">
                 <h3 class="h5">{{ $courseTitle }}</h3>
                 @if(!empty($course->created_at))
                   <div class="text-muted small mb-2">{{ $course->created_at->format('M j, Y') }}</div>
@@ -342,6 +458,9 @@
     @else
       <div class="text-muted">No courses available yet.</div>
     @endif
+    <div class="text-center mt-3" style="padding-top:1rem !important">
+      <a class="btn-outline btn-wide" href="{{ \Illuminate\Support\Facades\Route::has('courses.index') ? route('courses.index') : url('/courses') }}">View all courses</a>
+    </div>
   </div>
 </section>
 
@@ -375,13 +494,12 @@
   @endphp
 
   <div class="container">
-    <div class="d-flex justify-content-between align-items-end mb-3">
+    <div class="text-center mb-3">
       <h2 class="m-0">Upcoming Events</h2>
-      <a class="btn-outline" href="{{ $eventsIndexUrl }}">View all events</a>
     </div>
 
     @if($upcomingTop3->count())
-      <div class="row g-3">
+      <div class="row g-3 cards-rail">
         @foreach($upcomingTop3 as $event)
           @php
             $title = $event->title ?? 'Untitled Event';
@@ -421,6 +539,9 @@
     @else
       <div class="text-muted">No upcoming events.</div>
     @endif
+    <div class="text-center mt-3" style="padding-top:1rem !important">
+      <a class="btn-outline btn-wide" href="{{ $eventsIndexUrl }}">View all events</a>
+    </div>
   </div>
 </section>
 
