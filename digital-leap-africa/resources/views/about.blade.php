@@ -100,16 +100,34 @@
     .about-visual{border-radius:24px}
   }
 
-  /* Creative team card */
-  .team-card{position:relative;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:24px;overflow:hidden;transition:transform .3s, box-shadow .3s}
-  .team-card:hover{transform:translateY(-6px);box-shadow:0 14px 34px rgba(0,0,0,.35)}
-  .team-hero{position:relative;height:110px;background:linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);}
-  .team-avatar{position:absolute;left:50%;top:100%;transform:translate(-50%, -50%);width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.9);box-shadow:0 6px 18px rgba(0,0,0,.35)}
-  .team-avatar--fallback{display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25);color:#fff;font-size:1.5rem}
-  .team-body{padding:3.25rem 1rem 1.25rem 1rem;text-align:center}
-  .team-name{font-weight:800;color:var(--diamond-white);margin-bottom:.25rem}
-  .team-role{color:#9ecbff;margin-bottom:.5rem}
-  .team-bio{color:var(--cool-gray)}
+  /* Team card */
+  .tm-card{background:#1e293b;border-radius:16px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.3);transition:all .3s ease;max-width:580px;max-height:325px;width:100%;height:100%;display:flex;border:1px solid rgba(255,255,255,0.05)}
+  .tm-card:hover{transform:translateY(-5px);box-shadow:0 12px 25px rgba(0,0,0,0.4)}
+  .tm-image-container{min-width:40% !important; max-width:40% !important; overflow:hidden;position:relative}
+  .tm-image-container img{width:100% !important;height:100% !important;object-fit:cover;transition:all .3s ease;display:block}
+  .tm-card:hover .tm-image-container img{transform:scale(1.03)}
+  .tm-image-overlay{position:absolute;bottom:0;left:0;width:100%;height:40%;background:linear-gradient(to top, rgba(30,41,59,0.9), transparent);pointer-events:none}
+  .tm-content{padding:20px;flex-grow:1;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+  .tm-name{font-size:1.5rem;color:#f1f5f9;margin-bottom:3px;font-weight:700;background:linear-gradient(90deg,#3b82f6,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2}
+  .tm-position{color:#fff;background:#3b82f6;padding:5px 12px;border-radius:8px;font-size:.75rem;font-weight:500;display:inline-block;margin-bottom:15px;position:relative}
+  .tm-position::after{content:'';position:absolute;bottom:-8px;left:0;width:45px;height:3px;background:#3b82f6;border-radius:2px}
+  .tm-bio{color:#94a3b8;line-height:1.3;margin-bottom:15px;font-size:.9rem;max-width:100%;overflow:hidden}
+
+  /* Socials and contact (from template) */
+  .socials{display:flex;gap:8px;margin-bottom:15px}
+  .socials a{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:rgba(59,130,246,0.1);color:#60a5fa;transition:all .3s ease;text-decoration:none;border:1px solid rgba(59,130,246,0.2);font-size:.9rem}
+  .socials a:hover{background:#3b82f6;color:#fff;transform:translateY(-3px);box-shadow:0 4px 10px rgba(59,130,246,0.4)}
+  .contact-info{display:flex;flex-direction:column;gap:8px}
+  .contact-item{display:flex;align-items:center;gap:8px;color:#94a3b8;font-size:.8rem;padding:6px 10px;background:rgba(255,255,255,0.05);border-radius:8px;transition:all .3s ease}
+  .contact-item:hover{background:rgba(255,255,255,0.08)}
+  .contact-item i{color:#3b82f6;font-size:.8rem}
+
+  @media (max-width:650px){
+    .tm-card{flex-direction:column;max-height:unset;height:auto}
+    .tm-image-container{width:100%;height:180px}
+    .tm-content{padding:20px}
+    .tm-name{font-size:1.4rem}
+  }
 
   /* Make images truly flush with the card edges */
   .media{border-radius:0 !important;margin:0 !important}
@@ -266,20 +284,45 @@
       @if($teamMembers->count())
       <div class="team-grid">
         @foreach($teamMembers as $member)
-        <div class="team-card fade-in-up">
-          <div class="team-hero">
+        <div class="tm-card fade-in-up">
+          <div class="tm-image-container">
             @if($member->image_path)
-              <img class="team-avatar" src="{{ $member->image_url }}" alt="{{ $member->name }}">
+              <img src="{{ $member->image_url }}" alt="{{ $member->name }}">
             @else
-              <div class="team-avatar team-avatar--fallback">
-                <i class="fas fa-user"></i>
-              </div>
+              <img src="https://via.placeholder.com/600x600.png?text=Profile" alt="{{ $member->name }}">
             @endif
+            <div class="tm-image-overlay"></div>
           </div>
-          <div class="team-body">
-            <h3 class="team-name">{{ $member->name }}</h3>
-            <div class="team-role">{{ $member->role }}</div>
-            <div class="team-bio">{{ Str::limit($member->bio, 130) }}</div>
+          <div class="tm-content">
+            <div>
+              <h3 class="tm-name">{{ $member->name }}</h3>
+              <p class="tm-position">{{ $member->role }}</p>
+              <p class="tm-bio">{{ Str::limit($member->bio, 180) }}</p>
+            </div>
+            <div>
+              <div class="socials">
+                @if(!empty($member->instagram_url))
+                  <a href="{{ $member->instagram_url }}" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                @endif
+                @if(!empty($member->facebook_url))
+                  <a href="{{ $member->facebook_url }}" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                @endif
+                @if(!empty($member->twitter_url))
+                  <a href="{{ $member->twitter_url }}" target="_blank" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                @endif
+                @if(!empty($member->linkedin_url))
+                  <a href="{{ $member->linkedin_url }}" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                @endif
+              </div>
+              <div class="contact-info">
+                @if(!empty($member->email))
+                  <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>{{ $member->email }}</span>
+                  </div>
+                @endif
+              </div>
+            </div>
           </div>
         </div>
         @endforeach
