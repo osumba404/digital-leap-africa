@@ -17,34 +17,52 @@
     @endphp
 
     @if(count($slides))
-        <div class="hero-rtl" data-interval="6000">
+        <div class="hero-rtl hero-slides-container" data-interval="6000">
             <div class="hero-fader" style="position:relative;width:100%;height:100%;">
                 @foreach($slides as $idx => $s)
-                    <div class="hero-item hero-slide fade-slide{{ $idx===0 ? ' is-active' : '' }}" style="position:absolute;inset:0;">
-                        @if(!empty($s['image']))
-                            <img src="{{ $s['image'] }}" class="hero-img" alt="Hero {{ $idx+1 }}">
+                    @php $isAltA = ($idx % 2) === 0; @endphp
+                    @php
+                        $bgUrl = !empty($s['image']) ? $s['image'] : ($isAltA
+                            ? 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'
+                            : 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+                        $bgStyle = $isAltA
+                            ? "background: linear-gradient(135deg, rgba(10, 15, 28, 0.85) 0%, rgba(10, 15, 28, 0.75) 100%), url('{$bgUrl}');"
+                            : "background: linear-gradient(90deg, var(--dark-bg) 40%, transparent 70%), url('{$bgUrl}');";
+                    @endphp
+                    <section class="hero-item hero-slide fade-slide {{ $isAltA ? 'slide-2' : 'slide-8' }}{{ $idx===0 ? ' is-active' : '' }}" style="{{ $bgStyle }} background-size:cover;background-position:center;background-attachment:fixed;position:absolute;inset:0;">
+                        @if($isAltA)
+                            <div class="floating-shapes">
+                                <div class="floating-shape"></div>
+                                <div class="floating-shape"></div>
+                                <div class="floating-shape"></div>
+                            </div>
                         @endif
-                        <div class="hero-overlay" aria-hidden="true"></div>
-                        <div class="hero-caption">
+                        <div class="slide-content">
                             @if(!empty($s['mini']))
-                                <div class="badge bg-primary mb-2">{{ $s['mini'] }}</div>
+                                <p class="mini-title">{{ $s['mini'] }}</p>
                             @endif
                             @if(!empty($s['title']))
-                                <h1 class="mb-2 hero-title">{{ $s['title'] }}</h1>
+                                <h1 class="main-title">{{ $s['title'] }}</h1>
                             @endif
                             @if(!empty($s['sub']))
-                                <p class="mb-3 hero-sub">{{ $s['sub'] }}</p>
+                                <p class="hero-text">{{ $s['sub'] }}</p>
                             @endif
-                            <div class="d-flex gap-2 flex-wrap">
+                            <div class="cta-buttons">
                                 @if(!empty($s['cta1_label']))
-                                    <a class="btn-primary" href="{{ !empty($s['cta1_route']) && Route::has($s['cta1_route']) ? route($s['cta1_route']) : '#' }}">{{ $s['cta1_label'] }}</a>
+                                    <a href="{{ !empty($s['cta1_route']) && Route::has($s['cta1_route']) ? route($s['cta1_route']) : '#' }}" class="btn btn-primary">
+                                        <i class="fas {{ $isAltA ? 'fa-bolt' : 'fa-cloud' }}"></i>
+                                        {{ $s['cta1_label'] }}
+                                    </a>
                                 @endif
                                 @if(!empty($s['cta2_label']))
-                                    <a class="btn-outline" href="{{ !empty($s['cta2_route']) && Route::has($s['cta2_route']) ? route($s['cta2_route']) : '#' }}">{{ $s['cta2_label'] }}</a>
+                                    <a href="{{ !empty($s['cta2_route']) && Route::has($s['cta2_route']) ? route($s['cta2_route']) : '#' }}" class="btn btn-secondary">
+                                        <i class="fas {{ $isAltA ? 'fa-book' : 'fa-server' }}"></i>
+                                        {{ $s['cta2_label'] }}
+                                    </a>
                                 @endif
                             </div>
                         </div>
-                    </div>
+                    </section>
                 @endforeach
                 <div class="hero-stars" aria-hidden="true"></div>
             </div>
@@ -68,12 +86,67 @@
         </div>
     @endif
 </section>
+
 <style>
-  
-    .hero-title{font-size:3rem; color:rgb(132, 180, 231) !important;}.
-    .hero-sub{font-size:1.25rem;}
-    .hero-img{
-      opacity: 0.3 !important; 
+:root{--dark-bg:#0a0f1c;--card-bg:#131a2a;--accent-blue:#3b82f6;--neon-blue:#00d4ff;--light-blue:#60a5fa;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--shadow:0 10px 25px rgba(0,0,0,0.5);--transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275)}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
+
+/* New styles for hero slides */
+.hero-slide{min-height:100vh;display:flex;align-items:center;padding:0 5%;position:relative;overflow:hidden}
+.slide-content{max-width:1200px;margin:0 auto;width:100%}
+
+/* Optional nav (not rendered) */
+.slides-nav{position:fixed;top:20px;right:20px;z-index:1000;display:flex;gap:10px}
+.nav-btn{background:rgba(19,26,42,0.8);color:var(--text-primary);border:1px solid rgba(59,130,246,0.3);padding:8px 15px;border-radius:20px;cursor:pointer;transition:var(--transition);font-size:.9rem}
+.nav-btn:hover{background:var(--accent-blue);transform:translateY(-2px)}
+
+    .hero-slides-container{min-height:100vh}
+    .mini-title{color:#00d4ff;font-size:1rem;font-weight:600;margin-bottom:15px;text-transform:uppercase;letter-spacing:2px}
+    .main-title{font-size:3.5rem;font-weight:800;margin-bottom:20px;line-height:1.1}
+    .hero-text{color:#94a3b8;font-size:1.1rem;line-height:1.6;margin-bottom:30px;max-width:600px}
+    .cta-buttons{display:flex;gap:15px;flex-wrap:wrap}
+    .btn{padding:14px 30px;border-radius:30px;font-weight:600;font-size:1rem;cursor:pointer;transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);text-decoration:none;display:inline-flex;align-items:center;gap:10px}
+    .btn-secondary{background:transparent;color:var(--diamond-white);border:2px solid #3b82f6}
+    .btn-secondary:hover{background:rgba(59,130,246,0.1);transform:translateY(-3px)}
+
+    /* Slide 2 background and effects */
+    .slide-2{background:linear-gradient(135deg, rgba(10, 15, 28, 0.85) 0%, rgba(10, 15, 28, 0.75) 100%), url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');background-size:cover;background-position:center;background-attachment:fixed;position:relative}
+    .slide-2::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 30% 50%, rgba(59,130,246,0.15) 0%, transparent 50%);pointer-events:none}
+    .slide-2 .slide-content{max-width:700px;position:relative;z-index:2}
+    .slide-2 .main-title{background:linear-gradient(90deg,#3b82f6,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 5px 15px rgba(0,0,0,0.3)}
+    .slide-2 .hero-text{font-size:1.3rem;padding:20px}
+
+    .floating-shapes{position:absolute;width:100%;height:100%;pointer-events:none;z-index:1}
+    .floating-shape{position:absolute;border-radius:50%;background:rgba(59,130,246,0.1);animation:float 8s ease-in-out infinite}
+    .floating-shape:nth-child(1){width:80px;height:80px;top:20%;left:10%;animation-delay:0s}
+    .floating-shape:nth-child(2){width:120px;height:120px;top:60%;left:85%;animation-delay:2s}
+    .floating-shape:nth-child(3){width:60px;height:60px;top:80%;left:15%;animation-delay:4s}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-20px) rotate(10deg)}}
+
+    /* Slide 8 background and effects */
+    .slide-8{background:linear-gradient(90deg, var(--dark-bg) 40%, transparent 70%), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');background-size:cover;background-position:center;background-attachment:fixed;position:relative}
+    .slide-8::before{content:'';position:absolute;top:0;right:0;width:100%;height:100%;background:linear-gradient(45deg, transparent 60%, #3b82f6 200%);opacity:.1;z-index:1}
+    .slide-8 .slide-content{max-width:650px;position:relative;z-index:2}
+    .slide-8 .main-title{font-size:3.8rem;margin-bottom:15px;background:linear-gradient(90deg,#ffffff,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 5px 15px rgba(0,0,0,0.3)}
+    .slide-8 .hero-text{font-size:1.1rem;margin-bottom:25px;padding:20px;border-radius:15px}
+
+    @media (max-width:1024px){
+        .slide-8{background:linear-gradient(rgba(10,15,28,0.9), rgba(10,15,28,0.8)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');background-size:cover;background-position:center}
+        .main-title{font-size:2.8rem}
+        .slide-8 .main-title{font-size:3.2rem}
+    }
+    @media (max-width:768px){
+        .main-title{font-size:2.2rem}
+        .slide-8 .main-title{font-size:2.5rem}
+        .hero-text{font-size:1rem}
+        .btn{padding:12px 25px;font-size:.9rem}
+    }
+    @media (max-width:480px){
+        .main-title{font-size:1.8rem}
+        .slide-8 .main-title{font-size:2rem}
+        .cta-buttons{flex-direction:column;align-items:flex-start}
+        .btn{width:100%;justify-content:center}
     }
 </style>
 
@@ -490,7 +563,7 @@
 .fade-slide{opacity:0;transition:opacity .8s ease;}
 .fade-slide.is-active{opacity:1}
 /* Ensure hero reserves height */
-.hero-rtl{position:relative; height: min(75vh, 720px); min-height:420px}
+.hero-rtl{position:relative; height: 100vh; min-height:100vh}
 .hero-fader{position:relative; width:100%; height:100%}
 .hero-stars{position:absolute;inset:0;pointer-events:none;z-index:3;opacity:0;transition:opacity .6s ease;background-image:
   radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.9) 40%, transparent 41%),
@@ -504,8 +577,8 @@ animation: twinkle 2s infinite ease-in-out;
 @keyframes twinkle{0%,100%{filter:brightness(1)}50%{filter:brightness(1.6)}}
 
 @media (max-width: 768px) {
-  .hero-slide { height: 56vh; min-height: 320px; }
-  .hero-rtl, .hero-fader { height:56vh; min-height:320px }
+  .hero-slide { height: 80vh; min-height: 360px; }
+  .hero-rtl, .hero-fader { height:80vh; min-height:360px }
   .hero-caption { bottom: 6%; }
   .hero-caption h1 { font-size: 1.75rem; }
 }
