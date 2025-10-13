@@ -31,18 +31,27 @@ class AboutController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'subtitle' => 'nullable|string|max:255',
+            'mini_title' => 'nullable|string|max:255',
             'content' => 'required|string',
             'section_type' => 'required|in:about,mission,vision,values',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'is_active' => 'boolean',
             'order' => 'integer',
+            'bullet_points_text' => 'nullable|string'
         ]);
         
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('public/about');
             $validated['image_path'] = $path;
         }
+
+        // Transform bullet_points_text (one per line) to array
+        $validated['bullet_points'] = [];
+        if (!empty($validated['bullet_points_text'])) {
+            $lines = preg_split("/\r\n|\r|\n/", trim($validated['bullet_points_text']));
+            $validated['bullet_points'] = array_values(array_filter(array_map('trim', $lines), fn($v) => $v !== ''));
+        }
+        unset($validated['bullet_points_text']);
 
         AboutSection::create($validated);
 
@@ -59,12 +68,13 @@ class AboutController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'subtitle' => 'nullable|string|max:255',
+            'mini_title' => 'nullable|string|max:255',
             'content' => 'required|string',
             'section_type' => 'required|in:about,mission,vision,values',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'is_active' => 'boolean',
             'order' => 'integer',
+            'bullet_points_text' => 'nullable|string'
         ]);
         
         if ($request->hasFile('image')) {
@@ -74,6 +84,14 @@ class AboutController extends Controller
             $path = $request->file('image')->store('public/about');
             $validated['image_path'] = $path;
         }
+        
+        // Transform bullet_points_text (one per line) to array
+        $validated['bullet_points'] = [];
+        if (!empty($validated['bullet_points_text'])) {
+            $lines = preg_split("/\r\n|\r|\n/", trim($validated['bullet_points_text']));
+            $validated['bullet_points'] = array_values(array_filter(array_map('trim', $lines), fn($v) => $v !== ''));
+        }
+        unset($validated['bullet_points_text']);
         
         $section->update($validated);
 

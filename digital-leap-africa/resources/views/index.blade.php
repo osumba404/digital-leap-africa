@@ -111,134 +111,92 @@
 @if($about)
 <section id="about-section" class="section" style="padding:2.5rem 0;">
   <style>
-    /* Outer wrap shows ambient glow beyond bounds */
-    #about-section .about-visual-wrap{position:relative;overflow:visible}
-    #about-section .about-visual-wrap::before{content:"";position:absolute;top:-22%;left:-22%;width:65%;height:65%;background:radial-gradient(closest-side, rgba(59,130,246,.55), transparent 70%);filter: blur(18px);z-index:0;pointer-events:none}
-    #about-section .about-visual-wrap::after{content:"";position:absolute;bottom:-25%;left:-25%;width:75%;height:75%;background:radial-gradient(closest-side, rgba(37,99,235,.35), transparent 70%);filter: blur(22px);z-index:0;pointer-events:none}
+    /* Hexagon About card (scoped to #about-section to avoid collisions) */
+    #about-section .aboutx-card{background:#131a2a;border-radius:24px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.5);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);max-width:1000px;width:100%;display:flex;position:relative;border:1px solid rgba(59,130,246,0.1);margin:0 auto}
+    #about-section .aboutx-card::before{content:'';position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;background:linear-gradient(45deg,#3b82f6,#00d4ff,#3b82f6);z-index:-1;border-radius:26px;opacity:0;transition:opacity .5s ease}
+    #about-section .aboutx-card:hover::before{opacity:1;animation:aboutx-rotate 3s linear infinite}
+    @keyframes aboutx-rotate{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
 
-    /* Inner visual clamps the image with rounded corners */
-    #about-section .about-visual{
-      position:relative;
-      border-radius: 100px 16px 100px 16px;;
-      overflow:hidden;
-      background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));
-      /* Blue line on top/left/bottom with glow */
-      border-top:3px solid var(--primary-blue);
-      border-left:3px solid var(--primary-blue);
-      border-bottom:3px solid var(--primary-blue);
-      box-shadow:
-        -2px 0 16px rgba(59,130,246,.45),
-         0 -6px 18px rgba(59,130,246,.35),
-         0  6px 18px rgba(59,130,246,.35);
-      /* Slightly reduce visual footprint */
-      width:92%;
-      margin: auto 0 auto 12px;
+    #about-section .aboutx-image{min-width:30%;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    #about-section .aboutx-hex{width:320px;height:370px;background:linear-gradient(135deg,#3b82f6,#00d4ff);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;position:relative;transition:inherit}
+    #about-section .aboutx-hex-inner{width:300px;height:350px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);overflow:hidden;background:#131a2a;display:flex;align-items:center;justify-content:center}
+    #about-section .aboutx-hex-inner img{width:100%;height:100%;object-fit:cover;transition:inherit;filter:grayscale(30%)}
+    #about-section .aboutx-card:hover .aboutx-hex-inner img{transform:scale(1.1);filter:grayscale(0%)}
+
+    #about-section .aboutx-floating{position:absolute;width:100%;height:100%;pointer-events:none}
+    #about-section .aboutx-f{position:absolute;width:40px;height:40px;background:rgba(59,130,246,0.2);border-radius:50%;animation:aboutx-float 6s ease-in-out infinite}
+    #about-section .aboutx-f:nth-child(1){top:20%;left:10%;animation-delay:0s;width:30px;height:30px}
+    #about-section .aboutx-f:nth-child(2){top:60%;left:80%;animation-delay:1s;width:25px;height:25px}
+    #about-section .aboutx-f:nth-child(3){top:80%;left:20%;animation-delay:2s;width:35px;height:35px}
+    @keyframes aboutx-float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-20px) rotate(180deg)}}
+
+    #about-section .aboutx-content{padding:40px;flex-grow:1;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2}
+    #about-section .aboutx-badge{position:absolute;top:30px;right:30px;background:linear-gradient(45deg,#3b82f6,#00d4ff);color:#fff;padding:8px 20px;border-radius:20px;font-size:.9rem;font-weight:600;box-shadow:0 4px 15px rgba(59,130,246,.4)}
+    #about-section .aboutx-title{font-size:2.5rem;color:#f1f5f9;margin-bottom:15px;font-weight:800;background:linear-gradient(90deg,#3b82f6,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative;display:inline-block}
+    #about-section .aboutx-title::after{content:'';position:absolute;bottom:-8px;left:0;width:80px;height:4px;background:linear-gradient(90deg,#3b82f6,#00d4ff);border-radius:2px}
+    #about-section .aboutx-sub{color:#94a3b8;font-size:1.2rem;margin-bottom:25px;font-weight:500}
+    #about-section .aboutx-desc{color:#94a3b8;line-height:1.7;margin-bottom:30px;font-size:1.05rem}
+
+    #about-section .aboutx-features{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:30px}
+    #about-section .aboutx-feature{display:flex;align-items:center;gap:10px;color:#94a3b8;font-size:.95rem}
+    #about-section .aboutx-feature i{color:#3b82f6;font-size:1rem}
+
+    #about-section .aboutx-cta{align-self:flex-start;background:linear-gradient(45deg,#3b82f6,#00d4ff);color:#fff;border:none;padding:12px 30px;border-radius:30px;font-size:1rem;font-weight:600;cursor:pointer;transition:inherit;box-shadow:0 4px 15px rgba(59,130,246,.3);display:flex;align-items:center;gap:10px;text-decoration:none}
+    #about-section .aboutx-cta:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(59,130,246,.5)}
+
+    @media (max-width:900px){
+      #about-section .aboutx-card{flex-direction:column;max-width:600px}
+      #about-section .aboutx-image{width:100%;height:400px}
+      #about-section .aboutx-hex{width:280px;height:320px}
+      #about-section .aboutx-hex-inner{width:260px;height:300px}
+      #about-section .aboutx-content{padding:30px 25px}
+      #about-section .aboutx-title{font-size:2rem}
     }
-    #about-section .about-img{
-      display:block;
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      position:relative;
-      z-index:1;      
-      filter: drop-shadow(-8px 12px 28px rgba(37,99,235,.35));
+    @media (max-width:480px){
+      #about-section .aboutx-card{max-width:100%}
+      #about-section .aboutx-image{height:300px}
+      #about-section .aboutx-hex{width:220px;height:250px}
+      #about-section .aboutx-hex-inner{width:200px;height:230px}
+      #about-section .aboutx-features{grid-template-columns:1fr}
     }
-
-    @media (min-width: 768px){ #about-section .about-visual{height:300px;} }
-    @media (max-width: 767.98px){ #about-section .about-visual{height:260px;margin-bottom:0.5rem;} }
-
-    #about-section .about-copy .card-title{font-size:2rem;margin-bottom:.5rem;color: #64b5f6;}
-    #about-section .about-mini{color:var(--cool-gray)}
-
-    /* side-by-side layout */
-    #about-section .about-row{
-      display:flex !important; 
-      flex-wrap:nowrap !important; 
-      align-items:center !important;
-    }
-    #about-section .about-col{flex:0 0 50% !important; max-width:50% !important; width:50% !important;}
-    #about-section .about-col:first-child{padding-right:0.75rem;}
-    #about-section .about-col:last-child{padding-left:0.75rem;}
-    @media (max-width: 575.98px){
-      /* Optional: allow tiny screens to scroll horizontally rather than stack */
-      #about-section .about-row{overflow-x:auto;}
-    }
-    /* Unified card visuals */
-    #about-section .about-card{display:flex !important; flex-direction:row !important; align-items:stretch !important; border:1px solid rgba(255,255,255,0.08); border-radius: 100px 16px 100px 16px; overflow:hidden; background:rgba(255,255,255,0.03);}
-    #about-section .about-media{position:relative; flex:0 0 44% !important; max-width:44% !important;}
-    #about-section .about-media .about-visual{height:100%;}
-    #about-section .about-content{flex:1 1 auto !important; display:flex;}
-    #about-section .about-content .card{border:0; background:transparent;}
-    #about-section .about-content .card-body{display:flex; flex-direction:column;}
-
-    /* Ambient blue glow tied to media side */
-    #about-section .about-media::before{content:""; position:absolute; top:-18%; left:-18%; width:70%; height:70%; background:radial-gradient(closest-side, rgba(59,130,246,.6), transparent 72%); filter:blur(22px); z-index:0; pointer-events:none}
-    #about-section .about-media::after{content:""; position:absolute; bottom:-22%; left:-22%; width:80%; height:80%; background:radial-gradient(closest-side, rgba(37,99,235,.4), transparent 72%); filter:blur(26px); z-index:0; pointer-events:none}
+  </style>
   
-/* Fixed-width centered rails for cards */
-.cards-rail{display:grid;grid-template-columns:repeat(3, 320px);gap:1rem;justify-content:center;align-items:stretch}
-@media (max-width: 992px){ .cards-rail{grid-template-columns:repeat(2, 320px)} }
-@media (max-width: 576px){ .cards-rail{grid-template-columns:repeat(1, 320px)} }
-
-/* Equal-height cards and centered content */
-.cards-rail > *{display:flex}
-.cards-rail .card{display:flex;flex-direction:column;height:100%;min-height:460px}
-@media (max-width: 576px){ .cards-rail .card{min-height:420px} }
-.cards-rail .card-body{flex:1 1 auto;display:flex;flex-direction:column;align-items:stretch;text-align:left !important;padding-top:0 !important}
-
-/* Buttons inside cards: limit width and align left */
-.cards-rail .card .btn-primary,
-.cards-rail .card .btn-outline{width:100% !important;width:100%;align-self:flex-start}
-
-.cards-rail {
-  --bs-gutter-x: 0;
-  --bs-gutter-y: 0;
-}
-
-
-/* Make section bottom buttons full width */
-.btn-wide{display:block;width:100%;}
-
-/* Ensure media flush to card edges */
-.post-thumb,.course-thumb,.event-thumb{display:block;width:100%;max-width:100%;margin: 0; padding: 0; border-radius: 0;}
-.post-card{
-  margin: 0; 
-  padding: 0;}
-
-.post-card-out{margin:0; padding:0;}
-/* Section titles centered forcefully */
-.section h2{ text-align:center !important; margin-left:auto !important; margin-right:auto !important; }
-</style>
   <div class="container">
-    <div class="row g-4 align-items-center about-row">
-      <div class="col-12">
-        <div class="about-card">
-          <div class="about-media">
-            <div class="about-visual">
-              @if($about->image_path)
-                <img class="about-img" src="{{ Storage::url($about->image_path) }}" alt="{{ $about->title }}">
-              @else
-                <div class="d-flex align-items-center justify-content-center about-img" style="background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));">
-                  <i class="fas fa-users" style="font-size:3rem;color:var(--diamond-white);opacity:.35"></i>
-                </div>
-              @endif
-            </div>
-          </div>
-          <div class="about-content">
-            <div class="card h-100 about-copy">
-              <div class="card-body d-flex flex-column">
-                @if($about->mini_title)
-                  <div class="about-mini mb-2">{{ $about->mini_title }}</div>
-                @endif
-                <h2 class="card-title">{{ $about->title }}</h2>
-                <div class="card-text mb-3">{!! nl2br(e($about->content)) !!}</div>
-                <a href="{{ route('about') }}" class="btn-primary">
-                  <i class="fas fa-arrow-right me-2"></i>Learn more
-                </a>
-              </div>
-            </div>
+    <div class="aboutx-card">
+      <div class="aboutx-image">
+        <div class="aboutx-hex">
+          <div class="aboutx-hex-inner">
+            @if($about->image_path)
+              <img src="{{ Storage::url($about->image_path) }}" alt="{{ $about->title }}">
+            @else
+              <img src="https://via.placeholder.com/1000x800.png?text=About" alt="{{ $about->title }}">
+            @endif
           </div>
         </div>
+        <div class="aboutx-floating">
+          <div class="aboutx-f"></div>
+          <div class="aboutx-f"></div>
+          <div class="aboutx-f"></div>
+        </div>
+      </div>
+      <div class="aboutx-content">
+        <div class="aboutx-badge">{{ $about->mini_title ?? 'About Us' }}</div>
+        <h1 class="aboutx-title">{{ $about->title }}</h1>
+        @if(!empty($about->mini_title))
+          <p class="aboutx-sub">{{ $about->mini_title }}</p>
+        @endif
+        <div class="aboutx-desc">{!! nl2br(e($about->content)) !!}</div>
+        @if(!empty($about->bullet_points) && is_array($about->bullet_points))
+          <div class="aboutx-features">
+            @foreach($about->bullet_points as $bp)
+              <div class="aboutx-feature"><i class="fa-solid fa-circle-check"></i><span>{{ $bp }}</span></div>
+            @endforeach
+          </div>
+        @endif
+        <a href="{{ route('about') }}" class="aboutx-cta">
+          <span>Learn More</span>
+          <i class="fas fa-arrow-right"></i>
+        </a>
       </div>
     </div>
   </div>
