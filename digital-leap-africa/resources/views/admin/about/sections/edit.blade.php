@@ -28,9 +28,9 @@
             </div>
             
             <div class="mb-3">
-                <label for="subtitle" class="form-label text-gray-200">Subtitle</label>
-                <input type="text" class="form-control bg-primary-light border-0 text-gray-200" id="subtitle" 
-                       name="subtitle" value="{{ old('subtitle', $section->subtitle) }}">
+                <label for="mini_title" class="form-label text-gray-200">Subtitle</label>
+                <input type="text" class="form-control bg-primary-light border-0 text-gray-200" id="mini_title" 
+                       name="mini_title" value="{{ old('mini_title', $section->mini_title) }}">
             </div>
 
             <div class="mb-3">
@@ -50,6 +50,12 @@
                 <label for="content" class="form-label text-gray-200">Content</label>
                 <textarea class="form-control bg-primary-light border-0 text-gray-200" id="content" 
                           name="content" rows="5" required>{{ old('content', $section->content) }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="bullet_points_text" class="form-label text-gray-200">Key Points (one per line)</label>
+                <textarea class="form-control bg-primary-light border-0 text-gray-200" id="bullet_points_text" name="bullet_points_text" rows="4" placeholder="Point one&#10;Point two&#10;Point three">{{ old('bullet_points_text', isset($section->bullet_points) && is_array($section->bullet_points) ? implode("\n", $section->bullet_points) : '') }}</textarea>
+                <small class="text-gray-400">Leave blank if not needed. Each new line becomes a bullet.</small>
             </div>
             
             <div class="mb-3">

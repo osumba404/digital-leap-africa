@@ -15,7 +15,8 @@
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
   }
-  .team-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 2rem; }
+  .team-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+  @media (max-width: 991.98px){ .team-grid { grid-template-columns: 1fr; } }
   .partner-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 1.25rem; align-items:center; }
 
   .card {
@@ -108,7 +109,7 @@
   .tm-card:hover .tm-image-container img{transform:scale(1.03)}
   .tm-image-overlay{position:absolute;bottom:0;left:0;width:100%;height:40%;background:linear-gradient(to top, rgba(30,41,59,0.9), transparent);pointer-events:none}
   .tm-content{padding:20px;flex-grow:1;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
-  .tm-name{font-size:1.5rem;color:#f1f5f9;margin-bottom:3px;font-weight:700;background:linear-gradient(90deg,#3b82f6,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2}
+  .tm-name{font-size:1.3rem;color:#f1f5f9;margin-bottom:0 !important; margin-top: -0.25rem; font-weight:700;background:linear-gradient(90deg,#3b82f6,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2}
   .tm-position{color:#fff;background:#3b82f6;padding:5px 12px;border-radius:8px;font-size:.75rem;font-weight:500;display:inline-block;margin-bottom:15px;position:relative}
   .tm-position::after{content:'';position:absolute;bottom:-8px;left:0;width:45px;height:3px;background:#3b82f6;border-radius:2px}
   .tm-bio{color:#94a3b8;line-height:1.3;margin-bottom:15px;font-size:.9rem;max-width:100%;overflow:hidden}
@@ -145,33 +146,88 @@
     </div>
   </section>
 
-  {{-- About block (image + text) --}}
+  {{-- About block (hexagon card) --}}
   @php $about = \App\Models\AboutSection::where('section_type', 'about')->active()->first(); @endphp
   @if($about)
   <section class="section">
+    <style>
+      /* Scoped styles for About hex card on the About page */
+      .about-hex-card{background:#131a2a;border-radius:24px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.5);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);max-width:1000px;width:100%;display:flex;position:relative;border:1px solid rgba(59,130,246,0.1);margin:0 auto}
+      .about-hex-card::before{content:'';position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;background:linear-gradient(45deg,#3b82f6,#00d4ff,#3b82f6);z-index:-1;border-radius:26px;opacity:0;transition:opacity .5s ease}
+      .about-hex-card:hover::before{opacity:0;animation:none}
+      @keyframes abouthex-rotate{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
+
+      .about-hex-image{min-width:30%;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+      .about-hex{width:320px;height:370px;background:linear-gradient(135deg,#3b82f6,#00d4ff);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;position:relative}
+      .about-hex-inner{width:300px;height:350px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);overflow:hidden;background:#131a2a;display:flex;align-items:center;justify-content:center}
+      .about-hex-inner img{width:100%;height:100%;object-fit:cover;transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);filter:grayscale(30%)}
+      .about-hex-card:hover .about-hex-inner img{transform:none;filter:grayscale(30%)}
+
+      .about-hex-floating{position:absolute;width:100%;height:100%;pointer-events:none}
+      .about-hex-f{position:absolute;width:40px;height:40px;background:rgba(59,130,246,0.2);border-radius:50%;animation:abouthex-float 6s ease-in-out infinite}
+      .about-hex-f:nth-child(1){top:20%;left:10%;animation-delay:0s;width:30px;height:30px}
+      .about-hex-f:nth-child(2){top:60%;left:80%;animation-delay:1s;width:25px;height:25px}
+      .about-hex-f:nth-child(3){top:80%;left:20%;animation-delay:2s;width:35px;height:35px}
+      @keyframes abouthex-float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-20px) rotate(180deg)}}
+
+      .about-hex-content{padding:40px;flex-grow:1;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2}
+      .about-hex-badge{position:absolute;top:30px;right:30px;background:linear-gradient(45deg,#3b82f6,#00d4ff);color:#fff;padding:8px 20px;border-radius:20px;font-size:.9rem;font-weight:600;box-shadow:0 4px 15px rgba(59,130,246,.4)}
+      .about-hex-title{font-size:2.5rem;color:#f1f5f9;margin-bottom:15px;font-weight:800;background:linear-gradient(90deg,#3b82f6,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative;display:inline-block}
+      .about-hex-title::after{content:'';position:absolute;bottom:-8px;left:0;width:80px;height:4px;background:linear-gradient(90deg,#3b82f6,#00d4ff);border-radius:2px}
+      .about-hex-sub{color:#94a3b8;font-size:1.2rem;margin-bottom:25px;font-weight:500}
+      .about-hex-desc{color:#94a3b8;line-height:1.7;margin-bottom:30px;font-size:1.05rem}
+      .about-hex-features{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:30px}
+      .about-hex-feature{display:flex;align-items:center;gap:10px;color:#94a3b8;font-size:.95rem}
+      .about-hex-feature i{color:#3b82f6;font-size:1rem}
+
+      @media (max-width:900px){
+        .about-hex-card{flex-direction:column;max-width:600px}
+        .about-hex-image{width:100%;height:400px}
+        .about-hex{width:280px;height:320px}
+        .about-hex-inner{width:260px;height:300px}
+        .about-hex-content{padding:30px 25px}
+        .about-hex-title{font-size:2rem}
+      }
+      @media (max-width:480px){
+        .about-hex-card{max-width:100%}
+        .about-hex-image{height:300px}
+        .about-hex{width:220px;height:250px}
+        .about-hex-inner{width:200px;height:230px}
+        .about-hex-features{grid-template-columns:1fr}
+      }
+    </style>
     <div class="container">
-      <div class="about-card fade-in-up">
-        <div class="about-media">
-          <div class="about-visual">
-            @if($about->image_path)
-              <img class="about-img" src="{{ Storage::url($about->image_path) }}" alt="{{ $about->title }}">
-            @else
-              <div class="about-img d-flex align-items-center justify-content-center" style="background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));">
-                <i class="fas fa-users" style="font-size:3rem;color:var(--diamond-white);opacity:.35"></i>
-              </div>
-            @endif
-          </div>
-        </div>
-        <div class="about-content">
-          <div class="card h-100" style="border:0;background:transparent;">
-            <div class="card-body d-flex flex-column">
-              @if($about->mini_title)
-                <div class="muted" style="margin-bottom:.5rem;">{{ $about->mini_title }}</div>
+      <div class="about-hex-card fade-in-up">
+        <div class="about-hex-image">
+          <div class="about-hex">
+            <div class="about-hex-inner">
+              @if($about->image_path)
+                <img src="{{ Storage::url($about->image_path) }}" alt="{{ $about->title }}">
+              @else
+                <img src="https://via.placeholder.com/1000x800.png?text=About" alt="{{ $about->title }}">
               @endif
-              <h2 class="card-title" style="font-size:1.75rem;">{{ $about->title }}</h2>
-              <div class="card-text">{!! nl2br(e($about->content)) !!}</div>
             </div>
           </div>
+          <div class="about-hex-floating">
+            <div class="about-hex-f"></div>
+            <div class="about-hex-f"></div>
+            <div class="about-hex-f"></div>
+          </div>
+        </div>
+        <div class="about-hex-content">
+          <div class="about-hex-badge">{{ $about->mini_title ?? 'About Us' }}</div>
+          <h1 class="about-hex-title">{{ $about->title }}</h1>
+          @if(!empty($about->mini_title))
+            <p class="about-hex-sub">{{ $about->mini_title }}</p>
+          @endif
+          <div class="about-hex-desc">{!! nl2br(e($about->content)) !!}</div>
+          @if(!empty($about->bullet_points) && is_array($about->bullet_points) && count($about->bullet_points))
+            <div class="about-hex-features">
+              @foreach($about->bullet_points as $bp)
+                <div class="about-hex-feature"><i class="fa-solid fa-circle-check"></i><span>{{ $bp }}</span></div>
+              @endforeach
+            </div>
+          @endif
         </div>
       </div>
     </div>
@@ -224,6 +280,13 @@
           <div class="card-body">
             <h3 class="card-title">{{ $mission->title }}</h3>
             <div class="card-text">{{ $mission->content }}</div>
+            @if(!empty($mission->bullet_points) && is_array($mission->bullet_points) && count($mission->bullet_points))
+              <ul class="card-text" style="margin-top:.75rem; padding-left:1.1rem; list-style: disc;">
+                @foreach($mission->bullet_points as $bp)
+                  <li><i class="fas fa-circle-check" style="margin-right:6px;color:#3b82f6"></i>{{ $bp }}</li>
+                @endforeach
+              </ul>
+            @endif
           </div>
         </div>
         @endif
@@ -236,6 +299,13 @@
           <div class="card-body">
             <h3 class="card-title">{{ $vision->title }}</h3>
             <div class="card-text">{{ $vision->content }}</div>
+            @if(!empty($vision->bullet_points) && is_array($vision->bullet_points) && count($vision->bullet_points))
+              <ul class="card-text" style="margin-top:.75rem; padding-left:1.1rem; list-style: disc;">
+                @foreach($vision->bullet_points as $bp)
+                  <li><i class="fas fa-circle-check" style="margin-right:6px;color:#3b82f6"></i>{{ $bp }}</li>
+                @endforeach
+              </ul>
+            @endif
           </div>
         </div>
         @endif
@@ -265,6 +335,13 @@
             @endif
             <h3 class="card-title">{{ $value->title }}</h3>
             <div class="card-text">{!! nl2br(e($value->content)) !!}</div>
+            @if(!empty($value->bullet_points) && is_array($value->bullet_points) && count($value->bullet_points))
+              <ul class="card-text" style="margin-top:.75rem; padding-left:1.1rem; list-style: disc;">
+                @foreach($value->bullet_points as $bp)
+                  <li><i class="fas fa-circle-check" style="margin-right:6px;color:#3b82f6"></i>{{ $bp }}</li>
+                @endforeach
+              </ul>
+            @endif
           </div>
         </div>
         @endforeach

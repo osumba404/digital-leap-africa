@@ -14,13 +14,15 @@ class AboutSection extends Model
         'content',
         'image_path',
         'read_more_url',
+        'bullet_points',
         'order',
         'is_active'
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'order' => 'integer'
+        'order' => 'integer',
+        'bullet_points' => 'array'
     ];
 
     public function getImageUrlAttribute()
