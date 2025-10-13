@@ -297,7 +297,7 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
 </section>
 
 <!-- Latest Articles -->
-<section style="padding:2rem 0;">
+<section id="articles-section" style="padding:2rem 0;">
   @php
       try {
           $latestArticles = \App\Models\Article::query()->latest()->take(2)->get();
@@ -321,39 +321,43 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
     </div>
 
     @if($latestArticles->count())
-      <div class="row g-0 cards-rail" class="post-card-out" style="margin: 0; padding: 0;">
+      <div class="cards-grid">
         @foreach($latestArticles as $post)
           @php
             $image = $pickImage($post);
             $title = $post->title ?? 'Untitled';
-            $firstLetter = mb_strtoupper(mb_substr($title, 0, 1));
             $excerpt = method_exists($post, 'getExcerptAttribute')
               ? $post->excerpt
               : (\Illuminate\Support\Str::limit(strip_tags($post->content ?? $post->body ?? ''), 140));
+            $readMinutes = max(1, ceil(str_word_count(strip_tags($post->content ?? $post->body ?? ''))/200));
+            $category = $post->category_name ?? $post->category ?? null;
+            $dateText = !empty($post->created_at) ? $post->created_at->format('M j, Y') : null;
           @endphp
 
-          <div class="col-12 col-md-6" style="margin: 0; padding: 0;">
-            <div class="card h-100" class="post-card">
+          <div class="card">
+            <div class="card-image-container">
               @if($image)
-                <img src="{{ $image }}" alt="{{ $title }}" class="post-thumb">
+                <img src="{{ $image }}" alt="{{ $title }}" class="card-image">
               @else
-                <div class="post-avatar">
-                  <span>{{ $firstLetter }}</span>
-                </div>
+                <img src="https://via.placeholder.com/1000x600.png?text=Article" alt="{{ $title }}" class="card-image">
               @endif
-
-              <div class="card-body">
-                <h3 class="h5" style="color: #64b5f6">{{ $title }}</h3>
-                @if(!empty($post->created_at))
-                  <div class="text-muted small mb-2">{{ $post->created_at->format('M j, Y') }}</div>
+              @if($category)
+                <div class="card-category">{{ $category }}</div>
+              @endif
+              <h3 class="card-title">{{ $title }}</h3>
+            </div>
+            <div class="card-content">
+              <div class="card-meta">
+                <span><i class="far fa-clock"></i> {{ $readMinutes }} min read</span>
+                @if($dateText)
+                  <span><i class="far fa-calendar"></i> {{ $dateText }}</span>
                 @endif
-                <p style="color:var(--cool-gray)">{{ $excerpt }}</p>
-
-                {{-- Force the Read button to specific URL as requested --}}
-                <a class="btn-primary" href="http://127.0.0.1:8000/blog/cybersecurity-in-2025-safeguarding-your-digital-life">
-                  Read Article
-                </a>
               </div>
+              <p class="card-body">{{ $excerpt }}</p>
+              {{-- Force the Read button to specific URL as requested --}}
+              <a class="card-button" href="http://127.0.0.1:8000/blog/cybersecurity-in-2025-safeguarding-your-digital-life">
+                Read Article <i class="fas fa-arrow-right"></i>
+              </a>
             </div>
           </div>
         @endforeach
@@ -367,16 +371,54 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
   </div>
 </section>
 
+<style>
+  /* Articles overlay card styles (scoped) */
+  #articles-section .cards-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(320px,1fr));gap:2rem}
+  #articles-section .card{background-color:#112240;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(2,12,27,0.7);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);height:100%;display:flex;flex-direction:column;padding:0}
+  #articles-section .card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(2,12,27,0.9)}
+  #articles-section .card-image-container{position:relative;overflow:hidden;margin:0;padding:0;line-height:0;border-top-left-radius:12px;border-top-right-radius:12px}
+  #articles-section .card-image{width:100%;height:200px;object-fit:cover;display:block;margin:0;transition:transform .5s ease}
+  #articles-section .card:hover .card-image{transform:scale(1.05)}
+  #articles-section .card-title{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent, rgba(10,25,47,0.95));padding:1.5rem 1.5rem .75rem;margin:0;font-size:1.3rem;font-weight:600;line-height:1.4;text-shadow:0 2px 4px rgba(0,0,0,0.5)}
+  #articles-section .card-content{padding:1.5rem;flex-grow:1;display:flex;flex-direction:column}
+  #articles-section .card-body{color:#8892b0;line-height:1.6;margin-bottom:1.5rem;flex-grow:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  #articles-section .card-meta{display:flex;justify-content:space-between;color:#8892b0;font-size:.85rem;margin-bottom:1rem;border-bottom:1px solid rgba(136,146,176,0.2);padding-bottom:.75rem}
+  #articles-section .card-button{display:inline-flex;align-items:center;justify-content:center;background-color:transparent;color:#3b82f6;padding:.6rem 1.2rem;border:1px solid #3b82f6;border-radius:6px;text-decoration:none;font-size:.9rem;font-weight:500;transition:all .3s ease;cursor:pointer;gap:.5rem}
+  #articles-section .card-button:hover{background-color:rgba(59,130,246,.1);transform:translateY(-2px);box-shadow:0 4px 12px rgba(59,130,246,.2)}
+  #articles-section .card-category{position:absolute;top:1rem;left:1rem;background:rgba(100,255,218,0.9);color:#0a192f;padding:.3rem .8rem;border-radius:20px;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+  @media (max-width:768px){#articles-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.5rem}#articles-section .card-title{font-size:1.2rem;padding:1.25rem 1.25rem .5rem}}
+</style>
+
+<style>
+  /* Courses overlay card styles (scoped) */
+  #courses-section .cards-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(320px,1fr));gap:2rem}
+  #courses-section .card{background-color:#112240;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(2,12,27,0.7);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);height:100%;display:flex;flex-direction:column;padding:0}
+  #courses-section .card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(2,12,27,0.9)}
+  #courses-section .card-image-container{position:relative;overflow:hidden;margin:0;padding:0;line-height:0;border-top-left-radius:12px;border-top-right-radius:12px}
+  #courses-section .card-image{width:100%;height:200px;object-fit:cover;display:block;margin:0;transition:transform .5s ease}
+  #courses-section .card:hover .card-image{transform:scale(1.05)}
+  #courses-section .card-title{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent, rgba(10,25,47,0.95));padding:1.25rem 1.25rem .6rem;margin:0;font-size:1.1rem;font-weight:700;line-height:1.35;text-shadow:0 2px 4px rgba(0,0,0,0.5)}
+  #courses-section .card-content{padding:1.25rem;flex-grow:1;display:flex;flex-direction:column}
+  #courses-section .card-body{color:#8892b0;line-height:1.6;margin-bottom:1rem;flex-grow:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  #courses-section .card-meta{display:flex;justify-content:space-between;color:#8892b0;font-size:.85rem;margin-bottom:.85rem;border-bottom:1px solid rgba(136,146,176,0.2);padding-bottom:.6rem}
+  #courses-section .card-button{display:inline-flex;align-items:center;justify-content:center;background-color:transparent;color:#3b82f6;padding:.6rem 1.2rem;border:1px solid #3b82f6;border-radius:6px;text-decoration:none;font-size:.9rem;font-weight:600;transition:all .3s ease;cursor:pointer;gap:.5rem}
+  #courses-section .card-button:hover{background-color:rgba(59,130,246,.1);transform:translateY(-2px);box-shadow:0 4px 12px rgba(59,130,246,.2)}
+  .btn-wide{width: 100%;}
+  @media (max-width:768px){#courses-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.5rem}#courses-section .card-title{font-size:1rem;padding:1rem 1rem .45rem}}
+</style>
+
+
+
+
+
 <!-- Latest Courses -->
-<section style="padding:2rem 0;">
+<section id="courses-section" style="padding:2rem 0;">
   @php
     try {
       $latestCourses = \App\Models\Course::query()->latest()->take(3)->get();
     } catch (\Throwable $e) {
       $latestCourses = collect();
     }
-
-    // Helper to pick a course image from common fields
     $pickCourseImage = function($course) {
       return $course->image_url
           ?? $course->thumbnail
@@ -392,41 +434,42 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
     </div>
 
     @if($latestCourses->count())
-      <div class="row g-3 cards-rail">
+      <div class="cards-grid">
         @foreach($latestCourses as $course)
           @php
-            $courseImage = $pickCourseImage($course);
-            $courseTitle = $course->title ?? 'Untitled';
-            $courseLetter = mb_strtoupper(mb_substr($courseTitle, 0, 1));
-            $courseExcerpt = \Illuminate\Support\Str::limit(
-              strip_tags($course->short_description ?? $course->description ?? $course->summary ?? ''), 140
-            );
-            $showUrl = \Illuminate\Support\Facades\Route::has('courses.show')
-              ? route('courses.show', $course)
-              : url('/courses/'.$course->id);
+            $courseImage   = $pickCourseImage($course);
+            $courseTitle   = $course->title ?? 'Untitled';
+            $courseExcerpt = \Illuminate\Support\Str::limit(strip_tags($course->short_description ?? $course->description ?? $course->summary ?? ''), 140);
+            $showUrl       = \Illuminate\Support\Facades\Route::has('courses.show') ? route('courses.show', $course) : url('/courses/'.$course->id);
+            // Lessons count (relation preferred, fallback to *_count fields)
+            $lessonsCount = 0;
+            if (method_exists($course, 'lessons')) {
+              $lessonsCount = $course->relationLoaded('lessons') ? $course->lessons->count() : $course->lessons()->count();
+            } else {
+              $lessonsCount = $course->lessons_count ?? $course->lectures_count ?? 0;
+            }
           @endphp
 
-          <div class="col-12 col-md-4">
-            <div class="card h-100">
+          <div class="card">
+            <div class="card-image-container">
               @if($courseImage)
-                <img src="{{ $courseImage }}" alt="{{ $courseTitle }}" class="course-thumb">
+                <img src="{{ $courseImage }}" alt="{{ $courseTitle }}" class="card-image">
               @else
-                <div class="course-avatar">
-                  <span>{{ $courseLetter }}</span>
-                </div>
+                <img src="https://via.placeholder.com/1000x600.png?text=Course" alt="{{ $courseTitle }}" class="card-image">
               @endif
-
-              <div class="card-body d-flex flex-column align-items-center text-center">
-                <h3 class="h5" style="color: #64b5f6">{{ $courseTitle }}</h3>
-                
+              <h3 class="card-title">{{ $courseTitle }}</h3>
+            </div>
+            <div class="card-content">
+              <div class="card-meta">
+                <span><i class="fas fa-play-circle"></i> {{ $lessonsCount }} lessons</span>
                 @if(!empty($course->created_at))
-                  <div class="text-muted small mb-2">{{ $course->created_at->format('M j, Y') }}</div>
+                  <span><i class="far fa-calendar"></i> {{ $course->created_at->format('M j, Y') }}</span>
                 @endif
-                <p class="text-muted" style="color:var(--cool-gray)">{{ $courseExcerpt }}</p>
-                <div class="mt-auto">
-                  <a class="btn-primary" href="{{ $showUrl }}">View Course</a>
-                </div>
               </div>
+              <p class="card-body">{{ $courseExcerpt }}</p>
+              <a class="card-button" href="{{ $showUrl }}">
+                View Course <i class="fas fa-arrow-right"></i>
+              </a>
             </div>
           </div>
         @endforeach
@@ -439,6 +482,7 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
     </div>
   </div>
 </section>
+
 
 <!-- Upcoming Events -->
 <section style="padding:2rem 0;">
