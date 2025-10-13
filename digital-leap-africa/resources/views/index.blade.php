@@ -95,7 +95,7 @@
 
   $stats = [
     ['label'=>'Courses',  'value'=> \App\Models\Course::count(),  'icon'=>'fa-book-open'],
-    ['label'=>'Projects', 'value'=> \App\Models\Project::count(), 'icon'=>'fa-diagram-project'],
+    ['label'=>'Articles', 'value'=> \App\Models\Article::count(), 'icon'=>'fa-newspaper'],
     ['label'=>'Partners', 'value'=> \App\Models\Partner::count(), 'icon'=>'fa-handshake'],
     ['label'=>'Members',  'value'=> \App\Models\User::count(),    'icon'=>'fa-users'],
   ];
@@ -203,73 +203,8 @@
 </section>
 @endif
 
-@if($mission || $vision)
-<section class="section" style="padding:2rem 0;">
-  <style>
-    .mv-card{display:flex;flex-direction:row;align-items:stretch;border:1px solid rgba(255,255,255,0.08);border-radius: 100px 16px 100px 16px;overflow:hidden;background:rgba(255,255,255,0.03);margin-bottom:1rem}
-    .mv-card.is-reverse{flex-direction:row-reverse}
-    .mv-media{position:relative;flex:0 0 44%;max-width:44%}
-    .mv-visual{position:relative;border-radius: 100px 16px 100px 16px;overflow:hidden;background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));border-top:3px solid var(--primary-blue);border-left:3px solid var(--primary-blue);border-bottom:3px solid var(--primary-blue);box-shadow:-2px 0 16px rgba(59,130,246,.45),0 -6px 18px rgba(59,130,246,.35),0 6px 18px rgba(59,130,246,.35);width:92%;margin:auto 0 auto 12px;height:100%}
-    .is-reverse .mv-visual{border-left:none;border-right:3px solid var(--primary-blue);box-shadow:2px 0 16px rgba(59,130,246,.45),0 -6px 18px rgba(59,130,246,.35),0 6px 18px rgba(59,130,246,.35);margin:auto 12px auto 0}
-    .mv-img{display:block;width:100%;height:100%;object-fit:cover;position:relative;z-index:1;filter:drop-shadow(-8px 12px 28px rgba(37,99,235,.35))}
-    @media (min-width:768px){ .mv-visual{height:300px} }
-    @media (max-width:768px){.mv-media{display: none}  .about-media{display: none} }
-    @media (max-width:767.98px){ .mv-visual{height:260px;margin-bottom:.5rem} }
-    .mv-content{flex:1 1 auto;display:flex}
-    .mv-content .card{border:0;background:transparent}
-    .mv-content .card-body{display:flex;flex-direction:column}
-  </style>
-  <div class="container">
-    @if($mission)
-      <div class="mv-card">
-        <div class="mv-media">
-          <div class="mv-visual">
-            @if($mission->image_path)
-              <img class="mv-img" src="{{ Storage::url($mission->image_path) }}" alt="{{ $mission->title }}">
-            @else
-              <div class="d-flex align-items-center justify-content-center mv-img" style="background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));">
-                <i class="fas fa-bullseye" style="font-size:3rem;color:var(--diamond-white);opacity:.35"></i>
-              </div>
-            @endif
-          </div>
-        </div>
-        <div class="mv-content">
-          <div class="card h-100">
-            <div class="card-body">
-              <h2 class="card-title" style="color: #64b5f6; font-size: 2rem;" >{{ $mission->title }}</h2>
-              <div class="card-text" style="font-size: 1.1rem;">{{ $mission->content }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    @endif
 
-    @if($vision)
-      <div class="mv-card is-reverse">
-        <div class="mv-media">
-          <div class="mv-visual">
-            @if($vision->image_path)
-              <img class="mv-img" src="{{ Storage::url($vision->image_path) }}" alt="{{ $vision->title }}">
-            @else
-              <div class="d-flex align-items-center justify-content-center mv-img" style="background:linear-gradient(135deg,var(--primary-blue),var(--deep-blue));">
-                <i class="fas fa-eye" style="font-size:3rem;color:var(--diamond-white);opacity:.35"></i>
-              </div>
-            @endif
-          </div>
-        </div>
-        <div class="mv-content">
-          <div class="card h-100">
-            <div class="card-body">
-              <h2 class="card-title" style="color: #64b5f6; font-size: 2rem;">{{ $vision->title }}</h2>
-              <div class="card-text" style="font-size: 1.1rem;">{{ $vision->content }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    @endif
-  </div>
 
-@endif
 
     {{-- Stats strip --}}
     <div class="mt-4">

@@ -266,45 +266,128 @@
   @endphp
   @if($mission || $vision)
   <section class="section">
+    <style>
+      :root {
+        --dark-bg: #0a0f1c;
+        --card-bg: #131a2a;
+        --accent-blue: #3b82f6;
+        --neon-blue: #00d4ff;
+        --light-blue: #60a5fa;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .cards-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px; max-width: 1000px; width: 100%; margin: 0 auto; }
+      /* Vision Card - Top Image Layout */
+      .vision-card { background: var(--card-bg); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); height: 420px; position: relative; border: 1px solid rgba(59, 130, 246, 0.1); display: flex; flex-direction: column; }
+      /* Removed hover border glow on vision-card */
+      .vision-card::before { display: none; }
+      .vision-card:hover::before { display: none; }
+      .vision-header { height: 40%; position: relative; overflow: hidden; }
+      .vision-image { width: 100%; height: 100%; position: relative; }
+      .vision-image img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); filter: brightness(0.7); }
+      .vision-card:hover .vision-image img { transform: scale(1.06); filter: brightness(0.9); }
+      .vision-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent, rgba(19, 26, 42, 0.9)); display: flex; align-items: flex-end; padding: 20px; }
+      .vision-title { font-size: 1.8rem; color: var(--text-primary); font-weight: 700; background: linear-gradient(90deg, #8b5cf6, var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .vision-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; position: relative; }
+      .vision-subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 15px; font-weight: 500; }
+      .vision-body { color: var(--text-secondary); line-height: 1.6; font-size: 0.9rem; margin-bottom: 20px; }
+      .vision-goals { display: block; grid-template-columns: 1fr 1fr; gap: 12px; }
+      .vision-goal { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.8rem; }
+      .vision-goal i { color: #8b5cf6; font-size: 0.8rem; }
+      .vision-icon { position: absolute; bottom: 20px; right: 20px; width: 40px; height: 40px; background: linear-gradient(45deg, #8b5cf6, var(--neon-blue)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem; box-shadow: 0 3px 10px rgba(139, 92, 246, 0.3); }
+      /* Geometric Split Card */
+      .geometric-card { background: var(--card-bg); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); height: 420px; display: flex; position: relative; border: 1px solid rgba(59, 130, 246, 0.1); }
+      .geometric-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(45deg, transparent 40%, rgba(59, 130, 246, 0.1) 100%); clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%); z-index: 1; }
+      .geometric-content { padding: 25px; flex: 1; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 2; }
+      .geometric-title { font-size: 1.8rem; color: var(--text-primary); margin-bottom: 12px; font-weight: 700; background: linear-gradient(90deg, var(--accent-blue), var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .geometric-subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 20px; font-weight: 500; }
+      .geometric-body { color: var(--text-secondary); line-height: 1.6; font-size: 0.9rem; margin-bottom: 25px; }
+      .geometric-image { flex: 0 0 42%; position: relative; overflow: hidden; }
+      .geometric-image img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); clip-path: polygon(0 0, 100% 0, 100% 100%, 25% 100%); }
+      .geometric-card:hover .geometric-image img { transform: scale(1.05); }
+      .timeline-features { display: flex; flex-direction: column; gap: 10px; }
+      .timeline-feature { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.8rem; }
+      .timeline-feature i { color: var(--accent-blue); font-size: 0.8rem; }
+      /* Responsive adjustments */
+      @media (max-width: 900px) {
+        .cards-container { grid-template-columns: 1fr; gap: 25px; max-width: 500px; }
+        .vision-card, .geometric-card { height: auto; flex-direction: column; }
+        .vision-header { height: 200px; }
+        .geometric-image { flex: 0 0 200px; order: -1; }
+        .geometric-image img { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 85%); }
+      }
+      @media (max-width: 480px) {
+        .cards-container { grid-template-columns: 1fr; }
+        .vision-content, .geometric-content { padding: 20px; }
+        .vision-title, .geometric-title { font-size: 1.6rem; }
+        .vision-goals { grid-template-columns: 1fr; gap: 10px; }
+        .vision-icon { bottom: 15px; right: 15px; width: 35px; height: 35px; font-size: 0.9rem; }
+      }
+    </style>
     <div class="container">
-      <div class="section-title fade-in-up">
-        <h2 style="font-size:2rem;">Our Purpose</h2>
-        <p>Guided by a clear mission and vision for a digitally empowered Africa.</p>
-      </div>
-      <div class="about-grid">
+      <div class="cards-container">
         @if($mission)
-        <div class="card fade-in-up">
-          @if($mission->image_path)
-            <img class="media" src="{{ Storage::url($mission->image_path) }}" alt="{{ $mission->title }}">
-          @endif
-          <div class="card-body">
-            <h3 class="card-title">{{ $mission->title }}</h3>
-            <div class="card-text">{{ $mission->content }}</div>
-            @if(!empty($mission->bullet_points) && is_array($mission->bullet_points) && count($mission->bullet_points))
-              <ul class="card-text" style="margin-top:.75rem; padding-left:1.1rem; list-style: disc;">
-                @foreach($mission->bullet_points as $bp)
-                  <li><i class="fas fa-circle-check" style="margin-right:6px;color:#3b82f6"></i>{{ $bp }}</li>
-                @endforeach
-              </ul>
+        <!-- Mission as Vision Card -->
+        <div class="vision-card fade-in-up">
+          <div class="vision-header">
+            <div class="vision-image">
+              @if(!empty($mission->image_path))
+                <img src="{{ Storage::url($mission->image_path) }}" alt="{{ $mission->title }}">
+              @else
+                <img src="https://via.placeholder.com/1000x600.png?text=Mission" alt="{{ $mission->title }}">
+              @endif
+            </div>
+            <div class="vision-overlay">
+              <h2 class="vision-title">{{ $mission->title }}</h2>
+            </div>
+          </div>
+          <div class="vision-content">
+            @if(!empty($mission->mini_title))
+              <p class="vision-subtitle">{{ $mission->mini_title }}</p>
             @endif
+            <p class="vision-body">{!! nl2br(e($mission->content)) !!}</p>
+            @if(!empty($mission->bullet_points) && is_array($mission->bullet_points) && count($mission->bullet_points))
+              <div class="vision-goals">
+                @foreach($mission->bullet_points as $bp)
+                  <div class="vision-goal">
+                    <i class="fas fa-star"></i>
+                    <span>{{ $bp }}</span>
+                  </div>
+                @endforeach
+              </div>
+            @endif
+            <div class="vision-icon"><i class="fas fa-bullseye"></i></div>
           </div>
         </div>
         @endif
 
         @if($vision)
-        <div class="card fade-in-up">
-          @if($vision->image_path)
-            <img class="media" src="{{ Storage::url($vision->image_path) }}" alt="{{ $vision->title }}">
-          @endif
-          <div class="card-body">
-            <h3 class="card-title">{{ $vision->title }}</h3>
-            <div class="card-text">{{ $vision->content }}</div>
+        <!-- Vision as Geometric Split Card -->
+        <div class="geometric-card fade-in-up">
+          <div class="geometric-content">
+            <h2 class="geometric-title">{{ $vision->title }}</h2>
+            @if(!empty($vision->mini_title))
+              <p class="geometric-subtitle">{{ $vision->mini_title }}</p>
+            @endif
+            <p class="geometric-body">{!! nl2br(e($vision->content)) !!}</p>
             @if(!empty($vision->bullet_points) && is_array($vision->bullet_points) && count($vision->bullet_points))
-              <ul class="card-text" style="margin-top:.75rem; padding-left:1.1rem; list-style: disc;">
+              <div class="timeline-features">
                 @foreach($vision->bullet_points as $bp)
-                  <li><i class="fas fa-circle-check" style="margin-right:6px;color:#3b82f6"></i>{{ $bp }}</li>
+                  <div class="timeline-feature">
+                    <i class="fas fa-check"></i>
+                    <span>{{ $bp }}</span>
+                  </div>
                 @endforeach
-              </ul>
+              </div>
+            @endif
+          </div>
+          <div class="geometric-image">
+            @if(!empty($vision->image_path))
+              <img src="{{ Storage::url($vision->image_path) }}" alt="{{ $vision->title }}">
+            @else
+              <img src="https://via.placeholder.com/1000x600.png?text=Vision" alt="{{ $vision->title }}">
             @endif
           </div>
         </div>
@@ -323,25 +406,37 @@
         <h2 style="font-size:2rem;">Our Values</h2>
         <p>Principles that shape our culture and impact.</p>
       </div>
-      <div class="about-grid">
+      <div class="cards-container">
         @foreach($values as $value)
-        <div class="card fade-in-up">
-          @if($value->image_path)
-            <img class="media" src="{{ Storage::url($value->image_path) }}" alt="{{ $value->title }}">
-          @endif
-          <div class="card-body">
-            @if($value->mini_title)
-              <div class="muted" style="margin-bottom:.5rem;">{{ $value->mini_title }}</div>
+        <div class="vision-card fade-in-up">
+          <div class="vision-header">
+            <div class="vision-image">
+              @if(!empty($value->image_path))
+                <img src="{{ Storage::url($value->image_path) }}" alt="{{ $value->title }}">
+              @else
+                <img src="https://via.placeholder.com/1000x600.png?text=Value" alt="{{ $value->title }}">
+              @endif
+            </div>
+            <div class="vision-overlay">
+              <h2 class="vision-title">{{ $value->title }}</h2>
+            </div>
+          </div>
+          <div class="vision-content">
+            @if(!empty($value->mini_title))
+              <p class="vision-subtitle">{{ $value->mini_title }}</p>
             @endif
-            <h3 class="card-title">{{ $value->title }}</h3>
-            <div class="card-text">{!! nl2br(e($value->content)) !!}</div>
+            <p class="vision-body">{!! nl2br(e($value->content)) !!}</p>
             @if(!empty($value->bullet_points) && is_array($value->bullet_points) && count($value->bullet_points))
-              <ul class="card-text" style="margin-top:.75rem; padding-left:1.1rem; list-style: disc;">
+              <div class="vision-goals">
                 @foreach($value->bullet_points as $bp)
-                  <li><i class="fas fa-circle-check" style="margin-right:6px;color:#3b82f6"></i>{{ $bp }}</li>
+                  <div class="vision-goal">
+                    <i class="fas fa-star"></i>
+                    <span>{{ $bp }}</span>
+                  </div>
                 @endforeach
-              </ul>
+              </div>
             @endif
+            <div class="vision-icon"><i class="fas fa-bullseye"></i></div>
           </div>
         </div>
         @endforeach
