@@ -21,6 +21,10 @@ class Article extends Model
         'published_at',
         'status',
         'author_id',
+        'tags',
+        'likes_count',
+        'bookmarks_count',
+        'shares_count',
     ];
 
     // Cast timestamps
@@ -30,11 +34,25 @@ class Article extends Model
         'updated_at',
     ];
 
+    // Casts
+    protected $casts = [
+        'tags' => 'array',
+        'likes_count' => 'integer',
+        'bookmarks_count' => 'integer',
+        'shares_count' => 'integer',
+    ];
+
     // Scopes
     public function scopePublished(Builder $query): void
     {
         $query->where('status', 'published')
               ->where('published_at', '<=', now());
+    }
+
+    public function scopeWithTag(Builder $query, ?string $tag): Builder
+    {
+        if (!$tag) { return $query; }
+        return $query->whereJsonContains('tags', $tag);
     }
 
     // Relationships

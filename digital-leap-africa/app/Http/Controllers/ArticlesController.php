@@ -12,12 +12,16 @@ class ArticlesController extends Controller
 {
     public function index(Request $request): View
     {
+        $tag = $request->query('tag');
+
         $articles = Article::query()
             ->whereNotNull('published_at')
+            ->when($tag, fn($q) => $q->withTag($tag))
             ->orderByDesc('published_at')
-            ->paginate(9);
+            ->paginate(9)
+            ->appends(['tag' => $tag]);
 
-        return view('articles.index', compact('articles'));
+        return view('articles.index', compact('articles', 'tag'));
     }
 
     public function show(Article $article): View
@@ -47,5 +51,23 @@ class ArticlesController extends Controller
         ]);
 
         return back()->with('status', 'Comment posted successfully.');
+    }
+
+    public function like(Request $request, Article $article): RedirectResponse
+    {
+        $article->increment('likes_count');
+        return back();
+    }
+
+    public function bookmark(Request $request, Article $article): RedirectResponse
+    {
+        $article->increment('bookmarks_count');
+        return back();
+    }
+
+    public function share(Request $request, Article $article): RedirectResponse
+    {
+        $article->increment('shares_count');
+        return back();
     }
 }
