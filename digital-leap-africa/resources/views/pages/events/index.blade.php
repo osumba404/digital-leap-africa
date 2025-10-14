@@ -21,17 +21,29 @@
                             @endif
                             <div class="mt-3">
                                 <h3 class="h5 m-0">
-                                    <a class="link-info text-decoration-none" href="{{ route('events.show', $event->id) }}">
+                                    <a class="link-info text-decoration-none" href="{{ route('events.show', $event->slug ?? $event->id) }}">
                                         {{ $event->title }}
                                     </a>
                                 </h3>
+                                @php
+                                    $start = optional($event->date);
+                                    $end   = optional($event->ends_at);
+                                    $sameDay = $start && $end ? $start->isSameDay($end) : false;
+                                    $whenText = $start ? $start->format('M j, Y g:ia') : '';
+                                    if ($end) {
+                                        $whenText .= $sameDay ? ' – ' . $end->format('g:ia') : ' – ' . $end->format('M j, Y g:ia');
+                                    }
+                                @endphp
                                 <div class="text-muted small mt-1">
-                                    {{ optional($event->date)->format('M j, Y g:ia') }} • {{ $event->location }}
+                                    {{ $whenText }} • {{ $event->location }}
                                 </div>
+                                @if(!empty($event->topic))
+                                    <div class="mt-1"><span class="badge bg-primary">{{ $event->topic }}</span></div>
+                                @endif
                                 @if(!empty($event->description))
                                     <p class="mt-2" style="color:var(--cool-gray)">{{ \Illuminate\Support\Str::limit(strip_tags($event->description), 120) }}</p>
                                 @endif
-                                <a class="btn-outline btn-sm mt-1" href="{{ route('events.show', $event->id) }}">View details</a>
+                                <a class="btn-outline btn-sm mt-1" href="{{ route('events.show', $event->slug ?? $event->id) }}">View details</a>
                             </div>
                         </div>
                     </div>
@@ -53,17 +65,26 @@
                             @endif
                             <div class="mt-3">
                                 <h3 class="h5 m-0">
-                                    <a class="link-info text-decoration-none" href="{{ route('events.show', $event->id) }}">
+                                    <a class="link-info text-decoration-none" href="{{ route('events.show', $event->slug ?? $event->id) }}">
                                         {{ $event->title }}
                                     </a>
                                 </h3>
+                                @php
+                                    $start = $event->date;
+                                    $end   = $event->ends_at;
+                                    $sameDay = ($start && $end) ? $start->isSameDay($end) : false;
+                                    $whenText = $start ? $start->format('M j, Y g:ia') : '';
+                                    if ($end) {
+                                        $whenText .= $sameDay ? ' – ' . $end->format('g:ia') : ' – ' . $end->format('M j, Y g:ia');
+                                    }
+                                @endphp
                                 <div class="text-muted small mt-1">
-                                    {{ optional($event->date)->format('M j, Y g:ia') }} • {{ $event->location }}
+                                    {{ $whenText }} • {{ $event->location }}
                                 </div>
                                 @if(!empty($event->description))
                                     <p class="mt-2" style="color:var(--cool-gray)">{{ \Illuminate\Support\Str::limit(strip_tags($event->description), 120) }}</p>
                                 @endif
-                                <a class="btn-outline btn-sm mt-1" href="{{ route('events.show', $event->id) }}">View details</a>
+                                <a class="btn-outline btn-sm mt-1" href="{{ route('events.show', $event->slug ?? $event->id) }}">View details</a>
                             </div>
                         </div>
                     </div>
