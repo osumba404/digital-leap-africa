@@ -147,6 +147,7 @@
     $initials = collect(explode(' ', $authorName))->map(fn($p) => strtoupper(substr($p,0,1)))->take(2)->implode('');
     $readMinutes = max(1, ceil(str_word_count(strip_tags($article->content ?? ''))/200));
     $tags = is_array($article->tags ?? null) ? $article->tags : [];
+    $shareUrl = route('blog.show', $article);
   @endphp
 
   <div class="article-container py-4">
@@ -164,9 +165,9 @@
             </div>
           </div>
           <div class="article-stats">
-            <div><i class="far fa-clock me-1"></i> {{ $readMinutes }} min read</div>
-            <div><i class="far fa-comment me-1"></i> {{ $article->comments->count() }} comments</div>
-            <div><i class="far fa-thumbs-up me-1"></i> {{ $article->likes_count ?? 0 }} likes</div>
+            <div><i class="fa-regular fa-clock me-1"></i> {{ $readMinutes }} min read</div>
+            <div><i class="fa-regular fa-comment me-1"></i> {{ $article->comments->count() }} comments</div>
+            <div><i class="fa-regular fa-thumbs-up me-1"></i> {{ $article->likes_count ?? 0 }} likes</div>
           </div>
         </div>
 
@@ -224,14 +225,35 @@
 
           <div class="article-actions">
             @auth
-              <form method="POST" action="{{ route('blog.like', $article) }}" class="d-inline">@csrf<button type="submit" class="action-btn" title="Like"><i class="far fa-thumbs-up"></i></button></form>
-              <form method="POST" action="{{ route('blog.share', $article) }}" class="d-inline">@csrf<button type="submit" class="action-btn" title="Share"><i class="fas fa-share"></i></button></form>
-              <form method="POST" action="{{ route('blog.bookmark', $article) }}" class="d-inline">@csrf<button type="submit" class="action-btn" title="Save"><i class="far fa-bookmark"></i></button></form>
+              <form method="POST" action="{{ route('blog.like', $article) }}" class="d-inline">@csrf<button type="submit" class="action-btn" title="Like"><i class="fa-regular fa-thumbs-up" aria-hidden="true"></i></button></form>
+              <button type="button" class="action-btn" id="shareBtn" title="Share" data-title="{{ $article->title }}" data-url="{{ $shareUrl }}"><i class="fa-solid fa-share" aria-hidden="true"></i></button>
+              <form method="POST" action="{{ route('blog.bookmark', $article) }}" class="d-inline">@csrf<button type="submit" class="action-btn" title="Save"><i class="fa-regular fa-bookmark" aria-hidden="true"></i></button></form>
             @else
-              <a href="{{ route('login') }}" class="action-btn" title="Like"><i class="far fa-thumbs-up"></i></a>
-              <a href="{{ route('login') }}" class="action-btn" title="Share"><i class="fas fa-share"></i></a>
-              <a href="{{ route('login') }}" class="action-btn" title="Save"><i class="far fa-bookmark"></i></a>
+              <a href="{{ route('login') }}" class="action-btn" title="Like"><i class="fa-regular fa-thumbs-up" aria-hidden="true"></i></a>
+              <a href="{{ route('login') }}" class="action-btn" title="Share"><i class="fa-solid fa-share" aria-hidden="true"></i></a>
+              <a href="{{ route('login') }}" class="action-btn" title="Save"><i class="fa-regular fa-bookmark" aria-hidden="true"></i></a>
             @endauth
+          </div>
+
+          <!-- Share fallback menu -->
+          <div id="shareMenu" style="display:none; position: fixed; inset: 0; z-index: 1050; align-items:center; justify-content:center;">
+            <div style="position:absolute; inset:0; background: rgba(0,0,0,0.5);"></div>
+            <div style="position:relative; background: var(--secondary-dark); color: var(--text-primary); border:1px solid var(--border-color); box-shadow: 0 10px 30px var(--card-shadow); border-radius: 10px; width: 90%; max-width: 420px; padding: 1rem;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:.75rem;">
+                <strong>Share this article</strong>
+                <button type="button" id="shareClose" class="btn btn-sm btn-outline-light" style="background:transparent; border:1px solid var(--border-color); color: var(--text-secondary);">Close</button>
+              </div>
+              <div style="display:flex; gap:.5rem; align-items:center; margin-bottom:.75rem;">
+                <input id="shareLink" type="text" readonly class="form-control" value="{{ $shareUrl }}" style="flex:1;">
+                <button type="button" id="copyLink" class="btn btn-primary">Copy</button>
+              </div>
+              <div style="display:flex; gap:.5rem; flex-wrap:wrap;">
+                <a id="waShare" class="btn btn-outline" target="_blank" rel="noopener">WhatsApp</a>
+                <a id="twShare" class="btn btn-outline" target="_blank" rel="noopener">Twitter</a>
+                <a id="fbShare" class="btn btn-outline" target="_blank" rel="noopener">Facebook</a>
+                <a id="emShare" class="btn btn-outline" target="_blank" rel="noopener">Email</a>
+              </div>
+            </div>
           </div>
 
           <section class="comments-section mt-4">
@@ -330,4 +352,84 @@
       </div>
     </div>
   </div>
+
+  <script>
+    (function(){
+      const shareBtn = document.getElementById('shareBtn');
+      if (!shareBtn) return;
+      const title = shareBtn.getAttribute('data-title') || document.title;
+      const url = shareBtn.getAttribute('data-url') || window.location.href;
+      const menu = document.getElementById('shareMenu');
+      const closeBtn = document.getElementById('shareClose');
+      const copyBtn = document.getElementById('copyLink');
+      const linkInput = document.getElementById('shareLink');
+      const wa = document.getElementById('waShare');
+      const tw = document.getElementById('twShare');
+      const fb = document.getElementById('fbShare');
+      const em = document.getElementById('emShare');
+
+      function postShareIncrement(){
+        try {
+          const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+          fetch("{{ route('blog.share', $article) }}", { method: 'POST', headers: { 'X-CSRF-TOKEN': token, 'Accept': 'application/json' } });
+        } catch(e) { /* noop */ }
+      }
+
+      function openMenu(){
+        menu.style.display = 'flex';
+      }
+      function closeMenu(){
+        menu.style.display = 'none';
+      }
+
+      function setLinks(){
+        const text = encodeURIComponent(title + ' ' + url);
+        const u = encodeURIComponent(url);
+        wa.href = 'https://api.whatsapp.com/send?text=' + text;
+        tw.href = 'https://twitter.com/intent/tweet?text=' + text;
+        fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + u;
+        em.href = 'mailto:?subject=' + encodeURIComponent(title) + '&body=' + text;
+      }
+
+      shareBtn.addEventListener('click', async function(){
+        // Try native share first
+        if (navigator.share) {
+          try {
+            await navigator.share({ title: title, url: url });
+            postShareIncrement();
+            return;
+          } catch(err) {
+            // fall through to menu if user cancels or share fails
+          }
+        }
+        setLinks();
+        openMenu();
+      });
+
+      if (copyBtn && linkInput) {
+        copyBtn.addEventListener('click', async function(){
+          try {
+            await navigator.clipboard.writeText(linkInput.value);
+            copyBtn.textContent = 'Copied!';
+            setTimeout(()=> copyBtn.textContent = 'Copy', 1500);
+            postShareIncrement();
+          } catch(e) {
+            linkInput.select();
+            document.execCommand('copy');
+            postShareIncrement();
+          }
+        });
+      }
+
+      [wa, tw, fb, em].forEach(function(a){
+        if(!a) return;
+        a.addEventListener('click', function(){
+          postShareIncrement();
+        });
+      });
+
+      if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+      if (menu) menu.addEventListener('click', function(e){ if(e.target === menu) closeMenu(); });
+    })();
+  </script>
 @endsection
