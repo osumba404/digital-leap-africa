@@ -12,6 +12,14 @@
 </div>
 
 <div class="mb-3">
+    <label class="form-label">Tags</label>
+    @php $existingTags = is_array(old('tags', $article->tags ?? [])) ? old('tags', $article->tags ?? []) : []; @endphp
+    <input type="text" id="tags_input" value="{{ implode(', ', $existingTags) }}" class="form-control @error('tags') is-invalid @enderror" placeholder="e.g. Web Development, JavaScript, Trends, Frontend">
+    @error('tags')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    <small class="text-muted">Separate tags with commas.</small>
+</div>
+
+<div class="mb-3">
     <label class="form-label">Content</label>
     <!-- add an id to hook the editor -->
     <textarea id="article-editor" name="content" rows="10" class="form-control @error('content') is-invalid @enderror" required>{{ old('content', $article->content) }}</textarea>
@@ -39,12 +47,27 @@
     </label>
 </div>
 
-<!-- <div class="d-flex gap-2">
-    <x-primary-button type="submit">Save</x-primary-button>
-    <a href="{{ route('admin.articles.index') }}" class="btn btn-outline-secondary">Cancel</a>
-</div> -->
-
 <div class="d-flex gap-2">
     <button type="submit" class="btn btn-primary">Save</button>
     <a href="{{ route('admin.articles.index') }}" class="btn btn-outline-secondary">Cancel</a>
 </div>
+
+<script>
+(function(){
+  var form = document.currentScript.closest('form');
+  if(!form) return;
+  form.addEventListener('submit', function(){
+    var input = document.getElementById('tags_input');
+    if(!input) return;
+    Array.from(form.querySelectorAll('input[name="tags[]"]')).forEach(function(n){ n.parentNode.removeChild(n); });
+    var parts = (input.value || '').split(',');
+    parts.map(function(t){ return t.trim(); }).filter(function(t){ return t.length; }).forEach(function(tag){
+      var hidden = document.createElement('input');
+      hidden.type = 'hidden';
+      hidden.name = 'tags[]';
+      hidden.value = tag;
+      form.appendChild(hidden);
+    });
+  });
+})();
+</script>

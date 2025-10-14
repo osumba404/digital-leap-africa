@@ -37,7 +37,18 @@ class ArticleController extends Controller
         'published' => ['nullable','boolean'],
         'status' => ['nullable', Rule::in(['draft','published','archived'])],
         'published_at' => ['nullable','date'],
+        'tags' => ['sometimes','array'],
+        'tags.*' => ['string','max:50'],
     ]);
+
+    // Normalize tags: trim, drop empties, unique
+    $tags = collect($request->input('tags', []))
+        ->filter(fn($t) => is_string($t))
+        ->map(fn($t) => trim($t))
+        ->filter()
+        ->unique()
+        ->values()
+        ->all();
 
     $payload = [
         'title' => $data['title'],
@@ -45,6 +56,7 @@ class ArticleController extends Controller
         'content' => $data['content'],
         'slug' => $this->generateUniqueSlug($data['title']),
         'author_id' => $request->user()->id,
+        'tags' => $tags,
     ];
 
     if ($request->boolean('published')) {
@@ -85,12 +97,24 @@ public function update(Request $request, Article $article): RedirectResponse
         'published' => ['nullable','boolean'],
         'status' => ['nullable', Rule::in(['draft','published','archived'])],
         'published_at' => ['nullable','date'],
+        'tags' => ['sometimes','array'],
+        'tags.*' => ['string','max:50'],
     ]);
+
+    // Normalize tags
+    $tags = collect($request->input('tags', []))
+        ->filter(fn($t) => is_string($t))
+        ->map(fn($t) => trim($t))
+        ->filter()
+        ->unique()
+        ->values()
+        ->all();
 
     $payload = [
         'title' => $data['title'],
         'excerpt' => $data['excerpt'] ?? null,
         'content' => $data['content'],
+        'tags' => $tags,
     ];
 
     if ($article->title !== $data['title']) {
