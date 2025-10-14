@@ -10,9 +10,22 @@
 
     <div class="card">
         <h1 class="m-0">{{ $event->title }}</h1>
+        @php
+            // Model casts ensure $event->date and $event->ends_at are Carbon|null
+            $start = $event->date;
+            $end   = $event->ends_at;
+            $sameDay = ($start && $end) ? $start->isSameDay($end) : false;
+            $whenText = $start ? $start->format('M j, Y g:ia') : '';
+            if ($end) {
+                $whenText .= $sameDay ? ' – ' . $end->format('g:ia') : ' – ' . $end->format('M j, Y g:ia');
+            }
+        @endphp
         <div class="text-muted mt-1">
-            {{ optional($event->date)->format('M j, Y g:ia') }} • {{ $event->location }}
+            {{ $whenText }} • {{ $event->location }}
         </div>
+        @if(!empty($event->topic))
+            <div class="mt-2"><span class="badge bg-primary">{{ $event->topic }}</span></div>
+        @endif
 
         @if(!empty($event->image_path))
             <img class="mt-3" src="{{ $event->image_path }}" alt="{{ $event->title }}"

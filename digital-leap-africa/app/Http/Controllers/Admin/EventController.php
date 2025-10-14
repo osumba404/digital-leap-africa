@@ -76,8 +76,11 @@ class EventController extends Controller
     {
         return $request->validate([
             'title' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255'],
             'location' => ['required', 'string', 'max:255'],
+            'topic' => ['nullable', 'string', 'max:120'],
             'date' => ['required', 'date'],
+            'ends_at' => ['nullable', 'date', 'after_or_equal:date'],
             'description' => ['nullable', 'string'],
             'registration_url' => ['nullable', 'url'],
             // Image inputs (both optional; one may be provided by the client)

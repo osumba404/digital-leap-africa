@@ -13,10 +13,24 @@
     <x-input-error :messages="$errors->get('location')" class="mt-1" />
   </div>
   <div>
-    <x-input-label for="date" value="Date & Time" />
-    <x-text-input id="date" name="date" type="datetime-local" class="mt-1"
-      :value="old('date', isset($event) && $event->date ? (is_string($event->date) ? \Carbon\Carbon::parse($event->date)->format('Y-m-d\TH:i') : $event->date->format('Y-m-d\TH:i')) : '')" required />
-    <x-input-error :messages="$errors->get('date')" class="mt-1" />
+    <x-input-label for="topic" value="Topic (e.g. AI/ML, Web Development)" />
+    <x-text-input id="topic" name="topic" type="text" class="mt-1"
+      :value="old('topic', $event->topic ?? '')" placeholder="AI/ML" />
+    <x-input-error :messages="$errors->get('topic')" class="mt-1" />
+  </div>
+  <div class="row g-3">
+    <div class="col-12 col-md-6">
+      <x-input-label for="date" value="Starts At" />
+      <x-text-input id="date" name="date" type="datetime-local" class="mt-1"
+        :value="old('date', isset($event) && $event->date ? (is_string($event->date) ? \Carbon\Carbon::parse($event->date)->format('Y-m-d\TH:i') : $event->date->format('Y-m-d\TH:i')) : '')" required />
+      <x-input-error :messages="$errors->get('date')" class="mt-1" />
+    </div>
+    <div class="col-12 col-md-6">
+      <x-input-label for="ends_at" value="Ends At (optional)" />
+      <x-text-input id="ends_at" name="ends_at" type="datetime-local" class="mt-1"
+        :value="old('ends_at', isset($event) && $event->ends_at ? (is_string($event->ends_at) ? \Carbon\Carbon::parse($event->ends_at)->format('Y-m-d\TH:i') : $event->ends_at->format('Y-m-d\TH:i')) : '')" />
+      <x-input-error :messages="$errors->get('ends_at')" class="mt-1" />
+    </div>
   </div>
   <div>
     <x-input-label for="registration_url" value="Registration URL (optional)" />
@@ -24,11 +38,17 @@
       :value="old('registration_url', $event->registration_url ?? '')" />
     <x-input-error :messages="$errors->get('registration_url')" class="mt-1" />
   </div>
+  <div>
+    <x-input-label for="slug" value="Slug (optional; auto-generates if blank)" />
+    <x-text-input id="slug" name="slug" type="text" class="mt-1"
+      :value="old('slug', $event->slug ?? '')" placeholder="my-awesome-event" />
+    <x-input-error :messages="$errors->get('slug')" class="mt-1" />
+  </div>
   <!-- Event Image (with Cropper) -->
-<div>
-  <x-input-label for="image_file" value="Event Image (JPG/PNG/WebP)" />
-  <input id="image_file" name="image_file" type="file" accept="image/*" class="form-control bg-primary-light text-gray-200 border-0 mt-1">
-  <x-input-error :messages="$errors->get('image_file')" class="mt-1" />
+  <div>
+    <x-input-label for="image_file" value="Event Image (JPG/PNG/WebP)" />
+    <input id="image_file" name="image_file" type="file" accept="image/*" class="form-control bg-primary-light text-gray-200 border-0 mt-1">
+    <x-input-error :messages="$errors->get('image_file')" class="mt-1" />
 
   @if(!empty($event?->image_path))
     <div class="mt-2">
