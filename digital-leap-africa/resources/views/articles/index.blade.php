@@ -57,16 +57,16 @@
             </div>
             <div class="card-content">
               <div class="card-meta">
-                <span><i class="far fa-clock"></i> {{ $readMinutes }} min read</span>
+                <span><i class="fa-regular fa-clock"></i> {{ $readMinutes }} min read</span>
                 @if($dateText)
-                  <span><i class="far fa-calendar"></i> {{ $dateText }}</span>
+                  <span><i class="fa-regular fa-calendar"></i> {{ $dateText }}</span>
                 @endif
               </div>
 
               @if(!empty($tags))
-                <div class="mb-2" style="display:flex;flex-wrap:wrap;gap:.4rem;">
+                <div class="tags mb-2">
                   @foreach($tags as $t)
-                    <a href="{{ route('blog.index', ['tag' => $t]) }}" class="badge bg-info text-dark" style="text-decoration:none;">#{{ $t }}</a>
+                    <a href="{{ route('blog.index', ['tag' => $t]) }}" class="tag">{{ $t }}</a>
                   @endforeach
                 </div>
               @endif
@@ -75,19 +75,19 @@
 
               <div class="d-flex align-items-center justify-content-between mb-2" style="gap:.75rem;flex-wrap:wrap;">
                 <div style="display:flex;gap:1rem;color:#8892b0;">
-                  <span title="Likes"><i class="far fa-thumbs-up"></i> {{ $post->likes_count ?? 0 }}</span>
-                  <span title="Bookmarks"><i class="far fa-bookmark"></i> {{ $post->bookmarks_count ?? 0 }}</span>
-                  <span title="Shares"><i class="fas fa-share-alt"></i> {{ $post->shares_count ?? 0 }}</span>
+                  <span title="Likes"><i class="fa-regular fa-thumbs-up"></i> {{ $post->likes_count ?? 0 }}</span>
+                  <span title="Bookmarks"><i class="fa-regular fa-bookmark"></i> {{ $post->bookmarks_count ?? 0 }}</span>
+                  <span title="Shares"><i class="fa-solid fa-share"></i> {{ $post->shares_count ?? 0 }}</span>
                 </div>
                 <div style="display:flex;gap:.5rem;">
                   @auth
-                    <form method="POST" action="{{ route('blog.like', $post) }}">@csrf<button class="btn btn-sm btn-outline-primary" type="submit"><i class="far fa-thumbs-up"></i></button></form>
-                    <form method="POST" action="{{ route('blog.bookmark', $post) }}">@csrf<button class="btn btn-sm btn-outline-secondary" type="submit"><i class="far fa-bookmark"></i></button></form>
-                    <form method="POST" action="{{ route('blog.share', $post) }}">@csrf<button class="btn btn-sm btn-outline-info" type="submit"><i class="fas fa-share"></i></button></form>
+                    <form method="POST" action="{{ route('blog.like', $post) }}">@csrf<button class="btn btn-sm btn-outline-primary" type="submit" title="Like"><i class="fa-regular fa-thumbs-up"></i></button></form>
+                    <form method="POST" action="{{ route('blog.bookmark', $post) }}">@csrf<button class="btn btn-sm btn-outline-secondary" type="submit" title="Save"><i class="fa-regular fa-bookmark"></i></button></form>
+                    <form method="POST" action="{{ route('blog.share', $post) }}">@csrf<button class="btn btn-sm btn-outline-info" type="submit" title="Share"><i class="fa-solid fa-share"></i></button></form>
                   @else
-                    <a class="btn btn-sm btn-outline-primary" href="{{ route('login') }}"><i class="far fa-thumbs-up"></i></a>
-                    <a class="btn btn-sm btn-outline-secondary" href="{{ route('login') }}"><i class="far fa-bookmark"></i></a>
-                    <a class="btn btn-sm btn-outline-info" href="{{ route('login') }}"><i class="fas fa-share"></i></a>
+                    <a class="btn btn-sm btn-outline-primary" href="{{ route('login') }}" title="Like"><i class="fa-regular fa-thumbs-up"></i></a>
+                    <a class="btn btn-sm btn-outline-secondary" href="{{ route('login') }}" title="Save"><i class="fa-regular fa-bookmark"></i></a>
+                    <a class="btn btn-sm btn-outline-info" href="{{ route('login') }}" title="Share"><i class="fa-solid fa-share"></i></a>
                   @endauth
                 </div>
               </div>
@@ -126,6 +126,15 @@
   #articles-section .card-button{display:inline-flex;align-items:center;justify-content:center;background-color:transparent;color:#3b82f6;padding:.6rem 1.2rem;border:1px solid #3b82f6;border-radius:6px;text-decoration:none;font-size:.9rem;font-weight:500;transition:all .3s ease;cursor:pointer;gap:.5rem}
   #articles-section .card-button:hover{background-color:rgba(59,130,246,.1);transform:translateY(-2px);box-shadow:0 4px 12px rgba(59,130,246,.2)}
   #articles-section .card-category{position:absolute;top:1rem;left:1rem;background:rgba(100,255,218,0.9);color:#0a192f;padding:.3rem .8rem;border-radius:20px;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-  @media (max-width:768px){#articles-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.5rem}#articles-section .card-title{font-size:1.2rem;padding:1.25rem 1.25rem .5rem}}
+
+  /* Styled tags to match article page */
+  #articles-section .tags{display:flex;flex-wrap:wrap;gap:.4rem}
+  #articles-section .tag{display:inline-block;background:rgba(100,255,218,0.1);color:#64ffda;padding:.25rem .6rem;border-radius:999px;font-size:.8rem;border:1px solid rgba(100,255,218,0.2);text-decoration:none}
+  #articles-section .tag:hover{background:rgba(100,255,218,0.15);}
+
+  @media (max-width:768px){
+    #articles-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.5rem}
+    #articles-section .card-title{font-size:1.2rem;padding:1.25rem 1.25rem .5rem}
+  }
 </style>
 
