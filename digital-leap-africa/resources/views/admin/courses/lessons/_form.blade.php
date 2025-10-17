@@ -14,7 +14,7 @@
   {{-- Type --}}
   <div class="form-group">
     <x-input-label for="type" value="Lesson Type" class="form-label" />
-    <select id="type" name="type" class="mt-1 block w-100 form-control">
+    <select id="type" name="type" class="mt-1 block w-100 form-control" text-color="blue">
       @php $selectedType = old('type', $lesson->type ?? 'note'); @endphp
       <option value="note" {{ $selectedType === 'note' ? 'selected' : '' }}>Note</option>
       <option value="video" {{ $selectedType === 'video' ? 'selected' : '' }}>Video</option>
@@ -27,50 +27,9 @@
   {{-- Content --}}
   <div id="group-content" class="form-group">
     <x-input-label for="content" value="Content / Description" class="form-label" />
-    <div class="cms-editor mt-1">
-      <div class="cms-toolbar">
-        <select class="cms-select" data-cmd="formatBlock" aria-label="Block format">
-          <option value="p">Paragraph</option>
-          <option value="h1">Heading 1</option>
-          <option value="h2">Heading 2</option>
-          <option value="h3">Heading 3</option>
-          <option value="blockquote">Quote</option>
-          <option value="pre">Code Block</option>
-        </select>
-        <button type="button" class="cms-btn" data-cmd="bold" title="Bold" aria-label="Bold"><i class="fas fa-bold"></i><span class="txt">Bold</span></button>
-        <button type="button" class="cms-btn" data-cmd="italic" title="Italic" aria-label="Italic"><i class="fas fa-italic"></i><span class="txt">Italic</span></button>
-        <button type="button" class="cms-btn" data-cmd="underline" title="Underline" aria-label="Underline"><i class="fas fa-underline"></i><span class="txt">Underline</span></button>
-        <button type="button" class="cms-btn" data-cmd="strikeThrough" title="Strike" aria-label="Strike"><i class="fas fa-strikethrough"></i><span class="txt">Strike</span></button>
-        <span class="cms-divider"></span>
-        <button type="button" class="cms-btn" data-cmd="insertUnorderedList" title="Bulleted List" aria-label="Bulleted List"><i class="fas fa-list-ul"></i><span class="txt">Bulleted</span></button>
-        <button type="button" class="cms-btn" data-cmd="insertOrderedList" title="Numbered List" aria-label="Numbered List"><i class="fas fa-list-ol"></i><span class="txt">Numbered</span></button>
-        <button type="button" class="cms-btn" data-cmd="outdent" title="Outdent" aria-label="Outdent"><i class="fas fa-outdent"></i><span class="txt">Out</span></button>
-        <button type="button" class="cms-btn" data-cmd="indent" title="Indent" aria-label="Indent"><i class="fas fa-indent"></i><span class="txt">In</span></button>
-        <span class="cms-divider"></span>
-        <button type="button" class="cms-btn" data-cmd="justifyLeft" title="Align Left" aria-label="Align Left"><i class="fas fa-align-left"></i><span class="txt">Left</span></button>
-        <button type="button" class="cms-btn" data-cmd="justifyCenter" title="Align Center" aria-label="Align Center"><i class="fas fa-align-center"></i><span class="txt">Center</span></button>
-        <button type="button" class="cms-btn" data-cmd="justifyRight" title="Align Right" aria-label="Align Right"><i class="fas fa-align-right"></i><span class="txt">Right</span></button>
-        <span class="cms-divider"></span>
-        <button type="button" class="cms-btn" data-action="link" title="Insert Link" aria-label="Insert Link"><i class="fas fa-link"></i><span class="txt">Link</span></button>
-        <button type="button" class="cms-btn" data-action="image" title="Insert Image" aria-label="Insert Image"><i class="fas fa-image"></i><span class="txt">Image</span></button>
-        <button type="button" class="cms-btn" data-cmd="insertHorizontalRule" title="Horizontal Rule" aria-label="Horizontal Rule"><i class="fas fa-minus"></i><span class="txt">HR</span></button>
-        <span class="cms-divider"></span>
-        <button type="button" class="cms-btn" data-action="inline-code" title="Inline Code" aria-label="Inline Code"><i class="fas fa-code"></i><span class="txt">Inline</span></button>
-        <button type="button" class="cms-btn" data-action="clear" title="Clear Formatting" aria-label="Clear Formatting"><i class="fas fa-eraser"></i><span class="txt">Clear</span></button>
-        <span class="cms-flex"></span>
-        <button type="button" class="cms-btn" data-cmd="undo" title="Undo" aria-label="Undo"><i class="fas fa-rotate-left"></i><span class="txt">Undo</span></button>
-        <button type="button" class="cms-btn" data-cmd="redo" title="Redo" aria-label="Redo"><i class="fas fa-rotate-right"></i><span class="txt">Redo</span></button>
-      </div>
-      <style>
-        .cms-btn .txt{font-size:.82rem;margin-left:.35rem;opacity:.9}
-        @media (max-width: 576px){ .cms-btn .txt{display:none} }
-      </style>
-
-      <div id="content-editor" class="cms-surface" contenteditable="true">{!! old('content', $lesson->content ?? '') !!}</div>
-      <textarea id="content" name="content" class="d-none">{{ old('content', $lesson->content ?? '') }}</textarea>
-      <div class="cms-help small text-muted mt-1">Tips: Use Ctrl/Cmd+B/I/U for bold/italic/underline. Paste images or drag & drop to embed. Use the code block option for long code, inline code for short snippets.</div>
-    </div>
-    <x-input-error :messages="$errors->get('content')" class="mt-2" style="display: none;"/>
+    <div id="quill-editor" style="min-height: 200px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;"></div>
+    <textarea id="content" name="content" class="d-none">{{ old('content', $lesson->content ?? '') }}</textarea>
+    <x-input-error :messages="$errors->get('content')" class="mt-2" />
   </div>
 
   {{-- Code Snippets --}}
@@ -177,6 +136,73 @@
     <a href="{{ $cancelHref }}" class="btn btn-outline">Cancel</a>
   </div>
 </div>
+
+@push('styles')
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<style>
+.ql-toolbar {
+    background: rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-bottom: none !important;
+    border-radius: 8px 8px 0 0 !important;
+}
+.ql-container {
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    border-top: none !important;
+    border-radius: 0 0 8px 8px !important;
+    color: #fff !important;
+}
+.ql-editor {
+    color: #fff !important;
+    min-height: 200px;
+}
+.ql-editor.ql-blank::before {
+    color: rgba(255,255,255,0.5) !important;
+}
+</style>
+@endpush
+
+@push('scripts')
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const quill = new Quill('#quill-editor', {
+        theme: 'snow',
+        placeholder: 'Enter lesson content...',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['blockquote', 'code-block'],
+                ['link', 'image'],
+                ['clean']
+            ]
+        }
+    });
+    
+    // Set initial content
+    const initialContent = document.getElementById('content').value;
+    if (initialContent) {
+        quill.root.innerHTML = initialContent;
+    }
+    
+    // Update hidden textarea on content change
+    quill.on('text-change', function() {
+        document.getElementById('content').value = quill.root.innerHTML;
+    });
+    
+    // Update on form submit
+    const form = document.getElementById('content').closest('form');
+    if (form) {
+        form.addEventListener('submit', function() {
+            document.getElementById('content').value = quill.root.innerHTML;
+        });
+    }
+});
+</script>
+@endpush
 
 <script>
   (function initLessonForm(){
