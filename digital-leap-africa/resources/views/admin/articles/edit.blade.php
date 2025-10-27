@@ -8,10 +8,55 @@
         <h2>Edit Article</h2>
         <a href="{{ route('admin.articles.index') }}" class="btn btn-outline-secondary">Back</a>
     </div>
-    <form method="POST" action="{{ route('admin.articles.update', $article) }}" enctype="multipart/form-data" class="p-3">
+    <form id="article-form" method="POST" action="{{ route('admin.articles.update', $article) }}" enctype="multipart/form-data" class="p-3">
         @method('PUT')
         @include('admin.articles._form')
     </form>
+
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      var hidden = document.getElementById('content');
+      var editorEl = document.getElementById('quill-article-editor');
+      if(!hidden || !editorEl) return;
+      var quill = new Quill('#quill-article-editor', {
+        theme: 'snow',
+        placeholder: 'Write your article content...',
+        modules: { toolbar: [
+          [{ 'header': [1, 2, 3, false] }],
+          ['bold','italic','underline','strike'],
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+          ['blockquote','code-block'],
+          ['link','image'],
+          ['clean']
+        ]}
+      });
+      if (hidden.value) {
+        quill.root.innerHTML = hidden.value;
+      }
+      quill.on('text-change', function(){ hidden.value = quill.root.innerHTML; });
+      var form = hidden.closest('form');
+      if(form){ form.addEventListener('submit', function(){ hidden.value = quill.root.innerHTML; }); }
+
+      // Live image preview remains
+      const fileInput = document.getElementById('featured_image_input');
+      const previewImg = document.getElementById('featured_image_preview');
+      if (fileInput && previewImg) {
+        fileInput.addEventListener('change', function (e) {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = function (ev) {
+            previewImg.src = ev.target.result;
+            previewImg.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+    });
+    </script>
 
     {{-- CKEditor 5 CDN --}}
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
