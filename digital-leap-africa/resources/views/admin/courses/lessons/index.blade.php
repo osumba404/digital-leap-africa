@@ -24,23 +24,40 @@
   <div class="card mt-3">
     <div class="card-body">
       <h3 class="h5">Existing Lessons</h3>
-      @forelse($topic->lessons as $item)
-        <div class="d-flex justify-content-between align-items-center bg-primary p-3 rounded @if(!$loop->last) mb-2 @endif">
-          <div>
-            <span class="fw-semibold">{{ $item->title }}</span>
-            <span class="ms-3 badge bg-info text-dark text-uppercase">{{ $item->type }}</span>
-          </div>
-          <div class="d-flex align-items-center gap-3">
-            <a href="{{ route('admin.topics.lessons.edit', [$topic, $item]) }}" class="btn btn-sm btn-outline">Edit</a>
-            <form method="POST" action="{{ route('admin.topics.lessons.destroy', [$topic, $item]) }}" onsubmit="return confirm('Are you sure?');" class="m-0">
-              @csrf @method('DELETE')
-              <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-            </form>
-          </div>
+      @if($topic->lessons->count())
+        <div class="table-responsive">
+          <table class="table table-striped align-middle">
+            <thead>
+              <tr>
+                <th style="width:60px;">#</th>
+                <th>Title</th>
+                <th style="width:140px;">Type</th>
+                <th style="width:200px;">Updated</th>
+                <th style="width:180px;" class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($topic->lessons as $item)
+                <tr>
+                  <td>{{ $loop->iteration }}</td>
+                  <td class="fw-semibold">{{ $item->title }}</td>
+                  <td><span class="badge bg-info text-dark text-uppercase">{{ $item->type }}</span></td>
+                  <td class="text-muted">{{ optional($item->updated_at)->format('Y-m-d H:i') }}</td>
+                  <td class="text-end">
+                    <a href="{{ route('admin.topics.lessons.edit', [$topic, $item]) }}" class="btn btn-sm btn-outline">Edit</a>
+                    <form method="POST" action="{{ route('admin.topics.lessons.destroy', [$topic, $item]) }}" onsubmit="return confirm('Are you sure?');" class="d-inline-block m-0">
+                      @csrf @method('DELETE')
+                      <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
         </div>
-      @empty
+      @else
         <div class="text-muted">No lessons have been added to this topic yet.</div>
-      @endforelse
+      @endif
     </div>
   </div>
 </div>
