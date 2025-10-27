@@ -21,8 +21,8 @@
 
 <div class="mb-3">
     <label class="form-label">Content</label>
-    <!-- add an id to hook the editor -->
-    <textarea id="article-editor" name="content" rows="10" class="form-control @error('content') is-invalid @enderror" required>{{ old('content', $article->content) }}</textarea>
+    <div id="quill-article-editor" style="min-height: 320px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;"></div>
+    <textarea id="content" name="content" class="d-none">{{ old('content', $article->content) }}</textarea>
     @error('content')<div class="invalid-feedback">{{ $message }}</div>@enderror
 </div>
 
