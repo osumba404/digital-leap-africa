@@ -46,13 +46,25 @@
                 <input type="email" class="form-control bg-primary-light border-0 text-gray-200" id="email" 
                        name="email" value="{{ old('email', $teamMember->email) }}">
             </div>
-            
+
+            <div class="mb-3">
+                <label for="facebook_url" class="form-label text-gray-200">Facebook URL</label>
+                <input type="url" class="form-control bg-primary-light border-0 text-gray-200" id="facebook_url" 
+                       name="facebook_url" value="{{ old('facebook_url', $teamMember->facebook_url) }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="instagram_url" class="form-label text-gray-200">Instagram URL</label>
+                <input type="url" class="form-control bg-primary-light border-0 text-gray-200" id="instagram_url" 
+                       name="instagram_url" value="{{ old('instagram_url', $teamMember->instagram_url) }}">
+            </div>
+
             <div class="mb-3">
                 <label for="linkedin_url" class="form-label text-gray-200">LinkedIn URL</label>
                 <input type="url" class="form-control bg-primary-light border-0 text-gray-200" id="linkedin_url" 
                        name="linkedin_url" value="{{ old('linkedin_url', $teamMember->linkedin_url) }}">
             </div>
-            
+
             <div class="mb-3">
                 <label for="twitter_url" class="form-label text-gray-200">Twitter URL</label>
                 <input type="url" class="form-control bg-primary-light border-0 text-gray-200" id="twitter_url" 

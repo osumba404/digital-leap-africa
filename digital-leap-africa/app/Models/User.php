@@ -112,8 +112,8 @@ class User extends Authenticatable
         if (preg_match('/^https?:\/\//i', $this->profile_photo)) {
             return $this->profile_photo;
         }
-        // Normalize any mistakenly stored 'storage/' prefix
-        $path = preg_replace('#^storage/#', '', $this->profile_photo);
+        // Normalize common prefixes like 'storage/' or 'public/' to map correctly to the public disk
+        $path = preg_replace('#^(?:storage/|public/)#', '', $this->profile_photo);
         return Storage::disk('public')->url($path);
     }
 }

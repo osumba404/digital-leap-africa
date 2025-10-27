@@ -150,8 +150,12 @@
         {{-- Original Thread Post --}}
         <div class="thread-post">
             <div class="post-header">
-                <div class="user-avatar">
-                    {{ strtoupper(substr($thread->user->name, 0, 1)) }}
+                <div class="user-avatar" style="display:flex;align-items:center;justify-content:center;">
+                    @if(optional($thread->user)->profile_photo_url)
+                        <img src="{{ $thread->user->profile_photo_url }}" alt="{{ $thread->user->name }}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:block;">
+                    @else
+                        {{ strtoupper(substr($thread->user->name, 0, 1)) }}
+                    @endif
                 </div>
                 <div class="post-meta">
                     <div class="post-author">{{ $thread->user->name }}</div>
@@ -186,8 +190,12 @@
                 @foreach ($thread->replies as $reply)
                     <div class="reply-post">
                         <div class="post-header">
-                            <div class="user-avatar">
-                                {{ strtoupper(substr($reply->user->name, 0, 1)) }}
+                            <div class="user-avatar" style="display:flex;align-items:center;justify-content:center;">
+                                @if(optional($reply->user)->profile_photo_url)
+                                    <img src="{{ $reply->user->profile_photo_url }}" alt="{{ $reply->user->name }}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:block;">
+                                @else
+                                    {{ strtoupper(substr($reply->user->name, 0, 1)) }}
+                                @endif
                             </div>
                             <div class="post-meta">
                                 <div class="post-author">{{ $reply->user->name }}</div>
