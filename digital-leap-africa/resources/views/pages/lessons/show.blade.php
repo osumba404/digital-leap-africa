@@ -42,34 +42,7 @@
     border: none;
 }
 
-.lesson-text {
-    color: var(--cool-gray);
-    line-height: 1.8;
-    font-size: 1.1rem;
-}
-
-.lesson-text h1, .lesson-text h2, .lesson-text h3 {
-    color: var(--diamond-white);
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-}
-
-.lesson-text h1 { font-size: 2rem; }
-.lesson-text h2 { font-size: 1.5rem; }
-.lesson-text h3 { font-size: 1.25rem; }
-
-.lesson-text p {
-    margin-bottom: 1.5rem;
-}
-
-.lesson-text ul, .lesson-text ol {
-    margin-bottom: 1.5rem;
-    padding-left: 2rem;
-}
-
-.lesson-text li {
-    margin-bottom: 0.5rem;
-}
+/* Removed prose/typography overrides to display content exactly as authored in CMS */
 
 .completion-section {
     background: rgba(255, 255, 255, 0.03);
@@ -184,8 +157,8 @@
         {{-- Text Content --}}
         @if($lesson->content)
             <div class="lesson-content">
-                <div class="lesson-text">
-                    {!! nl2br(e(strip_tags($lesson->content))) !!}
+                <div>
+                    {!! $lesson->content !!}
                 </div>
             </div>
         @endif
