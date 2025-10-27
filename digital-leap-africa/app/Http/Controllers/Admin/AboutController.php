@@ -122,12 +122,14 @@ class AboutController extends Controller
             'bio' => 'nullable|string',
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'email' => 'nullable|email',
+            'facebook_url' => 'nullable|url',
+            'instagram_url' => 'nullable|url',
             'linkedin_url' => 'nullable|url',
             'twitter_url' => 'nullable|url',
             'is_active' => 'boolean',
             'order' => 'integer',
         ]);
-
+        
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('public/team');
             $validated['image_path'] = $path;
@@ -152,6 +154,8 @@ class AboutController extends Controller
             'bio' => 'nullable|string',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'email' => 'nullable|email',
+            'facebook_url' => 'nullable|url',
+            'instagram_url' => 'nullable|url',
             'linkedin_url' => 'nullable|url',
             'twitter_url' => 'nullable|url',
             'is_active' => 'boolean',

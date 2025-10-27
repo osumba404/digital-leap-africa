@@ -39,7 +39,19 @@
                 <input type="email" class="form-control bg-primary-light border-0 text-gray-200" id="email" 
                        name="email" value="{{ old('email') }}">
             </div>
-            
+
+            <div class="mb-3">
+                <label for="facebook_url" class="form-label text-gray-200">Facebook URL</label>
+                <input type="url" class="form-control bg-primary-light border-0 text-gray-200" id="facebook_url" 
+                       name="facebook_url" value="{{ old('facebook_url') }}" placeholder="https://facebook.com/username">
+            </div>
+
+            <div class="mb-3">
+                <label for="instagram_url" class="form-label text-gray-200">Instagram URL</label>
+                <input type="url" class="form-control bg-primary-light border-0 text-gray-200" id="instagram_url" 
+                       name="instagram_url" value="{{ old('instagram_url') }}" placeholder="https://instagram.com/username">
+            </div>
+
             <div class="mb-3">
                 <label for="linkedin_url" class="form-label text-gray-200">LinkedIn URL</label>
                 <input type="url" class="form-control bg-primary-light border-0 text-gray-200" id="linkedin_url" 
