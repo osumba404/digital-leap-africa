@@ -36,6 +36,40 @@
   #events-section .event-date-badge .day{font-size:1.35rem;display:block;margin-bottom:-2px;color:#ffffff}
   #events-section .event-date-badge .month{font-size:.75rem;display:block;font-weight:800;letter-spacing:.5px;color:#ffffff}
   @media (max-width:768px){#events-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.25rem}#events-section .card-image{height:160px}#events-section .event-date-badge{width:60px;height:70px}#events-section .event-date-badge .day{font-size:1.2rem}#events-section .event-date-badge .month{font-size:.7rem}}
+
+  /* Light Mode Events */
+  [data-theme="light"] #events-section .card {
+      background-color: #FFFFFF;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(46, 120, 197, 0.15);
+  }
+  [data-theme="light"] #events-section .card:hover {
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  }
+  [data-theme="light"] #events-section .card-title {
+      color: var(--primary-blue);
+  }
+  [data-theme="light"] #events-section .card-body,
+  [data-theme="light"] #events-section .event-location {
+      color: var(--cool-gray);
+  }
+  [data-theme="light"] #events-section .event-date {
+      color: var(--primary-blue);
+  }
+  [data-theme="light"] #events-section .card-button {
+      color: var(--primary-blue);
+      border-color: var(--primary-blue);
+  }
+  [data-theme="light"] #events-section .card-button:hover {
+      background-color: rgba(46, 120, 197, 0.1);
+      box-shadow: 0 4px 12px rgba(46, 120, 197, 0.2);
+  }
+  [data-theme="light"] #events-section .event-date-badge {
+      background: var(--primary-blue);
+  }
+  [data-theme="light"] #events-section .event-category {
+      background: rgba(46, 120, 197, 0.85);
+  }
 </style>
 
 <!-- Events Listing (Grouped) -->

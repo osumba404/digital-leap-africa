@@ -112,6 +112,56 @@
         gap: 0.25rem;
     }
 }
+
+/* ========== Light Mode Styles ========== */
+[data-theme="light"] .thread-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .thread-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .thread-title {
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .thread-title:hover {
+    color: var(--purple-accent);
+}
+
+[data-theme="light"] .thread-meta {
+    color: var(--cool-gray);
+}
+
+[data-theme="light"] .thread-author {
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .thread-content {
+    color: var(--cool-gray);
+}
+
+[data-theme="light"] .reply-count {
+    background: rgba(46, 120, 197, 0.15);
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .stat-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .stat-number {
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .stat-label {
+    color: var(--cool-gray);
+}
 </style>
 
 <div class="container">

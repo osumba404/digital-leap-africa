@@ -2,21 +2,51 @@
 
 @section('content')
 <style>
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+}
+
+.dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    background: linear-gradient(90deg, var(--cyan-accent), var(--purple-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.dashboard-header p {
+    color: var(--cool-gray);
+    font-size: 0.95rem;
+}
+
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin: 2rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
 }
 
 .stat-card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius);
-    padding: 2rem;
+    border-radius: 8px;
+    padding: 1.25rem;
     text-align: center;
     position: relative;
     overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .stat-card::before {
@@ -30,32 +60,33 @@
 }
 
 .stat-number {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: var(--cyan-accent);
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
 .stat-label {
     color: var(--cool-gray);
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
 .course-card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    margin-bottom: 1rem;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .course-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .progress-bar {
@@ -76,49 +107,217 @@
 .section-card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius);
-    padding: 2rem;
-    margin-bottom: 2rem;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--diamond-white);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .quick-actions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin: 2rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
 }
 
 .action-card {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: var(--radius);
-    padding: 1.5rem;
+    border-radius: 8px;
+    padding: 1rem;
     text-align: center;
     transition: all 0.2s;
     text-decoration: none;
     color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .action-card:hover {
     background: rgba(255, 255, 255, 0.05);
     transform: translateY(-2px);
     color: inherit;
+    border-color: rgba(255, 255, 255, 0.15);
 }
 
 .action-icon {
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: var(--cyan-accent);
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.action-card h3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.action-card p {
+    font-size: 0.75rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* ========== Light Mode Styles ========== */
+[data-theme="light"] .stat-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .stat-card::before {
+    background: var(--primary-blue);
+}
+
+[data-theme="light"] .stat-number {
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .stat-label {
+    color: var(--cool-gray);
+}
+
+[data-theme="light"] .course-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .course-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .course-card h3 {
+    color: var(--primary-blue) !important;
+}
+
+[data-theme="light"] .course-card h3 a {
+    color: var(--primary-blue) !important;
+}
+
+[data-theme="light"] .progress-bar {
+    background: rgba(46, 120, 197, 0.1);
+}
+
+[data-theme="light"] .progress-fill {
+    background: var(--primary-blue);
+}
+
+[data-theme="light"] .section-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .section-card h2 {
+    color: var(--primary-blue) !important;
+}
+
+[data-theme="light"] .action-card {
+    background: rgba(46, 120, 197, 0.05);
+    border: 1px solid rgba(46, 120, 197, 0.15);
+}
+
+[data-theme="light"] .action-card:hover {
+    background: rgba(46, 120, 197, 0.1);
+    border-color: rgba(46, 120, 197, 0.3);
+}
+
+[data-theme="light"] .action-card h3 {
+    color: var(--primary-blue) !important;
+}
+
+[data-theme="light"] .action-icon {
+    color: var(--primary-blue);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 1rem 0.75rem;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .dashboard-header p {
+        font-size: 0.85rem;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .section-card {
+        padding: 1rem;
+    }
+    
+    .section-title {
+        font-size: 1rem;
+    }
+    
+    .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .action-card {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .action-icon {
+        font-size: 1.25rem;
+        margin-bottom: 0.4rem;
+    }
+    
+    .action-card h3 {
+        font-size: 0.75rem;
+    }
+    
+    .action-card p {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .stat-number {
+        font-size: 1.35rem;
+    }
 }
 </style>
 
-<div class="container">
+<div class="dashboard-container">
     {{-- Welcome Section --}}
-    <div style="text-align: center; margin-bottom: 3rem;">
-        <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(90deg, var(--cyan-accent), var(--purple-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-            Welcome back, {{ Auth::user()->name }}!
-        </h1>
-        <p style="color: var(--cool-gray); font-size: 1.1rem;">Ready to continue your digital learning journey?</p>
+    <div class="dashboard-header">
+        <h1>Welcome back, {{ Auth::user()->name }}!</h1>
+        <p>Ready to continue your digital learning journey?</p>
     </div>
 
     {{-- Stats Dashboard --}}
@@ -150,8 +349,8 @@
     {{-- My Courses Section --}}
     @if(Auth::user()->courses()->count() > 0)
         <div class="section-card">
-            <h2 style="font-size: 1.5rem; font-weight: 600; color: var(--diamond-white); margin-bottom: 1.5rem;">
-                <i class="fas fa-graduation-cap me-2"></i>My Courses
+            <h2 class="section-title">
+                <i class="fas fa-graduation-cap"></i>My Courses
             </h2>
             
             @foreach(Auth::user()->courses()->take(3)->get() as $course)
@@ -164,28 +363,28 @@
                 @endphp
                 
                 <div class="course-card">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                        <div style="flex-grow: 1;">
-                            <h3 style="color: var(--diamond-white); font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; gap: 1rem;">
+                        <div style="flex-grow: 1; min-width: 0;">
+                            <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem;">
                                 <a href="{{ route('courses.show', $course) }}" style="color: inherit; text-decoration: none;">
                                     {{ $course->title }}
                                 </a>
                             </h3>
                             @if($course->instructor)
-                                <p style="color: var(--cyan-accent); font-size: 0.9rem; margin-bottom: 1rem;">
+                                <p style="color: var(--cyan-accent); font-size: 0.8rem; margin: 0;">
                                     <i class="fas fa-user-tie me-1"></i>{{ $course->instructor }}
                                 </p>
                             @endif
                         </div>
                         
-                        <a href="{{ route('courses.show', $course) }}" class="btn-primary" style="padding: 0.5rem 1rem;">
+                        <a href="{{ route('courses.show', $course) }}" class="btn-primary" style="padding: 0.4rem 0.85rem; font-size: 0.85rem; white-space: nowrap;">
                             Continue
                         </a>
                     </div>
                     
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                        <span style="color: var(--cool-gray); font-size: 0.9rem;">Progress</span>
-                        <span style="color: var(--cyan-accent); font-weight: 600;">{{ round($progress) }}%</span>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                        <span style="color: var(--cool-gray); font-size: 0.75rem;">Progress</span>
+                        <span style="color: var(--cyan-accent); font-weight: 600; font-size: 0.85rem;">{{ round($progress) }}%</span>
                     </div>
                     
                     <div class="progress-bar">
@@ -195,8 +394,8 @@
             @endforeach
             
             @if(Auth::user()->courses()->count() > 3)
-                <div style="text-align: center; margin-top: 1.5rem;">
-                    <a href="{{ route('courses.index') }}" class="btn-outline" style="padding: 0.75rem 1.5rem;">
+                <div style="text-align: center; margin-top: 1rem;">
+                    <a href="{{ route('courses.index') }}" class="btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                         View All My Courses
                     </a>
                 </div>
@@ -206,8 +405,8 @@
 
     {{-- Quick Actions --}}
     <div class="section-card">
-        <h2 style="font-size: 1.5rem; font-weight: 600; color: var(--diamond-white); margin-bottom: 1.5rem;">
-            <i class="fas fa-bolt me-2"></i>Quick Actions
+        <h2 class="section-title">
+            <i class="fas fa-bolt"></i>Quick Actions
         </h2>
         
         <div class="quick-actions">
@@ -215,8 +414,8 @@
                 <div class="action-icon">
                     <i class="fas fa-search"></i>
                 </div>
-                <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Browse Courses</h3>
-                <p style="color: var(--cool-gray); font-size: 0.9rem; margin: 0;">Discover new learning opportunities</p>
+                <h3 style="color: var(--diamond-white);">Browse Courses</h3>
+                <p style="color: var(--cool-gray);">Discover new learning</p>
             </a>
             
             <!-- <a href="{{ route('projects.index') }}" class="action-card">
@@ -231,8 +430,8 @@
                 <div class="action-icon">
                     <i class="fas fa-comments"></i>
                 </div>
-                <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Join Forum</h3>
-                <p style="color: var(--cool-gray); font-size: 0.9rem; margin: 0;">Connect with the community</p>
+                <h3 style="color: var(--diamond-white);">Join Forum</h3>
+                <p style="color: var(--cool-gray);">Connect with community</p>
             </a>
             
             <!-- <a href="{{ route('jobs.index') }}" class="action-card">
@@ -247,16 +446,16 @@
                 <div class="action-icon">
                     <i class="fas fa-quote-left"></i>
                 </div>
-                <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Share a Testimonial</h3>
-                <p style="color: var(--cool-gray); font-size: 0.9rem; margin: 0;">Tell others about your experience</p>
+                <h3 style="color: var(--diamond-white);">Share Testimonial</h3>
+                <p style="color: var(--cool-gray);">Tell your experience</p>
             </a>
 
             <a href="{{ route('testimonials.index') }}" class="action-card">
                 <div class="action-icon">
-                    <i class="fas fa-comments"></i>
+                    <i class="fas fa-star"></i>
                 </div>
-                <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">View Testimonials</h3>
-                <p style="color: var(--cool-gray); font-size: 0.9rem; margin: 0;">Read community experiences</p>
+                <h3 style="color: var(--diamond-white);">View Testimonials</h3>
+                <p style="color: var(--cool-gray);">Read experiences</p>
             </a>
         </div>
     </div>
@@ -264,13 +463,13 @@
     {{-- Recent Activity or Recommendations --}}
     @if(Auth::user()->courses()->count() == 0)
         <div class="section-card">
-            <div style="text-align: center; padding: 2rem 0;">
-                <i class="fas fa-rocket" style="font-size: 4rem; color: var(--cyan-accent); margin-bottom: 1.5rem;"></i>
-                <h3 style="color: var(--diamond-white); font-size: 1.5rem; margin-bottom: 1rem;">Ready to Start Learning?</h3>
-                <p style="color: var(--cool-gray); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+            <div style="text-align: center; padding: 1.5rem 0;">
+                <i class="fas fa-rocket" style="font-size: 3rem; color: var(--cyan-accent); margin-bottom: 1rem;"></i>
+                <h3 style="color: var(--diamond-white); font-size: 1.15rem; margin-bottom: 0.75rem;">Ready to Start Learning?</h3>
+                <p style="color: var(--cool-gray); margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto; font-size: 0.9rem;">
                     You haven't enrolled in any courses yet. Explore our catalog and begin your digital transformation journey today!
                 </p>
-                <a href="{{ route('courses.index') }}" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
+                <a href="{{ route('courses.index') }}" class="btn-primary" style="padding: 0.6rem 1.5rem; font-size: 0.95rem;">
                     <i class="fas fa-graduation-cap me-2"></i>Browse Courses
                 </a>
             </div>

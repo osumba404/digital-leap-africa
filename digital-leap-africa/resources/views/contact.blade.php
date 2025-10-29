@@ -209,28 +209,6 @@
     }
     
     .btn-donate:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 30px rgba(0, 201, 255, 0.5);
-        color: var(--navy-bg);
-    }
-    
-    @media (max-width: 768px) {
-        .contact-hero h1 {
-            font-size: 2rem;
-        }
-        
-        .contact-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .support-section {
-            padding: 2rem 1.5rem;
-        }
-        
-        .btn-donate {
-            padding: 0.875rem 2rem;
-            font-size: 1rem;
-        }
     }
 </style>
 
