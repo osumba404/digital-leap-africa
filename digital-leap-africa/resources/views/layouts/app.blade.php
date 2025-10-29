@@ -135,22 +135,23 @@
         /* ========== Navigation (Fixed) ========== */
         .site-header {
             padding: 1rem 0;
-            background: #1a237e;
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--navy-bg) 100%);
             position: fixed; 
             top: 0;
             width: 100%;
             z-index: 1000;
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(0, 201, 255, 0.2);
             height: var(--header-height);
             animation: slideDown 0.8s ease-out;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
         
         .site-header.scrolled {
-            background: #0d47a1;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #1a1f28 0%, var(--charcoal) 100%);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            border-bottom-color: rgba(0, 201, 255, 0.3);
         }
 
         .nav {
@@ -602,14 +603,14 @@
             width: 320px;
             max-width: 85vw;
             height: 100%;
-            background: #1a237e;
+            background: linear-gradient(180deg, var(--charcoal) 0%, var(--navy-bg) 100%);
             box-shadow: -4px 0 20px rgba(0, 0, 0, 0.7);
             z-index: 1002;
             overflow-y: auto;
             transform: translateX(100%); 
             transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             backdrop-filter: blur(10px);
-            border-left: 2px solid rgba(255, 255, 255, 0.2);
+            border-left: 2px solid rgba(0, 201, 255, 0.2);
         }
 
         .off-canvas-sidebar.is-open {
@@ -1185,17 +1186,19 @@
 
                     <li class="dropdown" onmouseenter="this.querySelector('.dropdown-menu').style.display='block'" onmouseleave="this.querySelector('.dropdown-menu').style.display='none'">
                         <a href="#" class="@if(request()->routeIs('elibrary.*') || request()->routeIs('events.*') || request()->routeIs('jobs.*') || request()->routeIs('forum.*')) active @endif" style="display:flex;align-items:center;gap:.35rem;">
-                            Resources▾<i class="fas fa-chevron-down" style="font-size:.75rem;"></i>
+                            Resources<i class="fas fa-chevron-down" style="font-size:.75rem;"></i>
                         </a>
-                        <ul class="dropdown-menu" style="display:none;position:absolute;margin-top:.5rem;background:#0d47a1;border:1px solid rgba(255,255,255,.15);border-radius:8px;min-width:220px;box-shadow:0 10px 20px rgba(0,0,0,.35);padding:.4rem 0;z-index:1002;">
+                        <ul class="dropdown-menu" style="display:none;position:absolute;margin-top:.5rem;background:linear-gradient(135deg, var(--charcoal) 0%, var(--navy-bg) 100%);border:1px solid rgba(0,201,255,.2);border-radius:8px;min-width:220px;box-shadow:0 10px 20px rgba(0,0,0,.5);padding:.4rem 0;z-index:1002;">
                             <li><a href="{{ route('elibrary.index') }}" class="@if(request()->routeIs('elibrary.*')) active @endif" style="display:block;padding:.5rem 1rem;">eLibrary</a></li>
                             <li><a href="{{ route('events.index') }}" class="@if(request()->routeIs('events.*')) active @endif" style="display:block;padding:.5rem 1rem;">Events</a></li>
+                            <li><a href="{{ route('forum.index') }}" class="@if(request()->routeIs('forum.*')) active @endif" style="display:block;padding:.5rem 1rem;">Forum</a></li>
+                            <li><a href="{{ route('contact') }}" class="@if(request()->routeIs('contact')) active @endif" style="display:block;padding:.5rem 1rem;">Contact</a></li>
                             
                             
                         </ul>
                     </li>
 
-                    <li class="dropdown" onmouseenter="this.querySelector('.dropdown-menu').style.display='block'" onmouseleave="this.querySelector('.dropdown-menu').style.display='none'">
+                    <!-- <li class="dropdown" onmouseenter="this.querySelector('.dropdown-menu').style.display='block'" onmouseleave="this.querySelector('.dropdown-menu').style.display='none'">
                         <a href="#" class="@if(request()->routeIs('blog.*') || request()->routeIs('contact') || request()->routeIs('donate')) active @endif" style="display:flex;align-items:center;gap:.35rem;">
                             More▾<i class="fas fa-chevron-down" style="font-size:.75rem;"></i>
                         </a>
@@ -1207,7 +1210,7 @@
                             <li><a href="{{ route('donate') }}" class="@if(request()->routeIs('donate')) active @endif" style="display:block;padding:.5rem 1rem;">Donate</a></li>
                             
                         </ul>
-                    </li>
+                    </li> -->
                 
                     <!-- @auth
                         <li><a href="{{ route('dashboard') }}" class="@if(request()->routeIs('dashboard')) active @endif">Dashboard</a></li>
