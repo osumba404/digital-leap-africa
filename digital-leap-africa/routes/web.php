@@ -12,7 +12,8 @@ use App\Http\Controllers\{
     EventController,
     ForumController,
     LessonController,
-    ArticlesController
+    ArticlesController,
+    PartnerPublicController
     
    
 };
@@ -41,6 +42,10 @@ require __DIR__.'/auth.php';
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');
+
+// Partners (public apply)
+Route::get('/partners/apply', [PartnerPublicController::class, 'apply'])->name('partners.apply');
+Route::post('/partners/apply', [PartnerPublicController::class, 'store'])->name('partners.store');
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 Route::get('/courses/{course:slug}', [CourseController::class, 'show'])->name('courses.show');

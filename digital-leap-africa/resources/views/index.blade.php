@@ -496,6 +496,57 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
 </section>
 
 
+<!-- Partners Logos -->
+<section id="partners-section" style="padding:2rem 0;">
+  @php
+    try {
+      $partners = \App\Models\Partner::query()->active()->ordered()->get();
+    } catch (\Throwable $e) {
+      $partners = collect();
+    }
+    $applyUrl = \Illuminate\Support\Facades\Route::has('partners.apply')
+      ? route('partners.apply')
+      : url('/partners/apply');
+  @endphp
+
+  <div class="container">
+    <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
+      <h2 class="m-0">Our Partners</h2>
+    </div>
+
+    @if($partners->count())
+      <div class="partners-grid">
+        @foreach($partners as $p)
+          <a class="partner-item" href="{{ $p->website_url ?: '#' }}" @if(!empty($p->website_url)) target="_blank" rel="noopener" @endif title="{{ $p->name }}">
+            @if(!empty($p->logo_url))
+              <img src="{{ $p->logo_url }}" alt="{{ $p->name }}">
+            @else
+              <div class="partner-fallback">{{ \Illuminate\Support\Str::limit($p->name, 20) }}</div>
+            @endif
+          </a>
+        @endforeach
+      </div>
+    @else
+      <div class="text-muted" style="text-align:center">No partners yet.</div>
+    @endif
+
+    <div class="text-center mt-3" style="padding-top:1rem !important">
+      <a class="btn-outline btn-wide" href="{{ $applyUrl }}">Become a Partner</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Partners grid (scoped) */
+  #partners-section .partners-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(140px,1fr));gap:1.25rem;align-items:center}
+  #partners-section .partner-item{display:flex;align-items:center;justify-content:center;background-color:#0f1a2f;border:1px solid rgba(136,146,176,0.2);border-radius:12px;min-height:90px;padding:12px;transition:transform .2s ease, box-shadow .2s ease}
+  #partners-section .partner-item:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(2,12,27,0.6)}
+  #partners-section .partner-item img{max-width:100%;max-height:56px;object-fit:contain;filter:grayscale(20%);opacity:.95}
+  #partners-section .partner-fallback{color:#94a3b8;font-weight:700}
+  @media (max-width:768px){#partners-section .partners-grid{grid-template-columns:repeat(auto-fill, minmax(120px,1fr))}}
+</style>
+
+
 <style>
   /* Events card styles (scoped) */
   #events-section .cards-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(320px,1fr));gap:2rem}
