@@ -101,6 +101,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Course Enrollment
     Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
     Route::post('/lessons/{lesson}/complete', [LessonController::class, 'complete'])->name('lessons.complete');
+
+    // Testimonials (user)
+    Route::get('/testimonials/create', [TestimonialPublicController::class, 'create'])->name('testimonials.create');
+    Route::post('/testimonials', [TestimonialPublicController::class, 'store'])->name('testimonials.store');
+    Route::get('/profile/testimonials', [TestimonialPublicController::class, 'myTestimonials'])->name('profile.testimonials');
 });
 
 Route::get('/me/photo', function () {

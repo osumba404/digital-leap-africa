@@ -87,6 +87,8 @@
     @endif
 </section>
 
+ 
+
 <style>
 :root{--dark-bg:#0a0f1c;--card-bg:#131a2a;--accent-blue:#3b82f6;--neon-blue:#00d4ff;--light-blue:#60a5fa;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--shadow:0 10px 25px rgba(0,0,0,0.5);--transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275)}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
@@ -303,6 +305,8 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
     </div>
   </div>
 </section>
+
+ 
 
 <!-- Latest Articles -->
 <section id="articles-section" style="padding:2rem 0;">
@@ -679,6 +683,48 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
     </div>
   </div>
 </section>
+
+<!-- FAQs -->
+<section id="faq-section" style="padding:2rem 0;">
+  @php
+    try {
+      $faqs = \App\Models\Faq::query()->where('is_active', true)->latest()->take(6)->get();
+    } catch (\Throwable $e) {
+      $faqs = collect();
+    }
+  @endphp
+
+  <div class="container">
+    <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
+      <h2 class="m-0">Frequently Asked Questions</h2>
+    </div>
+
+    @if($faqs->count())
+      <div class="faq-accordion">
+        @foreach($faqs as $i => $f)
+          <details class="faq-item" @if($i===0) open @endif>
+            <summary class="faq-q">{{ $f->question }}</summary>
+            <div class="faq-a">{!! nl2br(e($f->answer)) !!}</div>
+          </details>
+        @endforeach
+      </div>
+    @else
+      <div class="text-muted" style="text-align:center">No FAQs yet.</div>
+    @endif
+  </div>
+</section>
+
+<style>
+  /* FAQ styles (scoped) */
+  #faq-section .faq-accordion{display:grid;gap:.75rem}
+  #faq-section .faq-item{background:#112240;border:1px solid rgba(136,146,176,0.2);border-radius:12px;overflow:hidden}
+  #faq-section .faq-q{cursor:pointer;padding:1rem 1.25rem;list-style:none;display:flex;align-items:center;gap:.75rem;font-weight:700;color:#e6f1ff}
+  #faq-section .faq-q::-webkit-details-marker{display:none}
+  #faq-section .faq-q:after{content:'+';margin-left:auto;color:#64b5f6;font-weight:800}
+  #faq-section .faq-item[open] .faq-q:after{content:'−'}
+  #faq-section .faq-a{padding:0 1.25rem 1rem;color:#94a3b8;line-height:1.6}
+  @media (max-width:768px){#faq-section .faq-q{padding:0.9rem 1rem}#faq-section .faq-a{padding:0 1rem 1rem}}
+</style>
 
 @push('styles')
 <style>
