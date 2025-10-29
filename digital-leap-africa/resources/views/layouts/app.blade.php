@@ -35,7 +35,7 @@
     @endif
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         /* ========== Color palette variables ========== */
@@ -786,23 +786,111 @@
             background: linear-gradient(90deg, transparent, var(--cyan-accent), transparent);
         }
         
-        .footer-content {
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .footer-section {
+            animation: fadeInUp 0.8s ease-out both;
+        }
+        
+        .footer-section:nth-child(1) { animation-delay: 0.1s; }
+        .footer-section:nth-child(2) { animation-delay: 0.2s; }
+        .footer-section:nth-child(3) { animation-delay: 0.3s; }
+        .footer-section:nth-child(4) { animation-delay: 0.4s; }
+        
+        .footer-heading {
+            color: var(--cyan-accent);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--cyan-accent);
+        }
+        
+        .footer-description {
+            color: var(--cool-gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0;
+        }
+        
+        .footer-links a {
+            color: var(--cool-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            cursor: pointer;
+        }
+        
+        .footer-links a:hover {
+            color: var(--diamond-white);
+        }
+        
+        .footer-links i {
+            font-size: 0.85rem;
+            width: 18px;
+            color: var(--cyan-accent);
+            opacity: 0.7;
+        }
+        
+        .footer-bottom {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            animation: fadeInUp 1s ease-out;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         
         .footer-text {
             color: var(--cool-gray);
-            font-size: 0.9rem;
-            animation: fadeInLeft 0.8s ease-out 0.2s both;
+            font-size: 0.85rem;
+        }
+        
+        .footer-credits {
+            color: var(--cool-gray);
+            font-size: 0.85rem;
         }
         
         .social-links {
             display: flex;
-            gap: 1rem;
-            animation: fadeInRight 0.8s ease-out 0.4s both;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
         }
         
         .social-link {
@@ -893,9 +981,13 @@
                 display: none;
             }
             
-            .footer-content {
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .footer-bottom {
                 flex-direction: column;
-                gap: 1rem;
                 text-align: center;
             }
             
@@ -1238,29 +1330,95 @@
     
     <footer class="site-footer">
         <div class="container">
-            <div class="footer-content">
+            <div class="footer-grid">
+                <!-- About Section -->
+                <div class="footer-section">
+                    <h3 class="footer-heading">Our Socials</h3>
+                    <p class="footer-description">
+                    </p>
+                    <div class="social-links">
+                        @if(!empty($siteSettings['twitter_url']))
+                            <a href="{{ $siteSettings['twitter_url'] }}" class="social-link" title="Twitter/X" target="_blank" rel="noopener"><i class="fa-brands fa-x-twitter"></i></a>
+                        @endif
+                        @if(!empty($siteSettings['linkedin_url']))
+                            <a href="{{ $siteSettings['linkedin_url'] }}" class="social-link" title="LinkedIn" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin-in"></i></a>
+                        @endif
+                        @if(!empty($siteSettings['facebook_url']))
+                            <a href="{{ $siteSettings['facebook_url'] }}" class="social-link" title="Facebook" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a>
+                        @endif
+                        @if(!empty($siteSettings['instagram_url']))
+                            <a href="{{ $siteSettings['instagram_url'] }}" class="social-link" title="Instagram" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
+                        @endif
+                        @if(!empty($siteSettings['youtube_url']))
+                            <a href="{{ $siteSettings['youtube_url'] }}" class="social-link" title="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
+                        @endif
+                        @if(!empty($siteSettings['tiktok_url']))
+                            <a href="{{ $siteSettings['tiktok_url'] }}" class="social-link" title="TikTok" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul class="footer-links">
+                        
+                        @if(Route::has('courses.index'))
+                            <li><a href="{{ route('courses.index') }}"><i class="fas fa-graduation-cap"></i> Courses</a></li>
+                        @endif
+                        @if(Route::has('articles.index'))
+                            <li><a href="{{ route('articles.index') }}"><i class="fas fa-newspaper"></i> Articles</a></li>
+                        @endif
+                        @if(Route::has('forum.index'))
+                            <li><a href="{{ route('forum.index') }}"><i class="fas fa-comments"></i> Forum</a></li>
+                        @endif
+                        <li><a href="{{ route('testimonials.index') }}"><i class="fas fa-quote-left"></i> Testimonials</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div class="footer-section">
+                    <h3 class="footer-heading">Resources</h3>
+                    <ul class="footer-links">
+                        @if(Route::has('elibrary.index'))
+                            <li><a href="{{ route('elibrary.index') }}"><i class="fas fa-book"></i> eLibrary</a></li>
+                        @endif
+                        @if(Route::has('events.index'))
+                            <li><a href="{{ route('events.index') }}"><i class="fas fa-calendar-days"></i> Events</a></li>
+                        @endif                       
+                        @auth
+                            <li><a href="{{ route('dashboard') }}"><i class="fas fa-gauge"></i> Dashboard</a></li>
+                        @endauth
+                    </ul>
+                </div>
+
+                <!-- Legal & Contact -->
+                <div class="footer-section">
+                    <h3 class="footer-heading">Legal & Contact</h3>
+                    <ul class="footer-links">
+                        @if(!empty($siteSettings['privacy_policy_url']))
+                            <li><a href="{{ $siteSettings['privacy_policy_url'] }}" target="_blank" rel="noopener"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+                        @endif
+                        @if(!empty($siteSettings['terms_of_service_url']))
+                            <li><a href="{{ $siteSettings['terms_of_service_url'] }}" target="_blank" rel="noopener"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
+                        @endif
+                        @if(!empty($siteSettings['contact_email']))
+                            <li><a href="mailto:{{ $siteSettings['contact_email'] }}"><i class="fas fa-envelope"></i> {{ $siteSettings['contact_email'] }}</a></li>
+                        @endif
+                        @if(!empty($siteSettings['contact_phone']))
+                            <li><a href="tel:{{ $siteSettings['contact_phone'] }}"><i class="fas fa-phone"></i> {{ $siteSettings['contact_phone'] }}</a></li>
+                        @endif
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
                 <div class="footer-text">
                     {!! $siteSettings['footer_text'] ?? ('&copy; ' . date('Y') . ' ' . ($siteSettings['site_name'] ?? config('app.name')) . '. All rights reserved.') !!}
                 </div>
-                <div class="social-links">
-                    @if(!empty($siteSettings['twitter_url']))
-                        <a href="{{ $siteSettings['twitter_url'] }}" class="social-link" title="Twitter/X" target="_blank"><i class="fab fa-twitter"></i></a>
-                    @endif
-                    @if(!empty($siteSettings['linkedin_url']))
-                        <a href="{{ $siteSettings['linkedin_url'] }}" class="social-link" title="LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
-                    @endif
-                    @if(!empty($siteSettings['facebook_url']))
-                        <a href="{{ $siteSettings['facebook_url'] }}" class="social-link" title="Facebook" target="_blank"><i class="fab fa-facebook"></i></a>
-                    @endif
-                    @if(!empty($siteSettings['instagram_url']))
-                        <a href="{{ $siteSettings['instagram_url'] }}" class="social-link" title="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
-                    @endif
-                    @if(!empty($siteSettings['youtube_url']))
-                        <a href="{{ $siteSettings['youtube_url'] }}" class="social-link" title="YouTube" target="_blank"><i class="fab fa-youtube"></i></a>
-                    @endif
-                    @if(!empty($siteSettings['tiktok_url']))
-                        <a href="{{ $siteSettings['tiktok_url'] }}" class="social-link" title="TikTok" target="_blank"><i class="fab fa-tiktok"></i></a>
-                    @endif
+                <div class="footer-credits">
+                    <span>Made with <i class="fas fa-heart" style="color: #ff6b6b;"></i> in Africa</span>
                 </div>
             </div>
         </div>

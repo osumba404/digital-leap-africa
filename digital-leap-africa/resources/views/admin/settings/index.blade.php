@@ -346,10 +346,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-      
-        
+        </div>        
         
         <div style="margin-top: 2rem; text-align: center;">
             <button type="submit" class="btn-primary">
