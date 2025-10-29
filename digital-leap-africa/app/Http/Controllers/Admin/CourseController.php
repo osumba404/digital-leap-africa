@@ -35,10 +35,12 @@ class CourseController extends Controller
             'description' => 'required|string',
             'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'active' => 'nullable|boolean',
+            'is_free' => 'nullable|boolean',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
         $validated['active'] = $request->boolean('active');
+        $validated['is_free'] = $request->boolean('is_free');
 
         if ($request->hasFile('image_url')) {
             $path = $request->file('image_url')->store('public/courses');
@@ -64,10 +66,12 @@ class CourseController extends Controller
             'description' => 'required|string',
             'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'active' => 'nullable|boolean',
+            'is_free' => 'nullable|boolean',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
         $validated['active'] = $request->boolean('active');
+        $validated['is_free'] = $request->boolean('is_free');
 
         if ($request->hasFile('image_url')) {
             if ($course->image_url) {

@@ -12,7 +12,10 @@ class CourseController extends Controller
 {
     public function index(): View
     {
-        $courses = Course::latest()->paginate(9);
+        $courses = Course::query()
+            ->where('active', true)
+            ->latest()
+            ->paginate(9);
         return view('pages.courses.index', ['courses' => $courses]);
     }
 

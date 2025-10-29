@@ -185,7 +185,8 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
 <section id="about-section" class="section" style="padding:2.5rem 0;">
   <style>
     /* Hexagon About card (scoped to #about-section to avoid collisions) */
-    #about-section .aboutx-card{background:#131a2a;border-radius:24px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.5);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);max-width:1000px;width:100%;display:flex;position:relative;border:1px solid rgba(59,130,246,0.1);margin:0 auto}
+    #about-section .aboutx-card{background:#131a2a;border-radius:24px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.5);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);max-width:100%;width:100%;display:flex;position:relative;border:1px solid rgba(59,130,246,0.1);margin:0 auto}
+
     #about-section .aboutx-card::before{content:'';position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;background:linear-gradient(45deg,#3b82f6,#00d4ff,#3b82f6);z-index:-1;border-radius:26px;opacity:0;transition:opacity .5s ease}
     #about-section .aboutx-card:hover::before{opacity:1;animation:aboutx-rotate 3s linear infinite}
     @keyframes aboutx-rotate{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
@@ -194,7 +195,7 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
     #about-section .aboutx-hex{width:320px;height:370px;background:linear-gradient(135deg,#3b82f6,#00d4ff);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;position:relative;transition:inherit}
     #about-section .aboutx-hex-inner{width:300px;height:350px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);overflow:hidden;background:#131a2a;display:flex;align-items:center;justify-content:center}
     #about-section .aboutx-hex-inner img{width:100%;height:100%;object-fit:cover;transition:inherit;filter:grayscale(30%)}
-    #about-section .aboutx-card:hover .aboutx-hex-inner img{transform:scale(1.1);filter:grayscale(0%)}
+    #about-section .aboutx-hex-inner:hover img{transform:scale(1.1);filter:grayscale(0%)}
 
     #about-section .aboutx-floating{position:absolute;width:100%;height:100%;pointer-events:none}
     #about-section .aboutx-f{position:absolute;width:40px;height:40px;background:rgba(59,130,246,0.2);border-radius:50%;animation:aboutx-float 6s ease-in-out infinite}
@@ -212,7 +213,7 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
 
     #about-section .aboutx-features{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:30px}
     #about-section .aboutx-feature{display:flex;align-items:center;gap:10px;color:#94a3b8;font-size:.95rem}
-    #about-section .aboutx-feature i{color:#3b82f6;font-size:1rem}
+    #about-section .aboutx-feature .chk{width:16px;height:16px;color:#3b82f6;flex-shrink:0}
 
     #about-section .aboutx-cta{align-self:flex-start;background:linear-gradient(45deg,#3b82f6,#00d4ff);color:#fff;border:none;padding:12px 30px;border-radius:30px;font-size:1rem;font-weight:600;cursor:pointer;transition:inherit;box-shadow:0 4px 15px rgba(59,130,246,.3);display:flex;align-items:center;gap:10px;text-decoration:none}
     #about-section .aboutx-cta:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(59,130,246,.5)}
@@ -262,7 +263,12 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
         @if(!empty($about->bullet_points) && is_array($about->bullet_points))
           <div class="aboutx-features">
             @foreach($about->bullet_points as $bp)
-              <div class="aboutx-feature"><i class="fa-solid fa-circle-check"></i><span>{{ $bp }}</span></div>
+              <div class="aboutx-feature">
+                <svg class="chk" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>{{ $bp }}</span>
+              </div>
             @endforeach
           </div>
         @endif
@@ -281,7 +287,8 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
 
     {{-- Stats strip --}}
     <div class="mt-4">
-      <div class="stats-grid">
+      <div class="container">
+        <div class="stats-grid">
         @foreach($stats as $s)
           <div class="stat-card">
             <div style="font-size:1.25rem;color:var(--cyan-accent);margin-bottom:.25rem;">
@@ -291,6 +298,7 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
             <div class="stat-label">{{ $s['label'] }}</div>
           </div>
         @endforeach
+        </div>
       </div>
     </div>
   </div>
@@ -415,7 +423,11 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
 <section id="courses-section" style="padding:2rem 0;">
   @php
     try {
-      $latestCourses = \App\Models\Course::query()->latest()->take(3)->get();
+      $latestCourses = \App\Models\Course::query()
+        ->where('active', true)
+        ->latest()
+        ->take(3)
+        ->get();
     } catch (\Throwable $e) {
       $latestCourses = collect();
     }

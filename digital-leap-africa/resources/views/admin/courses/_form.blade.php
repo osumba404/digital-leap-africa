@@ -56,6 +56,15 @@
                 <span style="color: var(--cool-gray);">Toggle to make this course active/inactive</span>
             </div>
         </div>
+
+        <div class="form-group" style="margin-top: 0.5rem;">
+            <label class="form-label" for="is_free">Is Free</label>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+                <input type="checkbox" id="is_free" name="is_free" value="1"
+                       {{ old('is_free', isset($course) ? (int)($course->is_free ?? 0) : 0) ? 'checked' : '' }}>
+                <span style="color: var(--cool-gray);">Toggle if this course is free</span>
+            </div>
+        </div>
     </div>
 
     <div class="form-section">

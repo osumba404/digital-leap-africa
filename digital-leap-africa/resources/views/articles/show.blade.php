@@ -120,12 +120,13 @@
   .related-article a { text-decoration: none; color: var(--text-primary); font-weight: 500; transition: color 0.3s; }
   .related-article a:hover { color: var(--accent-blue); }
 
-  .article-actions { display: flex; gap: 1rem; margin-top: 2rem; }
+  .article-actions { display: flex; gap: 0.75rem; margin-top: 2rem; }
   .action-btn {
-    display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--secondary-dark);
-    border: 1px solid var(--border-color); border-radius: var(--radius); color: var(--text-secondary); text-decoration: none; transition: all 0.3s;
+    display: inline-flex; align-items: center; justify-content: center; padding: 0.35rem; background: transparent;
+    border: none; border-radius: 6px; color: var(--text-secondary); text-decoration: none; transition: color 0.2s, background 0.2s;
   }
-  .action-btn:hover { background: rgba(100, 255, 218, 0.1); color: var(--accent-blue); border-color: var(--accent-blue); }
+  .action-btn i { font-size: 1.05rem; line-height: 1; }
+  .action-btn:hover { background: rgba(255,255,255,0.06); color: var(--accent-blue); }
 
   .tag {
     display: inline-block; background: rgba(100, 255, 218, 0.1); color: var(--accent-blue); padding: 0.25rem 0.75rem; border-radius: 50px;

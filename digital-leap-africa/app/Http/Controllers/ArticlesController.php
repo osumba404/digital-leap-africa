@@ -28,10 +28,23 @@ class ArticlesController extends Controller
     {
         $article->load(['author', 'comments.user']);
 
-        $related = Article::where('id', '!=', $article->id)
-            ->whereNotNull('published_at')
+        $tags = is_array($article->tags ?? null) ? $article->tags : [];
+
+        $relatedQuery = Article::query()
+            ->where('id', '!=', $article->id)
+            ->whereNotNull('published_at');
+
+        if (!empty($tags)) {
+            $relatedQuery->where(function ($q) use ($tags) {
+                foreach ($tags as $t) {
+                    $q->orWhereJsonContains('tags', $t);
+                }
+            });
+        }
+
+        $related = $relatedQuery
             ->latest('published_at')
-            ->take(3)
+            ->take(5)
             ->get();
 
         return view('articles.show', compact('article', 'related'));

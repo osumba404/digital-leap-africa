@@ -16,6 +16,7 @@ class Course extends Model
         'instructor',
         'image_url',
         'is_free',
+        'active',
     ];
 
     public function topics()
