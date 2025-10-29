@@ -173,21 +173,96 @@
 }
 
 @media (max-width: 768px) {
+    .testimonials-container {
+        padding: 1.5rem 0.75rem;
+    }
+
     .testimonials-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .page-header {
+        margin-bottom: 2rem;
     }
     
     .page-title {
         font-size: 2rem;
     }
     
+    .page-subtitle {
+        font-size: 1rem;
+    }
+    
     .filters-bar {
         flex-direction: column;
         align-items: stretch;
+        gap: 0.75rem;
     }
     
     .filter-group {
         justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .testimonial-card {
+        padding: 1.25rem;
+    }
+    
+    .testimonial-header {
+        gap: 0.75rem;
+    }
+    
+    .testimonial-avatar,
+    .testimonial-avatar-placeholder {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+    
+    .testimonial-name {
+        font-size: 0.95rem;
+    }
+    
+    .testimonial-date {
+        font-size: 0.8rem;
+    }
+    
+    .testimonial-quote {
+        font-size: 0.95rem;
+        padding-left: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .testimonials-container {
+        padding: 1rem 0.5rem;
+    }
+    
+    .page-title {
+        font-size: 1.75rem;
+    }
+    
+    .page-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .filter-btn {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.6rem;
+    }
+    
+    .testimonial-card {
+        padding: 1rem;
+    }
+    
+    .testimonial-quote {
+        font-size: 0.9rem;
     }
 }
 </style>
@@ -198,6 +273,14 @@
     <div class="page-header">
         <h1 class="page-title">Testimonials</h1>
         <p class="page-subtitle">Hear what our community members have to say</p>
+        @auth
+        <div style="margin-top: 1.5rem;">
+            <a href="{{ route('testimonials.create') }}" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; text-decoration: none;">
+                <i class="fas fa-plus"></i>
+                <span>Share Your Testimonial</span>
+            </a>
+        </div>
+        @endauth
     </div>
 
     <div class="filters-bar">

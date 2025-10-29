@@ -499,6 +499,351 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
   </div>
 </section>
 
+<!-- Testimonials Carousel -->
+<section id="testimonials-section" style="padding:3rem 0; background: rgba(255, 255, 255, 0.02);">
+  <div class="container">
+    <div class="text-center mb-4" style="text-align:center !important; margin-bottom: 2rem !important;">
+      <h2 class="m-0" style="color: #64b5f6; font-size: 28px; margin-bottom: 0.5rem !important;">What People Say About Us</h2>
+      <p style="color: var(--cool-gray); font-size: 1rem;">Hear from our community members</p>
+    </div>
+
+    @if(isset($testimonials) && $testimonials->count())
+    <div class="testimonials-carousel-wrapper" style="position: relative; overflow: hidden; padding: 0 3rem;">
+      <button class="carousel-nav carousel-prev" onclick="scrollTestimonials('prev')" aria-label="Previous testimonial">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      
+      <div class="testimonials-carousel" id="testimonialsCarousel">
+        @foreach($testimonials as $testimonial)
+        <div class="testimonial-slide">
+          <div class="testimonial-content">
+            <div class="testimonial-quote-home">
+              <i class="fas fa-quote-left quote-icon"></i>
+              {{ \Illuminate\Support\Str::limit($testimonial->quote, 200) }}
+            </div>
+            <div class="testimonial-author-home">
+              <div class="testimonial-avatar-wrapper">
+                @if($testimonial->user && $testimonial->user->profile_photo)
+                  <img src="{{ route('me.photo') }}?user_id={{ $testimonial->user_id }}" 
+                       alt="{{ $testimonial->name }}" 
+                       class="testimonial-avatar-home"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                  <div class="testimonial-avatar-placeholder-home" style="display:none;">
+                    {{ strtoupper(substr($testimonial->name ?? 'U', 0, 1)) }}
+                  </div>
+                @elseif($testimonial->avatar_path)
+                  <img src="{{ Storage::url($testimonial->avatar_path) }}" 
+                       alt="{{ $testimonial->name }}" 
+                       class="testimonial-avatar-home"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                  <div class="testimonial-avatar-placeholder-home" style="display:none;">
+                    {{ strtoupper(substr($testimonial->name ?? 'U', 0, 1)) }}
+                  </div>
+                @else
+                  <div class="testimonial-avatar-placeholder-home">
+                    {{ strtoupper(substr($testimonial->name ?? 'U', 0, 1)) }}
+                  </div>
+                @endif
+              </div>
+              <div class="testimonial-author-info">
+                <div class="author-name">{{ $testimonial->name ?? 'Anonymous' }}</div>
+                <div class="author-date">
+                  <i class="far fa-calendar"></i> {{ $testimonial->created_at?->format('M d, Y') }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        @endforeach
+      </div>
+      
+      <button class="carousel-nav carousel-next" onclick="scrollTestimonials('next')" aria-label="Next testimonial">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <div class="text-center mt-4" style="padding-top:2rem !important">
+      <a class="btn-outline btn-wide" href="{{ route('testimonials.index') }}" style="text-decoration: none;">
+        View All Testimonials <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+    @else
+    <div class="text-center" style="color: var(--cool-gray); padding: 2rem;">
+      <p>No testimonials yet. Be the first to share your experience!</p>
+      @auth
+      <a class="btn-primary" href="{{ route('testimonials.create') }}" style="text-decoration: none; margin-top: 1rem; display: inline-block;">
+        Share Your Testimonial
+      </a>
+      @endauth
+    </div>
+    @endif
+  </div>
+</section>
+
+<style>
+.testimonials-carousel-wrapper {
+  position: relative;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.testimonials-carousel {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 1rem 0;
+}
+
+.testimonials-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.testimonial-slide {
+  flex: 0 0 350px;
+  min-width: 350px;
+}
+
+.testimonial-content {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.testimonial-content:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(0, 201, 255, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.testimonial-avatar-wrapper {
+  flex-shrink: 0;
+}
+
+.testimonial-avatar-home {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(0, 201, 255, 0.4);
+}
+
+.testimonial-avatar-placeholder-home {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan-accent), var(--purple-accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.testimonial-quote-home {
+  color: var(--diamond-white);
+  line-height: 1.6;
+  font-style: italic;
+  text-align: left;
+  position: relative;
+  flex: 1;
+}
+
+.quote-icon {
+  color: var(--cyan-accent);
+  font-size: 1.2rem;
+  opacity: 0.3;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.testimonial-author-home {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.testimonial-author-info {
+  flex: 1;
+  text-align: left;
+}
+
+.author-name {
+  font-weight: 600;
+  color: var(--cyan-accent);
+  margin-bottom: 0.25rem;
+}
+
+.author-date {
+  font-size: 0.85rem;
+  color: var(--cool-gray);
+}
+
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 201, 255, 0.2);
+  border: 1px solid rgba(0, 201, 255, 0.4);
+  color: var(--cyan-accent);
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+}
+
+.carousel-nav:hover {
+  background: rgba(0, 201, 255, 0.3);
+  border-color: var(--cyan-accent);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-prev {
+  left: 0;
+}
+
+.carousel-next {
+  right: 0;
+}
+
+@media (max-width: 768px) {
+  .testimonials-carousel-wrapper {
+    padding: 0 2.5rem;
+  }
+  
+  .testimonial-slide {
+    flex: 0 0 280px;
+    min-width: 280px;
+  }
+  
+  .testimonial-content {
+    padding: 1.5rem;
+  }
+  
+  .carousel-nav {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .testimonials-carousel-wrapper {
+    padding: 0 2rem;
+  }
+  
+  .testimonial-slide {
+    flex: 0 0 260px;
+    min-width: 260px;
+  }
+  
+  .testimonial-content {
+    padding: 1.25rem;
+  }
+  
+  .testimonial-avatar-home,
+  .testimonial-avatar-placeholder-home {
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+  
+  .carousel-nav {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+  }
+}
+</style>
+
+<script>
+let autoScrollInterval;
+let isUserScrolling = false;
+
+function scrollTestimonials(direction) {
+  const carousel = document.getElementById('testimonialsCarousel');
+  if (!carousel) return;
+  
+  const scrollAmount = 370; // slide width + gap
+  const currentScroll = carousel.scrollLeft;
+  
+  if (direction === 'next') {
+    carousel.scrollLeft = currentScroll + scrollAmount;
+  } else {
+    carousel.scrollLeft = currentScroll - scrollAmount;
+  }
+  
+  // Reset auto-scroll after manual interaction
+  isUserScrolling = true;
+  clearInterval(autoScrollInterval);
+  setTimeout(() => {
+    isUserScrolling = false;
+    startAutoScroll();
+  }, 5000);
+}
+
+function startAutoScroll() {
+  const carousel = document.getElementById('testimonialsCarousel');
+  if (!carousel) return;
+  
+  clearInterval(autoScrollInterval);
+  
+  autoScrollInterval = setInterval(() => {
+    if (isUserScrolling) return;
+    
+    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+    const currentScroll = carousel.scrollLeft;
+    
+    if (currentScroll >= maxScroll - 10) {
+      // Reset to start
+      carousel.scrollLeft = 0;
+    } else {
+      // Scroll to next
+      carousel.scrollLeft = currentScroll + 370;
+    }
+  }, 4000); // Auto-scroll every 4 seconds
+}
+
+// Initialize auto-scroll when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  startAutoScroll();
+  
+  // Pause auto-scroll when user manually scrolls
+  const carousel = document.getElementById('testimonialsCarousel');
+  if (carousel) {
+    carousel.addEventListener('scroll', () => {
+      isUserScrolling = true;
+      clearInterval(autoScrollInterval);
+      setTimeout(() => {
+        isUserScrolling = false;
+        startAutoScroll();
+      }, 3000);
+    });
+  }
+});
+
+// Clean up on page unload
+window.addEventListener('beforeunload', () => {
+  clearInterval(autoScrollInterval);
+});
+</script>
 
 <!-- Partners Logos -->
 <section id="partners-section" style="padding:2rem 0;">
