@@ -242,50 +242,7 @@
             </div>
         </div>
 
-        <!-- Appearance -->
-        <div class="settings-card">
-            <div class="settings-card-header" onclick="toggleSection('appearance')">
-                <h3><i class="fas fa-palette me-2"></i>Appearance</h3>
-                <i class="fas fa-chevron-down toggle-icon"></i>
-            </div>
-            <div class="settings-card-content" id="appearance">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="primary_color" class="form-label">Primary Theme Color</label>
-                        <input type="color" id="primary_color" name="primary_color" class="form-control" 
-                               value="{{ old('primary_color', $settings['primary_color'] ?? '#2E78C5') }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="secondary_color" class="form-label">Secondary Color</label>
-                        <input type="color" id="secondary_color" name="secondary_color" class="form-control" 
-                               value="{{ old('secondary_color', $settings['secondary_color'] ?? '#00C9FF') }}">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="font_family" class="form-label">Font Family</label>
-                        <select id="font_family" name="font_family" class="form-control">
-                            <option value="Inter" {{ ($settings['font_family'] ?? 'Inter') == 'Inter' ? 'selected' : '' }}>Inter</option>
-                            <option value="Roboto" {{ ($settings['font_family'] ?? '') == 'Roboto' ? 'selected' : '' }}>Roboto</option>
-                            <option value="Open Sans" {{ ($settings['font_family'] ?? '') == 'Open Sans' ? 'selected' : '' }}>Open Sans</option>
-                            <option value="Poppins" {{ ($settings['font_family'] ?? '') == 'Poppins' ? 'selected' : '' }}>Poppins</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="background_mode" class="form-label">Background Mode</label>
-                        <select id="background_mode" name="background_mode" class="form-control">
-                            <option value="dark" {{ ($settings['background_mode'] ?? 'dark') == 'dark' ? 'selected' : '' }}>Dark</option>
-                            <option value="light" {{ ($settings['background_mode'] ?? '') == 'light' ? 'selected' : '' }}>Light</option>
-                            <option value="auto" {{ ($settings['background_mode'] ?? '') == 'auto' ? 'selected' : '' }}>Auto</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="hero_banner" class="form-label">Hero Banner / Header Image</label>
-                    <input type="file" id="hero_banner" name="hero_banner" class="form-control" accept="image/*">
-                </div>
-            </div>
-        </div>
+      
 
         <!-- Social Media Links -->
         <div class="settings-card">
@@ -367,45 +324,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- Security & Access -->
-        <div class="settings-card">
-            <div class="settings-card-header" onclick="toggleSection('security')">
-                <h3><i class="fas fa-shield-alt me-2"></i>Security & Access</h3>
-                <i class="fas fa-chevron-down toggle-icon"></i>
-            </div>
-            <div class="settings-card-content" id="security">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Maintenance Mode</label>
-                        <div class="toggle-switch">
-                            <input type="checkbox" id="maintenance_mode" name="maintenance_mode" value="1" 
-                                   {{ ($settings['maintenance_mode'] ?? false) ? 'checked' : '' }}>
-                            <label for="maintenance_mode" class="toggle-label">Enable Maintenance Mode</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Public Registration</label>
-                        <div class="toggle-switch">
-                            <input type="checkbox" id="allow_registration" name="allow_registration" value="1" 
-                                   {{ ($settings['allow_registration'] ?? true) ? 'checked' : '' }}>
-                            <label for="allow_registration" class="toggle-label">Allow Public Registration</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="admin_notification_email" class="form-label">Admin Notification Email</label>
-                        <input type="email" id="admin_notification_email" name="admin_notification_email" class="form-control" 
-                               value="{{ old('admin_notification_email', $settings['admin_notification_email'] ?? '') }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="cookie_consent_message" class="form-label">Cookie Consent Message</label>
-                        <textarea id="cookie_consent_message" name="cookie_consent_message" class="form-control" rows="2">{{ old('cookie_consent_message', $settings['cookie_consent_message'] ?? '') }}</textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
 
         <!-- Legal Pages -->
         <div class="settings-card">
@@ -429,59 +348,8 @@
             </div>
         </div>
 
-        <!-- Integrations & APIs -->
-        <div class="settings-card">
-            <div class="settings-card-header" onclick="toggleSection('integrations')">
-                <h3><i class="fas fa-plug me-2"></i>Integrations & APIs</h3>
-                <i class="fas fa-chevron-down toggle-icon"></i>
-            </div>
-            <div class="settings-card-content" id="integrations">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="smtp_host" class="form-label">SMTP Host</label>
-                        <input type="text" id="smtp_host" name="smtp_host" class="form-control" 
-                               value="{{ old('smtp_host', $settings['smtp_host'] ?? '') }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="smtp_port" class="form-label">SMTP Port</label>
-                        <input type="number" id="smtp_port" name="smtp_port" class="form-control" 
-                               value="{{ old('smtp_port', $settings['smtp_port'] ?? '') }}">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="mpesa_consumer_key" class="form-label">M-Pesa Consumer Key</label>
-                        <input type="text" id="mpesa_consumer_key" name="mpesa_consumer_key" class="form-control" 
-                               value="{{ old('mpesa_consumer_key', $settings['mpesa_consumer_key'] ?? '') }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="mpesa_consumer_secret" class="form-label">M-Pesa Consumer Secret</label>
-                        <input type="password" id="mpesa_consumer_secret" name="mpesa_consumer_secret" class="form-control" 
-                               value="{{ old('mpesa_consumer_secret', $settings['mpesa_consumer_secret'] ?? '') }}">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Social Login Options</label>
-                        <div class="toggle-switch">
-                            <input type="checkbox" id="google_login" name="google_login" value="1" 
-                                   {{ ($settings['google_login'] ?? false) ? 'checked' : '' }}>
-                            <label for="google_login" class="toggle-label">Enable Google Login</label>
-                        </div>
-                        <div class="toggle-switch">
-                            <input type="checkbox" id="github_login" name="github_login" value="1" 
-                                   {{ ($settings['github_login'] ?? false) ? 'checked' : '' }}>
-                            <label for="github_login" class="toggle-label">Enable GitHub Login</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="webhook_url" class="form-label">Webhook / API Endpoint URL</label>
-                        <input type="url" id="webhook_url" name="webhook_url" class="form-control" 
-                               value="{{ old('webhook_url', $settings['webhook_url'] ?? '') }}">
-                    </div>
-                </div>
-            </div>
-        </div>
+      
+        
         
         <div style="margin-top: 2rem; text-align: center;">
             <button type="submit" class="btn-primary">

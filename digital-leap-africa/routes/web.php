@@ -13,7 +13,8 @@ use App\Http\Controllers\{
     ForumController,
     LessonController,
     ArticlesController,
-    PartnerPublicController
+    PartnerPublicController,
+    TestimonialPublicController
     
    
 };
@@ -31,7 +32,9 @@ use App\Http\Controllers\Admin\{
     ArticleController as AdminArticleController,
     DashboardController as AdminDashboardController,
     AboutController as AdminAboutController,
-    AssignmentController as AdminAssignmentController
+    AssignmentController as AdminAssignmentController,
+    TestimonialController as AdminTestimonialController,
+    FaqController as AdminFaqController
    
 };
 
@@ -270,6 +273,25 @@ Route::prefix('admin')
         });
 
             Route::resource('topics.lessons', AdminLessonController::class)->except(['index', 'show']);
+
+        // Testimonials moderation
+        Route::resource('testimonials', AdminTestimonialController::class)->only(['index','destroy','update'])->names([
+            'index' => 'testimonials.index',
+            'update' => 'testimonials.update',
+            'destroy' => 'testimonials.destroy',
+        ]);
+        Route::patch('testimonials/{testimonial}/approve', [AdminTestimonialController::class, 'approve'])->name('testimonials.approve');
+        Route::patch('testimonials/{testimonial}/unpublish', [AdminTestimonialController::class, 'unpublish'])->name('testimonials.unpublish');
+
+        // FAQs CRUD
+        Route::resource('faqs', AdminFaqController::class)->names([
+            'index' => 'faqs.index',
+            'create' => 'faqs.create',
+            'store' => 'faqs.store',
+            'edit' => 'faqs.edit',
+            'update' => 'faqs.update',
+            'destroy' => 'faqs.destroy',
+        ]);
 
              // Settings
         Route::prefix('settings')->name('settings.')->group(function () {

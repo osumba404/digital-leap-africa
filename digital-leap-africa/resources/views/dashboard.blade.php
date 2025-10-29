@@ -242,6 +242,22 @@
                 <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Find Jobs</h3>
                 <p style="color: var(--cool-gray); font-size: 0.9rem; margin: 0;">Discover career opportunities</p>
             </a>
+
+            <a href="{{ route('testimonials.create') }}" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-quote-left"></i>
+                </div>
+                <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Share a Testimonial</h3>
+                <p style="color: var(--cool-gray); font-size: 0.9rem; margin: 0;">Tell others about your experience</p>
+            </a>
+
+            <a href="{{ route('profile.testimonials') }}" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-list"></i>
+                </div>
+                <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">View My Testimonials</h3>
+                <p style="color: var(--cool-gray); font-size: 0.9rem; margin: 0;">See status of your submissions</p>
+            </a>
         </div>
     </div>
 

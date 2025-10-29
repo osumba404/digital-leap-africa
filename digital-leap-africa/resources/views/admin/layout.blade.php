@@ -579,6 +579,16 @@
                         </a>
                     </li>
                     <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}" href="{{ route('admin.testimonials.index') }}">
+                            <i class="fas fa-quote-left"></i><span class="sidebar-label">Testimonials</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}" href="{{ route('admin.faqs.index') }}">
+                            <i class="fas fa-circle-question"></i><span class="sidebar-label">FAQs</span>
+                        </a>
+                    </li>
+                    <li>
                         <a class="sidebar-link {{ request()->routeIs('admin.elibrary-resources.*') ? 'active' : '' }}" href="{{ route('admin.elibrary-resources.index') }}">
                             <i class="fas fa-book"></i><span class="sidebar-label">eLibrary</span>
                         </a>
