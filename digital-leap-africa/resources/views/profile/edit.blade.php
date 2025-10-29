@@ -315,8 +315,8 @@
             <a href="{{ route('testimonials.create') }}" class="btn-outline" style="padding: 0.6rem 1rem; text-decoration:none; display:inline-flex; align-items:center;">
                 <i class="fas fa-quote-left" style="margin-right:8px;"></i>Share a Testimonial
             </a>
-            <a href="{{ route('profile.testimonials') }}" class="btn-outline" style="padding: 0.6rem 1rem; text-decoration:none; display:inline-flex; align-items:center;">
-                <i class="fas fa-list" style="margin-right:8px;"></i>View My Testimonials
+            <a href="{{ route('testimonials.index') }}" class="btn-outline" style="padding: 0.6rem 1rem; text-decoration:none; display:inline-flex; align-items:center;">
+                <i class="fas fa-comments" style="margin-right:8px;"></i>View Testimonials
             </a>
         </div>
         <p class="section-description">

@@ -12,7 +12,7 @@
 
     <div class="card" style="background:#112240;border-radius:12px;border:1px solid rgba(136,146,176,0.2);max-width:760px;margin:0 auto;">
       <div class="card-body" style="padding:1.25rem 1.25rem;">
-        <form method="POST" action="{{ route('testimonials.store') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('testimonials.store') }}">
           @csrf
 
           <div class="mb-3">
@@ -23,17 +23,16 @@
             @enderror
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">Avatar (optional)</label>
-            <input type="file" name="avatar" accept="image/*" class="form-control">
-            @error('avatar')
-              <div class="text-danger" style="margin-top:.25rem;">{{ $message }}</div>
-            @enderror
+          <div class="mb-3" style="padding: 1rem; background: rgba(0, 201, 255, 0.05); border-radius: 8px; border: 1px solid rgba(0, 201, 255, 0.2);">
+            <p style="margin: 0; color: var(--cool-gray); font-size: 0.9rem;">
+              <i class="fas fa-info-circle" style="color: var(--cyan-accent); margin-right: 0.5rem;"></i>
+              Your profile photo will be used automatically for this testimonial.
+            </p>
           </div>
 
           <div class="d-grid" style="display:grid; gap:.75rem; grid-template-columns: 1fr;">
             <button type="submit" class="btn btn-primary btn-wide">Submit Testimonial</button>
-            <a href="{{ route('profile.testimonials') }}" class="btn btn-outline-secondary btn-wide">View My Testimonials</a>
+            <a href="{{ route('testimonials.index') }}" class="btn btn-outline-secondary btn-wide">View Testimonials</a>
           </div>
         </form>
       </div>

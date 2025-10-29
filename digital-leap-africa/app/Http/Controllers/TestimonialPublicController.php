@@ -12,6 +12,33 @@ use Illuminate\Http\RedirectResponse;
 
 class TestimonialPublicController extends Controller
 {
+    public function index(Request $request): View
+    {
+        $sort = $request->get('sort', 'latest');
+        $filter = $request->get('filter', 'all');
+        
+        $query = Testimonial::query()->with('user');
+        
+        // Filter by user's own testimonials
+        if ($filter === 'mine' && Auth::check()) {
+            $query->where('user_id', Auth::id());
+        } else {
+            // Show only approved testimonials for 'all' view
+            $query->where('is_active', true);
+        }
+        
+        // Sort options
+        if ($sort === 'oldest') {
+            $query->oldest();
+        } else {
+            $query->latest();
+        }
+        
+        $testimonials = $query->paginate(12)->appends(['sort' => $sort, 'filter' => $filter]);
+        
+        return view('testimonials.index', compact('testimonials', 'sort', 'filter'));
+    }
+
     public function create(): View
     {
         return view('testimonials.create');
@@ -21,22 +48,14 @@ class TestimonialPublicController extends Controller
     {
         $data = $request->validate([
             'quote' => ['required','string','min:20','max:1500'],
-            'avatar' => ['nullable','image','mimes:jpg,jpeg,png,webp,svg','max:2048'],
         ]);
-
-        $path = null;
-        if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-            $filename = Str::random(16).'_'.time().'.'.$file->getClientOriginalExtension();
-            $path = $file->storeAs('testimonials', $filename, 'public');
-        }
 
         $user = Auth::user();
 
         Testimonial::create([
             'user_id' => $user?->id,
             'name' => $user?->name,
-            'avatar_path' => $path,
+            'avatar_path' => $user?->profile_photo ?? null,
             'quote' => $data['quote'],
             'is_active' => false,
         ]);
