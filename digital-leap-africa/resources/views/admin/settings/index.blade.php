@@ -479,6 +479,53 @@ input[type="checkbox"]:checked + .toggle-label::after {
         padding: 1rem;
     }
 }
+
+/* CRITICAL: Light Mode Text Fixes */
+[data-theme="light"] .settings-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .settings-card-header {
+    background: rgba(46, 120, 197, 0.05);
+    border-bottom-color: rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .settings-card-header:hover {
+    background: rgba(46, 120, 197, 0.1);
+}
+
+[data-theme="light"] .settings-card-header h3 {
+    color: var(--primary-blue) !important;
+}
+
+[data-theme="light"] .toggle-icon {
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .form-label {
+    color: var(--charcoal) !important;
+}
+
+[data-theme="light"] .form-control {
+    background: #FFFFFF;
+    border-color: rgba(46, 120, 197, 0.3);
+    color: var(--charcoal);
+}
+
+[data-theme="light"] .form-control:focus {
+    border-color: var(--primary-blue);
+}
+
+[data-theme="light"] .text-muted,
+[data-theme="light"] p[style*="color: var(--cool-gray)"] {
+    color: var(--cool-gray) !important;
+}
+
+[data-theme="light"] code {
+    background: rgba(46, 120, 197, 0.1);
+    color: var(--primary-blue);
+}
 </style>
 @endpush
 

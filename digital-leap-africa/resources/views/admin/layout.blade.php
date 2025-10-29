@@ -3,6 +3,33 @@
 @push('styles')
 
 <style>
+/* ========== CRITICAL: Light Mode Sidebar Text Fixes ========== */
+[data-theme="light"] #adminSidebar .sidebar-header,
+[data-theme="light"] #adminSidebar .sidebar-header *:not(button):not(i) {
+    color: #2e78c5 !important;
+}
+
+[data-theme="light"] #adminSidebar .sidebar-header i,
+[data-theme="light"] #adminSidebar .toggle-btn i {
+    color: #2e78c5 !important;
+}
+
+[data-theme="light"] #adminSidebar .sidebar-label {
+    color: #1a202c !important;
+}
+
+[data-theme="light"] #adminSidebar .sidebar-link {
+    color: #1a202c !important;
+}
+
+[data-theme="light"] #adminSidebar .sidebar-link.active {
+    color: #2e78c5 !important;
+}
+
+[data-theme="light"] #adminSidebar .sidebar-link i {
+    color: #2e78c5 !important;
+}
+
 .admin-layout {
     background: linear-gradient(135deg, var(--navy-bg) 0%, var(--charcoal) 100%);
     min-height: calc(100vh - var(--header-height));
@@ -10,7 +37,7 @@
 }
 
 .admin-container {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0;
     padding: 0;
 }
@@ -672,5 +699,183 @@
     handleResize(); // Initial check
 })();
 </script>
+
+<style>
+/* ========== Light Mode Styles ========== */
+[data-theme="light"] .admin-layout {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+[data-theme="light"] .admin-sidebar {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .sidebar-header {
+    border-bottom-color: rgba(46, 120, 197, 0.15);
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .sidebar-header strong {
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .toggle-btn {
+    background: rgba(46, 120, 197, 0.1);
+    border-color: rgba(46, 120, 197, 0.2);
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .toggle-btn:hover {
+    background: rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .sidebar-link {
+    color: var(--charcoal);
+}
+
+[data-theme="light"] .sidebar-link:hover {
+    background: rgba(46, 120, 197, 0.08);
+    border-color: rgba(46, 120, 197, 0.3);
+}
+
+[data-theme="light"] .sidebar-link.active {
+    background: rgba(46, 120, 197, 0.15);
+    border-color: rgba(46, 120, 197, 0.4);
+    box-shadow: 0 2px 8px rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .sidebar-link i {
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .admin-content {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .admin-header {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .admin-nav-item {
+    background: rgba(46, 120, 197, 0.05);
+    border: 1px solid rgba(46, 120, 197, 0.15);
+    color: var(--charcoal);
+}
+
+[data-theme="light"] .admin-nav-item:hover {
+    background: rgba(46, 120, 197, 0.1);
+    border-color: rgba(46, 120, 197, 0.3);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .admin-nav-icon {
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .admin-nav-title {
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .admin-nav-desc {
+    color: var(--cool-gray);
+}
+
+[data-theme="light"] .table-responsive {
+    border-color: rgba(46, 120, 197, 0.15);
+}
+
+[data-theme="light"] .data-table th {
+    background: rgba(46, 120, 197, 0.08);
+    color: var(--primary-blue);
+    border-bottom-color: rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .data-table td {
+    color: var(--charcoal);
+    border-bottom-color: rgba(46, 120, 197, 0.1);
+}
+
+[data-theme="light"] .data-table tr:hover {
+    background: rgba(46, 120, 197, 0.05);
+}
+
+[data-theme="light"] .page-header {
+    border-bottom-color: rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .page-title {
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .form-section {
+    border-bottom-color: rgba(46, 120, 197, 0.15);
+}
+
+[data-theme="light"] .form-section-title {
+    color: var(--primary-blue);
+}
+
+/* Fix inline styled text colors in light mode */
+[data-theme="light"] h3,
+[data-theme="light"] h2,
+[data-theme="light"] p {
+    color: var(--charcoal) !important;
+}
+
+/* Fix sidebar header text in light mode - ALL TEXT */
+[data-theme="light"] .sidebar-header,
+[data-theme="light"] .sidebar-header *,
+[data-theme="light"] .sidebar-header i,
+[data-theme="light"] .sidebar-header strong {
+    color: var(--primary-blue) !important;
+}
+
+/* Fix sidebar label text - ALL MENU ITEMS */
+[data-theme="light"] .sidebar-label,
+[data-theme="light"] .sidebar-link {
+    color: var(--charcoal) !important;
+}
+
+[data-theme="light"] .sidebar-link.active {
+    color: var(--primary-blue) !important;
+}
+
+/* Fix button text colors */
+[data-theme="light"] .btn-outline {
+    color: var(--primary-blue);
+    border-color: var(--primary-blue);
+}
+
+[data-theme="light"] .btn-outline:hover {
+    background: var(--primary-blue);
+    color: #FFFFFF;
+}
+
+/* Fix empty state text */
+[data-theme="light"] div[style*="color: var(--cool-gray)"] {
+    color: var(--cool-gray) !important;
+}
+
+/* Fix table font weights */
+[data-theme="light"] td div[style*="font-weight: 600"] {
+    color: var(--charcoal) !important;
+}
+
+/* Fix icon colors in light mode */
+[data-theme="light"] .fas,
+[data-theme="light"] .far,
+[data-theme="light"] .fab {
+    color: inherit;
+}
+
+[data-theme="light"] td .fas {
+    color: var(--primary-blue);
+}
+</style>
 
 @endsection
