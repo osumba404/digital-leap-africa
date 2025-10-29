@@ -52,6 +52,18 @@
             --max-width: 1100px;
             --header-height: 4rem;
         }
+        
+        /* ========== Light Mode Variables ========== */
+        [data-theme="light"] {
+            --primary-blue: {{ $siteSettings['primary_color'] ?? '#2E78C5' }};
+            --deep-blue: 	#1E4C7C;
+            --navy-bg: 	    #F8FAFC;
+            --diamond-white:#1a202c;
+            --cool-gray: 	#4A5568;
+            --charcoal: 	#FFFFFF;
+            --cyan-accent: {{ $siteSettings['secondary_color'] ?? '#0088CC' }};
+            --purple-accent:#6B46C1;
+        }
 
         /* ========== Base ========== */
         * { box-sizing: border-box; }
@@ -68,6 +80,11 @@
             flex-direction: column;
             min-height: 100vh;
             padding-top: var(--header-height);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        
+        [data-theme="light"] body {
+            background: linear-gradient(180deg, #E6F2FF 0%, var(--navy-bg) 100%);
         }
 
         .container {
@@ -181,6 +198,12 @@
             position: relative;
         }
         
+        [data-theme="light"] .menu-toggle-btn {
+            background: rgba(46, 120, 197, 0.1);
+            border: 2px solid rgba(46, 120, 197, 0.3);
+            color: var(--primary-blue);
+        }
+        
         .menu-toggle-btn:hover {
             background: rgba(255, 255, 255, 0.25);
             border-color: rgba(255, 255, 255, 0.6);
@@ -202,6 +225,10 @@
             transition: transform 0.3s ease;
             flex-shrink: 0;
             margin-right: 2rem;
+        }
+        
+        [data-theme="light"] .brand {
+            color: var(--primary-blue);
         }
         
         .brand:hover {
@@ -238,6 +265,10 @@
             margin-top: 2px;
             display: block;
             line-height: 1;
+        }
+        
+        [data-theme="light"] .brand .tagline {
+            color: var(--cool-gray);
         }
 
         .nav-main-group {
@@ -278,6 +309,10 @@
             transition: all 0.3s ease;
             position: relative;
             padding: 0.5rem 0;
+        }
+        
+        [data-theme="light"] .nav-links a {
+            color: var(--primary-blue);
         }
         
         .nav-links a::after {
@@ -333,6 +368,12 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+        }
+        
+        [data-theme="light"] .user-profile-btn {
+            background: rgba(46, 120, 197, 0.1);
+            border: 1px solid rgba(46, 120, 197, 0.3);
+            color: var(--primary-blue);
         }
         
         .user-profile-btn::before {
@@ -408,6 +449,11 @@
             align-items: center;
             justify-content: center;
         }
+        
+        [data-theme="light"] .btn-outline {
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+        }
 
         .btn-outline:hover {
             background: rgba(255, 255, 255, 0.15);
@@ -431,6 +477,36 @@
             font-size: 0.85rem;
         }
 
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+        
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1) rotate(20deg);
+        }
+        
+        [data-theme="light"] .theme-toggle-btn {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--primary-blue);
+        }
+        
+        [data-theme="light"] .theme-toggle-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
         main {
             flex: 1;
             padding: 2rem 0;
@@ -441,12 +517,22 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: var(--radius);
             padding: 1.5rem;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.3s ease, border-color 0.3s ease;
+        }
+        
+        [data-theme="light"] .card {
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+        
+        [data-theme="light"] .card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
@@ -469,7 +555,13 @@
             color: var(--diamond-white);
             font-family: inherit;
             font-size: 1rem;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background 0.3s ease;
+        }
+        
+        [data-theme="light"] .form-control {
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: var(--diamond-white);
         }
 
         .form-control:focus {
@@ -1246,6 +1338,11 @@
                         <a href="{{ route('login') }}" class="btn-outline">Log in</a>
                         <a href="{{ route('register') }}" class="btn-primary">Sign up</a>
                     @endauth
+                    
+                    <!-- Theme Toggle -->
+                    <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark mode">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
                 </div>
             </div>
         </nav>
@@ -1299,6 +1396,11 @@
                     <a href="{{ route('login') }}" class="btn-outline">Log in</a>
                     <a href="{{ route('register') }}" class="btn-primary">Sign up</a>
                 @endauth
+                
+                <!-- Theme Toggle Mobile -->
+                <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode" style="margin-top: 1rem;">
+                    <i class="fas fa-moon" id="themeIconMobile"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -1430,6 +1532,45 @@
     @stack('scripts')
     
     <script>
+        // Theme Toggle Functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update icons
+            updateThemeIcons(newTheme);
+        }
+        
+        function updateThemeIcons(theme) {
+            const icons = document.querySelectorAll('#themeIcon, #themeIconMobile');
+            icons.forEach(icon => {
+                if (theme === 'light') {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            });
+        }
+        
+        // Load saved theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcons(savedTheme);
+            
+            // Add click event to theme toggle button
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', toggleTheme);
+            }
+        });
+        
         // Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.querySelector('.site-header');
