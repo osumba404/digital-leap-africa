@@ -7,6 +7,7 @@ use App\Models\Faq;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class FaqController extends Controller
 {
@@ -29,6 +30,7 @@ class FaqController extends Controller
             'is_active' => ['nullable','boolean'],
         ]);
         $data['is_active'] = (bool)($data['is_active'] ?? false);
+        $data['admin_user_id'] = Auth::id();
         Faq::create($data);
         return redirect()->route('admin.faqs.index')->with('success', 'FAQ created.');
     }
@@ -46,6 +48,7 @@ class FaqController extends Controller
             'is_active' => ['nullable','boolean'],
         ]);
         $data['is_active'] = (bool)($data['is_active'] ?? false);
+        $data['admin_user_id'] = Auth::id();
         $faq->update($data);
         return redirect()->route('admin.faqs.index')->with('success', 'FAQ updated.');
     }
