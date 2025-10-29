@@ -26,8 +26,33 @@
   #courses-section .card-button:hover{background-color:rgba(59,130,246,.1);transform:translateY(-2px);box-shadow:0 4px 12px rgba(59,130,246,.2)}
   .btn-wide{width: 100%;}
   @media (max-width:768px){#courses-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.5rem}#courses-section .card-title{font-size:1rem;padding:1rem 1rem .45rem}}
-</style>
 
+  /* Light Mode Courses */
+  [data-theme="light"] #courses-section .card {
+      background-color: #FFFFFF;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(46, 120, 197, 0.15);
+  }
+  [data-theme="light"] #courses-section .card:hover {
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  }
+  [data-theme="light"] #courses-section .card-title {
+      background: linear-gradient(transparent, rgba(230, 242, 255, 0.95));
+      color: var(--diamond-white);
+  }
+  [data-theme="light"] #courses-section .card-body,
+  [data-theme="light"] #courses-section .card-meta {
+      color: var(--cool-gray);
+  }
+  [data-theme="light"] #courses-section .card-button {
+      color: var(--primary-blue);
+      border-color: var(--primary-blue);
+  }
+  [data-theme="light"] #courses-section .card-button:hover {
+      background-color: rgba(46, 120, 197, 0.1);
+      box-shadow: 0 4px 12px rgba(46, 120, 197, 0.2);
+  }
+</style>
 
 
 

@@ -140,6 +140,170 @@
     .comment { flex-direction: column; }
     .comment-avatar { align-self: flex-start; }
   }
+
+  /* ========== Light Mode Styles ========== */
+  [data-theme="light"] body {
+      background-color: var(--navy-bg);
+      color: var(--diamond-white);
+  }
+
+  [data-theme="light"] .article-header {
+      background: linear-gradient(135deg, #E6F2FF, #F8FAFC);
+      border-bottom: 1px solid rgba(46, 120, 197, 0.2);
+  }
+
+  [data-theme="light"] .article-title {
+      color: var(--primary-blue);
+  }
+
+  [data-theme="light"] .author-avatar {
+      background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent));
+      color: #FFFFFF;
+  }
+
+  [data-theme="light"] .author-name,
+  [data-theme="light"] .sidebar-title,
+  [data-theme="light"] .comment-author {
+      color: var(--primary-blue) !important;
+  }
+
+  [data-theme="light"] .publish-date,
+  [data-theme="light"] .article-stats,
+  [data-theme="light"] .comment-date,
+  [data-theme="light"] .comment-text {
+      color: var(--cool-gray) !important;
+  }
+
+  [data-theme="light"] .article-featured-image {
+      border: 1px solid rgba(46, 120, 197, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  [data-theme="light"] .article-content {
+      background: #FFFFFF;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(46, 120, 197, 0.15);
+  }
+
+  [data-theme="light"] .article-content p {
+      color: var(--cool-gray);
+  }
+
+  [data-theme="light"] .article-content h1 {
+      color: var(--primary-blue);
+      border-bottom-color: rgba(46, 120, 197, 0.2);
+  }
+
+  [data-theme="light"] .article-content h2 {
+      color: var(--primary-blue);
+  }
+
+  [data-theme="light"] .article-content h3,
+  [data-theme="light"] .article-content h4,
+  [data-theme="light"] .article-content h5,
+  [data-theme="light"] .article-content h6 {
+      color: var(--diamond-white);
+  }
+
+  [data-theme="light"] .article-content blockquote {
+      border-left-color: var(--primary-blue);
+      background: rgba(46, 120, 197, 0.05);
+      color: var(--cool-gray);
+  }
+
+  [data-theme="light"] .article-content ul,
+  [data-theme="light"] .article-content ol {
+      color: var(--cool-gray);
+  }
+
+  [data-theme="light"] .article-content strong,
+  [data-theme="light"] .article-content b {
+      color: var(--diamond-white);
+  }
+
+  [data-theme="light"] .article-content code {
+      background: rgba(46, 120, 197, 0.1);
+      color: var(--primary-blue);
+  }
+
+  [data-theme="light"] .article-content pre {
+      background: #F8FAFC;
+      border: 1px solid rgba(46, 120, 197, 0.2);
+  }
+
+  [data-theme="light"] .comments-section {
+      background: #FFFFFF;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(46, 120, 197, 0.15);
+  }
+
+  [data-theme="light"] .comment {
+      border-bottom-color: rgba(46, 120, 197, 0.15);
+  }
+
+  [data-theme="light"] .comment-avatar {
+      background: linear-gradient(135deg, #8b5cf6, var(--primary-blue));
+      color: #FFFFFF;
+  }
+
+  [data-theme="light"] .form-control {
+      background: #FFFFFF;
+      border: 1px solid rgba(46, 120, 197, 0.2);
+      color: var(--diamond-white);
+  }
+
+  [data-theme="light"] .form-control:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 0.2rem rgba(46, 120, 197, 0.25);
+      background: #FFFFFF;
+  }
+
+  [data-theme="light"] .sidebar-card {
+      background: #FFFFFF;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(46, 120, 197, 0.15);
+  }
+
+  [data-theme="light"] .sidebar-title {
+      border-bottom-color: rgba(46, 120, 197, 0.2);
+  }
+
+  [data-theme="light"] .related-article {
+      border-bottom-color: rgba(46, 120, 197, 0.15);
+  }
+
+  [data-theme="light"] .related-article:hover {
+      background: rgba(46, 120, 197, 0.05);
+  }
+
+  [data-theme="light"] .related-article a {
+      color: var(--diamond-white);
+  }
+
+  [data-theme="light"] .related-article a:hover {
+      color: var(--primary-blue);
+  }
+
+  [data-theme="light"] .action-btn {
+      color: var(--cool-gray);
+  }
+
+  [data-theme="light"] .action-btn:hover {
+      background: rgba(46, 120, 197, 0.1);
+      color: var(--primary-blue);
+  }
+
+  [data-theme="light"] .tag {
+      background: rgba(46, 120, 197, 0.1);
+      color: var(--primary-blue);
+      border-color: rgba(46, 120, 197, 0.2);
+  }
+
+  [data-theme="light"] #shareMenu > div:last-child {
+      background: #FFFFFF;
+      border-color: rgba(46, 120, 197, 0.2);
+      color: var(--diamond-white);
+  }
 </style>
 
 @section('content')

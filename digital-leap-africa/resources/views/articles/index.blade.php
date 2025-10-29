@@ -136,5 +136,43 @@
     #articles-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.5rem}
     #articles-section .card-title{font-size:1.2rem;padding:1.25rem 1.25rem .5rem}
   }
+
+  /* Light Mode Articles */
+  [data-theme="light"] #articles-section .card {
+      background-color: #FFFFFF;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(46, 120, 197, 0.15);
+  }
+  [data-theme="light"] #articles-section .card:hover {
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  }
+  [data-theme="light"] #articles-section .card-title {
+      background: linear-gradient(transparent, rgba(230, 242, 255, 0.95));
+      color: var(--diamond-white);
+  }
+  [data-theme="light"] #articles-section .card-body,
+  [data-theme="light"] #articles-section .card-meta {
+      color: var(--cool-gray);
+  }
+  [data-theme="light"] #articles-section .card-button {
+      color: var(--primary-blue);
+      border-color: var(--primary-blue);
+  }
+  [data-theme="light"] #articles-section .card-button:hover {
+      background-color: rgba(46, 120, 197, 0.1);
+      box-shadow: 0 4px 12px rgba(46, 120, 197, 0.2);
+  }
+  [data-theme="light"] #articles-section .card-category {
+      background: rgba(46, 120, 197, 0.9);
+      color: #FFFFFF;
+  }
+  [data-theme="light"] #articles-section .tag {
+      background: rgba(46, 120, 197, 0.1);
+      color: var(--primary-blue);
+      border-color: rgba(46, 120, 197, 0.2);
+  }
+  [data-theme="light"] #articles-section .tag:hover {
+      background: rgba(46, 120, 197, 0.15);
+  }
 </style>
 

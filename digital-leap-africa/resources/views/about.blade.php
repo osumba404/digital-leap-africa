@@ -132,6 +132,176 @@
 
   /* Make images truly flush with the card edges */
   .media{border-radius:0 !important;margin:0 !important}
+
+  /* ========== Light Mode Styles ========== */
+  [data-theme="light"] .card {
+      background: #FFFFFF;
+      border: 1px solid rgba(46, 120, 197, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  [data-theme="light"] .card:hover {
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.12);
+  }
+  [data-theme="light"] .card-title {
+      color: var(--primary-blue);
+  }
+  [data-theme="light"] .card-text {
+      color: var(--cool-gray);
+  }
+
+  /* Light Mode Stats */
+  [data-theme="light"] .stat-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(46, 120, 197, 0.2);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  [data-theme="light"] .stat-value {
+      color: var(--primary-blue);
+  }
+  [data-theme="light"] .stat-label {
+      color: var(--cool-gray);
+  }
+
+  /* Light Mode Partners */
+  [data-theme="light"] .partner-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(46, 120, 197, 0.2);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      filter: grayscale(50%);
+  }
+  [data-theme="light"] .partner-card:hover {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      filter: grayscale(0%);
+  }
+
+  /* Light Mode About Card */
+  [data-theme="light"] .about-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(46, 120, 197, 0.2);
+  }
+  [data-theme="light"] .about-visual {
+      border-color: var(--primary-blue);
+      box-shadow: -2px 0 16px rgba(46, 120, 197, 0.2), 0 -6px 18px rgba(46, 120, 197, 0.15), 0 6px 18px rgba(46, 120, 197, 0.15);
+  }
+
+  /* Light Mode Team Cards */
+  [data-theme="light"] .tm-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(46, 120, 197, 0.2);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  }
+  [data-theme="light"] .tm-card:hover {
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+  }
+  [data-theme="light"] .tm-name {
+      color: var(--primary-blue);
+      background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+  }
+  [data-theme="light"] .tm-position {
+      background: var(--primary-blue);
+      color: #FFFFFF;
+  }
+  [data-theme="light"] .tm-position::after {
+      background: var(--primary-blue);
+  }
+  [data-theme="light"] .tm-bio {
+      color: var(--cool-gray);
+  }
+  [data-theme="light"] .socials a {
+      background: rgba(46, 120, 197, 0.1);
+      border-color: rgba(46, 120, 197, 0.2);
+      color: var(--primary-blue);
+  }
+  [data-theme="light"] .socials a:hover {
+      background: var(--primary-blue);
+      color: #FFFFFF;
+  }
+  [data-theme="light"] .contact-item {
+      background: rgba(46, 120, 197, 0.05);
+      color: var(--cool-gray);
+  }
+  [data-theme="light"] .contact-item:hover {
+      background: rgba(46, 120, 197, 0.1);
+  }
+  [data-theme="light"] .contact-item i {
+      color: var(--primary-blue);
+  }
+
+  /* Light Mode About Hex Card */
+  [data-theme="light"] .about-hex-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(46, 120, 197, 0.2);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  }
+  [data-theme="light"] .about-hex-card::before {
+      background: linear-gradient(45deg, var(--primary-blue), var(--cyan-accent), var(--primary-blue));
+  }
+  [data-theme="light"] .about-hex-inner {
+      background: #FFFFFF;
+  }
+  [data-theme="light"] .about-hex-title {
+      color: var(--primary-blue);
+      background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+  }
+  [data-theme="light"] .about-hex-sub,
+  [data-theme="light"] .about-hex-desc,
+  [data-theme="light"] .about-hex-feature {
+      color: var(--cool-gray);
+  }
+  [data-theme="light"] .about-hex-feature i {
+      color: var(--primary-blue);
+  }
+
+  /* Light Mode Mission/Vision Cards */
+  [data-theme="light"] .vision-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(46, 120, 197, 0.2);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  }
+  [data-theme="light"] .vision-title {
+      color: var(--primary-blue);
+      background: linear-gradient(90deg, #8b5cf6, var(--primary-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+  }
+  [data-theme="light"] .vision-subtitle,
+  [data-theme="light"] .vision-body,
+  [data-theme="light"] .vision-goal {
+      color: var(--cool-gray);
+  }
+  [data-theme="light"] .vision-goal i {
+      color: #8b5cf6;
+  }
+  [data-theme="light"] .vision-overlay {
+      background: linear-gradient(to bottom, transparent, rgba(230, 242, 255, 0.95));
+  }
+
+  [data-theme="light"] .geometric-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(46, 120, 197, 0.2);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  }
+  [data-theme="light"] .geometric-card::before {
+      background: linear-gradient(45deg, transparent 40%, rgba(46, 120, 197, 0.05) 100%);
+  }
+  [data-theme="light"] .geometric-title {
+      color: var(--primary-blue);
+      background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+  }
+  [data-theme="light"] .geometric-subtitle,
+  [data-theme="light"] .geometric-body,
+  [data-theme="light"] .timeline-feature {
+      color: var(--cool-gray);
+  }
+  [data-theme="light"] .timeline-feature i {
+      color: var(--primary-blue);
+  }
 </style>
 @endpush
 
@@ -194,6 +364,33 @@
         .about-hex{width:220px;height:250px}
         .about-hex-inner{width:200px;height:230px}
         .about-hex-features{grid-template-columns:1fr}
+      }
+
+      /* Light Mode About Hex Card */
+      [data-theme="light"] .about-hex-card {
+          background: #FFFFFF;
+          border: 1px solid rgba(46, 120, 197, 0.2);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      }
+      [data-theme="light"] .about-hex-card::before {
+          background: linear-gradient(45deg, var(--primary-blue), var(--cyan-accent), var(--primary-blue));
+      }
+      [data-theme="light"] .about-hex-inner {
+          background: #FFFFFF;
+      }
+      [data-theme="light"] .about-hex-title {
+          color: var(--primary-blue);
+          background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+      }
+      [data-theme="light"] .about-hex-sub,
+      [data-theme="light"] .about-hex-desc,
+      [data-theme="light"] .about-hex-feature {
+          color: var(--cool-gray);
+      }
+      [data-theme="light"] .about-hex-feature i {
+          color: var(--primary-blue);
       }
     </style>
     <div class="container">
@@ -324,6 +521,53 @@
         .vision-title, .geometric-title { font-size: 1.6rem; }
         .vision-goals { grid-template-columns: 1fr; gap: 10px; }
         .vision-icon { bottom: 15px; right: 15px; width: 35px; height: 35px; font-size: 0.9rem; }
+      }
+
+      /* Light Mode Mission/Vision Cards */
+      [data-theme="light"] .vision-card {
+          background: #FFFFFF;
+          border: 1px solid rgba(46, 120, 197, 0.2);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      }
+      [data-theme="light"] .vision-title {
+          color: var(--primary-blue);
+          background: linear-gradient(90deg, #8b5cf6, var(--primary-blue));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+      }
+      [data-theme="light"] .vision-subtitle,
+      [data-theme="light"] .vision-body,
+      [data-theme="light"] .vision-goal {
+          color: var(--cool-gray);
+      }
+      [data-theme="light"] .vision-goal i {
+          color: #8b5cf6;
+      }
+      [data-theme="light"] .vision-overlay {
+          background: linear-gradient(to bottom, transparent, rgba(230, 242, 255, 0.95));
+      }
+
+      [data-theme="light"] .geometric-card {
+          background: #FFFFFF;
+          border: 1px solid rgba(46, 120, 197, 0.2);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      }
+      [data-theme="light"] .geometric-card::before {
+          background: linear-gradient(45deg, transparent 40%, rgba(46, 120, 197, 0.05) 100%);
+      }
+      [data-theme="light"] .geometric-title {
+          color: var(--primary-blue);
+          background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+      }
+      [data-theme="light"] .geometric-subtitle,
+      [data-theme="light"] .geometric-body,
+      [data-theme="light"] .timeline-feature {
+          color: var(--cool-gray);
+      }
+      [data-theme="light"] .timeline-feature i {
+          color: var(--primary-blue);
       }
     </style>
     <div class="container">
