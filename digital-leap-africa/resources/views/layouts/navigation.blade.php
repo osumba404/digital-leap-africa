@@ -1,13 +1,13 @@
 <nav class="navbar navbar-expand-lg navbar-dark navbar-glass border-bottom border-dark-subtle">
   <div class="container">
     <!-- Logo -->
-    <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
+    <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}" style="padding-left: 1rem;">
       @if(!empty($siteSettings['logo_url']))
         <img
           src="{{ $siteSettings['logo_url'] }}"
           alt="{{ $siteSettings['site_name'] ?? 'Site Logo' }}"
-          class="me-2 brand-logo rounded-circle"
-          style="height:44px;width:44px;object-fit:cover;"
+          class="me-2 brand-logo"
+          style="height:44px;width:44px;object-fit:cover;border-radius:8px;"
         >
       @endif
       <span class="fw-semibold">{{ $siteSettings['site_name'] ?? config('app.name', 'Laravel') }}</span>
@@ -146,7 +146,6 @@
   </div>
 </nav>
 
-
 @push('styles')
 <style>
 /* Darker glass navbar */
@@ -173,10 +172,17 @@
 }
 
 /* Brand/logo tweaks */
-.navbar-brand { color: #e9eef6 !important; }
+.navbar-brand { 
+  color: #e9eef6 !important;
+  transition: none !important;
+}
 .navbar-brand .brand-logo {
   box-shadow: 0 2px 10px rgba(0,0,0,.35);
   border: 1px solid rgba(255,255,255,0.2);
+  display: block;
+  object-fit: cover;
+  transition: none !important;
+  animation: none !important;
 }
 
 /* Link contrast */

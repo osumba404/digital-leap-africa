@@ -165,6 +165,19 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
         
+        /* Light Mode - Plain White Background */
+        [data-theme="light"] .site-header {
+            background: #FFFFFF;
+            border-bottom: 1px solid rgba(46, 120, 197, 0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        [data-theme="light"] .site-header.scrolled {
+            background: #FFFFFF;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-bottom-color: rgba(46, 120, 197, 0.3);
+        }
+        
         .site-header.scrolled {
             background: linear-gradient(135deg, #1a1f28 0%, var(--charcoal) 100%);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
@@ -225,6 +238,7 @@
             transition: transform 0.3s ease;
             flex-shrink: 0;
             margin-right: 2rem;
+            padding-left: 1rem;
         }
         
         [data-theme="light"] .brand {
@@ -237,18 +251,19 @@
         }
 
         .brand img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-            border-radius: 8px;
-            background: linear-gradient(135deg, var(--primary-blue), var(--deep-blue));
-            padding: 6px;
-            transition: all 0.3s ease;
-            animation: bounce 2s infinite;
+            width: 44px;
+            height: 44px;
+            object-fit: cover;
+            border-radius: 0;
+            background: transparent;
+            padding: 0;
+            transition: none;
+            animation: none;
         }
         
         .brand:hover img {
-            animation: glow 1s ease-in-out infinite;
+            animation: none;
+            transform: none;
         }
 
         .brand h1 {
@@ -832,6 +847,57 @@
         .off-canvas-sidebar .nav-actions-group > * {
             width: 100%;
         }
+        
+        /* Light Mode Mobile Menu Styles */
+        [data-theme="light"] .off-canvas-sidebar {
+            background: #FFFFFF;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+            border-left: 2px solid rgba(46, 120, 197, 0.2);
+        }
+        
+        [data-theme="light"] .sidebar-overlay {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        [data-theme="light"] .sidebar-header {
+            border-bottom: 2px solid rgba(46, 120, 197, 0.2);
+            background: rgba(46, 120, 197, 0.05);
+        }
+        
+        [data-theme="light"] .sidebar-title {
+            color: var(--primary-blue);
+        }
+        
+        [data-theme="light"] .close-btn {
+            background: rgba(46, 120, 197, 0.1);
+            border: 2px solid rgba(46, 120, 197, 0.3);
+            color: var(--primary-blue);
+        }
+        
+        [data-theme="light"] .close-btn:hover {
+            background: rgba(46, 120, 197, 0.2);
+            border-color: rgba(46, 120, 197, 0.5);
+        }
+        
+        [data-theme="light"] .off-canvas-sidebar .nav-links {
+            border-bottom: 2px solid rgba(46, 120, 197, 0.2);
+        }
+        
+        [data-theme="light"] .off-canvas-sidebar .nav-links a {
+            color: var(--primary-blue);
+            background: rgba(46, 120, 197, 0.05);
+            border: 1px solid rgba(46, 120, 197, 0.1);
+        }
+        
+        [data-theme="light"] .off-canvas-sidebar .nav-links a:hover {
+            background: rgba(46, 120, 197, 0.15);
+            border-color: rgba(46, 120, 197, 0.3);
+            color: var(--primary-blue);
+        }
+        
+        [data-theme="light"] .off-canvas-sidebar .nav-links a::before {
+            background: var(--primary-blue);
+        }
 
         @media (max-width: 1200px) {
             .nav-links {
@@ -1115,12 +1181,13 @@
             }
             
             .feature-grid,
-            .stats-grid,
             .dashboard-grid,
             .quick-actions {
                 grid-template-columns: 1fr !important;
                 gap: 1rem !important;
             }
+            
+            /* Stats grid uses 2 columns on mobile - defined in index.blade.php */
             
             .job-header,
             .course-header {
@@ -1363,12 +1430,10 @@
                 <li><a href="{{ route('home') }}">Home</a></li>
                 <li><a href="{{ route('about') }}">About</a></li>
                 <li><a href="{{ route('courses.index') }}">Courses</a></li>
-                <li><a href="{{ route('projects.index') }}">Projects</a></li>
                 <li><a href="{{ route('elibrary.index') }}">eLibrary</a></li>
                 <li><a href="{{ route('events.index') }}">Events</a></li>
                 <li><a href="{{ route('blog.index') }}">Blog</a></li>
                 <li><a href="{{ route('contact') }}">Contact</a></li>
-                <li><a href="{{ route('donate') }}">Donate</a></li>
                 @auth
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
                 @endauth
