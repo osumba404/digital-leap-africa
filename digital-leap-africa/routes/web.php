@@ -273,6 +273,10 @@ Route::prefix('admin')
         });
 
             Route::resource('topics.lessons', AdminLessonController::class)->except(['index', 'show']);
+            
+            // Upload image from Quill editor (outside course prefix)
+            Route::post('lessons/upload-image', [AdminLessonController::class, 'uploadImage'])
+                ->name('lessons.upload-image');
 
         // Testimonials moderation
         Route::resource('testimonials', AdminTestimonialController::class)->only(['index','destroy','update'])->names([

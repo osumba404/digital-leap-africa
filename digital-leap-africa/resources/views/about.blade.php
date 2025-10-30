@@ -15,9 +15,9 @@
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
   }
-  .team-grid { display:grid; grid-template-columns: 1fr; gap: 2rem; max-width: 800px; margin: 0 auto; }
+  .team-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; max-width: 1400px; margin: 0 auto; }
   @media (max-width: 991.98px){ .team-grid { gap: 1.5rem; } }
-  @media (max-width: 768px){ .team-grid { gap: 1rem; } }
+  @media (max-width: 768px){ .team-grid { grid-template-columns: 1fr; gap: 1rem; max-width: 800px; } }
   .partner-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 1.25rem; align-items:center; }
 
   .card {

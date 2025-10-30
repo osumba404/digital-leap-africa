@@ -19,6 +19,29 @@ class LessonController extends Controller
         ]);
     }
 
+    // Handle image upload from Quill editor
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|max:5120', // 5MB max
+        ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('public/lessons/content-images');
+            $url = \Illuminate\Support\Facades\Storage::url($path);
+            
+            return response()->json([
+                'success' => true,
+                'url' => $url
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'No image uploaded'
+        ], 400);
+    }
+
     // Store a newly created lesson in storage.
     public function store(Request $request, Topic $topic)
     {
