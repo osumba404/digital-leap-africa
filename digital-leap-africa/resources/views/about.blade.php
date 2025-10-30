@@ -15,8 +15,9 @@
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
   }
-  .team-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
-  @media (max-width: 991.98px){ .team-grid { grid-template-columns: 1fr; } }
+  .team-grid { display:grid; grid-template-columns: 1fr; gap: 2rem; max-width: 800px; margin: 0 auto; }
+  @media (max-width: 991.98px){ .team-grid { gap: 1.5rem; } }
+  @media (max-width: 768px){ .team-grid { gap: 1rem; } }
   .partner-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 1.25rem; align-items:center; }
 
   .card {
@@ -55,6 +56,12 @@
   }
   .stat-value { font-size: 2rem; font-weight: 800; color: var(--diamond-white); }
   .stat-label { color: var(--cool-gray); }
+
+  @media (max-width: 768px) {
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
 
   /* Partners */
   .partner-card {
@@ -102,7 +109,7 @@
   }
 
   /* Team card */
-  .tm-card{background:#1e293b;border-radius:16px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.3);transition:all .3s ease;max-width:580px;max-height:325px;width:100%;height:100%;display:flex;border:1px solid rgba(255,255,255,0.05)}
+  .tm-card{background:#1e293b;border-radius:16px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.3);transition:all .3s ease;max-width:800px;max-height:360px;width:100%;height:100%;display:flex;border:1px solid rgba(255,255,255,0.05)}
   .tm-card:hover{transform:translateY(-5px);box-shadow:0 12px 25px rgba(0,0,0,0.4)}
   .tm-image-container{min-width:40% !important; max-width:40% !important; overflow:hidden;position:relative}
   .tm-image-container img{width:100% !important;height:100% !important;object-fit:cover;transition:all .3s ease;display:block}
@@ -114,6 +121,34 @@
   .tm-position::after{content:'';position:absolute;bottom:-8px;left:0;width:45px;height:3px;background:#3b82f6;border-radius:2px}
   .tm-bio{color:#94a3b8;line-height:1.3;margin-bottom:15px;font-size:.9rem;max-width:100%;overflow:hidden}
 
+  /* Mobile adjustments - keep 2 columns but smaller */
+  @media (max-width: 768px) {
+    .tm-card{max-height:240px;border-radius:12px}
+    .tm-content{padding:12px}
+    .tm-name{font-size:1rem;margin-top:0}
+    .tm-position{padding:4px 8px;font-size:.65rem;margin-bottom:10px}
+    .tm-position::after{width:30px;height:2px;bottom:-6px}
+    .tm-bio{font-size:.75rem;line-height:1.2;margin-bottom:10px}
+    .socials{gap:6px;margin-bottom:10px}
+    .socials a{width:28px;height:28px;font-size:.75rem;border-radius:8px}
+    .contact-item{padding:4px 8px;font-size:.7rem;gap:6px}
+    .contact-item i{font-size:.7rem}
+  }
+  
+  @media (max-width: 480px) {
+    .tm-card{max-height:200px;border-radius:10px}
+    .tm-image-container{min-width:35% !important; max-width:35% !important}
+    .tm-content{padding:10px}
+    .tm-name{font-size:.85rem}
+    .tm-position{padding:3px 6px;font-size:.6rem;margin-bottom:8px}
+    .tm-position::after{width:25px;height:1.5px;bottom:-5px}
+    .tm-bio{font-size:.7rem;margin-bottom:8px}
+    .socials{gap:4px;margin-bottom:8px}
+    .socials a{width:24px;height:24px;font-size:.7rem;border-radius:6px}
+    .contact-item{padding:3px 6px;font-size:.65rem}
+    .contact-item i{font-size:.65rem}
+  }
+
   /* Socials and contact (from template) */
   .socials{display:flex;gap:8px;margin-bottom:15px}
   .socials a{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:rgba(59,130,246,0.1);color:#60a5fa;transition:all .3s ease;text-decoration:none;border:1px solid rgba(59,130,246,0.2);font-size:.9rem}
@@ -123,12 +158,7 @@
   .contact-item:hover{background:rgba(255,255,255,0.08)}
   .contact-item i{color:#3b82f6;font-size:.8rem}
 
-  @media (max-width:650px){
-    .tm-card{flex-direction:column;max-height:unset;height:auto}
-    .tm-image-container{width:100%;height:180px}
-    .tm-content{padding:20px}
-    .tm-name{font-size:1.4rem}
-  }
+  /* Remove the old mobile breakpoint that switched to column layout */
 
   /* Make images truly flush with the card edges */
   .media{border-radius:0 !important;margin:0 !important}
