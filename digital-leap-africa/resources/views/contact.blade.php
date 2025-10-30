@@ -254,7 +254,7 @@
             <h3>Visit Us</h3>
             <p>Come visit our office or workspace</p>
             <span class="contact-link" style="cursor: default;">
-                Africa <i class="fas fa-heart" style="color: #ff6b6b; font-size: 0.85rem; margin-left: 0.25rem;"></i>
+                Nairobi, Kenya <i class="fas fa-location-dot" style="color: #ff6b6b; font-size: 0.85rem; margin-left: 0.25rem;"></i>
             </span>
         </div>
     </div>

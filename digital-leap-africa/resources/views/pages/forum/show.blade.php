@@ -3,26 +3,50 @@
 @section('content')
 <style>
 .thread-container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
 .thread-post {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius);
-    padding: 2rem;
-    margin-bottom: 2rem;
+    border-radius: 16px;
+    padding: 2.5rem;
+    margin-bottom: 2.5rem;
+    transition: all 0.3s ease;
+}
+
+[data-theme="light"] .thread-post {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .reply-post {
     background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-    margin-left: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    margin-left: 3rem;
     position: relative;
+    transition: all 0.3s ease;
+}
+
+[data-theme="light"] .reply-post {
+    background: #F8FAFC;
+    border: 1px solid rgba(46, 120, 197, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.reply-post:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(0, 201, 255, 0.2);
+}
+
+[data-theme="light"] .reply-post:hover {
+    background: #FFFFFF;
+    border-color: rgba(46, 120, 197, 0.3);
 }
 
 .reply-post::before {
@@ -45,16 +69,30 @@
 }
 
 .user-avatar {
-    width: 40px;
-    height: 40px;
-    background: var(--primary-blue);
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--cyan-accent), var(--purple-accent));
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    color: var(--diamond-white);
+    font-size: 1.2rem;
+    color: #ffffff;
     flex-shrink: 0;
+    border: 2px solid rgba(0, 201, 255, 0.3);
+}
+
+[data-theme="light"] .user-avatar {
+    background: linear-gradient(135deg, var(--primary-blue), #6B46C1);
+    border-color: rgba(46, 120, 197, 0.3);
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .post-meta {
@@ -68,6 +106,10 @@
     margin-bottom: 0.25rem;
 }
 
+[data-theme="light"] .post-author {
+    color: var(--primary-blue);
+}
+
 .post-time {
     color: var(--cool-gray);
     font-size: 0.9rem;
@@ -75,16 +117,26 @@
 
 .post-content {
     color: var(--cool-gray);
-    line-height: 1.7;
+    line-height: 1.8;
     font-size: 1.05rem;
+}
+
+[data-theme="light"] .post-content {
+    color: #4A5568;
 }
 
 .reply-form {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius);
+    border-radius: 16px;
     padding: 2rem;
     margin-top: 2rem;
+}
+
+[data-theme="light"] .reply-form {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .breadcrumb {
@@ -100,6 +152,14 @@
 
 .breadcrumb a:hover {
     text-decoration: underline;
+}
+
+[data-theme="light"] .breadcrumb {
+    color: #4A5568;
+}
+
+[data-theme="light"] .breadcrumb a {
+    color: var(--primary-blue);
 }
 
 .thread-stats {
@@ -150,11 +210,11 @@
         {{-- Original Thread Post --}}
         <div class="thread-post">
             <div class="post-header">
-                <div class="user-avatar" style="display:flex;align-items:center;justify-content:center;">
-                    @if(optional($thread->user)->profile_photo_url)
-                        <img src="{{ $thread->user->profile_photo_url }}" alt="{{ $thread->user->name }}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:block;">
+                <div class="user-avatar">
+                    @if($thread->user && $thread->user->profile_photo_url)
+                        <img src="{{ $thread->user->profile_photo_url }}" alt="{{ $thread->user->name }}">
                     @else
-                        {{ strtoupper(substr($thread->user->name, 0, 1)) }}
+                        {{ strtoupper(substr($thread->user->name ?? 'U', 0, 1)) }}
                     @endif
                 </div>
                 <div class="post-meta">
@@ -171,7 +231,7 @@
                 </div>
             </div>
             
-            <h1 style="font-size: 1.75rem; font-weight: 600; color: var(--diamond-white); margin-bottom: 1.5rem;">
+            <h1 style="font-size: 2rem; font-weight: 700; color: var(--diamond-white); margin-bottom: 1.5rem; line-height: 1.3;">
                 {{ $thread->title }}
             </h1>
             
@@ -190,11 +250,11 @@
                 @foreach ($thread->replies as $reply)
                     <div class="reply-post">
                         <div class="post-header">
-                            <div class="user-avatar" style="display:flex;align-items:center;justify-content:center;">
-                                @if(optional($reply->user)->profile_photo_url)
-                                    <img src="{{ $reply->user->profile_photo_url }}" alt="{{ $reply->user->name }}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:block;">
+                            <div class="user-avatar">
+                                @if($reply->user && $reply->user->profile_photo_url)
+                                    <img src="{{ $reply->user->profile_photo_url }}" alt="{{ $reply->user->name }}">
                                 @else
-                                    {{ strtoupper(substr($reply->user->name, 0, 1)) }}
+                                    {{ strtoupper(substr($reply->user->name ?? 'U', 0, 1)) }}
                                 @endif
                             </div>
                             <div class="post-meta">

@@ -32,9 +32,8 @@ class EventController extends Controller
         return view('pages.events.index', compact('upcoming', 'ongoing', 'past'));
     }
 
-    public function show($id)
+    public function show(Event $event)
     {
-        $event = Event::findOrFail($id);
         return view('pages.events.show', compact('event'));
     }
 

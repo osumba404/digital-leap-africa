@@ -3,22 +3,54 @@
 @section('content')
 <style>
 .forum-container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
+}
+
+.forum-hero {
+    background: linear-gradient(135deg, rgba(10, 15, 28, 0.95) 0%, rgba(19, 26, 42, 0.9) 100%);
+    padding: 3rem 0;
+    margin: -2rem -5% 3rem;
+    border-radius: 0 0 24px 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+[data-theme="light"] .forum-hero {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(230, 242, 255, 0.95) 100%);
+    border-bottom: 2px solid rgba(46, 120, 197, 0.2);
+}
+
+.forum-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 80% 50%, rgba(0, 201, 255, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.forum-hero-content {
+    position: relative;
+    z-index: 1;
 }
 
 .thread-card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 16px;
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    transition: all 0.3s ease;
+    position: relative;
 }
 
 .thread-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    border-color: rgba(0, 201, 255, 0.3);
 }
 
 .thread-header {

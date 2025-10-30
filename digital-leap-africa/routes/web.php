@@ -56,7 +56,8 @@ Route::get('/projects', [ProjectController::class, 'index'])->name('projects.ind
 Route::get('/projects/{project:slug}', [ProjectController::class, 'show'])->name('projects.show');
 Route::get('/elibrary', [ELibraryController::class, 'index'])->name('elibrary.index');
 Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
-Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
+Route::get('/events', [EventController::class, 'index'])->name('events.index');
+Route::get('/events/{event:slug}', [EventController::class, 'show'])->name('events.show');
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 Route::get('/forum/create', [ForumController::class, 'create'])->middleware(['auth', 'verified'])->name('forum.create');
 Route::post('/forum', [ForumController::class, 'store'])->middleware(['auth', 'verified'])->name('forum.store');
@@ -70,10 +71,6 @@ Route::post('/blog/{article:slug}/bookmark', [ArticlesController::class, 'bookma
 Route::post('/blog/{article:slug}/share', [ArticlesController::class, 'share'])->middleware(['auth', 'verified'])->name('blog.share');
 Route::view('/contact', 'contact')->name('contact');
 Route::view('/donate', 'donate')->name('donate');
-
-
-Route::get('/events', [EventController::class, 'index'])->name('events.index');
-Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
 
 
 // View a lesson

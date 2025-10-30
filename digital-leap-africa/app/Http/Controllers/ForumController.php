@@ -11,7 +11,10 @@ class ForumController extends Controller
 {
     public function index(): View
     {
-        $threads = Thread::withCount('replies')->with('latestReply','user')->latest()->paginate(20);
+        $threads = Thread::withCount('replies')
+            ->with(['user', 'latestReply.user'])
+            ->latest()
+            ->paginate(20);
         return view('pages.forum.index', compact('threads'));
     }
 

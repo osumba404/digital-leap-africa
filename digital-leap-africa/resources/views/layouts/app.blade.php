@@ -1588,7 +1588,7 @@
                     {!! $siteSettings['footer_text'] ?? ('&copy; ' . date('Y') . ' ' . ($siteSettings['site_name'] ?? config('app.name')) . '. All rights reserved.') !!}
                 </div>
                 <div class="footer-credits">
-                    <span>Made with <i class="fas fa-heart" style="color: #ff6b6b;"></i> in Africa</span>
+                    <span>Built by Africans <i class="fas fa-heart" style="color: #ff6b6b;"></i> for Africa</span>
                 </div>
             </div>
         </div>
