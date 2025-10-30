@@ -136,20 +136,8 @@
     display: block;
 }
 
-/* Code blocks in content (from Quill) */
-.lesson-content-body pre {
-    background: #0b1220;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
-    padding: 1rem;
-    overflow-x: auto;
-    margin: 1rem 0;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    line-height: 1.5;
-}
-
-.lesson-content-body code {
+/* Inline code */
+code {
     background: rgba(0, 0, 0, 0.35);
     padding: 0.2rem 0.4rem;
     border-radius: 0.25rem;
@@ -157,7 +145,8 @@
     font-size: 0.9em;
 }
 
-.lesson-content-body pre code {
+/* Code blocks inside code-wrap don't get inline styling */
+.code-wrap code {
     background: transparent;
     padding: 0;
 }
@@ -190,9 +179,13 @@
         color: #1e293b;
     }
     
-    .lesson-content-body code {
+    code {
         background: #e2e8f0;
         color: #1e293b;
+    }
+    
+    .code-wrap code {
+        background: transparent;
     }
     
     .lesson-content-body blockquote {
@@ -484,7 +477,8 @@
         @if($lesson->content)
             <div class="lesson-content">
                 <div class="lesson-content-body">
-                    {!! $lesson->content !!}
+                    {!! $lesson->content !!}                    
+                      
                 </div>
             </div>
         @endif
@@ -504,7 +498,6 @@
                                         <span class="code-dot yellow"></span>
                                         <span class="code-dot green"></span>
                                     </div>
-                                    <span class="code-badge" data-lang>Plain text</span>
                                     <div class="code-actions">
                                         <button class="code-btn code-copy" type="button" title="Copy">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
@@ -624,33 +617,152 @@
     function prettyLang(code){
       if(!code) return 'Plain text';
       const map = {
-        'js':'JavaScript','javascript':'JavaScript','ts':'TypeScript','typescript':'TypeScript',
-        'py':'Python','python':'Python','rb':'Ruby','ruby':'Ruby','php':'PHP','go':'Go','rs':'Rust','java':'Java',
-        'c':'C','cpp':'C++','cs':'C#','sql':'SQL','bash':'Bash','sh':'Bash','shell':'Bash','html':'HTML','xml':'XML','json':'JSON','yaml':'YAML','yml':'YAML','css':'CSS'
+        // JavaScript & TypeScript
+        'js':'JavaScript','javascript':'JavaScript','ts':'TypeScript','typescript':'TypeScript','jsx':'React JSX','tsx':'React TSX',
+        // Python
+        'py':'Python','python':'Python',
+        // Web
+        'html':'HTML','xml':'XML','css':'CSS','scss':'SCSS','sass':'Sass','less':'Less',
+        // Databases
+        'sql':'SQL','mysql':'MySQL','postgresql':'PostgreSQL','postgres':'PostgreSQL','plsql':'PL/SQL','tsql':'T-SQL',
+        // Backend
+        'php':'PHP','rb':'Ruby','ruby':'Ruby','java':'Java','kotlin':'Kotlin','scala':'Scala',
+        'go':'Go','golang':'Go','rs':'Rust','rust':'Rust',
+        // C Family
+        'c':'C','cpp':'C++','c++':'C++','cs':'C#','csharp':'C#','objc':'Objective-C',
+        // Mobile
+        'swift':'Swift','dart':'Dart','kotlin':'Kotlin',
+        // Shell
+        'bash':'Bash','sh':'Bash','shell':'Bash','powershell':'PowerShell','ps1':'PowerShell',
+        // Data
+        'json':'JSON','yaml':'YAML','yml':'YAML','toml':'TOML','ini':'INI','xml':'XML',
+        // Other
+        'markdown':'Markdown','md':'Markdown','latex':'LaTeX','r':'R','matlab':'MATLAB',
+        'perl':'Perl','lua':'Lua','vim':'Vim Script','dockerfile':'Dockerfile','makefile':'Makefile'
       };
-      return map[code] || code.toUpperCase();
+      return map[code.toLowerCase()] || code.charAt(0).toUpperCase() + code.slice(1);
     }
 
-    document.querySelectorAll('pre code.hljs').forEach(function(block){
+    // First, highlight ALL code blocks
+    document.querySelectorAll('pre code').forEach(function(block){
       try {
-        const res = hljs.highlightAuto(block.textContent);
-        if(res.language){ block.classList.add(res.language); }
-        const wrap = block.closest('.code-wrap');
-        if (wrap) {
-          const badge = wrap.querySelector('[data-lang]');
-          if (badge) badge.textContent = prettyLang(res.language);
+        // Get the original text content
+        const codeText = block.textContent;
+        
+        // Use highlightAuto to detect language and get highlighted HTML
+        const result = hljs.highlightAuto(codeText);
+        
+        console.log('Detection result:', result.language, 'for code:', codeText.substring(0, 50));
+        
+        // Apply the highlighted HTML
+        block.innerHTML = result.value;
+        
+        // Add classes
+        block.classList.add('hljs');
+        if (result.language) {
+          block.classList.add(result.language);
+          block.setAttribute('data-language', result.language);
         }
-      } catch(e) {}
-      hljs.highlightElement(block);
+      } catch(e) {
+        console.error('Error highlighting code:', e);
+      }
     });
 
+    // Update language badges for existing code-wrap elements
+    document.querySelectorAll('.code-wrap').forEach(function(wrap){
+      const pre = wrap.querySelector('pre');
+      const codeBlock = pre ? pre.querySelector('code') : null;
+      const detectedLang = codeBlock ? codeBlock.getAttribute('data-language') : null;
+      
+      // Find or create badge
+      let badge = wrap.querySelector('.code-badge');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'code-badge';
+        const topbar = wrap.querySelector('.code-topbar');
+        const actions = topbar ? topbar.querySelector('.code-actions') : null;
+        if (topbar && actions) {
+          topbar.insertBefore(badge, actions);
+        }
+      }
+      badge.textContent = prettyLang(detectedLang);
+    });
+
+    // Then wrap ALL pre elements (content and snippets) with code-wrap structure
+    document.querySelectorAll('pre').forEach(function(pre){
+      // Skip if already inside a code-wrap
+      if (pre.closest('.code-wrap')) return;
+      
+      // Create wrapper
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-wrap';
+      
+      // Create topbar
+      const topbar = document.createElement('div');
+      topbar.className = 'code-topbar';
+      
+      // Create dots
+      const dots = document.createElement('div');
+      dots.className = 'code-dots';
+      dots.innerHTML = '<span class="code-dot red"></span><span class="code-dot yellow"></span><span class="code-dot green"></span>';
+      
+      // Create language badge
+      const badge = document.createElement('span');
+      badge.className = 'code-badge';
+      const codeBlock = pre.querySelector('code');
+      const detectedLang = codeBlock ? codeBlock.getAttribute('data-language') : null;
+      badge.textContent = prettyLang(detectedLang);
+      
+      // Create actions
+      const actions = document.createElement('div');
+      actions.className = 'code-actions';
+      
+      // Create copy button
+      const btn = document.createElement('button');
+      btn.className = 'code-btn code-copy';
+      btn.type = 'button';
+      btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> <span class="d-none d-sm-inline">Copy</span>';
+      
+      // Add click handler
+      btn.addEventListener('click', function(){
+        const code = pre.querySelector('code') || pre;
+        const text = code.textContent;
+        navigator.clipboard.writeText(text).then(function(){
+          const originalHTML = btn.innerHTML;
+          btn.style.transform = 'scale(1.1)';
+          btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> <span class="d-none d-sm-inline">Copied!</span>';
+          setTimeout(function(){
+            btn.style.transform = 'scale(1)';
+            btn.innerHTML = originalHTML;
+          }, 1500);
+        });
+      });
+      
+      // Assemble structure
+      actions.appendChild(btn);
+      topbar.appendChild(dots);
+      topbar.appendChild(badge);
+      topbar.appendChild(actions);
+      
+      // Wrap the pre element
+      pre.parentNode.insertBefore(wrapper, pre);
+      wrapper.appendChild(topbar);
+      wrapper.appendChild(pre);
+    });
+
+    // Copy buttons for code snippets section
     document.querySelectorAll('.code-wrap .code-copy').forEach(function(btn){
       btn.addEventListener('click', function(){
         const pre = btn.closest('.code-wrap').querySelector('pre code');
         const text = pre.textContent;
         navigator.clipboard.writeText(text).then(function(){
-          btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> <span class="d-none d-sm-inline">Copied</span>';
-          setTimeout(function(){ btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> <span class="d-none d-sm-inline">Copy</span>'; }, 1400);
+          const originalHTML = btn.innerHTML;
+          btn.style.transform = 'scale(1.1)';
+          btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> <span class="d-none d-sm-inline">Copied!</span>';
+          setTimeout(function(){
+            btn.style.transform = 'scale(1)';
+            btn.innerHTML = originalHTML;
+          }, 1500);
         });
       });
     });
