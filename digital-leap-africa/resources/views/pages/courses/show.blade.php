@@ -79,6 +79,43 @@
     text-align: center;
     margin: 2rem 0;
 }
+
+/* Light Mode Styles */
+[data-theme="light"] .topic-section {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .lesson-item {
+    border-bottom: 1px solid rgba(46, 120, 197, 0.1);
+}
+
+[data-theme="light"] .lesson-item:hover {
+    background: rgba(46, 120, 197, 0.05);
+}
+
+[data-theme="light"] .lesson-link {
+    color: #1A202C;
+}
+
+[data-theme="light"] .lesson-link:hover {
+    color: #2E78C5;
+}
+
+[data-theme="light"] .enrollment-section {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .course-hero {
+    background: linear-gradient(135deg, #E8F4F8 0%, #D6EAF8 100%);
+}
+
+[data-theme="light"] .progress-container {
+    background: rgba(46, 120, 197, 0.1);
+}
 </style>
 
 <div class="container">

@@ -98,6 +98,62 @@
     color: var(--navy-bg);
     border-color: var(--cyan-accent);
 }
+
+/* Light Mode Styles */
+[data-theme="light"] .resource-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .resource-card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .resource-title {
+    color: #1A202C;
+}
+
+[data-theme="light"] .resource-description {
+    color: #4A5568;
+}
+
+[data-theme="light"] .resource-meta {
+    border-top-color: rgba(46, 120, 197, 0.1);
+}
+
+[data-theme="light"] .resource-meta span {
+    color: #4A5568 !important;
+}
+
+[data-theme="light"] .filter-tab {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    color: #1A202C;
+}
+
+[data-theme="light"] .filter-tab:hover {
+    background: rgba(46, 120, 197, 0.1);
+    border-color: rgba(46, 120, 197, 0.4);
+}
+
+[data-theme="light"] .filter-tab.active {
+    background: #2E78C5;
+    color: #FFFFFF;
+    border-color: #2E78C5;
+}
+
+[data-theme="light"] h1 {
+    color: #1A202C;
+}
+
+[data-theme="light"] .container > div > p {
+    color: #4A5568 !important;
+}
+
+[data-theme="light"] .resource-image {
+    background: linear-gradient(135deg, #E8F4F8, #D6EAF8);
+}
 </style>
 
 <div class="container">

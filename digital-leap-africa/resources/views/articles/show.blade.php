@@ -322,6 +322,11 @@
   
   .share-btn:hover { transform: translateY(-2px); opacity: .9; }
   .copy-link-btn:hover { background: #2563eb; transform: scale(1.02); }
+
+  [data-theme="light"] .article-content img {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-color: rgba(46, 120, 197, 0.2);
+  }
 </style>
 
 @section('content')

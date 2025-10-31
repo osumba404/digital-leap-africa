@@ -1306,6 +1306,38 @@
                 font-size: 0.9rem;
             }
         }
+
+        /* Light Mode Styles for Navigation Dropdowns */
+        [data-theme="light"] .nav-actions-group .dropdown-menu {
+            background: rgba(255, 255, 255, 0.98) !important;
+            border: 1px solid rgba(46, 120, 197, 0.3) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        [data-theme="light"] .nav-actions-group .dropdown-menu li a {
+            color: #1A202C !important;
+        }
+
+        [data-theme="light"] .nav-actions-group .dropdown-menu li a:hover {
+            background: rgba(46, 120, 197, 0.1) !important;
+            color: #2E78C5 !important;
+        }
+
+        [data-theme="light"] .nav-actions-group .dropdown-menu li a i {
+            color: #2E78C5 !important;
+        }
+
+        [data-theme="light"] .nav-actions-group .dropdown-menu hr {
+            border-color: rgba(46, 120, 197, 0.2) !important;
+        }
+
+        [data-theme="light"] .nav-actions-group .dropdown-menu button {
+            color: #ef4444 !important;
+        }
+
+        [data-theme="light"] .nav-actions-group .dropdown-menu button:hover {
+            background: rgba(239, 68, 68, 0.1) !important;
+        }
     </style>
 
     @stack('styles')
@@ -1343,7 +1375,7 @@
                     <li><a href="{{ route('blog.index') }}" class="@if(request()->routeIs('blog.*')) active @endif">Blog</a></li>
                     
 
-                    <li class="dropdown" onmouseenter="this.querySelector('.dropdown-menu').style.display='block'" onmouseleave="this.querySelector('.dropdown-menu').style.display='none'">
+                    <li class="dropdown" onmouseenter="clearTimeout(this.hideTimer); this.querySelector('.dropdown-menu').style.display='block'" onmouseleave="this.hideTimer = setTimeout(() => this.querySelector('.dropdown-menu').style.display='none', 300)">
                         <a href="#" class="@if(request()->routeIs('elibrary.*') || request()->routeIs('events.*') || request()->routeIs('jobs.*') || request()->routeIs('forum.*')) active @endif" style="display:flex;align-items:center;gap:.35rem;">
                             Resources<i class="fas fa-chevron-down" style="font-size:.75rem;"></i>
                         </a>
@@ -1378,29 +1410,61 @@
                 </ul>
 
                 <div class="nav-actions-group">
-                    @auth                       
-                            <a href="{{ route('dashboard') }}" class="btn-outline btn-sm is-admin">
-                                <i class="fas fa-screwdriver-wrench me-1"></i> Dashboard
-                            </a>
-                     @endauth 
                     @auth
                         @if(auth()->user()->role === 'admin')
-                            <a href="{{ route('admin.dashboard') }}" class="btn-outline btn-sm is-admin">
-                                <i class="fas fa-screwdriver-wrench me-1"></i> Admin Dash
+                            {{-- Admin users get a dropdown --}}
+                            <div class="dropdown" style="position:relative;display:inline-block;" 
+                                 onmouseenter="clearTimeout(this.hideTimer); this.querySelector('.dropdown-menu').style.display='block'" 
+                                 onmouseleave="this.hideTimer = setTimeout(() => this.querySelector('.dropdown-menu').style.display='none', 300)">
+                                <a href="#" class="btn-outline btn-sm" style="display:flex;align-items:center;gap:.35rem;">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard <i class="fas fa-chevron-down" style="font-size:.75rem;"></i>
+                                </a>
+                                <ul class="dropdown-menu" style="display:none;position:absolute;margin-top:.5rem;background:linear-gradient(135deg, var(--charcoal) 0%, var(--navy-bg) 100%);border:1px solid rgba(0,201,255,.2);border-radius:8px;min-width:200px;box-shadow:0 10px 20px rgba(0,0,0,.5);padding:.4rem 0;z-index:1002;right:0;">
+                                    <li>
+                                        <a href="{{ route('dashboard') }}" style="display:block;padding:.5rem 1rem;color:#dbe1ea;text-decoration:none;">
+                                            <i class="fas fa-gauge me-2"></i>User Dashboard
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.dashboard') }}" style="display:block;padding:.5rem 1rem;color:#dbe1ea;text-decoration:none;">
+                                            <i class="fas fa-shield-alt me-2"></i>Admin Panel
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        @else
+                            {{-- Normal users get a simple link --}}
+                            <a href="{{ route('dashboard') }}" class="btn-outline btn-sm">
+                                <i class="fas fa-tachometer-alt me-1"></i> Dashboard
                             </a>
                         @endif
                         
-                        <a href="{{ route('profile.edit') }}" class="user-profile-btn">
-                            <span class="user-avatar-initial">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
-                            <span>{{ Auth::user()->name }}</span>
-                        </a>
-
-                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-sm btn-outline logout-btn" title="Log Out">
-                                <i class="fas fa-right-from-bracket me-1"></i>Logout
-                            </button>
-                        </form>
+                        {{-- Profile dropdown with logout --}}
+                        <div class="dropdown" style="position:relative;display:inline-block;" 
+                             onmouseenter="clearTimeout(this.hideTimer); this.querySelector('.dropdown-menu').style.display='block'" 
+                             onmouseleave="this.hideTimer = setTimeout(() => this.querySelector('.dropdown-menu').style.display='none', 300)">
+                            <a href="#" class="user-profile-btn" style="display:flex;align-items:center;gap:.5rem;">
+                                <span class="user-avatar-initial">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                                <span>{{ Auth::user()->name }}</span>
+                                <i class="fas fa-chevron-down" style="font-size:.75rem;"></i>
+                            </a>
+                            <ul class="dropdown-menu" style="display:none;position:absolute;margin-top:.5rem;background:linear-gradient(135deg, var(--charcoal) 0%, var(--navy-bg) 100%);border:1px solid rgba(0,201,255,.2);border-radius:8px;min-width:200px;box-shadow:0 10px 20px rgba(0,0,0,.5);padding:.4rem 0;z-index:1002;right:0;">
+                                <li>
+                                    <a href="{{ route('profile.edit') }}" style="display:block;padding:.5rem 1rem;color:#dbe1ea;text-decoration:none;">
+                                        <i class="fas fa-user me-2"></i>Profile
+                                    </a>
+                                </li>
+                                <li><hr style="border-color:rgba(255,255,255,0.1);margin:.4rem 0;"></li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                                        @csrf
+                                        <button type="submit" style="display:block;width:100%;padding:.5rem 1rem;background:none;border:none;color:#ff6b6b;text-align:left;cursor:pointer;">
+                                            <i class="fas fa-sign-out-alt me-2"></i>Log Out
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
                     @else
                         <a href="{{ route('login') }}" class="btn-outline">Log in</a>
                         <a href="{{ route('register') }}" class="btn-primary">Sign up</a>

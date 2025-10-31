@@ -400,6 +400,130 @@
         margin-top: 1rem;
     }
 }
+
+/* Light Mode Styles */
+[data-theme="light"] .profile-title {
+    background: linear-gradient(90deg, #2E78C5, #7c4dff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+[data-theme="light"] .profile-subtitle {
+    color: #4A5568;
+}
+
+[data-theme="light"] .profile-section {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .profile-section:hover {
+    border-color: #2E78C5;
+    box-shadow: 0 8px 24px rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .section-title {
+    color: #1A202C;
+}
+
+[data-theme="light"] .section-icon {
+    color: #2E78C5;
+}
+
+[data-theme="light"] .section-description {
+    color: #4A5568;
+}
+
+[data-theme="light"] .form-label {
+    color: #1A202C;
+}
+
+[data-theme="light"] .form-control {
+    background: #F8FAFC;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    color: #1A202C;
+}
+
+[data-theme="light"] .form-control:focus {
+    background: #FFFFFF;
+    border-color: #2E78C5;
+    box-shadow: 0 0 0 0.2rem rgba(46, 120, 197, 0.25);
+}
+
+[data-theme="light"] .form-control::placeholder {
+    color: #94a3b8;
+}
+
+[data-theme="light"] .gamification-card {
+    background: linear-gradient(135deg, rgba(46, 120, 197, 0.05), rgba(124, 77, 255, 0.05));
+    border: 2px solid rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .points-display {
+    color: #2E78C5;
+}
+
+[data-theme="light"] .level-text {
+    color: #1A202C;
+}
+
+[data-theme="light"] .progress-bar-container {
+    background: rgba(46, 120, 197, 0.1);
+}
+
+[data-theme="light"] .progress-bar-fill {
+    background: linear-gradient(90deg, #2E78C5, #7c4dff);
+}
+
+[data-theme="light"] .badge-item {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .badge-icon {
+    color: #2E78C5;
+}
+
+[data-theme="light"] .badge-name {
+    color: #1A202C;
+}
+
+[data-theme="light"] .badge-description {
+    color: #4A5568;
+}
+
+[data-theme="light"] .course-item {
+    background: #FFFFFF;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .course-item:hover {
+    border-color: #2E78C5;
+    box-shadow: 0 4px 12px rgba(46, 120, 197, 0.15);
+}
+
+[data-theme="light"] .course-title {
+    color: #2E78C5;
+}
+
+[data-theme="light"] .course-progress {
+    color: #4A5568;
+}
+
+[data-theme="light"] .danger-section {
+    background: rgba(239, 68, 68, 0.05);
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+[data-theme="light"] .password-toggle {
+    color: #4A5568;
+}
+
+[data-theme="light"] .password-toggle:hover {
+    color: #2E78C5;
+}
 </style>
 @endpush
 

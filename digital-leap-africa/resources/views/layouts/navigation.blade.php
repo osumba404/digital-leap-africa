@@ -102,15 +102,30 @@
         </li>
 
         @auth
-          <li class="nav-item">
-            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-              {{ __('Dashboard') }}
-            </x-nav-link>
-          </li>
           @if(Auth::user()->role === 'admin')
+            {{-- Admin users get a dropdown with both dashboards --}}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dashboardDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Dashboard
+              </a>
+              <ul class="dropdown-menu dropdown-menu-glass" aria-labelledby="dashboardDropdown">
+                <li>
+                  <a class="dropdown-item" href="{{ route('dashboard') }}">
+                    <i class="fas fa-tachometer-alt me-2"></i>User Dashboard
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                    <i class="fas fa-shield-alt me-2"></i>Admin Panel
+                  </a>
+                </li>
+              </ul>
+            </li>
+          @else
+            {{-- Normal users get a simple Dashboard link --}}
             <li class="nav-item">
-              <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
-                {{ __('Admin Panel') }}
+              <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                {{ __('Dashboard') }}
               </x-nav-link>
             </li>
           @endif
@@ -122,15 +137,21 @@
         @auth
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-gray-300" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              {{ Auth::user()->name }}
+              <i class="fas fa-user-circle me-1"></i>{{ Auth::user()->name }}
             </a>
             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-glass" aria-labelledby="userDropdown">
-              <li><a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __('Profile') }}</a></li>
+              <li>
+                <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                  <i class="fas fa-user-edit me-2"></i>{{ __('Edit Profile') }}
+                </a>
+              </li>
               <li><hr class="dropdown-divider"></li>
               <li>
                 <form method="POST" action="{{ route('logout') }}" class="m-0">
                   @csrf
-                  <button class="dropdown-item" type="submit">{{ __('Log Out') }}</button>
+                  <button class="dropdown-item text-danger" type="submit">
+                    <i class="fas fa-sign-out-alt me-2"></i>{{ __('Log Out') }}
+                  </button>
                 </form>
               </li>
             </ul>
@@ -193,6 +214,102 @@
 .navbar-dark .navbar-nav .nav-link:focus,
 .navbar-dark .navbar-nav .nav-link.active {
   color: #ffffff;
+}
+
+/* Light Mode Styles - Ultra Specific to Override Everything */
+[data-theme="light"] .navbar.navbar-glass {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(46, 120, 197, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Brand/Platform Name */
+[data-theme="light"] .navbar .navbar-brand,
+[data-theme="light"] .navbar-brand {
+  color: #1A202C !important;
+}
+
+[data-theme="light"] .navbar .navbar-brand:hover,
+[data-theme="light"] .navbar .navbar-brand:focus,
+[data-theme="light"] .navbar-brand:hover,
+[data-theme="light"] .navbar-brand:focus {
+  color: #2E78C5 !important;
+}
+
+[data-theme="light"] .navbar .navbar-brand:hover span,
+[data-theme="light"] .navbar-brand:hover span {
+  color: #2E78C5 !important;
+}
+
+/* All Navigation Links */
+[data-theme="light"] .navbar-dark .navbar-nav .nav-link,
+[data-theme="light"] .navbar .navbar-nav .nav-link {
+  color: #4A5568 !important;
+}
+
+[data-theme="light"] .navbar-dark .navbar-nav .nav-link:hover,
+[data-theme="light"] .navbar-dark .navbar-nav .nav-link:focus,
+[data-theme="light"] .navbar .navbar-nav .nav-link:hover,
+[data-theme="light"] .navbar .navbar-nav .nav-link:focus {
+  color: #2E78C5 !important;
+}
+
+[data-theme="light"] .navbar-dark .navbar-nav .nav-link.active,
+[data-theme="light"] .navbar .navbar-nav .nav-link.active {
+  color: #2E78C5 !important;
+  font-weight: 600;
+}
+
+/* Dropdown Toggles */
+[data-theme="light"] .navbar .nav-link.dropdown-toggle,
+[data-theme="light"] .nav-link.dropdown-toggle {
+  color: #4A5568 !important;
+}
+
+[data-theme="light"] .navbar .nav-link.dropdown-toggle:hover,
+[data-theme="light"] .navbar .nav-link.dropdown-toggle:focus,
+[data-theme="light"] .nav-link.dropdown-toggle:hover,
+[data-theme="light"] .nav-link.dropdown-toggle:focus {
+  color: #2E78C5 !important;
+}
+
+/* Dropdown Menus */
+[data-theme="light"] .dropdown-menu-glass,
+[data-theme="light"] .dropdown-menu.dropdown-menu-glass {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(46, 120, 197, 0.2) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .dropdown-menu-glass .dropdown-item,
+[data-theme="light"] .dropdown-menu.dropdown-menu-glass .dropdown-item {
+  color: #1A202C !important;
+}
+
+[data-theme="light"] .dropdown-menu-glass .dropdown-item:hover,
+[data-theme="light"] .dropdown-menu-glass .dropdown-item:focus,
+[data-theme="light"] .dropdown-menu.dropdown-menu-glass .dropdown-item:hover,
+[data-theme="light"] .dropdown-menu.dropdown-menu-glass .dropdown-item:focus {
+  background: rgba(46, 120, 197, 0.1) !important;
+  color: #2E78C5 !important;
+}
+
+/* User Dropdown */
+[data-theme="light"] .navbar .text-gray-300,
+[data-theme="light"] .text-gray-300,
+[data-theme="light"] #userDropdown {
+  color: #4A5568 !important;
+}
+
+[data-theme="light"] .navbar .text-gray-300:hover,
+[data-theme="light"] .navbar .text-gray-300:focus,
+[data-theme="light"] #userDropdown:hover,
+[data-theme="light"] #userDropdown:focus {
+  color: #2E78C5 !important;
+}
+
+[data-theme="light"] .dropdown-divider {
+  border-color: rgba(46, 120, 197, 0.2) !important;
 }
 </style>
 @endpush

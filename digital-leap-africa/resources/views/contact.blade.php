@@ -209,6 +209,90 @@
     }
     
     .btn-donate:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(0, 201, 255, 0.4);
+    }
+
+    /* Light Mode Styles */
+    [data-theme="light"] .contact-hero h1 {
+        background: linear-gradient(135deg, #2E78C5, #7c4dff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    [data-theme="light"] .contact-hero p {
+        color: #4A5568;
+    }
+
+    [data-theme="light"] .contact-card {
+        background: #FFFFFF;
+        border: 1px solid rgba(46, 120, 197, 0.2);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="light"] .contact-card:hover {
+        border-color: #2E78C5;
+        box-shadow: 0 10px 30px rgba(46, 120, 197, 0.3);
+    }
+
+    [data-theme="light"] .contact-card h3 {
+        color: #1A202C;
+    }
+
+    [data-theme="light"] .contact-card p {
+        color: #4A5568;
+    }
+
+    [data-theme="light"] .contact-link {
+        color: #2E78C5;
+    }
+
+    [data-theme="light"] .contact-link:hover {
+        color: #7c4dff;
+    }
+
+    [data-theme="light"] .social-section {
+        background: #FFFFFF;
+        border: 1px solid rgba(46, 120, 197, 0.2);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="light"] .social-section h2 {
+        color: #1A202C;
+    }
+
+    [data-theme="light"] .social-section p {
+        color: #4A5568;
+    }
+
+    [data-theme="light"] .social-link-large {
+        background: #FFFFFF;
+        border: 1px solid rgba(46, 120, 197, 0.2);
+        color: #4A5568;
+    }
+
+    [data-theme="light"] .support-section {
+        background: linear-gradient(135deg, rgba(46, 120, 197, 0.1), rgba(124, 77, 255, 0.1));
+        border: 2px solid rgba(46, 120, 197, 0.3);
+    }
+
+    [data-theme="light"] .support-section h2 {
+        color: #1A202C;
+    }
+
+    [data-theme="light"] .support-section p {
+        color: #4A5568;
+    }
+
+    [data-theme="light"] .btn-donate {
+        background: linear-gradient(90deg, #2E78C5, #7c4dff);
+        color: #FFFFFF;
+        box-shadow: 0 8px 20px rgba(46, 120, 197, 0.3);
+    }
+
+    [data-theme="light"] .btn-donate:hover {
+        box-shadow: 0 12px 30px rgba(46, 120, 197, 0.4);
     }
 </style>
 
