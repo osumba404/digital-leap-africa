@@ -13,13 +13,17 @@ class PageController extends Controller
      */
     public function home(): View
     {
-        // Fetch approved testimonials for homepage carousel
-        $testimonials = Testimonial::query()
-            ->with('user')
-            ->where('is_active', true)
-            ->latest()
-            ->limit(10)
-            ->get();
+        // Fetch approved testimonials for homepage carousel (handle missing table gracefully)
+        try {
+            $testimonials = Testimonial::query()
+                ->with('user')
+                ->where('is_active', true)
+                ->latest()
+                ->limit(10)
+                ->get();
+        } catch (\Exception $e) {
+            $testimonials = collect(); // Empty collection if table doesn't exist
+        }
         
         return view('index', compact('testimonials'));
     }
