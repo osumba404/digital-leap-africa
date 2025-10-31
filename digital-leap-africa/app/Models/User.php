@@ -120,4 +120,11 @@ class User extends Authenticatable
         $path = preg_replace('#^(?:storage/|public/)#', '', $this->profile_photo);
         return Storage::disk('public')->url($path);
     }
+
+
+
+    public function notifications()
+        {
+            return $this->hasMany(Notification::class);
+        }
 }

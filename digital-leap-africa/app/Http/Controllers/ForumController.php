@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Thread;
 use App\Models\Reply;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -55,6 +56,17 @@ class ForumController extends Controller
             'user_id' => $request->user()->id,
             'content' => $data['content'],
         ]);
+
+        // Notify thread author about new reply (if not replying to own thread)
+        if ($thread->user_id !== $request->user()->id) {
+            Notification::createNotification(
+                $thread->user_id,
+                'forum_reply',
+                'New Reply on Your Thread',
+                "{$request->user()->name} replied to your thread: {$thread->title}",
+                route('forum.show', $thread->id)
+            );
+        }
 
         return redirect()->route('forum.show', $thread->id)->with('success', 'Reply posted successfully!');
     }

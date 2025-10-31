@@ -276,6 +276,77 @@
         font-size: 0.9rem;
     }
 }
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem 0;
+    color: var(--cool-gray);
+    font-size: 0.9rem;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.divider span {
+    padding: 0 1rem;
+}
+
+.google-button {
+    background: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.75rem 2rem;
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    text-decoration: none;
+}
+
+.google-button:hover {
+    background: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.google-button img {
+    width: 20px;
+    height: 20px;
+}
+
+/* Light Mode Styles for Google Button */
+[data-theme="light"] .google-button {
+    background: #ffffff;
+    border: 1px solid rgba(46, 120, 197, 0.2);
+    color: #1f2937;
+}
+
+[data-theme="light"] .google-button:hover {
+    background: #f8f9fa;
+    border-color: #2E78C5;
+}
+
+[data-theme="light"] .divider::before,
+[data-theme="light"] .divider::after {
+    border-bottom: 1px solid rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .divider {
+    color: #4A5568;
+}
 </style>
 @endpush
 
@@ -289,6 +360,20 @@
                 {{ session('status') }}
             </div>
         @endif
+
+        <a href="{{ route('auth.google') }}" class="google-button">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19.8055 10.2292C19.8055 9.55056 19.7501 8.86667 19.6306 8.19861H10.2002V12.0492H15.6014C15.3773 13.2911 14.6571 14.3898 13.6025 15.0875V17.5866H16.8251C18.7174 15.8449 19.8055 13.2728 19.8055 10.2292Z" fill="#4285F4"/>
+                <path d="M10.2002 20C12.9502 20 15.2643 19.1056 16.8296 17.5866L13.607 15.0875C12.7096 15.6979 11.5521 16.0433 10.2046 16.0433C7.54614 16.0433 5.29157 14.2831 4.50228 11.9169H1.17773V14.4927C2.78611 17.6889 6.31598 20 10.2002 20Z" fill="#34A853"/>
+                <path d="M4.49781 11.9169C4.07781 10.675 4.07781 9.33056 4.49781 8.08861V5.51279H1.17781C-0.207524 8.24028 -0.207524 11.7653 1.17781 14.4928L4.49781 11.9169Z" fill="#FBBC04"/>
+                <path d="M10.2002 3.95667C11.6252 3.93556 13.0014 4.47222 14.0378 5.45889L16.8918 2.60444C15.1766 0.990556 12.9325 0.0822222 10.2002 0.104444C6.31598 0.104444 2.78611 2.41556 1.17773 5.51278L4.49773 8.08861C5.28257 5.71778 7.54159 3.95667 10.2002 3.95667Z" fill="#EA4335"/>
+            </svg>
+            Continue with Google
+        </a>
+
+        <div class="divider">
+            <span>OR</span>
+        </div>
 
         <form method="POST" action="{{ route('login') }}">
             @csrf

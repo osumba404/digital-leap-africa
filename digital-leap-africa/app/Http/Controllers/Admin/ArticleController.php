@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -71,7 +73,21 @@ class ArticleController extends Controller
         $payload['featured_image'] = $request->file('featured_image')->store('public/articles');
     }
 
-    Article::create($payload);
+    $article = Article::create($payload);
+
+    // Notify all users about new article (only if published)
+    if ($article->status === 'published') {
+        $users = User::all();
+        foreach ($users as $user) {
+            Notification::createNotification(
+                $user->id,
+                'new_article',
+                'New Article Published',
+                "New article: {$article->title}",
+                route('blog.show', $article->slug)
+            );
+        }
+    }
 
     return redirect()->route('admin.articles.index')->with('status', 'Article created');
 }

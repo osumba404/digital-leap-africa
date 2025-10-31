@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Testimonial;
+use App\Models\Notification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -26,6 +27,16 @@ class TestimonialController extends Controller
     public function approve(Testimonial $testimonial): RedirectResponse
     {
         $testimonial->update(['is_active' => true]);
+        
+        // Create notification for testimonial approval
+        Notification::createNotification(
+            $testimonial->user_id,
+            'testimonial_approved',
+            'Testimonial Approved',
+            'Your testimonial has been approved and is now visible on the site',
+            route('testimonials.index')
+        );
+        
         return back()->with('success', 'Testimonial approved.');
     }
 

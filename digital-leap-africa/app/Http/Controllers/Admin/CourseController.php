@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Course; // Make sure this model is imported
 use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -47,7 +48,21 @@ class CourseController extends Controller
             $validated['image_url'] = Storage::url($path);
         }
 
-        Course::create($validated);
+        $course = Course::create($validated);
+
+        // Notify all users about new course (only if active)
+        if ($course->active) {
+            $users = User::all();
+            foreach ($users as $user) {
+                Notification::createNotification(
+                    $user->id,
+                    'new_course',
+                    'New Course Available',
+                    "Check out our new course: {$course->title}",
+                    route('courses.show', $course->id)
+                );
+            }
+        }
 
         return redirect()->route('admin.courses.index')->with('success', 'Course created successfully.');
     }

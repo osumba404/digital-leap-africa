@@ -1338,6 +1338,292 @@
         [data-theme="light"] .nav-actions-group .dropdown-menu button:hover {
             background: rgba(239, 68, 68, 0.1) !important;
         }
+
+        /* Notification Bell Styles */
+        .notification-bell {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--diamond-white);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .notification-bell:hover {
+            background: rgba(0, 201, 255, 0.1);
+            border-color: var(--cyan-accent);
+            transform: scale(1.05);
+        }
+
+        .notification-bell i {
+            font-size: 1.1rem;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--navy-bg) 100%);
+            border: 1px solid rgba(0, 201, 255, 0.2);
+            border-radius: 12px;
+            min-width: 360px;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 1003;
+            overflow: hidden;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--diamond-white);
+            font-weight: 600;
+        }
+
+        .mark-all-read {
+            color: var(--cyan-accent);
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .mark-all-read:hover {
+            color: var(--diamond-white);
+        }
+
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+
+        .notification-item:hover {
+            background: rgba(0, 201, 255, 0.05);
+        }
+
+        .notification-item.unread {
+            background: rgba(0, 201, 255, 0.03);
+            border-left: 3px solid var(--cyan-accent);
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.course {
+            background: rgba(0, 201, 255, 0.1);
+            color: var(--cyan-accent);
+        }
+
+        .notification-icon.badge {
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+        }
+
+        .notification-icon.testimonial {
+            background: rgba(124, 77, 255, 0.1);
+            color: var(--purple-accent);
+        }
+
+        .notification-icon.forum {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        .notification-icon.article {
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--diamond-white);
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .notification-message {
+            color: var(--cool-gray);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .notification-time {
+            color: var(--cool-gray);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .notification-empty {
+            padding: 3rem 1.5rem;
+            text-align: center;
+            color: var(--cool-gray);
+        }
+
+        .notification-empty i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .notification-footer {
+            padding: 0.75rem 1.25rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .view-all-notifications {
+            color: var(--cyan-accent);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .view-all-notifications:hover {
+            color: var(--diamond-white);
+        }
+
+        /* Light Mode Styles for Notifications */
+        [data-theme="light"] .notification-bell {
+            background: rgba(46, 120, 197, 0.05);
+            border: 1px solid rgba(46, 120, 197, 0.2);
+            color: #1A202C;
+        }
+
+        [data-theme="light"] .notification-bell:hover {
+            background: rgba(46, 120, 197, 0.1);
+            border-color: #2E78C5;
+        }
+
+        [data-theme="light"] .notification-dropdown {
+            background: #FFFFFF;
+            border: 1px solid rgba(46, 120, 197, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="light"] .notification-header {
+            border-bottom: 1px solid rgba(46, 120, 197, 0.1);
+        }
+
+        [data-theme="light"] .notification-header h3 {
+            color: #1A202C;
+        }
+
+        [data-theme="light"] .notification-item {
+            border-bottom: 1px solid rgba(46, 120, 197, 0.05);
+        }
+
+        [data-theme="light"] .notification-item:hover {
+            background: rgba(46, 120, 197, 0.05);
+        }
+
+        [data-theme="light"] .notification-item.unread {
+            background: rgba(46, 120, 197, 0.03);
+            border-left: 3px solid #2E78C5;
+        }
+
+        [data-theme="light"] .notification-title {
+            color: #1A202C;
+        }
+
+        [data-theme="light"] .notification-message,
+        [data-theme="light"] .notification-time {
+            color: #4A5568;
+        }
+
+        [data-theme="light"] .notification-footer {
+            border-top: 1px solid rgba(46, 120, 197, 0.1);
+        }
+
+        [data-theme="light"] .notification-empty {
+            color: #4A5568;
+        }
+
+        @media (max-width: 768px) {
+            .notification-dropdown {
+                min-width: 320px;
+                right: -50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .notification-dropdown {
+                min-width: 280px;
+                max-width: 90vw;
+                right: -80px;
+            }
+        }
     </style>
 
     @stack('styles')
@@ -1439,6 +1725,73 @@
                             </a>
                         @endif
                         
+                        {{-- Notification Bell --}}
+                        <div class="dropdown" style="position:relative;display:inline-block;">
+                            <a href="#" class="notification-bell" id="notificationBell" onclick="toggleNotifications(event)">
+                                <i class="fas fa-bell"></i>
+                                @php
+                                    $unreadCount = auth()->check() ? auth()->user()->notifications()->where('is_read', false)->count() : 0;
+                                @endphp
+                                @if($unreadCount > 0)
+                                    <span class="notification-badge">{{ $unreadCount > 99 ? '99+' : $unreadCount }}</span>
+                                @endif
+                            </a>
+                            
+                            <div class="notification-dropdown" id="notificationDropdown">
+                                <div class="notification-header">
+                                    <h3>Notifications</h3>
+                                    @if($unreadCount > 0)
+                                        <a href="#" class="mark-all-read" onclick="markAllAsRead(event)">Mark all read</a>
+                                    @endif
+                                </div>
+                                
+                                <div class="notification-list" id="notificationList">
+                                    @php
+                                        $notifications = auth()->check() ? auth()->user()->notifications()->latest()->take(10)->get() : collect();
+                                    @endphp
+                                    
+                                    @forelse($notifications as $notification)
+                                        <a href="{{ $notification->url }}" 
+                                           class="notification-item {{ !$notification->is_read ? 'unread' : '' }}" 
+                                           onclick="markAsRead(event, {{ $notification->id }})" 
+                                           style="display:flex;align-items:start;">
+                                            <div class="notification-icon {{ $notification->type }}">
+                                                @if($notification->type === 'course_enrollment')
+                                                    <i class="fas fa-graduation-cap"></i>
+                                                @elseif($notification->type === 'badge_earned')
+                                                    <i class="fas fa-medal"></i>
+                                                @elseif($notification->type === 'testimonial_approved')
+                                                    <i class="fas fa-check-circle"></i>
+                                                @elseif($notification->type === 'forum_reply')
+                                                    <i class="fas fa-comment"></i>
+                                                @elseif($notification->type === 'new_course')
+                                                    <i class="fas fa-book"></i>
+                                                @elseif($notification->type === 'new_article')
+                                                    <i class="fas fa-newspaper"></i>
+                                                @endif
+                                            </div>
+                                            <div class="notification-content">
+                                                <div class="notification-title">{{ $notification->title }}</div>
+                                                <div class="notification-message">{{ $notification->message }}</div>
+                                                <div class="notification-time">{{ $notification->created_at->diffForHumans() }}</div>
+                                            </div>
+                                        </a>
+                                    @empty
+                                        <div class="notification-empty">
+                                            <i class="fas fa-bell-slash"></i>
+                                            <p>No notifications yet</p>
+                                        </div>
+                                    @endforelse
+                                </div>
+                                
+                                @if($notifications->count() > 0)
+                                    <div class="notification-footer">
+                                        <a href="{{ route('notifications.index') }}" class="view-all-notifications">View all notifications</a>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        
                         {{-- Profile dropdown with logout --}}
                         <div class="dropdown" style="position:relative;display:inline-block;" 
                              onmouseenter="clearTimeout(this.hideTimer); this.querySelector('.dropdown-menu').style.display='block'" 
@@ -1454,7 +1807,6 @@
                                         <i class="fas fa-user me-2"></i>Profile
                                     </a>
                                 </li>
-                                <li><hr style="border-color:rgba(255,255,255,0.1);margin:.4rem 0;"></li>
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                                         @csrf
@@ -1751,6 +2103,109 @@
                 }
             });
         });
+        
+        // Notification Functions
+        function toggleNotifications(event) {
+            event.preventDefault();
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.classList.toggle('show');
+            
+            // Close dropdown when clicking outside
+            if (dropdown.classList.contains('show')) {
+                setTimeout(() => {
+                    document.addEventListener('click', closeNotificationsOnClickOutside);
+                }, 0);
+            }
+        }
+        
+        function closeNotificationsOnClickOutside(event) {
+            const dropdown = document.getElementById('notificationDropdown');
+            const bell = document.getElementById('notificationBell');
+            
+            if (!dropdown.contains(event.target) && !bell.contains(event.target)) {
+                dropdown.classList.remove('show');
+                document.removeEventListener('click', closeNotificationsOnClickOutside);
+            }
+        }
+        
+        function markAsRead(event, notificationId) {
+            event.preventDefault();
+            
+            fetch(`/notifications/${notificationId}/read`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            }).then(response => {
+                if (response.ok) {
+                    // Update UI - remove unread class
+                    const item = event.currentTarget;
+                    item.classList.remove('unread');
+                    
+                    // Update badge count
+                    updateNotificationBadge();
+                    
+                    // Navigate to the URL after a short delay
+                    const url = item.getAttribute('href');
+                    if (url && url !== '#') {
+                        setTimeout(() => {
+                            window.location.href = url;
+                        }, 200);
+                    }
+                }
+            }).catch(error => console.error('Error:', error));
+        }
+        
+        function markAllAsRead(event) {
+            event.preventDefault();
+            
+            fetch('/notifications/mark-all-read', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            }).then(response => {
+                if (response.ok) {
+                    // Remove all unread classes
+                    document.querySelectorAll('.notification-item.unread').forEach(item => {
+                        item.classList.remove('unread');
+                    });
+                    
+                    // Hide mark all read button
+                    event.target.style.display = 'none';
+                    
+                    // Update badge
+                    updateNotificationBadge();
+                }
+            }).catch(error => console.error('Error:', error));
+        }
+        
+        function updateNotificationBadge() {
+            fetch('/notifications/unread-count')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.querySelector('.notification-badge');
+                    if (data.count > 0) {
+                        if (badge) {
+                            badge.textContent = data.count > 99 ? '99+' : data.count;
+                        } else {
+                            // Create badge if it doesn't exist
+                            const bell = document.getElementById('notificationBell');
+                            const newBadge = document.createElement('span');
+                            newBadge.className = 'notification-badge';
+                            newBadge.textContent = data.count > 99 ? '99+' : data.count;
+                            bell.appendChild(newBadge);
+                        }
+                    } else {
+                        if (badge) {
+                            badge.remove();
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
     </script>
 </body>
 </html>

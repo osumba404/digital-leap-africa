@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\GamificationPoint;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +40,15 @@ class CourseController extends Controller
             'points' => 50,
             'reason' => 'Enrolled in course: ' . $course->title,
         ]);
+
+        // Create notification for course enrollment
+        Notification::createNotification(
+            $user->id,
+            'course_enrollment',
+            'Course Enrollment Successful',
+            "You've successfully enrolled in {$course->title}",
+            route('courses.show', $course->id)
+        );
 
         return redirect()->route('courses.show', $course)->with('success', 'You have successfully enrolled!');
     }
