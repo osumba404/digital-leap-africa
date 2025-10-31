@@ -93,6 +93,14 @@
                     <i class="fas fa-book"></i>
                 @elseif($notification->type === 'new_article')
                     <i class="fas fa-newspaper"></i>
+                @elseif($notification->type === 'lesson_completed')
+                    <i class="fas fa-check-circle"></i>
+                @elseif($notification->type === 'course_completed')
+                    <i class="fas fa-trophy"></i>
+                @elseif($notification->type === 'new_event')
+                    <i class="fas fa-calendar-alt"></i>
+                @elseif($notification->type === 'payment_success')
+                    <i class="fas fa-check-circle"></i>
                 @endif
             </div>
             <div style="flex: 1;">

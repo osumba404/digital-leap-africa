@@ -16,7 +16,14 @@ class Course extends Model
         'instructor',
         'image_url',
         'is_free',
+        'price',
         'active',
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+        'is_free' => 'boolean',
+        'active' => 'boolean',
     ];
 
     public function topics()
@@ -28,6 +35,11 @@ class Course extends Model
 public function lessons()
 {
     return $this->hasManyThrough(Lesson::class, Topic::class);
+}
+
+public function payments()
+{
+    return $this->hasMany(Payment::class);
 }
 
 

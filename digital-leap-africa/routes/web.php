@@ -15,7 +15,8 @@ use App\Http\Controllers\{
     ArticlesController,
     PartnerPublicController,
     TestimonialPublicController,
-    NotificationController
+    NotificationController,
+    PaymentController
 };
 
 use App\Http\Controllers\Admin\{
@@ -44,6 +45,17 @@ Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\GoogleAuthContro
 // Authentication Routes
 require __DIR__.'/auth.php';
 
+
+// Payment routes
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/courses/{course}/pay', [PaymentController::class, 'initiate'])->name('courses.pay');
+    Route::get('/payment/{payment}/status', [PaymentController::class, 'checkStatus'])->name('payment.status');
+    Route::get('/payment/{payment}/poll', [PaymentController::class, 'pollStatus'])->name('payment.poll');
+});
+
+// M-Pesa callback (no auth required)
+Route::post('/mpesa/callback', [PaymentController::class, 'callback'])->name('mpesa.callback');
+
 // --- PUBLIC ROUTES ---
 
 Route::get('/', [PageController::class, 'home'])->name('home');
@@ -54,12 +66,22 @@ Route::get('/partners/apply', [PartnerPublicController::class, 'apply'])->name('
 Route::post('/partners/apply', [PartnerPublicController::class, 'store'])->name('partners.store');
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
+// Fallback route for old ID-based URLs - redirects to slug-based URL
+Route::get('/courses/{id}', function($id) {
+    $course = \App\Models\Course::findOrFail($id);
+    return redirect()->route('courses.show', $course->slug, 301);
+})->where('id', '[0-9]+');
 Route::get('/courses/{course:slug}', [CourseController::class, 'show'])->name('courses.show');
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
 Route::get('/projects/{project:slug}', [ProjectController::class, 'show'])->name('projects.show');
 Route::get('/elibrary', [ELibraryController::class, 'index'])->name('elibrary.index');
 Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
+// Fallback route for old ID-based URLs - redirects to slug-based URL
+Route::get('/events/{id}', function($id) {
+    $event = \App\Models\Event::findOrFail($id);
+    return redirect()->route('events.show', $event->slug, 301);
+})->where('id', '[0-9]+');
 Route::get('/events/{event:slug}', [EventController::class, 'show'])->name('events.show');
 Route::get('/forum', [ForumController::class, 'index'])->name('forum.index');
 Route::get('/forum/create', [ForumController::class, 'create'])->middleware(['auth', 'verified'])->name('forum.create');

@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class EventController extends Controller
 {
@@ -30,6 +33,21 @@ class EventController extends Controller
         $event = Event::create(array_merge($data, [
             'image_path' => $imageUrl,
         ]));
+
+        // Notify all users about new upcoming event
+        $eventDate = Carbon::parse($event->date);
+        if ($eventDate->isFuture()) {
+            $users = User::all();
+            foreach ($users as $user) {
+                Notification::createNotification(
+                    $user->id,
+                    'new_event',
+                    'New Event: ' . $event->title,
+                    "Join us on {$eventDate->format('M d, Y')} at {$event->location}",
+                    route('events.show', $event->id)
+                );
+            }
+        }
 
         return redirect()
             ->route('admin.events.index')

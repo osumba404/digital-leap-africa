@@ -37,11 +37,13 @@ class CourseController extends Controller
             'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'active' => 'nullable|boolean',
             'is_free' => 'nullable|boolean',
+            'price' => 'nullable|numeric|min:0',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
         $validated['active'] = $request->boolean('active');
         $validated['is_free'] = $request->boolean('is_free');
+        $validated['price'] = $validated['is_free'] ? 0 : ($validated['price'] ?? 0);
 
         if ($request->hasFile('image_url')) {
             $path = $request->file('image_url')->store('public/courses');
@@ -82,11 +84,13 @@ class CourseController extends Controller
             'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'active' => 'nullable|boolean',
             'is_free' => 'nullable|boolean',
+            'price' => 'nullable|numeric|min:0',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
         $validated['active'] = $request->boolean('active');
         $validated['is_free'] = $request->boolean('is_free');
+        $validated['price'] = $validated['is_free'] ? 0 : ($validated['price'] ?? 0);
 
         if ($request->hasFile('image_url')) {
             if ($course->image_url) {

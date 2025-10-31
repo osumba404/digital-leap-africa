@@ -183,19 +183,72 @@
             </div>
         @else
             <div class="enrollment-section">
-                <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Ready to Start Learning?</h3>
-                <p style="color: var(--cool-gray); margin-bottom: 2rem;">Enroll now to access all course content and earn points!</p>
-                <form method="POST" action="{{ route('courses.enroll', $course) }}">
-                    @csrf
-                    <button type="submit" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
-                        <i class="fas fa-play me-2"></i>Enroll Now (+50 Points)
-                    </button>
-                </form>
+                @if($course->is_free)
+                    {{-- Free Course Enrollment --}}
+                    <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Ready to Start Learning?</h3>
+                    <p style="color: var(--cool-gray); margin-bottom: 2rem;">Enroll now to access all course content and earn points!</p>
+                    <form method="POST" action="{{ route('courses.enroll', $course) }}">
+                        @csrf
+                        <button type="submit" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
+                            <i class="fas fa-play me-2"></i>Enroll Now - FREE (+50 Points)
+                        </button>
+                    </form>
+                @else
+                    {{-- Paid Course Payment --}}
+                    <div style="max-width: 500px; margin: 0 auto;">
+                        <div style="background: rgba(59, 130, 246, 0.1); border: 2px solid #3b82f6; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                            <div style="text-align: center; margin-bottom: 1rem;">
+                                <i class="fas fa-graduation-cap" style="font-size: 3rem; color: #3b82f6;"></i>
+                            </div>
+                            <h3 style="color: var(--diamond-white); margin-bottom: 0.5rem; text-align: center;">Premium Course</h3>
+                            <div style="text-align: center; margin: 1.5rem 0;">
+                                <span style="font-size: 2.5rem; font-weight: 700; color: #3b82f6;">KES {{ number_format($course->price, 0) }}</span>
+                            </div>
+                            <p style="color: var(--cool-gray); text-align: center; margin-bottom: 0;">One-time payment for lifetime access</p>
+                        </div>
+
+                        <form method="POST" action="{{ route('courses.pay', $course) }}" id="payment-form">
+                            @csrf
+                            <div style="margin-bottom: 1.5rem;">
+                                <label for="phone_number" style="display: block; color: var(--diamond-white); font-weight: 600; margin-bottom: 0.5rem;">
+                                    <i class="fas fa-mobile-alt me-2"></i>M-Pesa Phone Number
+                                </label>
+                                <input type="text" 
+                                       id="phone_number" 
+                                       name="phone_number" 
+                                       class="form-control" 
+                                       placeholder="254712345678" 
+                                       pattern="254[0-9]{9}"
+                                       required
+                                       style="padding: 0.75rem; font-size: 1rem; text-align: center; letter-spacing: 1px;">
+                                <small style="color: var(--cool-gray); display: block; margin-top: 0.5rem; text-align: center;">
+                                    Enter your phone number in format: 254XXXXXXXXX
+                                </small>
+                            </div>
+
+                            <button type="submit" class="btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem; font-weight: 600;">
+                                <i class="fas fa-lock me-2"></i>Pay with M-Pesa
+                            </button>
+                        </form>
+
+                        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 4px solid #10b981;">
+                            <p style="color: var(--cool-gray); font-size: 0.9rem; margin: 0;">
+                                <i class="fas fa-shield-alt me-2" style="color: #10b981;"></i>
+                                <strong>Secure Payment:</strong> You'll receive an M-Pesa prompt on your phone. Enter your PIN to complete the payment. You'll be enrolled automatically once payment is confirmed.
+                            </p>
+                        </div>
+                    </div>
+                @endif
             </div>
         @endif
     @else
         <div class="enrollment-section">
             <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Join Digital Leap Africa</h3>
+            @if(!$course->is_free)
+                <div style="background: rgba(59, 130, 246, 0.1); border: 2px solid #3b82f6; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; display: inline-block;">
+                    <span style="font-size: 1.5rem; font-weight: 700; color: #3b82f6;">KES {{ number_format($course->price, 0) }}</span>
+                </div>
+            @endif
             <p style="color: var(--cool-gray); margin-bottom: 2rem;">Create an account to enroll in courses and track your progress</p>
             <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
                 <a href="{{ route('login') }}" class="btn-outline" style="padding: 0.75rem 1.5rem;">

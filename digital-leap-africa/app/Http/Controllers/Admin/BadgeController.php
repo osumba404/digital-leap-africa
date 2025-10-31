@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Badge;
 use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -133,8 +134,25 @@ class BadgeController extends Controller
             'user_ids.*' => 'exists:users,id',
         ]);
 
+        // Get previously assigned users
+        $previousUserIds = $badge->users()->pluck('users.id')->toArray();
+
         // Sync users with the badge
         $badge->users()->sync($validated['user_ids']);
+
+        // Find newly assigned users (those who weren't assigned before)
+        $newUserIds = array_diff($validated['user_ids'], $previousUserIds);
+
+        // Notify newly assigned users
+        foreach ($newUserIds as $userId) {
+            Notification::createNotification(
+                $userId,
+                'badge_earned',
+                'New Badge Earned',
+                "Congratulations! You've earned the {$badge->badge_name} badge",
+                route('dashboard') // or route to badges page if you have one
+            );
+        }
 
         return redirect()->route('admin.badges.index')
             ->with('success', 'Badge assignments updated successfully.');

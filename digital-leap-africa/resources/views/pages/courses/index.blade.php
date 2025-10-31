@@ -25,6 +25,9 @@
   #courses-section .card-button{display:inline-flex;align-items:center;justify-content:center;background-color:transparent;color:#3b82f6;padding:.6rem 1.2rem;border:1px solid #3b82f6;border-radius:6px;text-decoration:none;font-size:.9rem;font-weight:600;transition:all .3s ease;cursor:pointer;gap:.5rem}
   #courses-section .card-button:hover{background-color:rgba(59,130,246,.1);transform:translateY(-2px);box-shadow:0 4px 12px rgba(59,130,246,.2)}
   .btn-wide{width: 100%;}
+  #courses-section .price-badge{position:absolute;top:1rem;right:1rem;padding:.4rem .8rem;border-radius:6px;font-weight:700;font-size:.85rem;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+  #courses-section .price-badge.free{background:#10b981;color:#fff}
+  #courses-section .price-badge.paid{background:#3b82f6;color:#fff}
   @media (max-width:768px){#courses-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.5rem}#courses-section .card-title{font-size:1rem;padding:1rem 1rem .45rem}}
 
   /* Light Mode Courses */
@@ -107,6 +110,11 @@
                 <img src="{{ $courseImage }}" alt="{{ $courseTitle }}" class="card-image">
               @else
                 <img src="https://via.placeholder.com/1000x600.png?text=Course" alt="{{ $courseTitle }}" class="card-image">
+              @endif
+              @if($course->is_free)
+                <span class="price-badge free">FREE</span>
+              @else
+                <span class="price-badge paid">KES {{ number_format($course->price, 0) }}</span>
               @endif
               <h3 class="card-title">{{ $courseTitle }}</h3>
             </div>

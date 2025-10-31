@@ -65,6 +65,14 @@
                 <span style="color: var(--cool-gray);">Toggle if this course is free</span>
             </div>
         </div>
+
+        <div class="form-group" id="price-field" style="margin-top: 1rem; display: {{ old('is_free', isset($course) ? (int)($course->is_free ?? 0) : 0) ? 'none' : 'block' }};">
+            <label for="price" class="form-label">Price (KES)</label>
+            <input type="number" id="price" name="price" class="form-control" 
+                   value="{{ old('price', $course->price ?? 0) }}" 
+                   min="0" step="0.01" placeholder="0.00">
+            <small style="color: var(--cool-gray); font-size: 0.85rem;">Enter the course price in Kenyan Shillings (KES)</small>
+        </div>
     </div>
 
     <div class="form-section">
