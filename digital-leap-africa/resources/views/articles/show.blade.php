@@ -72,6 +72,10 @@
     background: var(--primary-dark); padding: 1.5rem; border-radius: var(--radius); overflow-x: auto; margin: 1.5rem 0; border: 1px solid var(--border-color);
   }
   .article-content pre code { background: none; padding: 0; }
+  .article-content img {
+    max-width: 100%; height: auto; border-radius: var(--radius); margin: 1.5rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color);
+  }
 
   .comments-section {
     background: var(--secondary-dark); padding: 2rem; border-radius: var(--radius);
@@ -120,18 +124,20 @@
   .related-article a { text-decoration: none; color: var(--text-primary); font-weight: 500; transition: color 0.3s; }
   .related-article a:hover { color: var(--accent-blue); }
 
-  .article-actions { display: flex; gap: 0.75rem; margin-top: 2rem; }
+  .article-actions { display: flex; gap: 1.5rem; margin-top: 2rem; align-items: center; }
   .action-btn {
-    display: inline-flex; align-items: center; justify-content: center; padding: 0.35rem; background: transparent;
-    border: none; border-radius: 6px; color: var(--text-secondary); text-decoration: none; transition: color 0.2s, background 0.2s;
+    background: none; border: none; color: #8892b0; cursor: pointer; display: inline-flex; align-items: center;
+    gap: 0.4rem; font-size: 0.9rem; transition: all 0.2s ease; padding: 0.25rem 0.5rem; border-radius: 6px;
   }
-  .action-btn i { font-size: 1.05rem; line-height: 1; }
-  .action-btn:hover { background: rgba(255,255,255,0.06); color: var(--accent-blue); }
+  .action-btn i { font-size: 1.1rem; }
+  .action-btn:hover { color: #64b5f6; background: rgba(100,181,246,0.1); }
+  .action-count { font-weight: 500; }
 
   .tag {
-    display: inline-block; background: rgba(100, 255, 218, 0.1); color: var(--accent-blue); padding: 0.25rem 0.75rem; border-radius: 50px;
-    font-size: 0.85rem; margin-right: 0.5rem; margin-bottom: 0.5rem; border: 1px solid rgba(100, 255, 218, 0.2);
+    display: inline-block; background: rgba(59,130,246,0.1); color: #3b82f6; padding: 0.2rem 0.5rem; border-radius: 999px;
+    font-size: 0.7rem; margin-right: 0.35rem; margin-bottom: 0.35rem; border: 1px solid rgba(59,130,246,0.2); font-weight: 500;
   }
+  .tag:hover { background: rgba(59,130,246,0.15); border-color: rgba(59,130,246,0.3); }
 
   @media (max-width: 768px) {
     .article-title { font-size: 2rem; }
@@ -285,12 +291,12 @@
   }
 
   [data-theme="light"] .action-btn {
-      color: var(--cool-gray);
+      color: #4A5568;
   }
 
   [data-theme="light"] .action-btn:hover {
       background: rgba(46, 120, 197, 0.1);
-      color: var(--primary-blue);
+      color: #2E78C5;
   }
 
   [data-theme="light"] .tag {
@@ -298,12 +304,24 @@
       color: var(--primary-blue);
       border-color: rgba(46, 120, 197, 0.2);
   }
-
-  [data-theme="light"] #shareMenu > div:last-child {
-      background: #FFFFFF;
-      border-color: rgba(46, 120, 197, 0.2);
-      color: var(--diamond-white);
+  
+  [data-theme="light"] .tag:hover {
+      background: rgba(46, 120, 197, 0.15);
   }
+
+  [data-theme="light"] #shareModal > div {
+      background: #FFFFFF;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  
+  [data-theme="light"] #shareModal input {
+      background: #F8FAFC;
+      border-color: #E2E8F0;
+      color: #1A202C;
+  }
+  
+  .share-btn:hover { transform: translateY(-2px); opacity: .9; }
+  .copy-link-btn:hover { background: #2563eb; transform: scale(1.02); }
 </style>
 
 @section('content')
@@ -354,69 +372,92 @@
           @endif
 
           <div class="article-content">
-            @php
-              $html = $article->content ?? '';
-              $html = preg_replace('/<br\s*\/?>(?i)/', "\n", $html);
-              for ($i = 1; $i <= 6; $i++) {
-                  $hashes = str_repeat('#', $i) . ' ';
-                  $html = preg_replace('/<h' . $i . '\b[^>]*>/i', "\n\n{$hashes}", $html);
-              }
-              $html = preg_replace('/<\/(p|div|h[1-6]|blockquote)>/i', "\n\n", $html);
-              $html = preg_replace('/<li\b[^>]*>/i', "- ", $html);
-              $html = preg_replace('/<\/li>/i', "\n", $html);
-              $html = preg_replace('/<\/(ul|ol)>/i', "\n", $html);
-              $html = preg_replace('/<(ul|ol)\b[^>]*>/i', "\n", $html);
-              $allowedInline = '<strong><b><em><i><code>';
-              $text = strip_tags($html, $allowedInline);
-              $text = preg_replace("/\n{3,}/", "\n\n", $text);
-              $lines = preg_split("/\r\n|\n|\r/", trim($text));
-              $out = '';
-              foreach ($lines as $line) {
-                  $trim = trim($line);
-                  if ($trim === '') { continue; }
-                  if (preg_match('/^(#{1,6})\s+(.*)$/', $trim, $m)) {
-                      $level = strlen($m[1]);
-                      $headingText = strip_tags($m[2], $allowedInline);
-                      $out .= "<h{$level}>{$headingText}</h{$level}>\n";
-                  } else {
-                      $para = strip_tags($trim, $allowedInline);
-                      $out .= '<p>' . $para . "</p>\n";
-                  }
-              }
-            @endphp
-            {!! $out !!}
+            {!! $article->content !!}
           </div>
           
 
           <div class="article-actions">
             @auth
-              <form method="POST" action="{{ route('blog.like', $article) }}" class="d-inline">@csrf<button type="submit" class="action-btn" title="Like"><i class="fa-regular fa-thumbs-up" aria-hidden="true"></i></button></form>
-              <button type="button" class="action-btn" id="shareBtn" title="Share" data-title="{{ $article->title }}" data-url="{{ $shareUrl }}"><i class="fa-solid fa-share" aria-hidden="true"></i></button>
-              <form method="POST" action="{{ route('blog.bookmark', $article) }}" class="d-inline">@csrf<button type="submit" class="action-btn" title="Save"><i class="fa-regular fa-bookmark" aria-hidden="true"></i></button></form>
+              <form method="POST" action="{{ route('blog.like', $article) }}" style="display:inline;">
+                @csrf
+                <button type="submit" class="action-btn" title="Like">
+                  <i class="fa-regular fa-heart"></i>
+                  <span class="action-count">{{ $article->likes_count ?? 0 }}</span>
+                </button>
+              </form>
+              <form method="POST" action="{{ route('blog.bookmark', $article) }}" style="display:inline;">
+                @csrf
+                <button type="submit" class="action-btn" title="Bookmark">
+                  <i class="fa-regular fa-bookmark"></i>
+                  <span class="action-count">{{ $article->bookmarks_count ?? 0 }}</span>
+                </button>
+              </form>
+              <button type="button" class="action-btn" onclick="openShareModal('{{ $shareUrl }}', '{{ addslashes($article->title) }}', {{ $article->id }})" title="Share">
+                <i class="fa-solid fa-share-nodes"></i>
+                <span class="action-count">{{ $article->shares_count ?? 0 }}</span>
+              </button>
             @else
-              <a href="{{ route('login') }}" class="action-btn" title="Like"><i class="fa-regular fa-thumbs-up" aria-hidden="true"></i></a>
-              <a href="{{ route('login') }}" class="action-btn" title="Share"><i class="fa-solid fa-share" aria-hidden="true"></i></a>
-              <a href="{{ route('login') }}" class="action-btn" title="Save"><i class="fa-regular fa-bookmark" aria-hidden="true"></i></a>
+              <a href="{{ route('login') }}" class="action-btn" title="Like">
+                <i class="fa-regular fa-heart"></i>
+                <span class="action-count">{{ $article->likes_count ?? 0 }}</span>
+              </a>
+              <a href="{{ route('login') }}" class="action-btn" title="Bookmark">
+                <i class="fa-regular fa-bookmark"></i>
+                <span class="action-count">{{ $article->bookmarks_count ?? 0 }}</span>
+              </a>
+              <a href="{{ route('login') }}" class="action-btn" title="Share">
+                <i class="fa-solid fa-share-nodes"></i>
+                <span class="action-count">{{ $article->shares_count ?? 0 }}</span>
+              </a>
             @endauth
           </div>
 
-          <!-- Share fallback menu -->
-          <div id="shareMenu" style="display:none; position: fixed; inset: 0; z-index: 1050; align-items:center; justify-content:center;">
-            <div style="position:absolute; inset:0; background: rgba(0,0,0,0.5);"></div>
-            <div style="position:relative; background: var(--secondary-dark); color: var(--text-primary); border:1px solid var(--border-color); box-shadow: 0 10px 30px var(--card-shadow); border-radius: 10px; width: 90%; max-width: 420px; padding: 1rem;">
-              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:.75rem;">
-                <strong>Share this article</strong>
-                <button type="button" id="shareClose" class="btn btn-sm btn-outline-light" style="background:transparent; border:1px solid var(--border-color); color: var(--text-secondary);">Close</button>
+          <!-- Share Modal -->
+          <div id="shareModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;">
+            <div style="background:var(--secondary-dark);padding:2rem;border-radius:12px;max-width:500px;width:90%;position:relative;border:1px solid var(--border-color);">
+              <button onclick="closeShareModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text-secondary);font-size:1.5rem;cursor:pointer;transition:color .2s;">
+                <i class="fas fa-times"></i>
+              </button>
+              
+              <h3 style="margin:0 0 1.5rem 0;color:var(--text-primary);font-size:1.5rem;">
+                <i class="fas fa-share-nodes" style="color:#3b82f6;margin-right:.5rem;"></i>
+                Share Article
+              </h3>
+              
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:1rem;margin-bottom:1.5rem;">
+                <a id="shareWhatsapp" target="_blank" class="share-btn" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);color:#25d366;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;border-radius:8px;text-decoration:none;transition:all .2s;cursor:pointer;">
+                  <i class="fab fa-whatsapp" style="font-size:1.5rem;"></i>
+                  <span style="font-size:.8rem;margin-top:.25rem;">WhatsApp</span>
+                </a>
+                <a id="shareTwitter" target="_blank" class="share-btn" style="background:rgba(29,161,242,0.1);border:1px solid rgba(29,161,242,0.3);color:#1da1f2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;border-radius:8px;text-decoration:none;transition:all .2s;cursor:pointer;">
+                  <i class="fab fa-twitter" style="font-size:1.5rem;"></i>
+                  <span style="font-size:.8rem;margin-top:.25rem;">Twitter</span>
+                </a>
+                <a id="shareFacebook" target="_blank" class="share-btn" style="background:rgba(24,119,242,0.1);border:1px solid rgba(24,119,242,0.3);color:#1877f2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;border-radius:8px;text-decoration:none;transition:all .2s;cursor:pointer;">
+                  <i class="fab fa-facebook" style="font-size:1.5rem;"></i>
+                  <span style="font-size:.8rem;margin-top:.25rem;">Facebook</span>
+                </a>
+                <a id="shareLinkedin" target="_blank" class="share-btn" style="background:rgba(0,119,181,0.1);border:1px solid rgba(0,119,181,0.3);color:#0077b5;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;border-radius:8px;text-decoration:none;transition:all .2s;cursor:pointer;">
+                  <i class="fab fa-linkedin" style="font-size:1.5rem;"></i>
+                  <span style="font-size:.8rem;margin-top:.25rem;">LinkedIn</span>
+                </a>
+                <a id="shareEmail" target="_blank" class="share-btn" style="background:rgba(234,67,53,0.1);border:1px solid rgba(234,67,53,0.3);color:#ea4335;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;border-radius:8px;text-decoration:none;transition:all .2s;cursor:pointer;">
+                  <i class="fas fa-envelope" style="font-size:1.5rem;"></i>
+                  <span style="font-size:.8rem;margin-top:.25rem;">Email</span>
+                </a>
               </div>
-              <div style="display:flex; gap:.5rem; align-items:center; margin-bottom:.75rem;">
-                <input id="shareLink" type="text" readonly class="form-control" value="{{ $shareUrl }}" style="flex:1;">
-                <button type="button" id="copyLink" class="btn btn-primary">Copy</button>
-              </div>
-              <div style="display:flex; gap:.5rem; flex-wrap:wrap;">
-                <a id="waShare" class="btn btn-outline" target="_blank" rel="noopener">WhatsApp</a>
-                <a id="twShare" class="btn btn-outline" target="_blank" rel="noopener">Twitter</a>
-                <a id="fbShare" class="btn btn-outline" target="_blank" rel="noopener">Facebook</a>
-                <a id="emShare" class="btn btn-outline" target="_blank" rel="noopener">Email</a>
+              
+              <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:1rem;">
+                <label style="display:block;color:var(--text-secondary);font-size:.85rem;margin-bottom:.5rem;">Article Link:</label>
+                <div style="display:flex;gap:.5rem;">
+                  <input id="shareLink" type="text" readonly style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:.5rem .75rem;color:var(--text-primary);font-size:.9rem;">
+                  <button onclick="copyShareLink()" class="copy-link-btn" style="background:#3b82f6;border:none;color:white;padding:.5rem 1rem;border-radius:6px;cursor:pointer;font-weight:600;transition:all .2s;white-space:nowrap;">
+                    <i class="fas fa-copy"></i> Copy
+                  </button>
+                </div>
+                <div id="copyFeedback" style="display:none;color:#22c55e;font-size:.85rem;margin-top:.5rem;">
+                  <i class="fas fa-check-circle"></i> Link copied to clipboard!
+                </div>
               </div>
             </div>
           </div>
@@ -519,82 +560,57 @@
   </div>
 
   <script>
-    (function(){
-      const shareBtn = document.getElementById('shareBtn');
-      if (!shareBtn) return;
-      const title = shareBtn.getAttribute('data-title') || document.title;
-      const url = shareBtn.getAttribute('data-url') || window.location.href;
-      const menu = document.getElementById('shareMenu');
-      const closeBtn = document.getElementById('shareClose');
-      const copyBtn = document.getElementById('copyLink');
+    let currentArticleId = null;
+
+    function openShareModal(url, title, articleId) {
+      currentArticleId = articleId;
+      const modal = document.getElementById('shareModal');
       const linkInput = document.getElementById('shareLink');
-      const wa = document.getElementById('waShare');
-      const tw = document.getElementById('twShare');
-      const fb = document.getElementById('fbShare');
-      const em = document.getElementById('emShare');
-
-      function postShareIncrement(){
-        try {
-          const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-          fetch("{{ route('blog.share', $article) }}", { method: 'POST', headers: { 'X-CSRF-TOKEN': token, 'Accept': 'application/json' } });
-        } catch(e) { /* noop */ }
-      }
-
-      function openMenu(){
-        menu.style.display = 'flex';
-      }
-      function closeMenu(){
-        menu.style.display = 'none';
-      }
-
-      function setLinks(){
-        const text = encodeURIComponent(title + ' ' + url);
-        const u = encodeURIComponent(url);
-        wa.href = 'https://api.whatsapp.com/send?text=' + text;
-        tw.href = 'https://twitter.com/intent/tweet?text=' + text;
-        fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + u;
-        em.href = 'mailto:?subject=' + encodeURIComponent(title) + '&body=' + text;
-      }
-
-      shareBtn.addEventListener('click', async function(){
-        // Try native share first
-        if (navigator.share) {
-          try {
-            await navigator.share({ title: title, url: url });
-            postShareIncrement();
-            return;
-          } catch(err) {
-            // fall through to menu if user cancels or share fails
-          }
-        }
-        setLinks();
-        openMenu();
-      });
-
-      if (copyBtn && linkInput) {
-        copyBtn.addEventListener('click', async function(){
-          try {
-            await navigator.clipboard.writeText(linkInput.value);
-            copyBtn.textContent = 'Copied!';
-            setTimeout(()=> copyBtn.textContent = 'Copy', 1500);
-            postShareIncrement();
-          } catch(e) {
-            linkInput.select();
-            document.execCommand('copy');
-            postShareIncrement();
+      
+      linkInput.value = url;
+      
+      // Update social share links
+      document.getElementById('shareWhatsapp').href = `https://wa.me/?text=${encodeURIComponent(title + ' - ' + url)}`;
+      document.getElementById('shareTwitter').href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+      document.getElementById('shareFacebook').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+      document.getElementById('shareLinkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+      document.getElementById('shareEmail').href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent('Check out this article: ' + url)}`;
+      
+      modal.style.display = 'flex';
+      
+      // Track share action
+      if (currentArticleId) {
+        fetch(`/blog/${currentArticleId}/share`, {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Content-Type': 'application/json'
           }
         });
       }
+    }
 
-      [wa, tw, fb, em].forEach(function(a){
-        if(!a) return;
-        a.addEventListener('click', function(){
-          postShareIncrement();
-        });
-      });
+    function closeShareModal() {
+      document.getElementById('shareModal').style.display = 'none';
+      document.getElementById('copyFeedback').style.display = 'none';
+    }
 
-      if (closeBtn) closeBtn.addEventListener('click', closeMenu);
-      if (menu) menu.addEventListener('click', function(e){ if(e.target === menu) closeMenu(); });
-    })();
+    function copyShareLink() {
+      const input = document.getElementById('shareLink');
+      input.select();
+      document.execCommand('copy');
+      
+      const feedback = document.getElementById('copyFeedback');
+      feedback.style.display = 'block';
+      
+      setTimeout(() => {
+        feedback.style.display = 'none';
+      }, 3000);
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('shareModal')?.addEventListener('click', function(e) {
+      if (e.target === this) closeShareModal();
+    });
   </script>
 @endsection
