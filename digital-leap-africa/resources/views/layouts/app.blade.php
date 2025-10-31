@@ -1730,7 +1730,11 @@
                             <a href="#" class="notification-bell" id="notificationBell" onclick="toggleNotifications(event)">
                                 <i class="fas fa-bell"></i>
                                 @php
-                                    $unreadCount = auth()->check() ? auth()->user()->notifications()->where('is_read', false)->count() : 0;
+                                    try {
+                                        $unreadCount = auth()->check() ? auth()->user()->notifications()->where('is_read', false)->count() : 0;
+                                    } catch (\Exception $e) {
+                                        $unreadCount = 0; // Fallback if notifications table doesn't exist
+                                    }
                                 @endphp
                                 @if($unreadCount > 0)
                                     <span class="notification-badge">{{ $unreadCount > 99 ? '99+' : $unreadCount }}</span>
@@ -1747,7 +1751,11 @@
                                 
                                 <div class="notification-list" id="notificationList">
                                     @php
-                                        $notifications = auth()->check() ? auth()->user()->notifications()->latest()->take(10)->get() : collect();
+                                        try {
+                                            $notifications = auth()->check() ? auth()->user()->notifications()->latest()->take(10)->get() : collect();
+                                        } catch (\Exception $e) {
+                                            $notifications = collect(); // Fallback if notifications table doesn't exist
+                                        }
                                     @endphp
                                     
                                     @forelse($notifications as $notification)

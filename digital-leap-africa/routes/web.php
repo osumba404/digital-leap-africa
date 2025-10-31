@@ -264,7 +264,8 @@ Route::prefix('admin')
         Route::resource('projects', AdminProjectController::class)->except(['show']);
         Route::resource('elibrary-resources', AdminELibraryResourceController::class);
         Route::resource('events', AdminEventController::class)->except(['show']);
-        Route::resource('forum', AdminForumController::class)->except(['show']);
+        Route::resource('forum', AdminForumController::class)->only(['index', 'show', 'destroy']);
+        Route::delete('forum/replies/{reply}', [AdminForumController::class, 'destroyReply'])->name('forum.replies.destroy');
         //Route::resource('articles', AdminArticleController::class)->except(['show']);
 
          // Courses
