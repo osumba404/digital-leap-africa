@@ -38,6 +38,10 @@ use App\Http\Controllers\Admin\{
    
 };
 
+// Google OAuth Routes
+Route::get('/auth/google', [\App\Http\Controllers\Auth\GoogleAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\GoogleAuthController::class, 'handleGoogleCallback']);
+
 // Authentication Routes
 require __DIR__.'/auth.php';
 
@@ -137,7 +141,10 @@ Route::get('/me/photo', function () {
         if (is_file($fallback)) {
             return response()->file($fallback);
         }
-        abort(404);
+        
+        // Return a transparent 1x1 pixel PNG to avoid 404 errors
+        $transparentPixel = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==');
+        return response($transparentPixel, 200)->header('Content-Type', 'image/png');
     }
 
     return Storage::disk('public')->response($path);

@@ -28,7 +28,37 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-
+        
+        // Get the intended URL
+        $intendedUrl = $request->session()->get('url.intended');
+        
+        // List of URLs that should NOT be redirected to after login
+        $excludedPaths = [
+            '/me/photo',
+            '/storage/',
+            '/images/',
+            '/css/',
+            '/js/',
+        ];
+        
+        // Check if intended URL should be excluded
+        $shouldExclude = false;
+        if ($intendedUrl) {
+            foreach ($excludedPaths as $path) {
+                if (str_contains($intendedUrl, $path)) {
+                    $shouldExclude = true;
+                    break;
+                }
+            }
+        }
+        
+        // If intended URL is an asset/excluded path, clear it and go to dashboard
+        if ($shouldExclude) {
+            $request->session()->forget('url.intended');
+            return redirect(RouteServiceProvider::HOME);
+        }
+        
+        // Otherwise, redirect to intended URL or dashboard
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 

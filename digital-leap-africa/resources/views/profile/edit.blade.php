@@ -232,6 +232,111 @@
     margin-top: 0.5rem;
 }
 
+/* Badge Card Styles */
+.badge-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(0, 201, 255, 0.05);
+    border: 1px solid rgba(0, 201, 255, 0.2);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.badge-card:hover {
+    background: rgba(0, 201, 255, 0.08);
+    border-color: rgba(0, 201, 255, 0.3);
+    transform: translateX(4px);
+}
+
+.badge-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid rgba(0, 201, 255, 0.4);
+}
+
+.badge-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(0, 201, 255, 0.3), rgba(138, 43, 226, 0.3));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(0, 201, 255, 0.4);
+}
+
+.badge-name {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--cyan-accent);
+}
+
+.badge-description {
+    margin: 0;
+    color: var(--cool-gray);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.badge-date {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.8rem;
+    color: var(--cool-gray);
+    opacity: 0.8;
+}
+
+.badge-empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--cool-gray);
+}
+
+/* Light Mode Badge Styles */
+[data-theme="light"] .badge-card {
+    background: rgba(46, 120, 197, 0.05);
+    border-color: rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .badge-card:hover {
+    background: rgba(46, 120, 197, 0.1);
+    border-color: rgba(46, 120, 197, 0.3);
+}
+
+[data-theme="light"] .badge-image {
+    border-color: rgba(46, 120, 197, 0.4);
+}
+
+[data-theme="light"] .badge-placeholder {
+    background: linear-gradient(135deg, rgba(46, 120, 197, 0.3), rgba(139, 92, 246, 0.3));
+    border-color: rgba(46, 120, 197, 0.4);
+}
+
+[data-theme="light"] .badge-placeholder i {
+    color: #2563eb;
+}
+
+[data-theme="light"] .badge-name {
+    color: #2563eb;
+}
+
+[data-theme="light"] .badge-description {
+    color: #4a5568;
+}
+
+[data-theme="light"] .badge-date {
+    color: #64748b;
+}
+
+[data-theme="light"] .badge-empty {
+    color: #64748b;
+}
+
 @media (max-width: 768px) {
     .profile-container {
         padding: 1rem 0.5rem;
@@ -379,20 +484,7 @@
         </div>
     </div>
 
-    {{-- Delete Account --}}
-    <div class="profile-section danger-section">
-        <h2 class="section-title">
-            <i class="fas fa-exclamation-triangle section-icon"></i>
-            Delete Account
-        </h2>
-        <p class="section-description">
-            Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
-        </p>
 
-        <button type="button" class="btn-danger" onclick="document.getElementById('deleteModal').style.display='block'">
-            <i class="fas fa-trash me-2"></i>Delete Account
-        </button>
-    </div>
     <div class="profile-section">
         <h2 class="section-title">
             <i class="fas fa-medal section-icon"></i>
@@ -459,6 +551,21 @@
                 <div style="color: var(--cool-gray);">No enrollments yet.</div>
             @endif
         </div>
+    </div>
+
+        {{-- Delete Account --}}
+    <div class="profile-section danger-section">
+        <h2 class="section-title">
+            <i class="fas fa-exclamation-triangle section-icon"></i>
+            Delete Account
+        </h2>
+        <p class="section-description">
+            Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
+        </p>
+
+        <button type="button" class="btn-danger" onclick="document.getElementById('deleteModal').style.display='block'">
+            <i class="fas fa-trash me-2"></i>Delete Account
+        </button>
     </div>
 </div>
 
