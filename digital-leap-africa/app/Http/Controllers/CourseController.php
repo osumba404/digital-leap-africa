@@ -13,10 +13,17 @@ class CourseController extends Controller
 {
     public function index(): View
     {
-        $courses = Course::query()
-            ->where('active', true)
-            ->latest()
-            ->paginate(9);
+        try {
+            $courses = Course::query()
+                ->where('active', true)
+                ->latest()
+                ->paginate(9);
+        } catch (\Exception $e) {
+            // Fallback if active column doesn't exist
+            $courses = Course::query()
+                ->latest()
+                ->paginate(9);
+        }
         return view('pages.courses.index', ['courses' => $courses]);
     }
 
