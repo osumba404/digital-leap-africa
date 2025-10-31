@@ -14,9 +14,8 @@ use App\Http\Controllers\{
     LessonController,
     ArticlesController,
     PartnerPublicController,
-    TestimonialPublicController
-    
-   
+    TestimonialPublicController,
+    NotificationController
 };
 
 use App\Http\Controllers\Admin\{
