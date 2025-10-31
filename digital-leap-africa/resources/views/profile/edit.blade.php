@@ -651,26 +651,49 @@
 <div id="changePasswordModal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
     <div style="background: var(--charcoal); padding: 2rem; border-radius: var(--radius); max-width: 640px; width: 92%;">
         <h3 style="margin-top:0; margin-bottom:1rem;">Change Password</h3>
+        
+        @if(auth()->user()->google_id)
+            <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 8px; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.9rem; color: #ffc107;">
+                <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
+                <strong>Note:</strong> If you signed up with Google, your default password is: <strong>@africa1</strong>
+            </div>
+        @endif
+        
         <form method="POST" action="{{ route('password.update') }}">
             @csrf
             @method('put')
             <div class="form-group">
                 <label for="current_password" class="form-label">Current Password</label>
-                <input id="current_password" name="current_password" type="password" class="form-control" required>
+                <div class="password-wrapper">
+                    <input id="current_password" name="current_password" type="password" class="form-control" required>
+                    <button type="button" class="password-toggle" onclick="togglePasswordModal('current_password')">
+                        <i class="fas fa-eye" id="current_password-icon"></i>
+                    </button>
+                </div>
                 @error('current_password')
                     <div class="error-message">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-group">
                 <label for="password" class="form-label">New Password</label>
-                <input id="password" name="password" type="password" class="form-control" required>
+                <div class="password-wrapper">
+                    <input id="password" name="password" type="password" class="form-control" required>
+                    <button type="button" class="password-toggle" onclick="togglePasswordModal('password')">
+                        <i class="fas fa-eye" id="password-icon"></i>
+                    </button>
+                </div>
                 @error('password')
                     <div class="error-message">{{ $message }}</div>
                 @enderror
             </div>
             <div class="form-group">
                 <label for="password_confirmation" class="form-label">Confirm Password</label>
-                <input id="password_confirmation" name="password_confirmation" type="password" class="form-control" required>
+                <div class="password-wrapper">
+                    <input id="password_confirmation" name="password_confirmation" type="password" class="form-control" required>
+                    <button type="button" class="password-toggle" onclick="togglePasswordModal('password_confirmation')">
+                        <i class="fas fa-eye" id="password_confirmation-icon"></i>
+                    </button>
+                </div>
                 @error('password_confirmation')
                     <div class="error-message">{{ $message }}</div>
                 @enderror

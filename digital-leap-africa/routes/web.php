@@ -116,9 +116,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/me/photo', function () {
-    $user = auth()->user();
-    if (!$user) {
-        abort(401);
+    // Check if a specific user_id is requested (for testimonials, etc.)
+    $userId = request()->query('user_id');
+    
+    if ($userId) {
+        // Fetch the specified user's photo
+        $user = \App\Models\User::find($userId);
+        if (!$user) {
+            // Return transparent pixel if user not found
+            $transparentPixel = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==');
+            return response($transparentPixel, 200)->header('Content-Type', 'image/png');
+        }
+    } else {
+        // Default to authenticated user
+        $user = auth()->user();
+        if (!$user) {
+            abort(401);
+        }
     }
 
     $path = (string) ($user->profile_photo ?? '');
@@ -148,7 +162,7 @@ Route::get('/me/photo', function () {
     }
 
     return Storage::disk('public')->response($path);
-})->middleware('auth')->name('me.photo');
+})->name('me.photo');
 
 
 
