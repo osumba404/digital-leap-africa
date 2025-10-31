@@ -297,6 +297,18 @@ Route::prefix('admin')
             'destroy' => 'faqs.destroy',
         ]);
 
+        // Badges Management
+        Route::resource('badges', \App\Http\Controllers\Admin\BadgeController::class)->names([
+            'index' => 'badges.index',
+            'create' => 'badges.create',
+            'store' => 'badges.store',
+            'edit' => 'badges.edit',
+            'update' => 'badges.update',
+            'destroy' => 'badges.destroy',
+        ]);
+        Route::get('badges/{badge}/assign', [\App\Http\Controllers\Admin\BadgeController::class, 'assign'])->name('badges.assign');
+        Route::post('badges/{badge}/assign', [\App\Http\Controllers\Admin\BadgeController::class, 'storeAssignment'])->name('badges.storeAssignment');
+
              // Settings
         Route::prefix('settings')->name('settings.')->group(function () {
             Route::get('/', [AdminSiteSettingController::class, 'index'])->name('index');

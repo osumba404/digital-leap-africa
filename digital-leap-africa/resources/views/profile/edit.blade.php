@@ -395,17 +395,42 @@
     </div>
     <div class="profile-section">
         <h2 class="section-title">
-            <i class="fas fa-award section-icon"></i>
-            Achievements
+            <i class="fas fa-medal section-icon"></i>
+            Badges and Honours
         </h2>
         <div class="section-description">
-            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                @forelse($user->badges as $badge)
-                    <span class="reply-count"><i class="fas fa-medal" style="margin-right:6px;"></i>{{ $badge->badge_name }}</span>
-                @empty
-                    <div style="color: var(--cool-gray);">No achievements yet.</div>
-                @endforelse
-            </div>
+            @forelse($user->badges as $badge)
+                <div style="display:grid; grid-template-columns: auto 1fr; gap:1rem; padding:1rem; background: rgba(0, 201, 255, 0.05); border: 1px solid rgba(0, 201, 255, 0.2); border-radius: 12px; margin-bottom: 1rem;">
+                    <div>
+                        @if($badge->img_url)
+                            <img src="{{ $badge->img_url }}" alt="{{ $badge->badge_name }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(0, 201, 255, 0.4);">
+                        @else
+                            <div style="width: 60px; height: 60px; border-radius: 8px; background: linear-gradient(135deg, rgba(0, 201, 255, 0.3), rgba(138, 43, 226, 0.3)); display: flex; align-items: center; justify-content: center; border: 2px solid rgba(0, 201, 255, 0.4);">
+                                <i class="fas fa-medal" style="font-size: 1.5rem; color: var(--cyan-accent);"></i>
+                            </div>
+                        @endif
+                    </div>
+                    <div>
+                        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem; font-weight: 700; color: var(--cyan-accent);">
+                            <i class="fas fa-medal" style="margin-right: 0.5rem; font-size: 0.9rem;"></i>{{ $badge->badge_name }}
+                        </h3>
+                        <p style="margin: 0; color: var(--cool-gray); font-size: 0.9rem; line-height: 1.5;">
+                            {{ $badge->description ?? 'No description available.' }}
+                        </p>
+                        @if($badge->pivot && $badge->pivot->awarded_at)
+                            <p style="margin: 0.5rem 0 0 0; font-size: 0.8rem; color: var(--cool-gray); opacity: 0.8;">
+                                <i class="fas fa-calendar" style="margin-right: 0.25rem;"></i>Awarded on {{ \Carbon\Carbon::parse($badge->pivot->awarded_at)->format('M d, Y') }}
+                            </p>
+                        @endif
+                    </div>
+                </div>
+            @empty
+                <div style="text-align: center; padding: 2rem; color: var(--cool-gray);">
+                    <i class="fas fa-medal" style="font-size: 2.5rem; opacity: 0.3; display: block; margin-bottom: 0.75rem;"></i>
+                    <p style="margin: 0; font-size: 1rem;">No badges earned yet.</p>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.85rem; opacity: 0.8;">Keep learning and participating to earn badges!</p>
+                </div>
+            @endforelse
         </div>
     </div>
 

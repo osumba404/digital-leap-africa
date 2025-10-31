@@ -668,26 +668,6 @@ code {
       }
     });
 
-    // Update language badges for existing code-wrap elements
-    document.querySelectorAll('.code-wrap').forEach(function(wrap){
-      const pre = wrap.querySelector('pre');
-      const codeBlock = pre ? pre.querySelector('code') : null;
-      const detectedLang = codeBlock ? codeBlock.getAttribute('data-language') : null;
-      
-      // Find or create badge
-      let badge = wrap.querySelector('.code-badge');
-      if (!badge) {
-        badge = document.createElement('span');
-        badge.className = 'code-badge';
-        const topbar = wrap.querySelector('.code-topbar');
-        const actions = topbar ? topbar.querySelector('.code-actions') : null;
-        if (topbar && actions) {
-          topbar.insertBefore(badge, actions);
-        }
-      }
-      badge.textContent = prettyLang(detectedLang);
-    });
-
     // Then wrap ALL pre elements (content and snippets) with code-wrap structure
     document.querySelectorAll('pre').forEach(function(pre){
       // Skip if already inside a code-wrap
@@ -748,6 +728,32 @@ code {
       pre.parentNode.insertBefore(wrapper, pre);
       wrapper.appendChild(topbar);
       wrapper.appendChild(pre);
+    });
+
+    // Finally, update ALL language badges (both existing and newly wrapped)
+    document.querySelectorAll('.code-wrap').forEach(function(wrap){
+      const pre = wrap.querySelector('pre');
+      const codeBlock = pre ? pre.querySelector('code') : null;
+      const detectedLang = codeBlock ? codeBlock.getAttribute('data-language') : null;
+      
+      console.log('Updating badge - detected language:', detectedLang);
+      console.log('Code block classes:', codeBlock ? codeBlock.className : 'no code block');
+      
+      // Find or create badge
+      let badge = wrap.querySelector('.code-badge');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'code-badge';
+        const topbar = wrap.querySelector('.code-topbar');
+        const actions = topbar ? topbar.querySelector('.code-actions') : null;
+        if (topbar && actions) {
+          topbar.insertBefore(badge, actions);
+        }
+      }
+      
+      const displayText = prettyLang(detectedLang);
+      console.log('Setting badge text to:', displayText);
+      badge.textContent = displayText;
     });
 
     // Copy buttons for code snippets section

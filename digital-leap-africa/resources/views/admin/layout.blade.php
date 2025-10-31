@@ -611,6 +611,11 @@
                         </a>
                     </li>
                     <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.badges.*') ? 'active' : '' }}" href="{{ route('admin.badges.index') }}">
+                            <i class="fas fa-medal"></i><span class="sidebar-label">Badges</span>
+                        </a>
+                    </li>
+                    <li>
                         <a class="sidebar-link {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}" href="{{ route('admin.faqs.index') }}">
                             <i class="fas fa-circle-question"></i><span class="sidebar-label">FAQs</span>
                         </a>

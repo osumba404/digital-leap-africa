@@ -94,6 +94,11 @@
             } else {
               $lessonsCount = $course->lessons_count ?? $course->lectures_count ?? 0;
             }
+            // Check if user is enrolled
+            $isEnrolled = false;
+            if (Auth::check()) {
+              $isEnrolled = Auth::user()->courses()->where('course_id', $course->id)->exists();
+            }
           @endphp
 
           <div class="card">
@@ -113,9 +118,15 @@
                 @endif
               </div>
               <p class="card-body">{{ $courseExcerpt }}</p>
-              <a class="card-button" href="{{ $showUrl }}">
-                View Course <i class="fas fa-arrow-right"></i>
-              </a>
+              @if($isEnrolled)
+                <a class="card-button" href="{{ $showUrl }}">
+                  Continue Learning <i class="fas fa-arrow-right"></i>
+                </a>
+              @else
+                <a class="card-button" href="{{ $showUrl }}">
+                  View Course <i class="fas fa-arrow-right"></i>
+                </a>
+              @endif
             </div>
           </div>
         @endforeach
