@@ -320,6 +320,27 @@
         <p>Ready to continue your digital learning journey?</p>
     </div>
 
+    @if(session('google_signup'))
+        <div style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.15), rgba(255, 152, 0, 0.15)); border: 2px solid #ffc107; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; animation: pulse 2s infinite;">
+            <div style="display: flex; align-items: start; gap: 1rem;">
+                <div style="flex-shrink: 0;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ffc107;"></i>
+                </div>
+                <div style="flex: 1;">
+                    <h3 style="margin: 0 0 0.5rem 0; color: #ffc107; font-size: 1.25rem; font-weight: 700;">
+                        <i class="fas fa-key" style="margin-right: 0.5rem;"></i>Important: Change Your Password
+                    </h3>
+                    <p style="margin: 0 0 1rem 0; color: var(--diamond-white); font-size: 1rem; line-height: 1.6;">
+                        {!! session('google_signup') !!}
+                    </p>
+                    <a href="{{ route('profile.edit') }}#changePassword" style="background: #ffc107; color: #000; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+                        <i class="fas fa-lock"></i> Go to Profile & Change Password
+                    </a>
+                </div>
+            </div>
+        </div>
+    @endif
+
     {{-- Stats Dashboard --}}
     <div class="dashboard-grid">
         <div class="stat-card">

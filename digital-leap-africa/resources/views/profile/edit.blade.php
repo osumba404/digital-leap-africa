@@ -33,6 +33,32 @@
     }
 }
 
+.password-wrapper {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--cool-gray);
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: color 0.2s;
+    font-size: 1.1rem;
+}
+
+.password-toggle:hover {
+    color: var(--cyan-accent);
+}
+
+.password-wrapper .form-control {
+    padding-right: 3rem;
+}
+
 .profile-container {
     max-width: 900px;
     margin: 0 auto;
@@ -381,10 +407,28 @@
 <div class="profile-container">
     <div class="profile-header">
         <h1 class="profile-title">My Profile</h1>
-        
- 
     </div>
 
+    @if(session('google_signup'))
+        <div style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.15), rgba(255, 152, 0, 0.15)); border: 2px solid #ffc107; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; animation: pulse 2s infinite;">
+            <div style="display: flex; align-items: start; gap: 1rem;">
+                <div style="flex-shrink: 0;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ffc107;"></i>
+                </div>
+                <div style="flex: 1;">
+                    <h3 style="margin: 0 0 0.5rem 0; color: #ffc107; font-size: 1.25rem; font-weight: 700;">
+                        <i class="fas fa-key" style="margin-right: 0.5rem;"></i>Important: Change Your Password
+                    </h3>
+                    <p style="margin: 0 0 1rem 0; color: var(--diamond-white); font-size: 1rem; line-height: 1.6;">
+                        {!! session('google_signup') !!}
+                    </p>
+                    <button onclick="document.getElementById('changePasswordModal').style.display='flex'" style="background: #ffc107; color: #000; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-lock"></i> Change Password Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
 
 {{-- Gamification Stats --}}
     <div class="profile-section gamification-card">
@@ -675,5 +719,33 @@ var cp = document.getElementById('changePasswordModal');
 if (cp) cp.addEventListener('click', function(e){ if (e.target === this) this.style.display='none'; });
 var dm = document.getElementById('deleteModal');
 if (dm) dm.addEventListener('click', function(e){ if (e.target === this) this.style.display='none'; });
+
+// Password visibility toggle for change password modal
+function togglePasswordModal(fieldId) {
+    const passwordField = document.getElementById(fieldId);
+    const icon = document.getElementById(fieldId + '-icon');
+    
+    if (passwordField && icon) {
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordField.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+}
+
+// Auto-open change password modal if hash is present
+if (window.location.hash === '#changePassword') {
+    var modal = document.getElementById('changePasswordModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        // Remove hash from URL
+        history.replaceState(null, null, ' ');
+    }
+}
 </script>
 @endsection
