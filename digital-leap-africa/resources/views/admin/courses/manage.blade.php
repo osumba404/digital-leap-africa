@@ -6,12 +6,18 @@
 </div>
 
 <div class="admin-content">
-  <div class="quick-actions" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+  <div class="quick-actions" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;">
     <a class="btn btn-edit" href="{{ route('admin.courses.topics.index', $course) }}">
       <i class="fas fa-list me-2"></i>Topics
     </a>
     <a class="btn btn-edit" href="{{ route('admin.courses.topics.index', $course) }}">
       <i class="fas fa-book-open me-2"></i>Lessons & Materials
+    </a>
+    <a class="btn btn-primary" href="{{ route('admin.courses.enrollments', $course) }}">
+      <i class="fas fa-users me-2"></i>Manage Enrollments
+    </a>
+    <a class="btn btn-edit" href="{{ route('admin.courses.edit', $course) }}">
+      <i class="fas fa-edit me-2"></i>Edit Course
     </a>
   </div>
 

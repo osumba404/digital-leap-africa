@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Lesson;
 use App\Models\Notification;
 use App\Models\GamificationPoint;
+use App\Services\GamificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -43,11 +44,8 @@ class LessonController extends Controller
         $user->lessons()->attach($lesson->id);
 
         // Award points for lesson completion
-        GamificationPoint::create([
-            'user_id' => $user->id,
-            'points' => 10,
-            'reason' => 'Completed lesson: ' . $lesson->title,
-        ]);
+        $gamification = new GamificationService();
+        $gamification->awardPoints($user, 'lesson_complete', 'Completed lesson: ' . $lesson->title);
 
         // Get the course
         $course = $lesson->topic->course;
@@ -69,11 +67,7 @@ class LessonController extends Controller
 
         if ($totalLessons > 0 && $completedLessons >= $totalLessons) {
             // User completed the entire course!
-            GamificationPoint::create([
-                'user_id' => $user->id,
-                'points' => 100,
-                'reason' => 'Completed course: ' . $course->title,
-            ]);
+            $gamification->awardPoints($user, 'course_complete', 'Completed course: ' . $course->title);
 
             Notification::createNotification(
                 $user->id,

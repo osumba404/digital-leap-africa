@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Enrollment;
+use App\Services\GamificationService;
 
 class CourseController extends Controller
 {
@@ -131,5 +132,36 @@ class CourseController extends Controller
         return view('admin.courses.enrollments', compact('course', 'enrollments', 'totalLessons'));
     }
 
-    // DO NOT ADD THE enroll() METHOD HERE
+    public function approveEnrollment(Enrollment $enrollment)
+    {
+        $enrollment->update(['status' => 'active']);
+
+        $gamification = new \App\Services\GamificationService();
+        $gamification->awardPoints($enrollment->user, 'course_enroll', 'Enrolled in course: ' . $enrollment->course->title);
+
+        Notification::createNotification(
+            $enrollment->user_id,
+            'course_enrollment_approved',
+            'Enrollment Approved!',
+            "Your enrollment in {$enrollment->course->title} has been approved. You can now access the course content.",
+            route('courses.show', $enrollment->course_id)
+        );
+
+        return redirect()->back()->with('success', 'Enrollment approved successfully.');
+    }
+
+    public function rejectEnrollment(Enrollment $enrollment)
+    {
+        $enrollment->update(['status' => 'rejected']);
+
+        Notification::createNotification(
+            $enrollment->user_id,
+            'course_enrollment_rejected',
+            'Enrollment Rejected',
+            "Your enrollment in {$enrollment->course->title} has been rejected. Please contact support for more information.",
+            route('courses.show', $enrollment->course_id)
+        );
+
+        return redirect()->back()->with('success', 'Enrollment rejected.');
+    }
 }

@@ -16,7 +16,8 @@ use App\Http\Controllers\{
     PartnerPublicController,
     TestimonialPublicController,
     NotificationController,
-    PaymentController
+    PaymentController,
+    PointRedemptionController
 };
 
 use App\Http\Controllers\Admin\{
@@ -44,6 +45,10 @@ Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\GoogleAuthContro
 
 // Authentication Routes
 require __DIR__.'/auth.php';
+
+// Simple Password Reset (without email)
+Route::get('/password/simple-reset', [\App\Http\Controllers\Auth\PasswordResetController::class, 'showResetForm'])->name('password.simple-reset.form');
+Route::post('/password/simple-reset', [\App\Http\Controllers\Auth\PasswordResetController::class, 'reset'])->name('password.simple-reset');
 
 
 // Payment routes
@@ -134,6 +139,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/testimonials/create', [TestimonialPublicController::class, 'create'])->name('testimonials.create');
     Route::post('/testimonials', [TestimonialPublicController::class, 'store'])->name('testimonials.store');
     Route::get('/profile/testimonials', [TestimonialPublicController::class, 'myTestimonials'])->name('profile.testimonials');
+    
+    // Point Redemption
+    Route::get('/points', [PointRedemptionController::class, 'index'])->name('points.index');
+    Route::post('/points/redeem', [PointRedemptionController::class, 'redeem'])->name('points.redeem');
 });
 
 Route::get('/me/photo', function () {
@@ -260,6 +269,8 @@ Route::prefix('admin')
         Route::resource('jobs', AdminJobController::class)->except(['show']);
         Route::resource('courses', AdminCourseController::class)->except(['show']);
         Route::get('/courses/{course}/enrollments', [AdminCourseController::class, 'enrollments'])->name('courses.enrollments');
+        Route::patch('/enrollments/{enrollment}/approve', [AdminCourseController::class, 'approveEnrollment'])->name('courses.enrollments.approve');
+        Route::patch('/enrollments/{enrollment}/reject', [AdminCourseController::class, 'rejectEnrollment'])->name('courses.enrollments.reject');
 
         Route::resource('projects', AdminProjectController::class)->except(['show']);
         Route::resource('elibrary-resources', AdminELibraryResourceController::class);
@@ -359,6 +370,11 @@ Route::prefix('admin')
         ]);
         Route::get('badges/{badge}/assign', [\App\Http\Controllers\Admin\BadgeController::class, 'assign'])->name('badges.assign');
         Route::post('badges/{badge}/assign', [\App\Http\Controllers\Admin\BadgeController::class, 'storeAssignment'])->name('badges.storeAssignment');
+
+        // User Management
+        Route::get('users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+        Route::patch('users/{user}/verify', [\App\Http\Controllers\Admin\UserController::class, 'verify'])->name('users.verify');
+        Route::patch('users/{user}/unverify', [\App\Http\Controllers\Admin\UserController::class, 'unverify'])->name('users.unverify');
 
              // Settings
         Route::prefix('settings')->name('settings.')->group(function () {

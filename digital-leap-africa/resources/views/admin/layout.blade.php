@@ -616,6 +616,11 @@
                         </a>
                     </li>
                     <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                            <i class="fas fa-users"></i><span class="sidebar-label">Users</span>
+                        </a>
+                    </li>
+                    <li>
                         <a class="sidebar-link {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}" href="{{ route('admin.faqs.index') }}">
                             <i class="fas fa-circle-question"></i><span class="sidebar-label">FAQs</span>
                         </a>

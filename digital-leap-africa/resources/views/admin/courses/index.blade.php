@@ -160,7 +160,7 @@
                 <th>Level</th>
                 <th>Status</th>
                 <th>Created</th>
-                <th style="width: 240px;">Actions</th>
+                <th style="width: 300px;">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -195,6 +195,9 @@
                     <div class="action-buttons">
                         <a href="{{ route('admin.courses.manage', $course) }}" class="btn-sm btn-view">
                             <i class="fas fa-eye"></i>View
+                        </a>
+                        <a href="{{ route('admin.courses.enrollments', $course) }}" class="btn-sm btn-edit">
+                            <i class="fas fa-users"></i>Enrollments
                         </a>
                         <a href="{{ route('admin.courses.edit', $course) }}" class="btn-sm btn-edit">
                             <i class="fas fa-edit"></i>Edit

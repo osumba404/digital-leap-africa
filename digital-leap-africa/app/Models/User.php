@@ -124,7 +124,22 @@ class User extends Authenticatable
 
 
     public function notifications()
-        {
-            return $this->hasMany(Notification::class);
-        }
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    public function threads()
+    {
+        return $this->hasMany(Thread::class);
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(Reply::class);
+    }
+
+    public function testimonials()
+    {
+        return $this->hasMany(Testimonial::class);
+    }
 }

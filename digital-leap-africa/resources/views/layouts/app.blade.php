@@ -425,6 +425,33 @@
             font-weight: 700;
             color: #ffffff;
             flex-shrink: 0;
+            position: relative;
+        }
+        
+        .user-avatar-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .verification-badge {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 14px;
+            height: 14px;
+            background: linear-gradient(135deg, #ffd700, #ffb347);
+            border: 2px solid var(--navy-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: #8b4513;
+            z-index: 1;
+        }
+        
+        [data-theme="light"] .verification-badge {
+            border-color: #FFFFFF;
         }
 
         .btn-primary {
@@ -1805,7 +1832,14 @@
                              onmouseenter="clearTimeout(this.hideTimer); this.querySelector('.dropdown-menu').style.display='block'" 
                              onmouseleave="this.hideTimer = setTimeout(() => this.querySelector('.dropdown-menu').style.display='none', 300)">
                             <a href="#" class="user-profile-btn" style="display:flex;align-items:center;gap:.5rem;">
-                                <span class="user-avatar-initial">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                                <div class="user-avatar-container">
+                                    <span class="user-avatar-initial">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                                    @if(Auth::user()->email_verified_at)
+                                        <span class="verification-badge">
+                                            <i class="fas fa-medal"></i>
+                                        </span>
+                                    @endif
+                                </div>
                                 <span>{{ Auth::user()->name }}</span>
                                 <i class="fas fa-chevron-down" style="font-size:.75rem;"></i>
                             </a>
@@ -1870,7 +1904,14 @@
                     @endif
                     
                     <a href="{{ route('profile.edit') }}" class="user-profile-btn">
-                        <span class="user-avatar-initial">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                        <div class="user-avatar-container">
+                            <span class="user-avatar-initial">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                            @if(Auth::user()->email_verified_at)
+                                <span class="verification-badge">
+                                    <i class="fas fa-medal"></i>
+                                </span>
+                            @endif
+                        </div>
                         <span>{{ Auth::user()->name }}</span>
                     </a>
 

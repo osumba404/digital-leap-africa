@@ -560,7 +560,14 @@
         <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1.25rem; align-items: center;">
             <div>
 
-    <img src="{{ route('me.photo') }}" alt="{{ $user->name }}" style="width:120px;height:120px;object-fit:cover;border-radius:50%;border:3px solid rgba(0,201,255,0.4);" />        
+                <div class="user-avatar-container" style="position: relative; display: inline-block;">
+                    <img src="{{ route('me.photo') }}" alt="{{ $user->name }}" style="width:120px;height:120px;object-fit:cover;border-radius:50%;border:3px solid rgba(0,201,255,0.4);" />
+                    @if($user->email_verified_at)
+                        <span class="verification-badge" style="position: absolute; bottom: 8px; right: 8px; width: 24px; height: 24px; background: linear-gradient(135deg, #ffd700, #ffb347); border: 3px solid var(--navy-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #8b4513; z-index: 1;">
+                            <i class="fas fa-medal"></i>
+                        </span>
+                    @endif
+                </div>        
 
     </div>
     <div>
@@ -578,6 +585,16 @@
             {{ $totalPoints ?? 0 }}
             <span class="points-label">Points</span>
         </div>
+        @if(isset($userLevel))
+        <div style="margin-top: 1rem; padding: 1rem; background: rgba(122, 95, 255, 0.1); border-radius: 8px; border: 1px solid rgba(122, 95, 255, 0.2);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-weight: 600; color: var(--purple-accent);">Level: {{ $userLevel }}</span>
+                <a href="{{ route('points.index') }}" class="btn-outline btn-sm" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; text-decoration: none;">
+                    <i class="fas fa-store"></i> Redeem Points
+                </a>
+            </div>
+        </div>
+        @endif
         <div style="display:flex; gap:0.75rem; flex-wrap:wrap; justify-content:flex-end; margin-top: 0.5rem;">
             <button type="button" class="btn-primary" style="padding: 0.6rem 1rem;" onclick="document.getElementById('updateProfileModal').style.display='flex'">
                 <i class="fas fa-user-edit" style="margin-right:8px;"></i>Update Profile

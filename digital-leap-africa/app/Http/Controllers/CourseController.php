@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\GamificationPoint;
 use App\Models\Notification;
+use App\Services\GamificationService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Enrollment;
 
 class CourseController extends Controller
 {
@@ -40,23 +42,41 @@ class CourseController extends Controller
             return redirect()->route('courses.show', $course)->with('error', 'You are already enrolled in this course.');
         }
 
-        $user->courses()->attach($course->id);
+        if ($course->is_free) {
+            // Free Course: Immediate access
+            $user->courses()->attach($course->id, [
+                'status' => 'active',
+                'enrolled_at' => now()
+            ]);
 
-        GamificationPoint::create([
-            'user_id' => $user->id,
-            'points' => 50,
-            'reason' => 'Enrolled in course: ' . $course->title,
-        ]);
+            $gamification = new GamificationService();
+            $gamification->awardPoints($user, 'course_enroll', 'Enrolled in course: ' . $course->title);
 
-        // Create notification for course enrollment
-        Notification::createNotification(
-            $user->id,
-            'course_enrollment',
-            'Course Enrollment Successful',
-            "You've successfully enrolled in {$course->title}",
-            route('courses.show', $course->id)
-        );
+            Notification::createNotification(
+                $user->id,
+                'course_enrollment',
+                'Course Enrollment Successful',
+                "You've successfully enrolled in {$course->title}",
+                route('courses.show', $course->id)
+            );
 
-        return redirect()->route('courses.show', $course)->with('success', 'You have successfully enrolled!');
+            return redirect()->route('courses.show', $course)->with('success', 'You have successfully enrolled!');
+        } else {
+            // Premium Course: Pending approval
+            $user->courses()->attach($course->id, [
+                'status' => 'pending',
+                'enrolled_at' => now()
+            ]);
+
+            Notification::createNotification(
+                $user->id,
+                'course_enrollment_pending',
+                'Enrollment Pending Approval',
+                "Your enrollment in {$course->title} is pending admin approval. You'll be notified once approved.",
+                route('courses.show', $course->id)
+            );
+
+            return redirect()->route('courses.show', $course)->with('info', 'Your enrollment is pending admin approval. You will be notified once approved.');
+        }
     }
 }

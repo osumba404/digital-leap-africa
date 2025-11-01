@@ -175,12 +175,29 @@
 
     {{-- Enrollment Section --}}
     @auth
-        @if(Auth::user()->courses()->where('course_id', $course->id)->exists())
-            <div class="enrollment-section">
-                <i class="fas fa-check-circle" style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;"></i>
-                <h3 style="color: var(--diamond-white); margin-bottom: 0.5rem;">You're Enrolled!</h3>
-                <p style="color: var(--cool-gray);">Continue your learning journey below</p>
-            </div>
+        @php
+            $enrollment = Auth::user()->courses()->where('course_id', $course->id)->first();
+        @endphp
+        @if($enrollment)
+            @if($enrollment->pivot->status === 'active')
+                <div class="enrollment-section">
+                    <i class="fas fa-check-circle" style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;"></i>
+                    <h3 style="color: var(--diamond-white); margin-bottom: 0.5rem;">You're Enrolled!</h3>
+                    <p style="color: var(--cool-gray);">Continue your learning journey below</p>
+                </div>
+            @elseif($enrollment->pivot->status === 'pending')
+                <div class="enrollment-section">
+                    <i class="fas fa-clock" style="font-size: 3rem; color: #f59e0b; margin-bottom: 1rem;"></i>
+                    <h3 style="color: var(--diamond-white); margin-bottom: 0.5rem;">Enrollment Pending</h3>
+                    <p style="color: var(--cool-gray);">Your enrollment is awaiting admin approval. You'll be notified once approved.</p>
+                </div>
+            @elseif($enrollment->pivot->status === 'rejected')
+                <div class="enrollment-section">
+                    <i class="fas fa-times-circle" style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;"></i>
+                    <h3 style="color: var(--diamond-white); margin-bottom: 0.5rem;">Enrollment Rejected</h3>
+                    <p style="color: var(--cool-gray);">Your enrollment was not approved. Please contact support for more information.</p>
+                </div>
+            @endif
         @else
             <div class="enrollment-section">
                 @if($course->is_free)
@@ -190,11 +207,11 @@
                     <form method="POST" action="{{ route('courses.enroll', $course) }}">
                         @csrf
                         <button type="submit" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
-                            <i class="fas fa-play me-2"></i>Enroll Now - FREE (+50 Points)
+                            <i class="fas fa-play me-2"></i>Enroll Now - FREE (+20 Points)
                         </button>
                     </form>
                 @else
-                    {{-- Paid Course Payment --}}
+                    {{-- Premium Course - Show old payment form for now --}}
                     <div style="max-width: 500px; margin: 0 auto;">
                         <div style="background: rgba(59, 130, 246, 0.1); border: 2px solid #3b82f6; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
                             <div style="text-align: center; margin-bottom: 1rem;">
@@ -262,7 +279,7 @@
     @endauth
 
     {{-- Course Curriculum Section --}}
-    @if(Auth::check() && Auth::user()->courses()->where('course_id', $course->id)->exists())
+    @if(Auth::check() && $enrollment && $enrollment->pivot->status === 'active')
         <div style="margin-top: 3rem;">
             <h2 style="font-size: 2rem; font-weight: 600; margin-bottom: 2rem; color: var(--diamond-white);">
                 <i class="fas fa-list-ul me-2"></i>Course Curriculum
@@ -310,6 +327,12 @@
     @if(session('error'))
         <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 1rem; border-radius: var(--radius); margin: 1rem 0;">
             <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+        </div>
+    @endif
+    
+    @if(session('info'))
+        <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: #3b82f6; padding: 1rem; border-radius: var(--radius); margin: 1rem 0;">
+            <i class="fas fa-info-circle me-2"></i>{{ session('info') }}
         </div>
     @endif
 </div>

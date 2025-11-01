@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Services\GamificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,9 +25,15 @@ class ProfileController extends Controller
             'gamificationPoints',
         ]);
 
+        $gamification = new GamificationService();
+        
+        // Award daily login points
+        $gamification->awardPoints($user, 'daily_login');
+
         return view('profile.edit', [
             'user' => $user,
-            'totalPoints' => $user->getTotalPoints(),
+            'totalPoints' => $gamification->getUserPoints($user),
+            'userLevel' => $gamification->getUserLevel($user),
         ]);
     }
 
