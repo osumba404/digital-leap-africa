@@ -439,14 +439,6 @@
                 <p style="color: var(--cool-gray);">Discover new learning</p>
             </a>
             
-            <!-- <a href="{{ route('projects.index') }}" class="action-card">
-                <div class="action-icon">
-                    <i class="fas fa-project-diagram"></i>
-                </div>
-                <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">View Projects</h3>
-                <p style="color: var(--cool-gray); font-size: 0.9rem; margin: 0;">Explore community projects</p>
-            </a> -->
-            
             <a href="{{ route('forum.index') }}" class="action-card">
                 <div class="action-icon">
                     <i class="fas fa-comments"></i>
@@ -455,14 +447,6 @@
                 <p style="color: var(--cool-gray);">Connect with community</p>
             </a>
             
-            <!-- <a href="{{ route('jobs.index') }}" class="action-card">
-                <div class="action-icon">
-                    <i class="fas fa-briefcase"></i>
-                </div>
-                <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Find Jobs</h3>
-                <p style="color: var(--cool-gray); font-size: 0.9rem; margin: 0;">Discover career opportunities</p>
-            </a> -->
-
             <a href="{{ route('testimonials.create') }}" class="action-card">
                 <div class="action-icon">
                     <i class="fas fa-quote-left"></i>

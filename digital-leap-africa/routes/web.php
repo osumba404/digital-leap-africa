@@ -96,11 +96,12 @@ Route::post('/forum/{thread}/reply', [ForumController::class, 'storeReply'])->mi
 Route::get('/blog', [ArticlesController::class, 'index'])->name('blog.index');
 Route::get('/blog/{article:slug}', [ArticlesController::class, 'show'])->name('blog.show');
 Route::post('/blog/{article:slug}/comments', [ArticlesController::class, 'storeComment'])->middleware(['auth', 'verified'])->name('blog.comments.store');
-Route::post('/blog/{article:slug}/like', [ArticlesController::class, 'like'])->middleware(['auth', 'verified'])->name('blog.like');
-Route::post('/blog/{article:slug}/bookmark', [ArticlesController::class, 'bookmark'])->middleware(['auth', 'verified'])->name('blog.bookmark');
-Route::post('/blog/{article:slug}/share', [ArticlesController::class, 'share'])->middleware(['auth', 'verified'])->name('blog.share');
+Route::post('/blog/{article}/like', [ArticlesController::class, 'like'])->middleware(['auth', 'verified'])->name('blog.like');
+Route::post('/blog/{article}/bookmark', [ArticlesController::class, 'bookmark'])->middleware(['auth', 'verified'])->name('blog.bookmark');
+Route::post('/blog/{article}/share', [ArticlesController::class, 'share'])->name('blog.share');
 Route::view('/contact', 'contact')->name('contact');
 Route::view('/donate', 'donate')->name('donate');
+Route::post('/newsletter/subscribe', [\App\Http\Controllers\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
 
 // View a lesson

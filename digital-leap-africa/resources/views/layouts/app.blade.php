@@ -1334,6 +1334,8 @@
             }
         }
 
+
+        
         /* Light Mode Styles for Navigation Dropdowns */
         [data-theme="light"] .nav-actions-group .dropdown-menu {
             background: rgba(255, 255, 255, 0.98) !important;
@@ -1651,9 +1653,13 @@
                 right: -80px;
             }
         }
+        
+
     </style>
 
     @stack('styles')
+    
+
 </head>
 <body>
     <header class="site-header">
@@ -2060,6 +2066,8 @@
     </footer>
 
     @stack('scripts')
+    
+
     
     <script>
         // Theme Toggle Functionality

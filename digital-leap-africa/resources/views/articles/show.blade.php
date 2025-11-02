@@ -139,12 +139,41 @@
   }
   .tag:hover { background: rgba(59,130,246,0.15); border-color: rgba(59,130,246,0.3); }
 
+  /* Enhanced Mobile Responsiveness */
   @media (max-width: 768px) {
-    .article-title { font-size: 2rem; }
-    .article-content { padding: 1.5rem; }
+    .article-container { padding: 0 1rem; }
+    .article-header { padding: 2rem 0; margin-bottom: 1.5rem; }
+    .article-title { font-size: 1.8rem; line-height: 1.3; }
     .article-meta { flex-direction: column; align-items: flex-start; gap: 1rem; }
-    .comment { flex-direction: column; }
-    .comment-avatar { align-self: flex-start; }
+    .article-stats { flex-wrap: wrap; gap: 1rem; }
+    .article-content { padding: 1.5rem; margin-bottom: 1.5rem; }
+    .article-actions { flex-wrap: wrap; gap: 1rem; justify-content: center; }
+    .action-btn { padding: 0.5rem 1rem; font-size: 1rem; }
+    .comments-section { padding: 1.5rem; margin-bottom: 1.5rem; }
+    .comment { flex-direction: column; gap: 0.75rem; padding: 1rem 0; }
+    .comment-avatar { align-self: flex-start; width: 40px; height: 40px; }
+    .comment-form textarea { font-size: 16px; }
+    .sidebar { margin-top: 2rem; }
+    .sidebar-card { padding: 1.25rem; margin-bottom: 1.25rem; }
+    .tags { justify-content: center; }
+    .tag { margin: 0.2rem; }
+  }
+  
+  @media (max-width: 480px) {
+    .article-container { padding: 0 0.75rem; }
+    .article-header { padding: 1.5rem 0; }
+    .article-title { font-size: 1.5rem; }
+    .author-info { flex-direction: column; align-items: center; text-align: center; gap: 0.5rem; }
+    .article-stats { justify-content: center; }
+    .article-content { padding: 1rem; }
+    .article-content p { font-size: 1rem; }
+    .article-actions { gap: 0.75rem; }
+    .action-btn { padding: 0.4rem 0.8rem; font-size: 0.9rem; }
+    .comments-section { padding: 1rem; }
+    .comment-avatar { width: 35px; height: 35px; }
+    .sidebar-card { padding: 1rem; }
+    .form-control { font-size: 16px; padding: 0.75rem; }
+    .btn-primary { padding: 0.75rem 1rem; font-size: 1rem; }
   }
 
   /* ========== Light Mode Styles ========== */
@@ -327,6 +356,87 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       border-color: rgba(46, 120, 197, 0.2);
   }
+  
+  /* Newsletter Form Enhancements */
+  .newsletter-card {
+    background: linear-gradient(135deg, var(--secondary-dark), rgba(100, 255, 218, 0.05));
+    border: 1px solid rgba(100, 255, 218, 0.1);
+  }
+  
+  .newsletter-input {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+  
+  .newsletter-input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 0.2rem rgba(100, 255, 218, 0.25);
+    transform: translateY(-1px);
+  }
+  
+  .newsletter-btn {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-light-blue));
+    border: none;
+    transition: all 0.3s ease;
+    font-weight: 600;
+  }
+  
+  .newsletter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(100, 255, 218, 0.3);
+  }
+  
+  .newsletter-btn:disabled {
+    opacity: 0.7;
+    transform: none;
+  }
+  
+  /* Light Mode Newsletter */
+  [data-theme="light"] .newsletter-card {
+    background: linear-gradient(135deg, #FFFFFF, rgba(46, 120, 197, 0.02));
+    border: 1px solid rgba(46, 120, 197, 0.15);
+  }
+  
+  [data-theme="light"] .newsletter-input:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(46, 120, 197, 0.25);
+  }
+  
+  [data-theme="light"] .newsletter-btn {
+    background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent));
+  }
+  
+  [data-theme="light"] .newsletter-btn:hover {
+    box-shadow: 0 8px 25px rgba(46, 120, 197, 0.3);
+  }
+  
+  /* Mobile Newsletter Optimizations */
+  @media (max-width: 768px) {
+    .newsletter-card {
+      text-align: center;
+    }
+    
+    .newsletter-input {
+      font-size: 16px;
+      padding: 0.875rem 1rem;
+    }
+    
+    .newsletter-btn {
+      padding: 0.875rem 1.5rem;
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .newsletter-card {
+      margin: 1rem 0;
+    }
+    
+    .sidebar-title {
+      font-size: 1.1rem;
+      text-align: center;
+    }
+  }
 </style>
 
 @section('content')
@@ -371,7 +481,7 @@
 
     <div class="container">
       <div class="row g-4">
-        <div class="col-lg-8 order-lg-1">
+        <div class="col-lg-8 order-lg-1 order-2">
           @if($article->featured_image_url)
             <img class="article-featured-image" src="{{ $article->featured_image_url }}" alt="{{ $article->title }}">
           @endif
@@ -383,21 +493,23 @@
 
           <div class="article-actions">
             @auth
-              <form method="POST" action="{{ route('blog.like', $article) }}" style="display:inline;">
-                @csrf
-                <button type="submit" class="action-btn" title="Like">
-                  <i class="fa-regular fa-heart"></i>
-                  <span class="action-count">{{ $article->likes_count ?? 0 }}</span>
-                </button>
-              </form>
-              <form method="POST" action="{{ route('blog.bookmark', $article) }}" style="display:inline;">
-                @csrf
-                <button type="submit" class="action-btn" title="Bookmark">
-                  <i class="fa-regular fa-bookmark"></i>
-                  <span class="action-count">{{ $article->bookmarks_count ?? 0 }}</span>
-                </button>
-              </form>
-              <button type="button" class="action-btn" onclick="openShareModal('{{ $shareUrl }}', '{{ addslashes($article->title) }}', {{ $article->id }})" title="Share">
+              @php
+                $userInteraction = \DB::table('article_user_interactions')
+                    ->where('user_id', auth()->id())
+                    ->where('article_id', $article->id)
+                    ->first();
+                $isLiked = $userInteraction ? $userInteraction->liked : false;
+                $isBookmarked = $userInteraction ? $userInteraction->bookmarked : false;
+              @endphp
+              <button class="action-btn like-btn" data-article-id="{{ $article->id }}" title="Like">
+                <i class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-heart" style="{{ $isLiked ? 'color: #ef4444;' : '' }}"></i>
+                <span class="action-count">{{ $article->likes_count ?? 0 }}</span>
+              </button>
+              <button class="action-btn bookmark-btn" data-article-id="{{ $article->id }}" title="Bookmark">
+                <i class="{{ $isBookmarked ? 'fa-solid' : 'fa-regular' }} fa-bookmark" style="{{ $isBookmarked ? 'color: #3b82f6;' : '' }}"></i>
+                <span class="action-count">{{ $article->bookmarks_count ?? 0 }}</span>
+              </button>
+              <button type="button" class="action-btn share-btn" data-article-id="{{ $article->id }}" onclick="openShareModal('{{ $shareUrl }}', '{{ addslashes($article->title) }}', {{ $article->id }})" title="Share">
                 <i class="fa-solid fa-share-nodes"></i>
                 <span class="action-count">{{ $article->shares_count ?? 0 }}</span>
               </button>
@@ -492,16 +604,20 @@
             <div class="comment-form">
               @auth
                 <h3 class="h5 mb-3" style="color: var(--accent-light-blue);">Add a comment</h3>
-                <form method="POST" action="{{ route('blog.comments.store', $article) }}">
+                <form id="comment-form" method="POST" action="{{ route('blog.comments.store', $article) }}">
                   @csrf
                   <div class="mb-3">
                     <textarea id="comment" name="content" rows="4" class="form-control @error('content') is-invalid @enderror" placeholder="Share your thoughts..."></textarea>
                     @error('content')
                       <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                    <div id="comment-error" class="invalid-feedback" style="display: none;"></div>
                   </div>
-                  <button type="submit" class="btn btn-primary">Post Comment</button>
+                  <button type="submit" class="btn btn-primary" id="comment-submit">Post Comment</button>
                 </form>
+                <div id="comment-success" style="display: none; color: #22c55e; margin-top: 1rem;">
+                  <i class="fas fa-check-circle"></i> Comment posted successfully!
+                </div>
               @else
                 <div class="alert alert-info mt-3">
                   Please <a href="{{ route('login') }}" class="alert-link">log in</a> to post a comment.
@@ -511,7 +627,7 @@
           </section>
         </div>
 
-        <div class="col-lg-4 order-lg-2">
+        <div class="col-lg-4 order-lg-2 order-1">
           <div class="sidebar">
             <div class="sidebar-card">
               <h3 class="sidebar-title">Related Articles</h3>
@@ -524,15 +640,22 @@
               </ul>
             </div>
 
-            <div class="sidebar-card">
-              <h3 class="sidebar-title">Subscribe to Our Newsletter</h3>
-              <p class="mb-3" style="color: var(--text-secondary);">Get the latest web development insights delivered to your inbox.</p>
-              <form>
+            <div class="sidebar-card newsletter-card">
+              <h3 class="sidebar-title">📧 Subscribe to Our Newsletter</h3>
+              <p class="mb-3" style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">Get the latest web development insights and Digital Leap Africa updates delivered to your inbox.</p>
+              <form id="newsletter-form">
+                @csrf
                 <div class="mb-3">
-                  <input type="email" class="form-control" placeholder="Your email address">
+                  <input type="email" name="email" class="form-control newsletter-input" placeholder="Enter your email address" required>
+                  <div id="newsletter-error" class="invalid-feedback" style="display: none; margin-top: 0.5rem;"></div>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Subscribe</button>
+                <button type="submit" class="btn btn-primary w-100 newsletter-btn" id="newsletter-submit">
+                  <i class="fas fa-paper-plane me-2"></i>Subscribe Now
+                </button>
               </form>
+              <div id="newsletter-success" style="display: none; color: #22c55e; margin-top: 1rem; font-size: 0.9rem; padding: 0.75rem; background: rgba(34, 197, 94, 0.1); border-radius: 6px; border: 1px solid rgba(34, 197, 94, 0.2);">
+                <i class="fas fa-check-circle"></i> Thank you for subscribing!
+              </div>
             </div>
 
             <div class="sidebar-card">
@@ -567,6 +690,189 @@
   <script>
     let currentArticleId = null;
 
+    // AJAX interaction handlers
+    document.addEventListener('DOMContentLoaded', function() {
+      // Like button handlers
+      document.querySelectorAll('.like-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const articleId = this.dataset.articleId;
+          const icon = this.querySelector('i');
+          const count = this.querySelector('.action-count');
+          
+          fetch(`/blog/${articleId}/like`, {
+            method: 'POST',
+            headers: {
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.liked) {
+              icon.className = 'fa-solid fa-heart';
+              icon.style.color = '#ef4444';
+            } else {
+              icon.className = 'fa-regular fa-heart';
+              icon.style.color = '';
+            }
+            count.textContent = data.likes_count;
+          })
+          .catch(error => console.error('Error:', error));
+        });
+      });
+      
+      // Bookmark button handlers
+      document.querySelectorAll('.bookmark-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const articleId = this.dataset.articleId;
+          const icon = this.querySelector('i');
+          const count = this.querySelector('.action-count');
+          
+          fetch(`/blog/${articleId}/bookmark`, {
+            method: 'POST',
+            headers: {
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.bookmarked) {
+              icon.className = 'fa-solid fa-bookmark';
+              icon.style.color = '#3b82f6';
+            } else {
+              icon.className = 'fa-regular fa-bookmark';
+              icon.style.color = '';
+            }
+            count.textContent = data.bookmarks_count;
+          })
+          .catch(error => console.error('Error:', error));
+        });
+      });
+      
+      // Comment form handler
+      const commentForm = document.getElementById('comment-form');
+      if (commentForm) {
+        commentForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const formData = new FormData(this);
+          const submitBtn = document.getElementById('comment-submit');
+          const textarea = document.getElementById('comment');
+          const errorDiv = document.getElementById('comment-error');
+          const successDiv = document.getElementById('comment-success');
+          
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Posting...';
+          errorDiv.style.display = 'none';
+          successDiv.style.display = 'none';
+          
+          fetch(this.action, {
+            method: 'POST',
+            headers: {
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+              'Accept': 'application/json'
+            },
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              // Add new comment to the list
+              const commentsSection = document.querySelector('.comments-section');
+              const commentsList = commentsSection.querySelector('h2').nextElementSibling;
+              
+              const newComment = document.createElement('div');
+              newComment.className = 'comment';
+              newComment.innerHTML = `
+                <div class="comment-avatar">${data.comment.user_initials}</div>
+                <div class="comment-content">
+                  <div class="comment-header">
+                    <div class="comment-author">${data.comment.user_name}</div>
+                    <div class="comment-date">${data.comment.created_at}</div>
+                  </div>
+                  <p class="comment-text">${data.comment.content}</p>
+                </div>
+              `;
+              
+              if (commentsList.classList.contains('text-muted')) {
+                commentsList.replaceWith(newComment);
+              } else {
+                commentsList.parentNode.insertBefore(newComment, commentsList);
+              }
+              
+              // Update comments count
+              const commentsTitle = commentsSection.querySelector('h2');
+              commentsTitle.textContent = `Comments (${data.comments_count})`;
+              
+              // Reset form
+              textarea.value = '';
+              successDiv.style.display = 'block';
+              setTimeout(() => successDiv.style.display = 'none', 3000);
+            }
+          })
+          .catch(error => {
+            errorDiv.textContent = 'Error posting comment. Please try again.';
+            errorDiv.style.display = 'block';
+          })
+          .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Post Comment';
+          });
+        });
+      }
+      
+      // Newsletter form handler
+      const newsletterForm = document.getElementById('newsletter-form');
+      if (newsletterForm) {
+        newsletterForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const formData = new FormData(this);
+          const submitBtn = document.getElementById('newsletter-submit');
+          const emailInput = this.querySelector('input[name="email"]');
+          const errorDiv = document.getElementById('newsletter-error');
+          const successDiv = document.getElementById('newsletter-success');
+          
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Subscribing...';
+          errorDiv.style.display = 'none';
+          successDiv.style.display = 'none';
+          
+          fetch('/newsletter/subscribe', {
+            method: 'POST',
+            headers: {
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+              'Accept': 'application/json'
+            },
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              emailInput.value = '';
+              successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${data.message}`;
+              successDiv.style.display = 'block';
+              setTimeout(() => successDiv.style.display = 'none', 5000);
+            } else {
+              errorDiv.textContent = data.message || 'Error subscribing. Please try again.';
+              errorDiv.style.display = 'block';
+            }
+          })
+          .catch(error => {
+            errorDiv.textContent = 'Error subscribing. Please try again.';
+            errorDiv.style.display = 'block';
+          })
+          .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Subscribe';
+          });
+        });
+      }
+    });
+
     function openShareModal(url, title, articleId) {
       currentArticleId = articleId;
       const modal = document.getElementById('shareModal');
@@ -589,9 +895,19 @@
           method: 'POST',
           headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json',
             'Content-Type': 'application/json'
           }
-        });
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Update share count in UI
+          const shareBtn = document.querySelector(`[data-article-id="${articleId}"].share-btn .action-count`);
+          if (shareBtn) {
+            shareBtn.textContent = data.shares_count;
+          }
+        })
+        .catch(error => console.error('Error:', error));
       }
     }
 

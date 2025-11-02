@@ -57,11 +57,11 @@ class TestimonialPublicController extends Controller
             'name' => $user?->name,
             'avatar_path' => $user?->profile_photo ?? null,
             'quote' => $data['quote'],
-            'is_active' => false,
+            'is_active' => true,
         ]);
 
         return redirect()->route('profile.testimonials')
-            ->with('success', 'Thank you! Your testimonial was submitted and is pending review.');
+            ->with('success', 'Thank you! Your testimonial has been published successfully.');
     }
 
     public function myTestimonials(): View

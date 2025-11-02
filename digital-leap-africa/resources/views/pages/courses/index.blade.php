@@ -10,9 +10,10 @@
         
 <style>
   /* Courses overlay card styles (scoped) */
-  #courses-section .cards-grid{display:grid;grid-template-columns:1fr;gap:2rem}
+  #courses-section .cards-grid{display:grid;grid-template-columns:1fr;gap:1.5rem}
   @media (min-width:640px){#courses-section .cards-grid{grid-template-columns:repeat(2,1fr)}}
   @media (min-width:1024px){#courses-section .cards-grid{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:480px){#courses-section .cards-grid{gap:1rem}}
   #courses-section .card{background-color:#112240;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(2,12,27,0.7);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);height:100%;display:flex;flex-direction:column;padding:0}
   #courses-section .card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(2,12,27,0.9)}
   #courses-section .card-image-container{position:relative;overflow:hidden;margin:0;padding:0;line-height:0;border-top-left-radius:12px;border-top-right-radius:12px}
@@ -28,7 +29,7 @@
   #courses-section .price-badge{position:absolute;top:1rem;right:1rem;padding:.4rem .8rem;border-radius:6px;font-weight:700;font-size:.85rem;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
   #courses-section .price-badge.free{background:#10b981;color:#fff}
   #courses-section .price-badge.paid{background:#3b82f6;color:#fff}
-  @media (max-width:768px){#courses-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.5rem}#courses-section .card-title{font-size:1rem;padding:1rem 1rem .45rem}}
+  @media (max-width:768px){#courses-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.5rem}#courses-section .card-title{font-size:1rem;padding:1rem 1rem .45rem}.search-container{margin:0 1rem 2rem!important}.search-input{font-size:0.9rem!important;padding:0.75rem 2.75rem 0.75rem 0.875rem!important}.search-btn{width:2.25rem!important;height:2.25rem!important;right:0.375rem!important}}
 
   /* Light Mode Courses */
   [data-theme="light"] #courses-section .card {
@@ -54,6 +55,30 @@
   [data-theme="light"] #courses-section .card-button:hover {
       background-color: rgba(46, 120, 197, 0.1);
       box-shadow: 0 4px 12px rgba(46, 120, 197, 0.2);
+  }
+  
+  /* Search Bar Styles */
+  .search-input:focus {
+      border-color: rgba(100, 181, 246, 0.6) !important;
+      box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.1) !important;
+  }
+  .search-btn:hover {
+      transform: translateY(-50%) scale(1.05) !important;
+      box-shadow: 0 4px 12px rgba(100, 181, 246, 0.3) !important;
+  }
+  
+  /* Light Mode Search */
+  [data-theme="light"] .search-input {
+      background: #FFFFFF !important;
+      border-color: rgba(46, 120, 197, 0.3) !important;
+      color: #1A202C !important;
+  }
+  [data-theme="light"] .search-input::placeholder {
+      color: #4A5568 !important;
+  }
+  [data-theme="light"] .search-btn {
+      background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent)) !important;
+      color: #FFFFFF !important;
   }
 </style>
 
@@ -81,8 +106,38 @@
     <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
       <h2 class="m-0">Available Courses</h2>
     </div>
+    
+    <!-- Search Bar -->
+    <div class="search-container" style="max-width: 500px; margin: 0 auto 2rem; position: relative;">
+      <form method="GET" action="{{ route('courses.index') }}" style="position: relative;">
+        <input type="text" 
+               name="search" 
+               value="{{ $search ?? '' }}" 
+               placeholder="Search courses..." 
+               class="search-input"
+               style="width: 100%; padding: 0.875rem 3rem 0.875rem 1rem; border: 1px solid rgba(100, 181, 246, 0.3); border-radius: 50px; background: rgba(255, 255, 255, 0.05); color: var(--diamond-white); font-size: 1rem; outline: none; transition: all 0.3s ease;">
+        <button type="submit" 
+                class="search-btn"
+                style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: linear-gradient(135deg, #64b5f6, #00d4ff); border: none; border-radius: 50%; width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center; color: var(--navy-bg); cursor: pointer; transition: all 0.3s ease;">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+      @if($search ?? false)
+        <div style="text-align: center; margin-top: 0.75rem; color: var(--cool-gray); font-size: 0.9rem;">
+          Showing results for "<strong style="color: #64b5f6;">{{ $search }}</strong>" 
+          <a href="{{ route('courses.index') }}" style="color: #64b5f6; text-decoration: none; margin-left: 0.5rem;">
+            <i class="fas fa-times"></i> Clear
+          </a>
+        </div>
+      @endif
+    </div>
 
     @if($courses->count())
+      @if($search && $courses->total() > 0)
+        <div style="text-align: center; margin-bottom: 1.5rem; color: var(--cool-gray);">
+          Found {{ $courses->total() }} course{{ $courses->total() !== 1 ? 's' : '' }}
+        </div>
+      @endif
       <div class="cards-grid">
         @foreach($courses as $course)
           @php
@@ -140,18 +195,25 @@
         @endforeach
       </div>
     @else
-      <h3 style="color: var(--cool-gray); margin-bottom: 1rem;">No Courses Available</h3>
-            <p style="color: var(--cool-gray);">Check back soon for new courses!</p>
+      <div style="text-align: center; padding: 3rem 1rem; color: var(--cool-gray);">
+        <i class="fas fa-search" style="font-size: 3rem; opacity: 0.3; margin-bottom: 1rem;"></i>
+        @if($search ?? false)
+          <h3 style="margin-bottom: 1rem;">No courses found for "{{ $search }}"</h3>
+          <p>Try searching with different keywords or <a href="{{ route('courses.index') }}" style="color: #64b5f6;">browse all courses</a></p>
+        @else
+          <h3 style="margin-bottom: 1rem;">No Courses Available</h3>
+          <p>Check back soon for new courses!</p>
+        @endif
+      </div>
+    @endif
+    
+    <!-- Pagination -->
+    @if($courses->hasPages())
+      <div style="margin-top: 3rem; display: flex; justify-content: center;">
+        {{ $courses->links() }}
+      </div>
     @endif
    
   </div>
 </section>
-
-
-
-        
-
-       
-
-</div>
 @endsection

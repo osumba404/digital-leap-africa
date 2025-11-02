@@ -3,8 +3,36 @@
 @section('content')
 
 
+<!-- Hero Section -->
+<section class="blog-hero" style="padding: 3rem 0 2rem; background: linear-gradient(135deg, var(--navy-bg), var(--charcoal)); border-bottom: 1px solid rgba(100, 181, 246, 0.1);">
+  <div class="container">
+    <div class="text-center">
+      <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--diamond-white); margin-bottom: 1rem; background: linear-gradient(90deg, #64b5f6, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+        📚 Digital Insights Blog
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--cool-gray); max-width: 600px; margin: 0 auto 2rem; line-height: 1.6;">
+        Discover the latest trends, tutorials, and insights in web development, technology, and digital transformation across Africa.
+      </p>
+      <div class="blog-stats" style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+        <div class="stat-item" style="text-align: center;">
+          <div style="font-size: 1.5rem; font-weight: 700; color: #64b5f6;">{{ $articles->total() ?? 0 }}</div>
+          <div style="font-size: 0.9rem; color: var(--cool-gray);">Articles</div>
+        </div>
+        <div class="stat-item" style="text-align: center;">
+          <div style="font-size: 1.5rem; font-weight: 700; color: #00d4ff;">{{ collect($articles->items())->sum('likes_count') ?? 0 }}</div>
+          <div style="font-size: 0.9rem; color: var(--cool-gray);">Total Likes</div>
+        </div>
+        <div class="stat-item" style="text-align: center;">
+          <div style="font-size: 1.5rem; font-weight: 700; color: #7a5fff;">{{ collect($articles->items())->sum(fn($a) => $a->comments->count()) ?? 0 }}</div>
+          <div style="font-size: 0.9rem; color: var(--cool-gray);">Comments</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Latest Articles -->
-<section id="articles-section" style="padding:2rem 0;">
+<section id="articles-section" style="padding: 3rem 0;">
   @php
       try {
           $articles = isset($articles) ? $articles : \App\Models\Article::query()->latest()->paginate(12);
@@ -23,13 +51,56 @@
   @endphp
 
   <div class="container">
-    <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
-      <h2 class="m-0">Latest Articles</h2>
-    </div>
 
     @if($articles->count())
+      <!-- Featured Article -->
+      @if($articles->items() && count($articles->items()) > 0)
+        @php $featured = $articles->items()[0]; @endphp
+        <div class="featured-article" style="margin-bottom: 3rem;">
+          <div class="featured-card" style="background: var(--charcoal); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(2,12,27,0.8); border: 1px solid rgba(100, 181, 246, 0.1); display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 400px;">
+            <div class="featured-image" style="position: relative; overflow: hidden;">
+              @if($pickImage($featured))
+                <img src="{{ $pickImage($featured) }}" alt="{{ $featured->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+              @else
+                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #64b5f6, #00d4ff); display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-newspaper" style="font-size: 4rem; color: rgba(255,255,255,0.3);"></i>
+                </div>
+              @endif
+              <div style="position: absolute; top: 1rem; left: 1rem; background: rgba(100, 181, 246, 0.9); color: var(--navy-bg); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">✨ Featured</div>
+            </div>
+            <div class="featured-content" style="padding: 2rem; display: flex; flex-direction: column; justify-content: center;">
+              <div style="margin-bottom: 1rem;">
+                @php $featuredTags = is_array($featured->tags ?? null) ? $featured->tags : []; @endphp
+                @if(!empty($featuredTags))
+                  @foreach(array_slice($featuredTags, 0, 2) as $tag)
+                    <span class="tag" style="display: inline-block; background: rgba(100, 181, 246, 0.1); color: #64b5f6; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; margin-right: 0.5rem; border: 1px solid rgba(100, 181, 246, 0.2);">{{ $tag }}</span>
+                  @endforeach
+                @endif
+              </div>
+              <h2 style="font-size: 1.8rem; font-weight: 700; color: var(--diamond-white); margin-bottom: 1rem; line-height: 1.3;">{{ $featured->title }}</h2>
+              <p style="color: var(--cool-gray); line-height: 1.6; margin-bottom: 1.5rem; font-size: 1rem;">{{ Str::limit(strip_tags($featured->content ?? ''), 150) }}</p>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                <div style="display: flex; gap: 1rem; color: var(--cool-gray); font-size: 0.9rem;">
+                  <span><i class="fa-regular fa-clock"></i> {{ max(1, ceil(str_word_count(strip_tags($featured->content ?? ''))/200)) }} min</span>
+                  <span><i class="fa-regular fa-calendar"></i> {{ $featured->created_at->format('M j, Y') }}</span>
+                </div>
+              </div>
+              <a href="{{ route('blog.show', $featured) }}" class="featured-btn" style="display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #64b5f6, #00d4ff); color: var(--navy-bg); padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; align-self: flex-start;">
+                Read Full Article <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      @endif
+      
+      <!-- Articles Grid -->
+      <div class="section-header" style="text-align: center; margin-bottom: 2rem;">
+        <h2 style="font-size: 2rem; font-weight: 700; color: var(--diamond-white); margin-bottom: 0.5rem;">All Articles</h2>
+        <p style="color: var(--cool-gray);">Explore our collection of insights and tutorials</p>
+      </div>
+      
       <div class="cards-grid">
-        @foreach($articles as $post)
+        @foreach($articles->skip(1) as $post)
           @php
             $image = $pickImage($post);
             $title = $post->title ?? 'Untitled';
@@ -76,15 +147,23 @@
               <div class="article-actions" style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem;">
                 <div class="action-stats" style="display:flex;gap:1.5rem;">
                   @auth
-                    <button class="action-btn" onclick="likeArticle({{ $post->id }})" title="Like">
-                      <i class="fa-regular fa-heart"></i>
+                    @php
+                      $userInteraction = \DB::table('article_user_interactions')
+                          ->where('user_id', auth()->id())
+                          ->where('article_id', $post->id)
+                          ->first();
+                      $isLiked = $userInteraction ? $userInteraction->liked : false;
+                      $isBookmarked = $userInteraction ? $userInteraction->bookmarked : false;
+                    @endphp
+                    <button class="action-btn like-btn" data-article-id="{{ $post->id }}" title="Like">
+                      <i class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-heart" style="{{ $isLiked ? 'color: #ef4444;' : '' }}"></i>
                       <span class="action-count">{{ $post->likes_count ?? 0 }}</span>
                     </button>
-                    <button class="action-btn" onclick="bookmarkArticle({{ $post->id }})" title="Bookmark">
-                      <i class="fa-regular fa-bookmark"></i>
+                    <button class="action-btn bookmark-btn" data-article-id="{{ $post->id }}" title="Bookmark">
+                      <i class="{{ $isBookmarked ? 'fa-solid' : 'fa-regular' }} fa-bookmark" style="{{ $isBookmarked ? 'color: #3b82f6;' : '' }}"></i>
                       <span class="action-count">{{ $post->bookmarks_count ?? 0 }}</span>
                     </button>
-                    <button class="action-btn" onclick="openShareModal('{{ $showUrl }}', '{{ addslashes($title) }}', {{ $post->id }})" title="Share">
+                    <button class="action-btn share-btn" data-article-id="{{ $post->id }}" onclick="openShareModal('{{ $showUrl }}', '{{ addslashes($title) }}', {{ $post->id }})" title="Share">
                       <i class="fa-solid fa-share-nodes"></i>
                       <span class="action-count">{{ $post->shares_count ?? 0 }}</span>
                     </button>
@@ -112,12 +191,41 @@
           </div>
         @endforeach
       </div>
+      
+      <!-- Newsletter CTA -->
+      @if($articles->count() > 3)
+        <div class="newsletter-cta">
+          <h3>📧 Stay Updated with Digital Leap Africa</h3>
+          <p>Get the latest articles, tutorials, and insights delivered straight to your inbox. Join our growing community of tech enthusiasts!</p>
+          <form class="newsletter-form" id="blog-newsletter-form">
+            @csrf
+            <input type="email" name="email" placeholder="Enter your email address" required>
+            <button type="submit" id="blog-newsletter-submit">
+              <i class="fas fa-paper-plane"></i> Subscribe
+            </button>
+          </form>
+          <div id="blog-newsletter-success" style="display: none; color: #22c55e; margin-top: 1rem;">
+            <i class="fas fa-check-circle"></i> <span></span>
+          </div>
+          <div id="blog-newsletter-error" style="display: none; color: #ef4444; margin-top: 1rem;">
+            <i class="fas fa-exclamation-circle"></i> <span></span>
+          </div>
+        </div>
+      @endif
+      
     @else
-      <div class="text-muted">No articles published yet.</div>
+      <div class="empty-state" style="text-align: center; padding: 4rem 2rem; color: var(--cool-gray);">
+        <i class="fas fa-newspaper" style="font-size: 4rem; opacity: 0.3; margin-bottom: 1rem;"></i>
+        <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">No Articles Yet</h3>
+        <p>We're working on bringing you amazing content. Check back soon!</p>
+      </div>
     @endif
+    
     @if(method_exists($articles, 'links'))
-      <div class="mt-4" style="display:flex;justify-content:center">
-        {{ $articles->links() }}
+      <div class="pagination-wrapper" style="display: flex; justify-content: center; margin-top: 3rem;">
+        <div class="pagination-container" style="background: var(--charcoal); border-radius: 12px; padding: 1rem; border: 1px solid rgba(100, 181, 246, 0.1);">
+          {{ $articles->links() }}
+        </div>
       </div>
     @endif
 
@@ -147,13 +255,100 @@
   
   /* Action buttons styling */
   .action-btn{background:none;border:none;color:#8892b0;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;font-size:.9rem;transition:all .2s ease;padding:.25rem .5rem;border-radius:6px}
-  .action-btn:hover{color:#64b5f6;background:rgba(100,181,246,0.1)}
+  .action-btn:hover{color:#64b5f6;background:rgba(100,181,246,0.1);transform:translateY(-1px)}
   .action-btn i{font-size:1.1rem}
   .action-count{font-weight:500}
+  
+  /* Featured article enhancements */
+  .featured-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(100, 181, 246, 0.3); }
+  
+  /* Enhanced card hover effects */
+  #articles-section .card:hover { transform: translateY(-10px); }
+  #articles-section .card:hover .card-image { transform: scale(1.08); }
+  
+  /* Newsletter integration in articles */
+  .newsletter-cta {
+    background: linear-gradient(135deg, var(--charcoal), rgba(100, 181, 246, 0.05));
+    border: 1px solid rgba(100, 181, 246, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    margin: 3rem 0;
+  }
+  
+  .newsletter-cta h3 {
+    color: var(--diamond-white);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .newsletter-cta p {
+    color: var(--cool-gray);
+    margin-bottom: 1.5rem;
+  }
+  
+  .newsletter-form {
+    display: flex;
+    gap: 1rem;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .newsletter-form input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(100, 181, 246, 0.2);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--diamond-white);
+  }
+  
+  .newsletter-form button {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #64b5f6, #00d4ff);
+    border: none;
+    border-radius: 8px;
+    color: var(--navy-bg);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .newsletter-form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(100, 181, 246, 0.3);
+  }
+  
+  @media (max-width: 480px) {
+    .newsletter-form { flex-direction: column; }
+    .newsletter-cta { padding: 1.5rem; margin: 2rem 0; }
+  }
 
-  @media (max-width:768px){
-    #articles-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.5rem}
-    #articles-section .card-title{font-size:1.2rem;padding:1.25rem 1.25rem .5rem}
+  /* Enhanced Mobile Responsiveness */
+  @media (max-width: 768px) {
+    .blog-hero { padding: 2rem 0 1.5rem; }
+    .blog-hero h1 { font-size: 2rem; }
+    .blog-stats { gap: 1.5rem; }
+    .featured-card { grid-template-columns: 1fr !important; min-height: auto !important; }
+    .featured-content { padding: 1.5rem; }
+    .featured-btn { align-self: stretch; text-align: center; justify-content: center; }
+    #articles-section { padding: 2rem 0; }
+    #articles-section .cards-grid { grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 1.5rem; }
+    #articles-section .card-title { font-size: 1.2rem; padding: 1.25rem 1.25rem .5rem; }
+    .action-stats { justify-content: center; }
+  }
+  
+  @media (max-width: 480px) {
+    .blog-hero { padding: 1.5rem 0 1rem; }
+    .blog-hero h1 { font-size: 1.8rem; }
+    .blog-stats { flex-direction: column; gap: 1rem; }
+    .stat-item { padding: 0.5rem; }
+    .featured-content { padding: 1.25rem; }
+    .featured-content h2 { font-size: 1.5rem; }
+    #articles-section .cards-grid { grid-template-columns: 1fr; gap: 1.25rem; padding: 0 1rem; }
+    #articles-section .card { margin: 0 auto; max-width: 400px; }
+    .action-stats { gap: 1rem; }
+    .action-btn { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
   }
 
   /* Light Mode Articles */
@@ -199,6 +394,53 @@
   [data-theme="light"] .action-btn:hover {
       color: #2E78C5;
       background: rgba(46, 120, 197, 0.1);
+  }
+  
+  /* Light Mode Blog Enhancements */
+  [data-theme="light"] .blog-hero {
+      background: linear-gradient(135deg, #E6F2FF, #F8FAFC);
+      border-bottom-color: rgba(46, 120, 197, 0.2);
+  }
+  
+  [data-theme="light"] .blog-hero h1 {
+      background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+  }
+  
+  [data-theme="light"] .featured-card {
+      background: #FFFFFF;
+      border-color: rgba(46, 120, 197, 0.15);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  }
+  
+  [data-theme="light"] .featured-content h2 {
+      color: var(--primary-blue);
+  }
+  
+  [data-theme="light"] .featured-btn {
+      background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent));
+      color: #FFFFFF;
+  }
+  
+  [data-theme="light"] .newsletter-cta {
+      background: linear-gradient(135deg, #FFFFFF, rgba(46, 120, 197, 0.02));
+      border-color: rgba(46, 120, 197, 0.15);
+  }
+  
+  [data-theme="light"] .newsletter-cta h3 {
+      color: var(--primary-blue);
+  }
+  
+  [data-theme="light"] .newsletter-form input {
+      background: #FFFFFF;
+      border-color: rgba(46, 120, 197, 0.2);
+      color: var(--diamond-white);
+  }
+  
+  [data-theme="light"] .newsletter-form button {
+      background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent));
+      color: #FFFFFF;
   }
 </style>
 
@@ -309,29 +551,131 @@ function copyShareLink() {
   }, 3000);
 }
 
+// AJAX interaction handlers
+document.addEventListener('DOMContentLoaded', function() {
+  // Like button handlers
+  document.querySelectorAll('.like-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const articleId = this.dataset.articleId;
+      const icon = this.querySelector('i');
+      const count = this.querySelector('.action-count');
+      
+      fetch(`/blog/${articleId}/like`, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.liked) {
+          icon.className = 'fa-solid fa-heart';
+          icon.style.color = '#ef4444';
+        } else {
+          icon.className = 'fa-regular fa-heart';
+          icon.style.color = '';
+        }
+        count.textContent = data.likes_count;
+      })
+      .catch(error => console.error('Error:', error));
+    });
+  });
+  
+  // Bookmark button handlers
+  document.querySelectorAll('.bookmark-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const articleId = this.dataset.articleId;
+      const icon = this.querySelector('i');
+      const count = this.querySelector('.action-count');
+      
+      fetch(`/blog/${articleId}/bookmark`, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.bookmarked) {
+          icon.className = 'fa-solid fa-bookmark';
+          icon.style.color = '#3b82f6';
+        } else {
+          icon.className = 'fa-regular fa-bookmark';
+          icon.style.color = '';
+        }
+        count.textContent = data.bookmarks_count;
+      })
+      .catch(error => console.error('Error:', error));
+    });
+  });
+});
+
+// Legacy functions for backward compatibility
 function likeArticle(articleId) {
-  fetch(`/blog/${articleId}/like`, {
-    method: 'POST',
-    headers: {
-      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-      'Content-Type': 'application/json'
-    }
-  }).then(() => location.reload());
+  const btn = document.querySelector(`[data-article-id="${articleId}"].like-btn`);
+  if (btn) btn.click();
 }
 
 function bookmarkArticle(articleId) {
-  fetch(`/blog/${articleId}/bookmark`, {
-    method: 'POST',
-    headers: {
-      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-      'Content-Type': 'application/json'
-    }
-  }).then(() => location.reload());
+  const btn = document.querySelector(`[data-article-id="${articleId}"].bookmark-btn`);
+  if (btn) btn.click();
 }
 
 // Close modal when clicking outside
 document.getElementById('shareModal')?.addEventListener('click', function(e) {
   if (e.target === this) closeShareModal();
 });
+
+// Blog newsletter form handler
+const blogNewsletterForm = document.getElementById('blog-newsletter-form');
+if (blogNewsletterForm) {
+  blogNewsletterForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const submitBtn = document.getElementById('blog-newsletter-submit');
+    const emailInput = this.querySelector('input[name="email"]');
+    const errorDiv = document.getElementById('blog-newsletter-error');
+    const successDiv = document.getElementById('blog-newsletter-success');
+    
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subscribing...';
+    errorDiv.style.display = 'none';
+    successDiv.style.display = 'none';
+    
+    fetch('/newsletter/subscribe', {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        'Accept': 'application/json'
+      },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        emailInput.value = '';
+        successDiv.querySelector('span').textContent = data.message;
+        successDiv.style.display = 'block';
+        setTimeout(() => successDiv.style.display = 'none', 5000);
+      } else {
+        errorDiv.querySelector('span').textContent = data.message || 'Error subscribing. Please try again.';
+        errorDiv.style.display = 'block';
+      }
+    })
+    .catch(error => {
+      errorDiv.querySelector('span').textContent = 'Error subscribing. Please try again.';
+      errorDiv.style.display = 'block';
+    })
+    .finally(() => {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Subscribe';
+    });
+  });
+}
 </script>
 

@@ -68,7 +68,7 @@
 
 .testimonials-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
@@ -79,6 +79,9 @@
     border-radius: 12px;
     padding: 1.5rem;
     transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .testimonial-card:hover {
@@ -123,6 +126,8 @@
     font-weight: 600;
     color: var(--diamond-white);
     margin-bottom: 0.25rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .testimonial-date {
@@ -137,6 +142,10 @@
     position: relative;
     padding-left: 1rem;
     border-left: 3px solid rgba(0, 201, 255, 0.3);
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 .testimonial-status {
@@ -236,6 +245,10 @@
     .testimonial-quote {
         font-size: 0.95rem;
         padding-left: 0.75rem;
+        word-wrap: break-word;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
     }
 }
 
@@ -263,6 +276,10 @@
     
     .testimonial-quote {
         font-size: 0.9rem;
+        word-wrap: break-word;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
     }
 }
 

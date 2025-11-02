@@ -13,20 +13,26 @@ use App\Models\Enrollment;
 
 class CourseController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $search = $request->get('search');
+        
         try {
-            $courses = Course::query()
-                ->where('active', true)
-                ->latest()
-                ->paginate(9);
+            $query = Course::query()->where('active', true);
         } catch (\Exception $e) {
-            // Fallback if active column doesn't exist
-            $courses = Course::query()
-                ->latest()
-                ->paginate(9);
+            $query = Course::query();
         }
-        return view('pages.courses.index', ['courses' => $courses]);
+        
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                  ->orWhere('description', 'LIKE', "%{$search}%");
+            });
+        }
+        
+        $courses = $query->latest()->paginate(9)->appends(['search' => $search]);
+        
+        return view('pages.courses.index', compact('courses', 'search'));
     }
 
     public function show(Course $course): View

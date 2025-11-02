@@ -74,7 +74,7 @@
   <div class="container">
     <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
       <h1 class="m-0">Share a Testimonial</h1>
-      <p class="text-muted" style="margin-top:.5rem;color:#94a3b8">Tell others about your learning experience. Submissions are reviewed before publishing.</p>
+      <p class="text-muted" style="margin-top:.5rem;color:#94a3b8">Tell others about your learning experience. Your testimonial will be published immediately.</p>
     </div>
 
     <div class="card testimonial-form-card">

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @push('styles')
+<link rel="stylesheet" href="{{ asset('css/mobile-responsive.css') }}">
 <style>
 @keyframes fadeInUp {
     from {
@@ -363,9 +364,20 @@
     color: #64748b;
 }
 
+/* Desktop Course Table - Default */
+.mobile-course-table .desktop-table {
+    display: block;
+}
+
+.mobile-course-table .mobile-course-list {
+    display: none;
+}
+
+/* Mobile Responsive Styles */
 @media (max-width: 768px) {
     .profile-container {
         padding: 1rem 0.5rem;
+        max-width: 100%;
     }
     
     .profile-title {
@@ -373,7 +385,8 @@
     }
     
     .profile-section {
-        padding: 1.5rem;
+        padding: 1.5rem 1rem;
+        margin-bottom: 1.5rem;
     }
     
     .points-display {
@@ -382,12 +395,156 @@
     
     .section-title {
         font-size: 1.25rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    /* Force mobile layout for profile header */
+    .profile-section .profile-header-mobile {
+        grid-template-columns: 100px 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    /* Force mobile layout for action buttons */
+    .profile-section .mobile-action-buttons {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0.5rem !important;
+        justify-content: stretch !important;
+    }
+    
+    /* Force mobile layout for profile info */
+    .profile-section .mobile-profile-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0.75rem !important;
+    }
+    
+    /* Mobile button styles */
+    .mobile-btn {
+        font-size: 0.85rem !important;
+        padding: 0.75rem 0.5rem !important;
+        text-align: center !important;
+        justify-content: center !important;
+    }
+    
+    .mobile-btn i {
+        margin-right: 4px !important;
+    }
+    
+    /* Mobile Profile Header */
+    .profile-header-mobile {
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .profile-header-mobile .user-avatar-container img {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .profile-header-mobile .verification-badge {
+        width: 20px;
+        height: 20px;
+        bottom: 6px;
+        right: 6px;
+        font-size: 0.7rem;
+    }
+    
+    /* Mobile Profile Info Grid */
+    .mobile-profile-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    /* Mobile Action Buttons */
+    .mobile-action-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+    
+    .mobile-action-buttons .btn-primary,
+    .mobile-action-buttons .btn-outline {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
+        text-align: center;
+    }
+    
+    /* Mobile Stats Display */
+    .mobile-stats-container {
+        text-align: center;
+        margin: 1rem 0;
+    }
+    
+    /* Mobile Badge Cards */
+    .mobile-badge-card {
+        display: grid;
+        grid-template-columns: 50px 1fr;
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+    
+    .mobile-badge-card .badge-image,
+    .mobile-badge-card .badge-placeholder {
+        width: 50px;
+        height: 50px;
+    }
+    
+    /* Mobile Stats Grid */
+    .profile-section div[style*="grid-template-columns: repeat(3, 1fr)"] {
+        grid-template-columns: 1fr !important;
+        gap: 0.75rem !important;
+    }
+    
+    /* Mobile Course Table */
+    .mobile-course-table .desktop-table {
+        display: none;
+    }
+    
+    .mobile-course-table .mobile-course-list {
+        display: block !important;
+    }
+    
+    .mobile-course-item {
+        display: block;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+    }
+    
+    .mobile-course-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .mobile-course-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        color: var(--cool-gray);
     }
 }
 
 @media (max-width: 480px) {
+    .profile-container {
+        padding: 0.75rem 0.25rem;
+    }
+    
     .profile-section {
-        padding: 1rem;
+        padding: 1rem 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .profile-title {
+        font-size: 1.75rem;
     }
     
     .points-display {
@@ -398,6 +555,33 @@
     .btn-danger {
         width: 100%;
         margin-top: 1rem;
+    }
+    
+    /* Small Mobile Action Buttons */
+    .mobile-action-buttons {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    /* Small Mobile Profile Header */
+    .profile-header-mobile {
+        grid-template-columns: 80px 1fr;
+        gap: 0.75rem;
+    }
+    
+    .profile-header-mobile .user-avatar-container img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    /* Small Mobile Modal */
+    .mobile-modal {
+        width: 95% !important;
+        padding: 1.5rem !important;
+    }
+    
+    .mobile-modal h3 {
+        font-size: 1.25rem;
     }
 }
 
@@ -557,9 +741,8 @@
 {{-- Gamification Stats --}}
     <div class="profile-section gamification-card">
       
-        <div style="display: grid; grid-template-columns: 120px 1fr; gap: 1.25rem; align-items: center;">
+        <div class="profile-header-mobile" style="display: grid; grid-template-columns: 120px 1fr; gap: 1.25rem; align-items: center;">
             <div>
-
                 <div class="user-avatar-container" style="position: relative; display: inline-block;">
                     <img src="{{ route('me.photo') }}" alt="{{ $user->name }}" style="width:120px;height:120px;object-fit:cover;border-radius:50%;border:3px solid rgba(0,201,255,0.4);" />
                     @if($user->email_verified_at)
@@ -568,106 +751,71 @@
                         </span>
                     @endif
                 </div>        
-
-    </div>
-    <div>
+            </div>
+            <div>
                 <div style="font-size: 1.25rem; font-weight: 600;">{{ $user->name }}</div>
                 <div style="color: var(--cool-gray);">{{ $user->email }}</div>
-                <div style="margin-top: 0.5rem; display:flex; gap:0.75rem; flex-wrap: wrap;">
-                    <span class="reply-count"><i class="fas fa-user-tag" style="margin-right:6px;"></i>{{ $user->role ?? 'user' }}</span>
-                    <span class="reply-count"><i class="fas fa-calendar-alt" style="margin-right:6px;"></i>Joined {{ $user->created_at?->format('M d, Y') }}</span>
-                    <span class="reply-count"><i class="fas fa-check" style="margin-right:6px;"></i>{{ $user->email_verified_at ? 'Verified' : 'Not verified' }}</span>
-                    <span class="reply-count"><i class="fas fa-book" style="margin-right:6px;"></i>{{ $user->lessons()->count() }} lessons completed</span>
+                <div class="mobile-profile-grid" style="margin-top: 0.5rem; display:flex; gap:0.75rem; flex-wrap: wrap;">
+                    <span class="reply-count"><i class="fas fa-shield-alt" style="margin-right:6px; color: var(--purple-accent);"></i>{{ ucfirst($user->role ?? 'user') }}</span>
+                    <span class="reply-count"><i class="fas fa-calendar-plus" style="margin-right:6px; color: var(--cyan-accent);"></i>Joined {{ $user->created_at?->format('M d, Y') }}</span>
+                    <span class="reply-count"><i class="fas fa-{{ $user->email_verified_at ? 'check-circle' : 'clock' }}" style="margin-right:6px; color: {{ $user->email_verified_at ? '#22c55e' : '#f59e0b' }};"></i>{{ $user->email_verified_at ? 'Verified' : 'Pending' }}</span>
                 </div>
             </div>
         </div>
-        <div class="points-display">
-            {{ $totalPoints ?? 0 }}
-            <span class="points-label">Points</span>
+        
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0;">
+            <div style="text-align: center; padding: 1rem; background: rgba(0, 201, 255, 0.1); border-radius: 8px; border: 1px solid rgba(0, 201, 255, 0.2);">
+                <i class="fas fa-coins" style="font-size: 1.5rem; color: var(--cyan-accent); margin-bottom: 0.5rem; display: block;"></i>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--cyan-accent);">{{ $totalPoints ?? 0 }}</div>
+                <div style="color: var(--cool-gray); font-size: 0.9rem;">Points</div>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: rgba(122, 95, 255, 0.1); border-radius: 8px; border: 1px solid rgba(122, 95, 255, 0.2);">
+                <i class="fas fa-trophy" style="font-size: 1.5rem; color: var(--purple-accent); margin-bottom: 0.5rem; display: block;"></i>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--purple-accent);">{{ $userLevel ?? 'Beginner' }}</div>
+                <div style="color: var(--cool-gray); font-size: 0.9rem;">Level</div>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: rgba(34, 197, 94, 0.1); border-radius: 8px; border: 1px solid rgba(34, 197, 94, 0.2);">
+                <i class="fas fa-book-open" style="font-size: 1.5rem; color: #22c55e; margin-bottom: 0.5rem; display: block;"></i>
+                <div style="font-size: 2rem; font-weight: 700; color: #22c55e;">{{ $user->lessons()->count() }}</div>
+                <div style="color: var(--cool-gray); font-size: 0.9rem;">Lessons</div>
+            </div>
         </div>
+        
+        <div class="mobile-action-buttons" style="display:flex; gap:0.75rem; flex-wrap:wrap; justify-content:center; margin-top: 1rem;">
+            <button type="button" class="btn-primary mobile-btn" onclick="document.getElementById('updateProfileModal').style.display='flex'">
+                <i class="fas fa-user-edit" style="margin-right:8px;"></i>Profile
+            </button>
+            <button type="button" class="btn-outline mobile-btn" onclick="document.getElementById('changePasswordModal').style.display='flex'">
+                <i class="fas fa-lock" style="margin-right:8px;"></i>Password
+            </button>
+            <a href="{{ route('testimonials.create') }}" class="btn-outline mobile-btn" style="text-decoration:none; display:inline-flex; align-items:center;">
+                <i class="fas fa-plus-circle" style="margin-right:8px;"></i>Testimonial
+            </a>
+            <a href="{{ route('testimonials.index') }}" class="btn-outline mobile-btn" style="text-decoration:none; display:inline-flex; align-items:center;">
+                <i class="fas fa-list-ul" style="margin-right:8px;"></i>Testimonials
+            </a>
+        </div>
+        
         @if(isset($userLevel))
-        <div style="margin-top: 1rem; padding: 1rem; background: rgba(122, 95, 255, 0.1); border-radius: 8px; border: 1px solid rgba(122, 95, 255, 0.2);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <span style="font-weight: 600; color: var(--purple-accent);">Level: {{ $userLevel }}</span>
-                <a href="{{ route('points.index') }}" class="btn-outline btn-sm" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; text-decoration: none;">
-                    <i class="fas fa-store"></i> Redeem Points
-                </a>
-            </div>
-        </div>
-        @endif
-        <div style="display:flex; gap:0.75rem; flex-wrap:wrap; justify-content:flex-end; margin-top: 0.5rem;">
-            <button type="button" class="btn-primary" style="padding: 0.6rem 1rem;" onclick="document.getElementById('updateProfileModal').style.display='flex'">
-                <i class="fas fa-user-edit" style="margin-right:8px;"></i>Update Profile
-            </button>
-            <button type="button" class="btn-outline" style="padding: 0.6rem 1rem;" onclick="document.getElementById('changePasswordModal').style.display='flex'">
-                <i class="fas fa-key" style="margin-right:8px;"></i>Change Password
-            </button>
-            <a href="{{ route('testimonials.create') }}" class="btn-outline" style="padding: 0.6rem 1rem; text-decoration:none; display:inline-flex; align-items:center;">
-                <i class="fas fa-quote-left" style="margin-right:8px;"></i>Share a Testimonial
-            </a>
-            <a href="{{ route('testimonials.index') }}" class="btn-outline" style="padding: 0.6rem 1rem; text-decoration:none; display:inline-flex; align-items:center;">
-                <i class="fas fa-comments" style="margin-right:8px;"></i>View Testimonials
+        <div style="margin-top: 1rem; text-align: center;">
+            <a href="{{ route('points.index') }}" class="btn-outline btn-sm" style="padding: 0.5rem 1rem; font-size: 0.9rem; text-decoration: none;">
+                <i class="fas fa-shopping-cart" style="margin-right: 0.5rem;"></i>Redeem Points
             </a>
         </div>
-        <p class="section-description">
-            Keep participating in courses, completing projects, and engaging with the community to earn more points and unlock exclusive badges!
-        </p>
+        @endif
     </div>
 
-    <div class="profile-section">
-        <h2 class="section-title">
-            <i class="fas fa-user section-icon"></i>
-            Profile Information
-        </h2>
-        <div class="section-description">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
-                <div>
-                    <div style="color: var(--cool-gray);">Full name</div>
-                    <div style="font-weight:600;">{{ $user->name }}</div>
-                </div>
-                <div>
-                    <div style="color: var(--cool-gray);">Email</div>
-                    <div style="font-weight:600;">{{ $user->email }}</div>
-                </div>
-                <div>
-                    <div style="color: var(--cool-gray);">Role</div>
-                    <div style="font-weight:600;">{{ $user->role ?? 'user' }}</div>
-                </div>
-                <div>
-                    <div style="color: var(--cool-gray);">Member since</div>
-                    <div style="font-weight:600;">{{ $user->created_at?->format('M d, Y') }}</div>
-                </div>
-            </div>
+    @if (session('status') === 'profile-updated')
+        <div class="success-message" style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem;">
+            <i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i>Profile updated successfully!
         </div>
-        @if (session('status') === 'profile-updated')
-            <div class="success-message">
-                <i class="fas fa-check-circle me-2"></i>Profile updated successfully!
-            </div>
-        @endif
-        <div style="display:flex; justify-content:flex-end;">
-            <button type="button" class="btn-primary" onclick="document.getElementById('updateProfileModal').style.display='flex'">
-                <i class="fas fa-user-edit" style="margin-right:8px;"></i>Update Profile
-            </button>
+    @endif
+    
+    @if (session('status') === 'password-updated')
+        <div class="success-message" style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); color: #22c55e; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem;">
+            <i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i>Password updated successfully!
         </div>
-    </div>
-
-    <div class="profile-section">
-        <h2 class="section-title">
-            <i class="fas fa-lock section-icon"></i>
-            Security
-        </h2>
-        <div class="section-description">Manage your password and account security.</div>
-        @if (session('status') === 'password-updated')
-            <div class="success-message">
-                <i class="fas fa-check-circle me-2"></i>Password updated successfully!
-            </div>
-        @endif
-        <div style="display:flex; justify-content:flex-end;">
-            <button type="button" class="btn-outline" onclick="document.getElementById('changePasswordModal').style.display='flex'">
-                <i class="fas fa-key" style="margin-right:8px;"></i>Change Password
-            </button>
-        </div>
-    </div>
+    @endif
 
 
     <div class="profile-section">
@@ -677,12 +825,12 @@
         </h2>
         <div class="section-description">
             @forelse($user->badges as $badge)
-                <div style="display:grid; grid-template-columns: auto 1fr; gap:1rem; padding:1rem; background: rgba(0, 201, 255, 0.05); border: 1px solid rgba(0, 201, 255, 0.2); border-radius: 12px; margin-bottom: 1rem;">
+                <div class="mobile-badge-card" style="display:grid; grid-template-columns: auto 1fr; gap:1rem; padding:1rem; background: rgba(0, 201, 255, 0.05); border: 1px solid rgba(0, 201, 255, 0.2); border-radius: 12px; margin-bottom: 1rem;">
                     <div>
                         @if($badge->img_url)
-                            <img src="{{ $badge->img_url }}" alt="{{ $badge->badge_name }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(0, 201, 255, 0.4);">
+                            <img src="{{ $badge->img_url }}" alt="{{ $badge->badge_name }}" class="badge-image" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(0, 201, 255, 0.4);">
                         @else
-                            <div style="width: 60px; height: 60px; border-radius: 8px; background: linear-gradient(135deg, rgba(0, 201, 255, 0.3), rgba(138, 43, 226, 0.3)); display: flex; align-items: center; justify-content: center; border: 2px solid rgba(0, 201, 255, 0.4);">
+                            <div class="badge-placeholder" style="width: 60px; height: 60px; border-radius: 8px; background: linear-gradient(135deg, rgba(0, 201, 255, 0.3), rgba(138, 43, 226, 0.3)); display: flex; align-items: center; justify-content: center; border: 2px solid rgba(0, 201, 255, 0.4);">
                                 <i class="fas fa-medal" style="font-size: 1.5rem; color: var(--cyan-accent);"></i>
                             </div>
                         @endif
@@ -703,9 +851,9 @@
                 </div>
             @empty
                 <div style="text-align: center; padding: 2rem; color: var(--cool-gray);">
-                    <i class="fas fa-medal" style="font-size: 2.5rem; opacity: 0.3; display: block; margin-bottom: 0.75rem;"></i>
-                    <p style="margin: 0; font-size: 1rem;">No badges earned yet.</p>
-                    <p style="margin: 0.5rem 0 0 0; font-size: 0.85rem; opacity: 0.8;">Keep learning and participating to earn badges!</p>
+                    <i class="fas fa-award" style="font-size: 3rem; opacity: 0.3; display: block; margin-bottom: 1rem;"></i>
+                    <p style="margin: 0; font-size: 1.1rem; font-weight: 600;">No badges earned yet</p>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; opacity: 0.8;">Complete courses and engage with the community to earn your first badge!</p>
                 </div>
             @endforelse
         </div>
@@ -718,44 +866,72 @@
         </h2>
         <div class="section-description">
             @if($user->courses->count())
-                <div class="table" style="border-spacing:0;">
-                    <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:0.5rem; padding:0.75rem 0; color: var(--cool-gray); border-bottom:1px solid rgba(255,255,255,0.1);">
-                        <div>Course</div>
-                        <div>Status</div>
-                        <div>Enrolled</div>
-                    </div>
-                    @foreach($user->courses as $course)
-                        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:0.5rem; padding:0.9rem 0; border-bottom:1px solid rgba(255,255,255,0.05);">
-                            <div style="font-weight:600;">{{ $course->title ?? $course->name ?? 'Course' }}</div>
-                            <div><span class="reply-count">{{ ucfirst($course->pivot->status ?? 'enrolled') }}</span></div>
-                            <div>{{ optional($course->pivot->enrolled_at)->format('M d, Y') }}</div>
+                <div class="mobile-course-table">
+                    <div class="desktop-table" style="border-spacing:0; display: block;">
+                        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:0.5rem; padding:0.75rem 0; color: var(--cool-gray); border-bottom:1px solid rgba(255,255,255,0.1);">
+                            <div><i class="fas fa-book" style="margin-right: 0.5rem;"></i>Course</div>
+                            <div><i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>Status</div>
+                            <div><i class="fas fa-calendar" style="margin-right: 0.5rem;"></i>Enrolled</div>
                         </div>
-                    @endforeach
+                        @foreach($user->courses as $course)
+                            <div class="desktop-course-row" style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:0.5rem; padding:0.9rem 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                                <div style="font-weight:600;">{{ $course->title ?? $course->name ?? 'Course' }}</div>
+                                <div>
+                                    <span class="reply-count">
+                                        @if(($course->pivot->status ?? 'enrolled') === 'active')
+                                            <i class="fas fa-check-circle" style="margin-right: 0.25rem; color: #22c55e;"></i>
+                                        @elseif(($course->pivot->status ?? 'enrolled') === 'pending')
+                                            <i class="fas fa-clock" style="margin-right: 0.25rem; color: #f59e0b;"></i>
+                                        @else
+                                            <i class="fas fa-user-check" style="margin-right: 0.25rem; color: var(--cyan-accent);"></i>
+                                        @endif
+                                        {{ ucfirst($course->pivot->status ?? 'enrolled') }}
+                                    </span>
+                                </div>
+                                <div>{{ optional($course->pivot->enrolled_at)->format('M d, Y') }}</div>
+                            </div>
+                        @endforeach
+                    </div>
+                    
+                    <div class="mobile-course-list" style="display: none;">
+                        @foreach($user->courses as $course)
+                            <div class="mobile-course-item">
+                                <div class="mobile-course-title">{{ $course->title ?? $course->name ?? 'Course' }}</div>
+                                <div class="mobile-course-meta">
+                                    <span class="reply-count">
+                                    @if(($course->pivot->status ?? 'enrolled') === 'active')
+                                        <i class="fas fa-check-circle" style="margin-right: 0.25rem; color: #22c55e;"></i>
+                                    @elseif(($course->pivot->status ?? 'enrolled') === 'pending')
+                                        <i class="fas fa-clock" style="margin-right: 0.25rem; color: #f59e0b;"></i>
+                                    @else
+                                        <i class="fas fa-user-check" style="margin-right: 0.25rem; color: var(--cyan-accent);"></i>
+                                    @endif
+                                    {{ ucfirst($course->pivot->status ?? 'enrolled') }}
+                                </span>
+                                    <span>{{ optional($course->pivot->enrolled_at)->format('M d, Y') }}</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             @else
-                <div style="color: var(--cool-gray);">No enrollments yet.</div>
+                <div style="text-align: center; padding: 2rem; color: var(--cool-gray);">
+                    <i class="fas fa-graduation-cap" style="font-size: 3rem; opacity: 0.3; display: block; margin-bottom: 1rem;"></i>
+                    <p style="margin: 0; font-size: 1.1rem; font-weight: 600;">No courses enrolled yet</p>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; opacity: 0.8;">Browse our course catalog to start your learning journey!</p>
+                    <a href="{{ route('courses.index') }}" class="btn-primary" style="margin-top: 1rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-search"></i>Browse Courses
+                    </a>
+                </div>
             @endif
         </div>
     </div>
 
-        {{-- Delete Account --}}
-    <div class="profile-section danger-section">
-        <h2 class="section-title">
-            <i class="fas fa-exclamation-triangle section-icon"></i>
-            Delete Account
-        </h2>
-        <p class="section-description">
-            Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
-        </p>
 
-        <button type="button" class="btn-danger" onclick="document.getElementById('deleteModal').style.display='block'">
-            <i class="fas fa-trash me-2"></i>Delete Account
-        </button>
-    </div>
 </div>
 
 <div id="updateProfileModal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
-    <div style="background: var(--charcoal); padding: 2rem; border-radius: var(--radius); max-width: 640px; width: 92%;">
+    <div class="mobile-modal" style="background: var(--charcoal); padding: 2rem; border-radius: var(--radius); max-width: 640px; width: 92%;">
         <h3 style="margin-top:0; margin-bottom:1rem;">Update Profile</h3>
         <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
             @csrf
@@ -790,7 +966,7 @@
 </div>
 
 <div id="changePasswordModal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
-    <div style="background: var(--charcoal); padding: 2rem; border-radius: var(--radius); max-width: 640px; width: 92%;">
+    <div class="mobile-modal" style="background: var(--charcoal); padding: 2rem; border-radius: var(--radius); max-width: 640px; width: 92%;">
         <h3 style="margin-top:0; margin-bottom:1rem;">Change Password</h3>
         
         @if(auth()->user()->google_id)
@@ -847,42 +1023,14 @@
     </div>
 </div>
 
-{{-- Delete Confirmation Modal --}}
-<div id="deleteModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
-    <div style="background: var(--charcoal); padding: 2rem; border-radius: var(--radius); max-width: 500px; margin: 1rem;">
-        <h3 style="color: #ff6b6b; margin-bottom: 1rem;">Are you sure?</h3>
-        <p style="color: var(--cool-gray); margin-bottom: 2rem;">
-            Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm.
-        </p>
-        
-        <form method="POST" action="{{ route('profile.destroy') }}">
-            @csrf
-            @method('delete')
-            
-            <div class="form-group">
-                <label for="delete_password" class="form-label">Password</label>
-                <input id="delete_password" name="password" type="password" class="form-control" required>
-            </div>
-            
-            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                <button type="button" class="btn-outline" onclick="document.getElementById('deleteModal').style.display='none'">
-                    Cancel
-                </button>
-                <button type="submit" class="btn-danger">
-                    Delete Account
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
+
 
 <script>
 var up = document.getElementById('updateProfileModal');
 if (up) up.addEventListener('click', function(e){ if (e.target === this) this.style.display='none'; });
 var cp = document.getElementById('changePasswordModal');
 if (cp) cp.addEventListener('click', function(e){ if (e.target === this) this.style.display='none'; });
-var dm = document.getElementById('deleteModal');
-if (dm) dm.addEventListener('click', function(e){ if (e.target === this) this.style.display='none'; });
+
 
 // Password visibility toggle for change password modal
 function togglePasswordModal(fieldId) {

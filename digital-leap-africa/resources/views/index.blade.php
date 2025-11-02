@@ -79,9 +79,9 @@
                 Empowering learners across Africa with courses, projects, jobs, events, and a vibrant community.
             </p>
             <div style="margin-top:1.5rem; display:flex; gap:.75rem; flex-wrap:wrap;">
-                <a class="btn-primary" href="{{ route('courses.index') }}">Browse Courses</a>
-                <a class="btn-outline" href="{{ route('projects.index') }}">Explore Projects</a>
-                <a class="btn-outline" href="{{ route('elibrary.index') }}">Visit eLibrary</a>
+                <a class="btn-primary" href="{{ route('courses.index') }}"><i class="fas fa-graduation-cap" style="margin-right: 0.5rem;"></i>Browse Courses</a>
+                <a class="btn-outline" href="{{ route('projects.index') }}"><i class="fas fa-rocket" style="margin-right: 0.5rem;"></i>Explore Projects</a>
+                <a class="btn-outline" href="{{ route('elibrary.index') }}"><i class="fas fa-book-open" style="margin-right: 0.5rem;"></i>Visit eLibrary</a>
             </div>
         </div>
     @endif
@@ -154,16 +154,22 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
         .slide-8 .main-title{font-size:3.2rem}
     }
     @media (max-width:768px){
+        .hero-slide{padding:0 5%}
+        .slide-content{max-width:100%;padding:0 1rem}
         .main-title{font-size:2.2rem}
         .slide-8 .main-title{font-size:2.5rem}
         .hero-text{font-size:1rem}
-        .btn{padding:12px 25px;font-size:.9rem}
+        .btn{padding:12px 25px;font-size:.9rem;width:100%;justify-content:center}
+        .cta-buttons{flex-direction:column;gap:0.75rem}
     }
     @media (max-width:480px){
+        .hero-slide{padding:0 4%}
+        .slide-content{padding:0 1.5rem}
         .main-title{font-size:1.8rem}
         .slide-8 .main-title{font-size:2rem}
-        .cta-buttons{flex-direction:column;align-items:flex-start}
-        .btn{width:100%;justify-content:center}
+        .hero-text{font-size:0.95rem}
+        .cta-buttons{flex-direction:column;align-items:stretch}
+        .btn{width:100%;justify-content:center;padding:10px 20px;font-size:0.85rem}
     }
 
     /* Light Mode Hero Styles */
@@ -437,7 +443,7 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
               <p class="card-body">{{ $excerpt }}</p>
               {{-- Force the Read button to specific URL as requested --}}
               <a class="card-button" href="http://127.0.0.1:8000/blog/cybersecurity-in-2025-safeguarding-your-digital-life">
-                Read Article <i class="fas fa-arrow-right"></i>
+                <i class="fas fa-book-reader" style="margin-right: 0.5rem;"></i>Read Article <i class="fas fa-arrow-right"></i>
               </a>
             </div>
           </div>
@@ -447,7 +453,7 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
       <div class="text-muted">No articles published yet.</div>
     @endif
     <div class="text-center mt-3" style="padding-top:1rem !important">
-      <a class="btn-outline btn-wide" href="{{ \Illuminate\Support\Facades\Route::has('articles.index') ? route('articles.index') : url('/articles') }}">View all articles</a>
+      <a class="btn-outline btn-wide" href="{{ \Illuminate\Support\Facades\Route::has('articles.index') ? route('articles.index') : url('/articles') }}"><i class="fas fa-newspaper" style="margin-right: 0.5rem;"></i>View all articles</a>
     </div>
   </div>
 </section>
@@ -609,7 +615,7 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
               </div>
               <p class="card-body">{{ $courseExcerpt }}</p>
               <a class="card-button" href="{{ $showUrl }}">
-                View Course <i class="fas fa-arrow-right"></i>
+                <i class="fas fa-play-circle" style="margin-right: 0.5rem;"></i>View Course <i class="fas fa-arrow-right"></i>
               </a>
             </div>
           </div>
@@ -619,7 +625,7 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
       <div class="text-muted">No courses available yet.</div>
     @endif
     <div class="text-center mt-3" style="padding-top:1rem !important">
-      <a class="btn-outline btn-wide" href="{{ \Illuminate\Support\Facades\Route::has('courses.index') ? route('courses.index') : url('/courses') }}">View all courses</a>
+      <a class="btn-outline btn-wide" href="{{ \Illuminate\Support\Facades\Route::has('courses.index') ? route('courses.index') : url('/courses') }}"><i class="fas fa-graduation-cap" style="margin-right: 0.5rem;"></i>View all courses</a>
     </div>
   </div>
 </section>
@@ -689,7 +695,7 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
 
     <div class="text-center mt-4" style="padding-top:2rem !important">
       <a class="btn-outline btn-wide" href="{{ route('testimonials.index') }}" style="text-decoration: none;">
-        View All Testimonials <i class="fas fa-arrow-right"></i>
+        <i class="fas fa-comments" style="margin-right: 0.5rem;"></i>View All Testimonials <i class="fas fa-arrow-right"></i>
       </a>
     </div>
     @else
@@ -697,7 +703,7 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
       <p>No testimonials yet. Be the first to share your experience!</p>
       @auth
       <a class="btn-primary" href="{{ route('testimonials.create') }}" style="text-decoration: none; margin-top: 1rem; display: inline-block;">
-        Share Your Testimonial
+        <i class="fas fa-plus-circle" style="margin-right: 0.5rem;"></i>Share Your Testimonial
       </a>
       @endauth
     </div>
@@ -1038,7 +1044,7 @@ window.addEventListener('beforeunload', () => {
     @endif
 
     <div class="text-center mt-3" style="padding-top:1rem !important">
-      <a class="btn-outline btn-wide" href="{{ $applyUrl }}">Become a Partner</a>
+      <a class="btn-outline btn-wide" href="{{ $applyUrl }}"><i class="fas fa-handshake" style="margin-right: 0.5rem;"></i>Become a Partner</a>
     </div>
   </div>
 </section>
@@ -1226,7 +1232,7 @@ window.addEventListener('beforeunload', () => {
       <div class="text-muted">No upcoming events.</div>
     @endif
     <div class="text-center mt-3" style="padding-top:1rem !important">
-      <a class="btn-outline btn-wide" href="{{ $eventsIndexUrl }}">View all events</a>
+      <a class="btn-outline btn-wide" href="{{ $eventsIndexUrl }}"><i class="fas fa-calendar-alt" style="margin-right: 0.5rem;"></i>View all events</a>
     </div>
   </div>
 </section>
@@ -1389,24 +1395,266 @@ animation: twinkle 2s infinite ease-in-out;
     gap: 1.25rem;
   }
   
-  /* Mobile: 2 columns for stats */
+  /* Mobile Responsive Styles */
   @media (max-width: 768px) {
+    .container {
+      width: 90%;
+      padding: 1.5rem 0;
+      margin: 0 auto;
+    }
+    
+    .hero-slide {
+      padding: 0 5%;
+    }
+    
+    .slide-content {
+      max-width: 100%;
+      padding: 0 1rem;
+    }
+    
+    .main-title {
+      font-size: 2.2rem !important;
+    }
+    
+    .hero-text {
+      font-size: 1rem !important;
+    }
+    
+    .cta-buttons {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+    }
+    
+    .btn {
+      width: 100%;
+      justify-content: center;
+      padding: 12px 20px;
+      font-size: 0.9rem;
+    }
+    
     .stats-grid {
       grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
     }
+    
+    .stat-card {
+      padding: 1.25rem 1rem;
+    }
+    
+    .stat-value {
+      font-size: 1.75rem;
+    }
+    
+    /* Articles and Courses Cards */
+    #articles-section .cards-grid,
+    #courses-section .cards-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    #articles-section .card-title,
+    #courses-section .card-title {
+      font-size: 1.1rem;
+      padding: 1rem 1rem 0.5rem;
+    }
+    
+    #articles-section .card-content,
+    #courses-section .card-content {
+      padding: 1rem;
+    }
+    
+    /* Testimonials */
+    .testimonials-carousel-wrapper {
+      padding: 0 1rem;
+    }
+    
+    .testimonial-slide {
+      flex: 0 0 280px;
+      min-width: 280px;
+    }
+    
+    .testimonial-content {
+      padding: 1.25rem;
+    }
+    
+    /* Partners */
+    #partners-section .partners-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    
+    /* Events */
+    #events-section .cards-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    #events-section .card-image {
+      height: 160px;
+    }
+    
+    /* About Section */
+    #about-section .aboutx-card {
+      flex-direction: column;
+      max-width: 100%;
+    }
+    
+    #about-section .aboutx-image {
+      width: 100%;
+      height: 300px;
+    }
+    
+    #about-section .aboutx-content {
+      padding: 1.5rem;
+    }
+    
+    #about-section .aboutx-title {
+      font-size: 2rem;
+    }
+    
+    #about-section .aboutx-features {
+      grid-template-columns: 1fr;
+    }
+    
+    /* FAQ */
+    #faq-section .faq-q {
+      padding: 0.9rem 1rem;
+      font-size: 0.95rem;
+    }
+    
+    #faq-section .faq-a {
+      padding: 0 1rem 1rem;
+      font-size: 0.9rem;
+    }
   }
   
   @media (max-width: 480px) {
+    .container {
+      width: 85%;
+      padding: 1rem 0;
+      margin: 0 auto;
+    }
+    
+    .hero-slide {
+      padding: 0 4%;
+    }
+    
+    .slide-content {
+      padding: 0 1.5rem;
+    }
+    
+    .main-title {
+      font-size: 1.8rem !important;
+    }
+    
+    .hero-text {
+      font-size: 0.95rem !important;
+    }
+    
+    .btn {
+      padding: 10px 16px;
+      font-size: 0.85rem;
+    }
+    
     .stats-grid {
       grid-template-columns: repeat(2, 1fr);
       gap: 0.75rem;
     }
+    
     .stat-card {
-      padding: 1rem;
+      padding: 1rem 0.75rem;
     }
+    
     .stat-value {
       font-size: 1.5rem;
+    }
+    
+    .stat-label {
+      font-size: 0.85rem;
+    }
+    
+    /* Cards */
+    #articles-section .card-content,
+    #courses-section .card-content {
+      padding: 0.875rem;
+    }
+    
+    #articles-section .card-title,
+    #courses-section .card-title {
+      font-size: 1rem;
+      padding: 0.875rem 0.875rem 0.5rem;
+    }
+    
+    /* Testimonials */
+    .testimonial-slide {
+      flex: 0 0 260px;
+      min-width: 260px;
+    }
+    
+    .testimonial-content {
+      padding: 1rem;
+    }
+    
+    .testimonial-avatar-home,
+    .testimonial-avatar-placeholder-home {
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
+    }
+    
+    /* Partners */
+    #partners-section .partners-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    
+    #partners-section .partner-item {
+      min-height: 70px;
+      padding: 8px;
+    }
+    
+    /* About Section */
+    #about-section .aboutx-image {
+      height: 250px;
+    }
+    
+    #about-section .aboutx-hex {
+      width: 200px;
+      height: 230px;
+    }
+    
+    #about-section .aboutx-hex-inner {
+      width: 180px;
+      height: 210px;
+    }
+    
+    #about-section .aboutx-content {
+      padding: 1.25rem;
+    }
+    
+    #about-section .aboutx-title {
+      font-size: 1.75rem;
+    }
+    
+    #about-section .aboutx-badge {
+      position: static;
+      margin-bottom: 1rem;
+      align-self: flex-start;
+    }
+    
+    /* Events */
+    #events-section .event-date-badge {
+      width: 50px;
+      height: 60px;
+    }
+    
+    #events-section .event-date-badge .day {
+      font-size: 1rem;
+    }
+    
+    #events-section .event-date-badge .month {
+      font-size: 0.65rem;
     }
   }
   .stat-card {
