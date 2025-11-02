@@ -66,7 +66,7 @@ class LessonController extends Controller
         // Check if user has completed all lessons in the course
         $totalLessons = $course->lessons()->count();
         $completedLessons = $user->lessons()
-            ->whereIn('lesson_id', $course->lessons()->pluck('id'))
+            ->whereIn('lesson_id', $course->lessons()->pluck('lessons.id'))
             ->count();
 
         if ($totalLessons > 0 && $completedLessons >= $totalLessons) {
