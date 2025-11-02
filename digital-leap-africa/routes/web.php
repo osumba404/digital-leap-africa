@@ -101,6 +101,8 @@ Route::post('/blog/{article}/bookmark', [ArticlesController::class, 'bookmark'])
 Route::post('/blog/{article}/share', [ArticlesController::class, 'share'])->name('blog.share');
 Route::view('/contact', 'contact')->name('contact');
 Route::view('/donate', 'donate')->name('donate');
+Route::view('/privacy-policy', 'legal.privacy')->name('privacy.policy');
+Route::view('/terms-of-service', 'legal.terms')->name('terms.service');
 Route::post('/newsletter/subscribe', [\App\Http\Controllers\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
 

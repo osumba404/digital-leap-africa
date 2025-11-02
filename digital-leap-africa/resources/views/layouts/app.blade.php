@@ -2037,12 +2037,8 @@
                 <div class="footer-section">
                     <h3 class="footer-heading">Legal & Contact</h3>
                     <ul class="footer-links">
-                        @if(!empty($siteSettings['privacy_policy_url']))
-                            <li><a href="{{ $siteSettings['privacy_policy_url'] }}" target="_blank" rel="noopener"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
-                        @endif
-                        @if(!empty($siteSettings['terms_of_service_url']))
-                            <li><a href="{{ $siteSettings['terms_of_service_url'] }}" target="_blank" rel="noopener"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
-                        @endif
+                        <li><a href="{{ route('privacy.policy') }}"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+                        <li><a href="{{ route('terms.service') }}"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
                         @if(!empty($siteSettings['contact_email']))
                             <li><a href="mailto:{{ $siteSettings['contact_email'] }}"><i class="fas fa-envelope"></i> {{ $siteSettings['contact_email'] }}</a></li>
                         @endif
