@@ -176,10 +176,30 @@
             <div class="card-content">
               <div class="card-meta">
                 <span><i class="fas fa-play-circle"></i> {{ $lessonsCount }} lessons</span>
-                @if(!empty($course->created_at))
-                  <span><i class="far fa-calendar"></i> {{ $course->created_at->format('M j, Y') }}</span>
+                @if($course->course_type === 'cohort_based')
+                  <span><i class="fas fa-users"></i> Cohort-Based</span>
+                @else
+                  <span><i class="fas fa-user"></i> Self-Paced</span>
                 @endif
               </div>
+              @if($course->course_type === 'cohort_based' && ($course->duration_weeks || $course->start_date))
+                <div style="margin-bottom: 1rem; padding: 0.5rem; background: rgba(147, 51, 234, 0.1); border-radius: 6px; border-left: 3px solid #9333ea;">
+                  @if($course->duration_weeks)
+                    <div style="color: #9333ea; font-size: 0.85rem; font-weight: 600;">
+                      <i class="fas fa-clock"></i> {{ $course->duration_weeks }} weeks duration
+                    </div>
+                  @endif
+                  @if($course->start_date && $course->end_date)
+                    <div style="color: var(--cool-gray); font-size: 0.8rem; margin-top: 0.25rem;">
+                      {{ $course->start_date->format('M j') }} - {{ $course->end_date->format('M j, Y') }}
+                    </div>
+                  @elseif($course->start_date)
+                    <div style="color: var(--cool-gray); font-size: 0.8rem; margin-top: 0.25rem;">
+                      Starts {{ $course->start_date->format('M j, Y') }}
+                    </div>
+                  @endif
+                </div>
+              @endif
               <p class="card-body">{{ $courseExcerpt }}</p>
               @if($isEnrolled)
                 <a class="card-button" href="{{ $showUrl }}">

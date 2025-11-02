@@ -886,6 +886,27 @@
 [data-theme="light"] td .fas {
     color: var(--primary-blue);
 }
+
+/* Fix dropdown/select options visibility in dark mode */
+.form-control option {
+    background: var(--charcoal);
+    color: var(--diamond-white);
+}
+
+[data-theme="light"] .form-control option {
+    background: #FFFFFF;
+    color: #1a202c;
+}
+
+.form-control select {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--diamond-white);
+}
+
+[data-theme="light"] .form-control select {
+    background: #FFFFFF;
+    color: #1a202c;
+}
 </style>
 
 @endsection

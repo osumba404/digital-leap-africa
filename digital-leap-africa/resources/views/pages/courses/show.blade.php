@@ -144,10 +144,50 @@
                 {{ $course->description }}
             </p>
             
-            @if($course->level)
-                <span style="background: rgba(122, 95, 255, 0.2); color: var(--purple-accent); padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.9rem; font-weight: 500;">
-                    {{ ucfirst($course->level) }} Level
-                </span>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                @if($course->level)
+                    <span style="background: rgba(122, 95, 255, 0.2); color: var(--purple-accent); padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.9rem; font-weight: 500;">
+                        {{ ucfirst($course->level) }} Level
+                    </span>
+                @endif
+                
+                @if($course->course_type === 'cohort_based')
+                    <span style="background: rgba(147, 51, 234, 0.2); color: #9333ea; padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.9rem; font-weight: 500;">
+                        <i class="fas fa-users me-1"></i>Cohort-Based
+                    </span>
+                @else
+                    <span style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.9rem; font-weight: 500;">
+                        <i class="fas fa-user me-1"></i>Self-Paced
+                    </span>
+                @endif
+                
+                @if($course->course_type === 'cohort_based' && $course->duration_weeks)
+                    <span style="background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.9rem; font-weight: 500;">
+                        <i class="fas fa-clock me-1"></i>{{ $course->duration_weeks }} weeks
+                    </span>
+                @endif
+            </div>
+            
+            @if($course->course_type === 'cohort_based' && ($course->start_date || $course->end_date))
+                <div style="margin-top: 1rem; padding: 1rem; background: rgba(147, 51, 234, 0.1); border-radius: 8px; border-left: 4px solid #9333ea;">
+                    <h4 style="color: #9333ea; margin-bottom: 0.5rem; font-size: 1rem;">
+                        <i class="fas fa-calendar-alt me-2"></i>Cohort Schedule
+                    </h4>
+                    @if($course->start_date && $course->end_date)
+                        <p style="color: var(--cool-gray); margin: 0; font-size: 0.95rem;">
+                            <strong>Duration:</strong> {{ $course->start_date->format('M j, Y') }} - {{ $course->end_date->format('M j, Y') }}
+                        </p>
+                    @elseif($course->start_date)
+                        <p style="color: var(--cool-gray); margin: 0; font-size: 0.95rem;">
+                            <strong>Starts:</strong> {{ $course->start_date->format('M j, Y') }}
+                        </p>
+                    @endif
+                    @if($course->start_date && $course->start_date->isFuture())
+                        <p style="color: #f59e0b; margin: 0.5rem 0 0; font-size: 0.9rem; font-weight: 500;">
+                            <i class="fas fa-info-circle me-1"></i>Enrollment open - Course starts {{ $course->start_date->diffForHumans() }}
+                        </p>
+                    @endif
+                </div>
             @endif
 
             {{-- Progress Bar for Enrolled Users --}}
@@ -203,7 +243,14 @@
                 @if($course->is_free)
                     {{-- Free Course Enrollment --}}
                     <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Ready to Start Learning?</h3>
-                    <p style="color: var(--cool-gray); margin-bottom: 2rem;">Enroll now to access all course content and earn points!</p>
+                    <p style="color: var(--cool-gray); margin-bottom: 2rem;">
+                        @if($course->course_type === 'cohort_based')
+                            Join this cohort-based course and learn with fellow students!
+                        @else
+                            Enroll now to access all course content and learn at your own pace!
+                        @endif
+                        <br><small style="color: var(--cyan-accent);">+20 Points upon enrollment</small>
+                    </p>
                     <form method="POST" action="{{ route('courses.enroll', $course) }}">
                         @csrf
                         <button type="submit" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">

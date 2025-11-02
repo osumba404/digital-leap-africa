@@ -73,6 +73,39 @@
                    min="0" step="0.01" placeholder="0.00">
             <small style="color: var(--cool-gray); font-size: 0.85rem;">Enter the course price in Kenyan Shillings (KES)</small>
         </div>
+
+        <div class="form-group" style="margin-top: 1rem;">
+            <label for="course_type" class="form-label">Course Type</label>
+            <select id="course_type" name="course_type" class="form-control" required>
+                <option value="self_paced" {{ old('course_type', $course->course_type ?? 'self_paced') === 'self_paced' ? 'selected' : '' }}>Self-Paced</option>
+                <option value="cohort_based" {{ old('course_type', $course->course_type ?? '') === 'cohort_based' ? 'selected' : '' }}>Cohort-Based</option>
+            </select>
+            <small style="color: var(--cool-gray); font-size: 0.85rem;">Choose whether this is a self-paced or cohort-based course</small>
+        </div>
+
+        <div id="cohort-fields" style="display: {{ old('course_type', $course->course_type ?? 'self_paced') === 'cohort_based' ? 'block' : 'none' }}; margin-top: 1rem;">
+            <div class="form-group">
+                <label for="duration_weeks" class="form-label">Duration (Weeks)</label>
+                <input type="number" id="duration_weeks" name="duration_weeks" class="form-control" 
+                       value="{{ old('duration_weeks', $course->duration_weeks ?? '') }}" 
+                       min="1" max="52" placeholder="e.g., 8">
+                <small style="color: var(--cool-gray); font-size: 0.85rem;">Course duration in weeks</small>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="start_date" class="form-label">Start Date</label>
+                    <input type="date" id="start_date" name="start_date" class="form-control" 
+                           value="{{ old('start_date', $course->start_date ? $course->start_date->format('Y-m-d') : '') }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="end_date" class="form-label">End Date</label>
+                    <input type="date" id="end_date" name="end_date" class="form-control" 
+                           value="{{ old('end_date', $course->end_date ? $course->end_date->format('Y-m-d') : '') }}">
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="form-section">
@@ -98,3 +131,22 @@
         </button>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const courseTypeSelect = document.getElementById('course_type');
+    const cohortFields = document.getElementById('cohort-fields');
+    const isFreeCheckbox = document.getElementById('is_free');
+    const priceField = document.getElementById('price-field');
+    
+    // Toggle cohort fields based on course type
+    courseTypeSelect.addEventListener('change', function() {
+        cohortFields.style.display = this.value === 'cohort_based' ? 'block' : 'none';
+    });
+    
+    // Toggle price field based on is_free checkbox
+    isFreeCheckbox.addEventListener('change', function() {
+        priceField.style.display = this.checked ? 'none' : 'block';
+    });
+});
+</script>

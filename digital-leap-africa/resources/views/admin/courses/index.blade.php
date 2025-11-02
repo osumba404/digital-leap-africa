@@ -137,6 +137,36 @@
 [data-theme="light"] .course-description {
     color: #6b7280 !important;
 }
+
+.status-cohort {
+    background: rgba(147, 51, 234, 0.1);
+    color: #9333ea;
+    border: 1px solid rgba(147, 51, 234, 0.3);
+}
+
+.status-self {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-inactive {
+    background: rgba(107, 114, 128, 0.1);
+    color: #6b7280;
+    border: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+[data-theme="light"] .status-cohort {
+    color: #7c3aed;
+}
+
+[data-theme="light"] .status-self {
+    color: #059669;
+}
+
+[data-theme="light"] .status-inactive {
+    color: #4b5563;
+}
 </style>
 @endpush
 
@@ -157,7 +187,8 @@
             <tr>
                 <th>Course</th>
                 <th>Instructor</th>
-                <th>Level</th>
+                <th>Type</th>
+                <th>Duration</th>
                 <th>Status</th>
                 <th>Created</th>
                 <th style="width: 300px;">Actions</th>
@@ -183,12 +214,28 @@
                 </td>
                 <td>{{ $course->instructor ?? 'Not assigned' }}</td>
                 <td>
-                    @if($course->level)
-                        <span class="status-badge status-{{ $course->level }}">{{ ucfirst($course->level) }}</span>
+                    <span class="status-badge status-{{ $course->course_type === 'cohort_based' ? 'cohort' : 'self' }}">
+                        {{ $course->course_type === 'cohort_based' ? 'Cohort-Based' : 'Self-Paced' }}
+                    </span>
+                </td>
+                <td>
+                    @if($course->course_type === 'cohort_based')
+                        @if($course->duration_weeks)
+                            {{ $course->duration_weeks }} weeks
+                        @endif
+                        @if($course->start_date && $course->end_date)
+                            <br><small style="color: var(--cool-gray); font-size: 0.75rem;">
+                                {{ $course->start_date->format('M j') }} - {{ $course->end_date->format('M j, Y') }}
+                            </small>
+                        @endif
+                    @else
+                        <span style="color: var(--cool-gray); font-size: 0.85rem;">Flexible</span>
                     @endif
                 </td>
                 <td>
-                    <span class="status-badge status-active">Active</span>
+                    <span class="status-badge status-{{ $course->active ? 'active' : 'inactive' }}">
+                        {{ $course->active ? 'Active' : 'Inactive' }}
+                    </span>
                 </td>
                 <td>{{ $course->created_at->format('M j, Y') }}</td>
                 <td>

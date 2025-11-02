@@ -40,6 +40,10 @@ class CourseController extends Controller
             'active' => 'nullable|boolean',
             'is_free' => 'nullable|boolean',
             'price' => 'nullable|numeric|min:0',
+            'course_type' => 'required|in:self_paced,cohort_based',
+            'duration_weeks' => 'nullable|integer|min:1|max:52',
+            'start_date' => 'nullable|date|after_or_equal:today',
+            'end_date' => 'nullable|date|after:start_date',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
@@ -90,6 +94,10 @@ class CourseController extends Controller
             'active' => 'nullable|boolean',
             'is_free' => 'nullable|boolean',
             'price' => 'nullable|numeric|min:0',
+            'course_type' => 'required|in:self_paced,cohort_based',
+            'duration_weeks' => 'nullable|integer|min:1|max:52',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after:start_date',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
