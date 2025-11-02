@@ -62,6 +62,92 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // M-Pesa callback (no auth required)
 Route::post('/mpesa/callback', [PaymentController::class, 'callback'])->name('mpesa.callback');
 
+// Test callback URL accessibility (remove in production)
+Route::get('/mpesa/callback', function() {
+    return response()->json([
+        'status' => 'success',
+        'message' => 'M-Pesa callback URL is accessible',
+        'timestamp' => now()->toISOString(),
+        'url' => request()->fullUrl()
+    ]);
+});
+
+// Test M-Pesa callback route (remove in production)
+Route::get('/test-mpesa-callback', function() {
+    // Simulate a successful M-Pesa callback
+    $testData = [
+        'Body' => [
+            'stkCallback' => [
+                'MerchantRequestID' => 'test-merchant-123',
+                'CheckoutRequestID' => 'test-checkout-456',
+                'ResultCode' => 0,
+                'ResultDesc' => 'The service request is processed successfully.',
+                'CallbackMetadata' => [
+                    'Item' => [
+                        [
+                            'Name' => 'Amount',
+                            'Value' => 2500
+                        ],
+                        [
+                            'Name' => 'MpesaReceiptNumber',
+                            'Value' => 'TEST123456789'
+                        ],
+                        [
+                            'Name' => 'TransactionDate',
+                            'Value' => 20241102103000
+                        ],
+                        [
+                            'Name' => 'PhoneNumber',
+                            'Value' => 254712345678
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
+    
+    // Find a pending payment to test with
+    $payment = \App\Models\Payment::where('status', 'pending')->first();
+    if (!$payment) {
+        return 'No pending payments found to test with';
+    }
+    
+    // Update the test data with the actual payment's checkout request ID
+    $testData['Body']['stkCallback']['CheckoutRequestID'] = $payment->checkout_request_id;
+    
+    // Create a request with the test data
+    $request = new \Illuminate\Http\Request();
+    $request->merge($testData);
+    
+    // Call the callback method
+    $controller = new \App\Http\Controllers\PaymentController();
+    $response = $controller->callback($request);
+    
+    return 'Test callback executed. Response: ' . $response->getContent();
+})->name('test.mpesa.callback');
+
+// Test payment success email route (remove in production)
+Route::get('/test-payment-email', function() {
+    if (!auth()->check()) {
+        return 'Please login first';
+    }
+    
+    $payment = \App\Models\Payment::with('course')->first();
+    if (!$payment) {
+        return 'No payments found to test with';
+    }
+    
+    try {
+        \App\Services\EmailNotificationService::sendNotification('payment_success', auth()->user(), [
+            'payment' => $payment,
+            'course' => $payment->course
+        ]);
+        return 'Payment success email sent successfully to ' . auth()->user()->email;
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+})->middleware('auth')->name('test.payment.email');
+
 // Test email notification route (remove in production)
 Route::get('/test-email', function() {
     if (!auth()->check()) {

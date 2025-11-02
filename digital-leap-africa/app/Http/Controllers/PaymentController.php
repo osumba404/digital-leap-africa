@@ -25,7 +25,7 @@ class PaymentController extends Controller
         $this->consumerSecret = env('MPESA_CONSUMER_SECRET');
         $this->passkey = env('MPESA_PASSKEY');
         $this->shortcode = env('MPESA_SHORTCODE');
-        $this->callbackUrl = env('MPESA_CALLBACK_URL', route('mpesa.callback'));
+        $this->callbackUrl = env('MPESA_CALLBACK_URL') ?: url('/mpesa/callback');
     }
     
     private function getAccessToken()
@@ -60,8 +60,11 @@ class PaymentController extends Controller
         $accessToken = $this->getAccessToken();
         
         if (!$accessToken) {
+            Log::error('Failed to get M-Pesa access token');
             return back()->with('error', 'Payment system unavailable. Please try again later.');
         }
+        
+        Log::info('M-Pesa access token obtained successfully');
         
         $timestamp = date('YmdHis');
         $password = base64_encode($this->shortcode . $this->passkey . $timestamp);
@@ -86,6 +89,8 @@ class PaymentController extends Controller
         
         $result = $response->json();
         
+        Log::info('M-Pesa STK Push Response', $result);
+        
         if (isset($result['ResponseCode']) && $result['ResponseCode'] == '0') {
             // Create payment record
             $payment = Payment::create([
@@ -98,12 +103,15 @@ class PaymentController extends Controller
                 'status' => 'pending',
             ]);
             
+            Log::info('Payment record created', ['payment_id' => $payment->id, 'checkout_request_id' => $payment->checkout_request_id]);
+            
             return redirect()->route('payment.status', ['payment' => $payment->id])
                 ->with('success', 'Payment request sent! Please check your phone to complete the payment.');
         }
         
         Log::error('M-Pesa STK Push failed', $result);
-        return back()->with('error', 'Payment initiation failed. Please try again.');
+        $errorMessage = $result['errorMessage'] ?? $result['ResponseDescription'] ?? 'Payment initiation failed. Please try again.';
+        return back()->with('error', $errorMessage);
     }
     
     public function callback(Request $request)
@@ -122,8 +130,17 @@ class PaymentController extends Controller
         }
         
         if ($resultCode == '0') {
-            // Payment successful
-            $mpesaReceiptNumber = $data['Body']['stkCallback']['CallbackMetadata']['Item'][1]['Value'] ?? null;
+            // Payment successful - extract receipt number from callback metadata
+            $mpesaReceiptNumber = null;
+            $callbackMetadata = $data['Body']['stkCallback']['CallbackMetadata']['Item'] ?? [];
+            
+            // Find the MpesaReceiptNumber in the callback metadata
+            foreach ($callbackMetadata as $item) {
+                if (isset($item['Name']) && $item['Name'] === 'MpesaReceiptNumber') {
+                    $mpesaReceiptNumber = $item['Value'];
+                    break;
+                }
+            }
             
             $payment->markAsCompleted($mpesaReceiptNumber, $data);
             
@@ -158,12 +175,14 @@ class PaymentController extends Controller
                 route('courses.show', $payment->course_id)
             );
             
-            // Send email notification
+            // Send email notification using our email service
             try {
-                \Illuminate\Support\Facades\Mail::to($payment->user->email)
-                    ->send(new \App\Mail\PaymentSuccessNotification($payment));
+                \App\Services\EmailNotificationService::sendNotification('payment_success', $payment->user, [
+                    'payment' => $payment,
+                    'course' => $payment->course
+                ]);
             } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error('Failed to send payment success email: ' . $e->getMessage());
+                Log::error('Failed to send payment success email: ' . $e->getMessage());
             }
         } else {
             // Payment failed
