@@ -137,7 +137,7 @@
         @auth
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-gray-300" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fas fa-user-circle me-1"></i>{{ Auth::user()->name }}
+              <i class="fas fa-user-circle me-1"></i>{{ Auth::user()?->name ?? 'User' }}
             </a>
             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-glass" aria-labelledby="userDropdown">
               <li>

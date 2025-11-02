@@ -18,29 +18,11 @@ class PasswordResetController extends Controller
     {
         $request->validate(['email' => 'required|email']);
         
-        $user = User::where('email', $request->email)->first();
+        $status = Password::sendResetLink($request->only('email'));
         
-        if (!$user) {
-            // Don't reveal if email exists or not for security
-            return back()->with('status', 'If your email is registered with us, you will receive a password reset link shortly.');
-        }
-        
-        $token = Str::random(64);
-        
-        // Store token in password_resets table
-        \DB::table('password_resets')->updateOrInsert(
-            ['email' => $request->email],
-            [
-                'email' => $request->email,
-                'token' => Hash::make($token),
-                'created_at' => now()
-            ]
-        );
-        
-        // Send email notification
-        EmailNotificationService::sendNotification('password_reset', $user, ['token' => $token]);
-        
-        return back()->with('status', 'If your email is registered with us, you will receive a password reset link shortly.');
+        return $status === Password::RESET_LINK_SENT
+            ? back()->with('status', 'If your email is registered with us, you will receive a password reset link shortly.')
+            : back()->with('status', 'If your email is registered with us, you will receive a password reset link shortly.');
     }
 
     public function showResetPasswordForm(Request $request, $token = null)

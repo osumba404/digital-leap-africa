@@ -269,16 +269,16 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('password.update') }}">
+        <form method="POST" action="/reset-password">
             @csrf
 
-            <input type="hidden" name="token" value="{{ $token }}">
-            <input type="hidden" name="email" value="{{ $email }}">
+            <input type="hidden" name="token" value="{{ request()->route('token') }}">
+            <input type="hidden" name="email" value="{{ request()->get('email') }}">
 
             <div class="form-group">
                 <label for="email" class="form-label">Email Address</label>
                 <input id="email" type="email" class="form-control" 
-                       value="{{ $email }}" readonly>
+                       value="{{ request()->get('email') }}" readonly>
             </div>
 
             <div class="form-group">

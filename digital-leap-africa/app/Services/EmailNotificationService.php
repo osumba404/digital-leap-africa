@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Models\User;
-use App\Models\Course;
-use App\Models\Lesson;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
@@ -13,73 +11,53 @@ class EmailNotificationService
     public static function sendNotification($type, $user, $data = [])
     {
         try {
-            switch ($type) {
-                case 'course_enrollment':
-                    if (isset($data['course'])) {
-                        Mail::to($user->email)->send(new \App\Mail\CourseEnrollmentNotification($user, $data['course']));
-                    }
-                    break;
-
-                case 'course_enrollment_approved':
-                    if (isset($data['course'])) {
-                        Mail::to($user->email)->send(new \App\Mail\CourseApprovalNotification($user, $data['course'], true));
-                    }
-                    break;
-
-                case 'course_enrollment_rejected':
-                    if (isset($data['course'])) {
-                        Mail::to($user->email)->send(new \App\Mail\CourseApprovalNotification($user, $data['course'], false));
-                    }
-                    break;
-
-                case 'account_verified':
-                    Mail::to($user->email)->send(new \App\Mail\AccountVerificationNotification($user, true));
-                    break;
-
-                case 'account_unverified':
-                    Mail::to($user->email)->send(new \App\Mail\AccountVerificationNotification($user, false));
-                    break;
-
-                case 'lesson_completed':
-                    if (isset($data['lesson'])) {
-                        Mail::to($user->email)->send(new \App\Mail\LessonCompletionNotification($user, $data['lesson']));
-                    }
-                    break;
-
-                case 'course_completed':
-                    if (isset($data['course'])) {
-                        Mail::to($user->email)->send(new \App\Mail\CourseCompletionNotification($user, $data['course']));
-                    }
-                    break;
-
-                case 'new_course':
-                    if (isset($data['course'])) {
-                        Mail::to($user->email)->send(new \App\Mail\NewCourseNotification($user, $data['course']));
-                    }
-                    break;
-
-                case 'payment_success':
-                    if (isset($data['payment'])) {
-                        Mail::to($user->email)->send(new \App\Mail\PaymentSuccessNotification($data['payment']));
-                    }
-                    break;
-
-                case 'password_reset':
-                    if (isset($data['token'])) {
-                        Mail::to($user->email)->send(new \App\Mail\PasswordResetNotification($user, $data['token']));
-                    }
-                    break;
-
-                default:
-                    // For generic notifications, use base notification
-                    $title = $data['title'] ?? 'Notification';
-                    $message = $data['message'] ?? 'You have a new notification.';
-                    $actionUrl = $data['url'] ?? null;
-                    Mail::to($user->email)->send(new \App\Mail\BaseNotification($user, $title, $message, $actionUrl));
-                    break;
-            }
+            $subject = self::getSubject($type, $data);
+            $content = self::getContent($type, $user, $data);
+            
+            Mail::raw($content, function ($message) use ($user, $subject) {
+                $message->to($user->email, $user->name)
+                        ->subject($subject)
+                        ->from(config('mail.from.address'), config('mail.from.name'));
+            });
+            
+            Log::info('Email sent', ['type' => $type, 'email' => $user->email]);
         } catch (\Exception $e) {
-            Log::error("Failed to send email notification ({$type}) to {$user->email}: " . $e->getMessage());
+            Log::error("Failed to send email ({$type}) to {$user->email}: " . $e->getMessage());
         }
+    }
+
+    private static function getSubject($type, $data)
+    {
+        return match($type) {
+            'course_enrollment' => 'Course Enrollment - Digital Leap Africa',
+            'course_enrollment_approved' => 'Course Approved - Digital Leap Africa',
+            'course_enrollment_rejected' => 'Course Update - Digital Leap Africa',
+            'account_verified' => 'Account Verified - Digital Leap Africa',
+            'lesson_completed' => 'Lesson Completed - Digital Leap Africa',
+            'course_completed' => 'Course Completed - Digital Leap Africa',
+            'payment_success' => 'Payment Successful - Digital Leap Africa',
+            'password_reset' => 'Password Reset - Digital Leap Africa',
+            default => $data['title'] ?? 'Notification - Digital Leap Africa'
+        };
+    }
+
+    private static function getContent($type, $user, $data)
+    {
+        $greeting = "Hello {$user->name},\n\n";
+        $footer = "\n\nBest regards,\nDigital Leap Africa Team";
+        
+        $body = match($type) {
+            'course_enrollment' => "You have enrolled in: {$data['course']->title}\n\nStart learning now!",
+            'course_enrollment_approved' => "Your enrollment for '{$data['course']->title}' has been approved!\n\nYou can now access the course.",
+            'course_enrollment_rejected' => "Your enrollment for '{$data['course']->title}' was not approved.\n\nPlease contact support.",
+            'account_verified' => "Your account has been verified!\n\nYou now have access to premium features.",
+            'lesson_completed' => "Congratulations! You completed: {$data['lesson']->title}\n\nKeep up the great work!",
+            'course_completed' => "Congratulations! You completed: {$data['course']->title}\n\nYour certificate is ready.",
+            'payment_success' => "Payment successful!\n\nTransaction: {$data['payment']->transaction_id}",
+            'password_reset' => "Reset your password: {$data['url']}\n\nIgnore if you didn't request this.",
+            default => $data['message'] ?? 'You have a new notification.'
+        };
+        
+        return $greeting . $body . $footer;
     }
 }

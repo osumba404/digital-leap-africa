@@ -162,7 +162,7 @@ All major features have been implemented with modern design, full mobile respons
 - Composer
 - Node.js & NPM
 - MySQL/PostgreSQL
-- Laravel 9.52.20
+- Laravel 10.x
 
 ### Installation Steps
 
@@ -214,7 +214,7 @@ DB_DATABASE=digital_leap_africa
 DB_USERNAME=your_username
 DB_PASSWORD=your_password
 
-# Email Configuration (for password reset)
+# Email Configuration (Required for notifications & password reset)
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
@@ -223,6 +223,21 @@ MAIL_PASSWORD=your-app-password
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS="noreply@digitaleapafrica.com"
 MAIL_FROM_NAME="${APP_NAME}"
+
+# Google OAuth (Optional - for social login)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_REDIRECT_URI=http://127.0.0.1:8000/auth/google/callback
+
+# M-Pesa Payment Gateway (Optional - for premium features)
+MPESA_ENV=sandbox
+MPESA_CONSUMER_KEY=your-mpesa-consumer-key
+MPESA_CONSUMER_SECRET=your-mpesa-consumer-secret
+MPESA_SHORTCODE=your-shortcode
+MPESA_PASSKEY=your-passkey
+MPESA_BASE_URL=https://sandbox.safaricom.co.ke
+MPESA_CALLBACK_URL=your-callback-url
+MPESA_SANDBOX=true
 ```
 
 ### **Course Search Configuration**
@@ -271,11 +286,23 @@ User::create([
 
 ### **Email Configuration**
 
-#### **SMTP Setup (Required)**
+#### **SMTP Setup (Required for Email Notifications)**
 1. **Gmail Setup**: Enable 2FA and generate App Password
 2. **Update .env**: Replace `your-email@gmail.com` and `your-app-password`
 3. **Cache Config**: Run `php artisan config:cache`
 4. **Test Email**: Visit `/test-email` while logged in to test email delivery
+
+#### **Google OAuth Setup (Optional)**
+1. **Google Console**: Create project at https://console.developers.google.com
+2. **OAuth Credentials**: Create OAuth 2.0 client ID
+3. **Authorized Redirects**: Add `http://127.0.0.1:8000/auth/google/callback`
+4. **Update .env**: Add your Google client ID and secret
+
+#### **M-Pesa Integration (Optional)**
+1. **Safaricom Developer**: Register at https://developer.safaricom.co.ke
+2. **Create App**: Get consumer key and secret
+3. **Sandbox Testing**: Use sandbox environment for development
+4. **Update .env**: Configure M-Pesa credentials and callback URL
 
 #### **Password Reset System**
 - **Secure Token-Based**: Only registered users receive reset emails

@@ -307,6 +307,7 @@
             </div>
         @endif
 
+        <!-- Debug: Form action is {{ route('password.email') }} -->
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
 
@@ -320,7 +321,7 @@
                 @enderror
             </div>
 
-            <button type="submit" class="auth-button">
+            <button type="submit" class="auth-button" onclick="console.log('Form submitted to:', this.form.action)">
                 Email Password Reset Link
             </button>
         </form>
