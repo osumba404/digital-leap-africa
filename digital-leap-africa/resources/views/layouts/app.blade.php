@@ -439,14 +439,14 @@
             right: -2px;
             width: 14px;
             height: 14px;
-            background: linear-gradient(135deg, #ffd700, #ffb347);
+            background: #22c55e;
             border: 2px solid var(--navy-bg);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.6rem;
-            color: #8b4513;
+            color: white;
             z-index: 1;
         }
         
@@ -1842,7 +1842,7 @@
                                     <span class="user-avatar-initial">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
                                     @if(Auth::user()->email_verified_at)
                                         <span class="verification-badge">
-                                            <i class="fas fa-medal"></i>
+                                            <i class="fas fa-check"></i>
                                         </span>
                                     @endif
                                 </div>
@@ -1914,7 +1914,7 @@
                             <span class="user-avatar-initial">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
                             @if(Auth::user()->email_verified_at)
                                 <span class="verification-badge">
-                                    <i class="fas fa-medal"></i>
+                                    <i class="fas fa-check"></i>
                                 </span>
                             @endif
                         </div>
