@@ -763,7 +763,7 @@
             </div>
         </div>
         
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0;">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1.5rem 0;">
             <div style="text-align: center; padding: 1rem; background: rgba(0, 201, 255, 0.1); border-radius: 8px; border: 1px solid rgba(0, 201, 255, 0.2);">
                 <i class="fas fa-coins" style="font-size: 1.5rem; color: var(--cyan-accent); margin-bottom: 0.5rem; display: block;"></i>
                 <div style="font-size: 2rem; font-weight: 700; color: var(--cyan-accent);">{{ $totalPoints ?? 0 }}</div>
@@ -773,11 +773,6 @@
                 <i class="fas fa-trophy" style="font-size: 1.5rem; color: var(--purple-accent); margin-bottom: 0.5rem; display: block;"></i>
                 <div style="font-size: 2rem; font-weight: 700; color: var(--purple-accent);">{{ $userLevel ?? 'Beginner' }}</div>
                 <div style="color: var(--cool-gray); font-size: 0.9rem;">Level</div>
-            </div>
-            <div style="text-align: center; padding: 1rem; background: rgba(34, 197, 94, 0.1); border-radius: 8px; border: 1px solid rgba(34, 197, 94, 0.2);">
-                <i class="fas fa-book-open" style="font-size: 1.5rem; color: #22c55e; margin-bottom: 0.5rem; display: block;"></i>
-                <div style="font-size: 2rem; font-weight: 700; color: #22c55e;">{{ $user->lessons()->count() }}</div>
-                <div style="color: var(--cool-gray); font-size: 0.9rem;">Lessons</div>
             </div>
         </div>
         
