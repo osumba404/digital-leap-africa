@@ -362,8 +362,19 @@
         </div>
         
         <div class="stat-card">
-            <span class="stat-number">{{ Auth::user()->created_at->diffInDays(now()) }}</span>
-            <div class="stat-label">Days Active</div>
+            @php
+                $certificates = Auth::user()->certificates ?? collect();
+            @endphp
+            <span class="stat-number">{{ $certificates->count() }}</span>
+            <div class="stat-label">Certificates Earned</div>
+        </div>
+        
+        <div class="stat-card">
+            @php
+                $badges = Auth::user()->badges ?? collect();
+            @endphp
+            <span class="stat-number">{{ $badges->count() }}</span>
+            <div class="stat-label">Badges Earned</div>
         </div>
     </div>
 
@@ -462,8 +473,112 @@
                 <h3 style="color: var(--diamond-white);">View Testimonials</h3>
                 <p style="color: var(--cool-gray);">Read experiences</p>
             </a>
+            
+            <a href="{{ route('points.index') }}" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3 style="color: var(--diamond-white);">Redeem Points</h3>
+                <p style="color: var(--cool-gray);">Spend your points</p>
+            </a>
+            
+            @if(Auth::user()->badges && Auth::user()->badges->count() > 0)
+            <a href="#badges" onclick="document.getElementById('badges-section').scrollIntoView({behavior: 'smooth'})" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-medal"></i>
+                </div>
+                <h3 style="color: var(--diamond-white);">My Badges</h3>
+                <p style="color: var(--cool-gray);">View achievements</p>
+            </a>
+            @endif
+            
+            @if(Auth::user()->certificates && Auth::user()->certificates->count() > 0)
+            <a href="#certificates" onclick="document.getElementById('certificates-section').scrollIntoView({behavior: 'smooth'})" class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-certificate"></i>
+                </div>
+                <h3 style="color: var(--diamond-white);">My Certificates</h3>
+                <p style="color: var(--cool-gray);">View & download</p>
+            </a>
+            @endif
         </div>
     </div>
+
+    {{-- My Badges Section --}}
+    @if(Auth::user()->badges && Auth::user()->badges->count() > 0)
+        <div class="section-card" id="badges-section">
+            <h2 class="section-title">
+                <i class="fas fa-medal"></i>My Badges
+            </h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                @foreach(Auth::user()->badges as $badge)
+                    <div style="background: rgba(122, 95, 255, 0.1); border: 1px solid rgba(122, 95, 255, 0.3); border-radius: 8px; padding: 1.25rem; position: relative;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                            @if($badge->img_url)
+                                <img src="{{ $badge->img_url }}" alt="{{ $badge->badge_name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(122, 95, 255, 0.4);">
+                            @else
+                                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #7a5fff, #a855f7); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; border: 2px solid rgba(122, 95, 255, 0.4);">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                            @endif
+                            <div>
+                                <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin: 0;">{{ $badge->badge_name }}</h3>
+                                <p style="color: var(--cool-gray); font-size: 0.8rem; margin: 0;">{{ $badge->description ?? 'Achievement badge' }}</p>
+                            </div>
+                        </div>
+                        
+                        @if($badge->pivot && $badge->pivot->awarded_at)
+                            <div style="margin-bottom: 1rem;">
+                                <p style="color: var(--cool-gray); font-size: 0.75rem; margin: 0;">
+                                    <i class="fas fa-calendar me-1"></i>Earned: {{ \Carbon\Carbon::parse($badge->pivot->awarded_at)->format('M j, Y') }}
+                                </p>
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
+    {{-- My Certificates Section --}}
+    @if(Auth::user()->certificates && Auth::user()->certificates->count() > 0)
+        <div class="section-card" id="certificates-section">
+            <h2 class="section-title">
+                <i class="fas fa-certificate"></i>My Certificates
+            </h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                @foreach(Auth::user()->certificates as $certificate)
+                    <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 8px; padding: 1.25rem; position: relative;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                            <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #f59e0b, #fbbf24); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <div>
+                                <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin: 0;">{{ $certificate->certificate_title }}</h3>
+                                <p style="color: var(--cool-gray); font-size: 0.8rem; margin: 0;">{{ $certificate->course->title }}</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <p style="color: var(--cool-gray); font-size: 0.75rem; margin: 0;">Certificate No: {{ $certificate->certificate_number }}</p>
+                            <p style="color: var(--cool-gray); font-size: 0.75rem; margin: 0;">Issued: {{ $certificate->issued_at->format('M j, Y') }}</p>
+                        </div>
+                        
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <a href="{{ route('certificates.show', $certificate) }}" class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; flex: 1; text-align: center;">
+                                <i class="fas fa-eye me-1"></i>View
+                            </a>
+                            <a href="{{ route('certificates.download', $certificate) }}" class="btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; flex: 1; text-align: center;">
+                                <i class="fas fa-download me-1"></i>Download
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 
     {{-- Recent Activity or Recommendations --}}
     @if(Auth::user()->courses()->count() == 0)

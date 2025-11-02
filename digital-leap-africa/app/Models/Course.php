@@ -22,12 +22,15 @@ class Course extends Model
         'duration_weeks',
         'start_date',
         'end_date',
+        'has_certification',
+        'certificate_title',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
         'is_free' => 'boolean',
         'active' => 'boolean',
+        'has_certification' => 'boolean',
         'start_date' => 'date',
         'end_date' => 'date',
     ];
@@ -48,5 +51,9 @@ public function payments()
     return $this->hasMany(Payment::class);
 }
 
+public function certificates()
+{
+    return $this->hasMany(Certificate::class);
+}
 
 }

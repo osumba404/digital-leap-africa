@@ -142,4 +142,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Testimonial::class);
     }
+
+    public function certificates()
+    {
+        return $this->hasMany(Certificate::class);
+    }
 }

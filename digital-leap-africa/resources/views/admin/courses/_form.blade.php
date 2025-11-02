@@ -83,6 +83,23 @@
             <small style="color: var(--cool-gray); font-size: 0.85rem;">Choose whether this is a self-paced or cohort-based course</small>
         </div>
 
+        <div class="form-group" style="margin-top: 1rem;">
+            <label class="form-label" for="has_certification">Certification</label>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+                <input type="checkbox" id="has_certification" name="has_certification" value="1"
+                       {{ old('has_certification', isset($course) ? (int)($course->has_certification ?? 0) : 0) ? 'checked' : '' }}>
+                <span style="color: var(--cool-gray);">Award certificate upon course completion</span>
+            </div>
+        </div>
+
+        <div class="form-group" id="certificate-title-field" style="margin-top: 1rem; display: {{ old('has_certification', isset($course) ? (int)($course->has_certification ?? 0) : 0) ? 'block' : 'none' }};">
+            <label for="certificate_title" class="form-label">Certificate Title</label>
+            <input type="text" id="certificate_title" name="certificate_title" class="form-control" 
+                   value="{{ old('certificate_title', $course->certificate_title ?? '') }}" 
+                   placeholder="e.g., Web Development Fundamentals">
+            <small style="color: var(--cool-gray); font-size: 0.85rem;">Title that will appear on the certificate</small>
+        </div>
+
         <div id="cohort-fields" style="display: {{ old('course_type', $course->course_type ?? 'self_paced') === 'cohort_based' ? 'block' : 'none' }}; margin-top: 1rem;">
             <div class="form-group">
                 <label for="duration_weeks" class="form-label">Duration (Weeks)</label>
@@ -138,6 +155,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const cohortFields = document.getElementById('cohort-fields');
     const isFreeCheckbox = document.getElementById('is_free');
     const priceField = document.getElementById('price-field');
+    const hasCertificationCheckbox = document.getElementById('has_certification');
+    const certificateTitleField = document.getElementById('certificate-title-field');
     
     // Toggle cohort fields based on course type
     courseTypeSelect.addEventListener('change', function() {
@@ -147,6 +166,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Toggle price field based on is_free checkbox
     isFreeCheckbox.addEventListener('change', function() {
         priceField.style.display = this.checked ? 'none' : 'block';
+    });
+    
+    // Toggle certificate title field based on certification checkbox
+    hasCertificationCheckbox.addEventListener('change', function() {
+        certificateTitleField.style.display = this.checked ? 'block' : 'none';
     });
 });
 </script>

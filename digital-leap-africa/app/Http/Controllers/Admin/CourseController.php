@@ -44,6 +44,8 @@ class CourseController extends Controller
             'duration_weeks' => 'nullable|integer|min:1|max:52',
             'start_date' => 'nullable|date|after_or_equal:today',
             'end_date' => 'nullable|date|after:start_date',
+            'has_certification' => 'nullable|boolean',
+            'certificate_title' => 'nullable|string|max:255',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
@@ -98,6 +100,8 @@ class CourseController extends Controller
             'duration_weeks' => 'nullable|integer|min:1|max:52',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after:start_date',
+            'has_certification' => 'nullable|boolean',
+            'certificate_title' => 'nullable|string|max:255',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);

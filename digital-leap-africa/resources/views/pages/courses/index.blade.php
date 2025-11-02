@@ -200,6 +200,17 @@
                   @endif
                 </div>
               @endif
+              
+              @if($course->has_certification)
+                <div style="margin-bottom: 1rem; padding: 0.5rem; background: rgba(251, 191, 36, 0.1); border-radius: 6px; border-left: 3px solid #f59e0b;">
+                  <div style="color: #f59e0b; font-size: 0.85rem; font-weight: 600;">
+                    <i class="fas fa-certificate"></i> Certificate of Completion
+                  </div>
+                  <div style="color: var(--cool-gray); font-size: 0.8rem; margin-top: 0.25rem;">
+                    Earn a professional certificate upon course completion
+                  </div>
+                </div>
+              @endif
               <p class="card-body">{{ $courseExcerpt }}</p>
               @if($isEnrolled)
                 <a class="card-button" href="{{ $showUrl }}">

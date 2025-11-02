@@ -788,21 +788,10 @@
             <button type="button" class="btn-outline mobile-btn" onclick="document.getElementById('changePasswordModal').style.display='flex'">
                 <i class="fas fa-lock" style="margin-right:8px;"></i>Password
             </button>
-            <a href="{{ route('testimonials.create') }}" class="btn-outline mobile-btn" style="text-decoration:none; display:inline-flex; align-items:center;">
-                <i class="fas fa-plus-circle" style="margin-right:8px;"></i>Testimonial
-            </a>
-            <a href="{{ route('testimonials.index') }}" class="btn-outline mobile-btn" style="text-decoration:none; display:inline-flex; align-items:center;">
-                <i class="fas fa-list-ul" style="margin-right:8px;"></i>Testimonials
-            </a>
+
         </div>
         
-        @if(isset($userLevel))
-        <div style="margin-top: 1rem; text-align: center;">
-            <a href="{{ route('points.index') }}" class="btn-outline btn-sm" style="padding: 0.5rem 1rem; font-size: 0.9rem; text-decoration: none;">
-                <i class="fas fa-shopping-cart" style="margin-right: 0.5rem;"></i>Redeem Points
-            </a>
-        </div>
-        @endif
+
     </div>
 
     @if (session('status') === 'profile-updated')

@@ -166,6 +166,12 @@
                         <i class="fas fa-clock me-1"></i>{{ $course->duration_weeks }} weeks
                     </span>
                 @endif
+                
+                @if($course->has_certification)
+                    <span style="background: rgba(251, 191, 36, 0.2); color: #f59e0b; padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.9rem; font-weight: 500;">
+                        <i class="fas fa-certificate me-1"></i>Certificate Included
+                    </span>
+                @endif
             </div>
             
             @if($course->course_type === 'cohort_based' && ($course->start_date || $course->end_date))

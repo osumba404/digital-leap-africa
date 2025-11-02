@@ -84,6 +84,14 @@ class LessonController extends Controller
             // Send email notification
             EmailNotificationService::sendNotification('course_completed', $user, ['course' => $course]);
 
+            // Issue certificate if course has certification
+            if ($course->has_certification) {
+                $certificate = \App\Http\Controllers\CertificateController::issueCertificate($user->id, $course->id);
+                if ($certificate) {
+                    return redirect()->back()->with('success', 'Congratulations! You completed the course and earned a certificate! <a href="' . route('certificates.show', $certificate) . '" class="text-cyan-400 underline">View Certificate</a>');
+                }
+            }
+
             return redirect()->back()->with('success', 'Congratulations! You completed the entire course!');
         }
 

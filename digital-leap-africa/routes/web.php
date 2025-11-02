@@ -304,6 +304,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
     Route::post('/lessons/{lesson}/complete', [LessonController::class, 'complete'])->name('lessons.complete');
 
+    // Certificates
+    Route::get('/certificates/{certificate}', [\App\Http\Controllers\CertificateController::class, 'show'])->name('certificates.show');
+    Route::get('/certificates/{certificate}/download', [\App\Http\Controllers\CertificateController::class, 'download'])->name('certificates.download');
+
     // Testimonials (user)
     Route::get('/testimonials/create', [TestimonialPublicController::class, 'create'])->name('testimonials.create');
     Route::post('/testimonials', [TestimonialPublicController::class, 'store'])->name('testimonials.store');
@@ -313,6 +317,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/points', [PointRedemptionController::class, 'index'])->name('points.index');
     Route::post('/points/redeem', [PointRedemptionController::class, 'redeem'])->name('points.redeem');
 });
+
+// Certificate verification (public)
+Route::get('/verify-certificate/{certificateNumber}', [\App\Http\Controllers\CertificateController::class, 'verify'])->name('certificates.verify');
 
 Route::get('/me/photo', function () {
     // Check if a specific user_id is requested (for testimonials, etc.)
@@ -545,7 +552,13 @@ Route::prefix('admin')
         Route::patch('users/{user}/verify', [\App\Http\Controllers\Admin\UserController::class, 'verify'])->name('users.verify');
         Route::patch('users/{user}/unverify', [\App\Http\Controllers\Admin\UserController::class, 'unverify'])->name('users.unverify');
 
-             // Settings
+             // Certificates
+        Route::prefix('certificates')->name('certificates.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\CertificateController::class, 'index'])->name('index');
+            Route::put('/', [\App\Http\Controllers\Admin\CertificateController::class, 'update'])->name('update');
+        });
+
+        // Settings
         Route::prefix('settings')->name('settings.')->group(function () {
             Route::get('/', [AdminSiteSettingController::class, 'index'])->name('index');
             Route::post('/', [AdminSiteSettingController::class, 'update'])->name('update');

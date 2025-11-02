@@ -631,6 +631,11 @@
                         </a>
                     </li>
                     <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.certificates.*') ? 'active' : '' }}" href="{{ route('admin.certificates.index') }}">
+                            <i class="fas fa-certificate"></i><span class="sidebar-label">Certificates</span>
+                        </a>
+                    </li>
+                    <li>
                         <a class="sidebar-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">
                             <i class="fas fa-gear"></i><span class="sidebar-label">Settings</span>
                         </a>

@@ -318,7 +318,17 @@ User::create([
 
 ## 🆕 Latest Updates & Features
 
-### **Version 8.0 - Comprehensive Email Notification System** 🆕 **LATEST**
+### **Version 9.0 - Professional Certification System** 🆕 **LATEST**
+- **Complete Certification System**: Professional digital certificates with Digital Leap Africa branding
+- **Cohort-Based Courses**: Support for both self-paced and cohort-based learning with schedules
+- **Certificate CMS**: Admin interface to customize certificate design, content, and signatures
+- **Automatic Certificate Issuance**: Certificates automatically issued upon course completion
+- **Professional Certificate Design**: Modern design with brand colors, gradients, and animations
+- **Certificate Verification**: Public certificate verification system with unique certificate numbers
+- **Dashboard Integration**: Certificates displayed in user dashboard with view/download options
+- **Mobile Responsive**: Certificate design optimized for all devices and printing
+
+### **Version 8.0 - Comprehensive Email Notification System**
 - **Complete Email Infrastructure**: Professional email notifications for all platform activities
 - **10 Email Notification Types**: Course enrollment, completion, verification, payments, forum replies, etc.
 - **Secure Password Reset**: Token-based email reset system for registered users only
@@ -404,6 +414,9 @@ SettingsHelper::all() // Get all settings
 - [x] User Authentication & Authorization (Google OAuth included)
 - [x] **ALX-Style Enrollment System** (free vs premium course flows)
 - [x] **Course Search System** (real-time search with pagination and filters)
+- [x] **Professional Certification System** (automatic certificate issuance with customizable design)
+- [x] **Cohort-Based Learning** (support for both self-paced and scheduled cohort courses)
+- [x] **Certificate CMS Management** (admin interface to customize certificate content and design)
 - [x] Course Management System (with rich text editor)
 - [x] Project Showcase Platform
 - [x] Job Board with Applications
@@ -433,7 +446,6 @@ SettingsHelper::all() // Get all settings
 - [x] **Point Redemption Store** (spend points on premium features)
 - [x] **User Level Progression** (Beginner → Learner → Contributor → Expert → Master)
 - [x] **Daily Login Rewards** (5 points per day)
-- [x] **ALX-Style Enrollment System** (free vs premium course flows)
 - [x] **Admin Enrollment Management** (approve/reject premium course enrollments)
 - [x] **Status-Based Course Access** (content access controlled by enrollment status)
 - [x] **Dual Course Types** (free courses with immediate access, premium with approval)
@@ -446,6 +458,8 @@ SettingsHelper::all() // Get all settings
 - [x] **User Management Interface** (admin panel for user verification and management)
 - [x] **Legal Pages System** (Privacy Policy and Terms of Service with modern design)
 - [x] **Enhanced Mobile Responsiveness** (fixed text overflow and card layout issues)
+- [x] **Certificate Verification System** (public certificate verification with unique numbers)
+- [x] **Dashboard Certificate Integration** (certificates displayed with view/download options)
 
 ### **Technical Achievements** 🏆
 - [x] Role-based Access Control
