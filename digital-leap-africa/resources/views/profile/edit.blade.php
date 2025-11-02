@@ -746,8 +746,8 @@
                 <div class="user-avatar-container" style="position: relative; display: inline-block;">
                     <img src="{{ route('me.photo') }}" alt="{{ $user->name }}" style="width:120px;height:120px;object-fit:cover;border-radius:50%;border:3px solid rgba(0,201,255,0.4);" />
                     @if($user->email_verified_at)
-                        <span class="verification-badge" style="position: absolute; bottom: 8px; right: 8px; width: 24px; height: 24px; background: linear-gradient(135deg, #ffd700, #ffb347); border: 3px solid var(--navy-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #8b4513; z-index: 1;">
-                            <i class="fas fa-medal"></i>
+                        <span class="verification-badge" style="position: absolute; bottom: 8px; right: 8px; width: 24px; height: 24px; background: #22c55e; border: 3px solid var(--navy-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: white; z-index: 1;">
+                            <i class="fas fa-check"></i>
                         </span>
                     @endif
                 </div>        
@@ -842,6 +842,47 @@
             @endforelse
         </div>
     </div>
+
+    {{-- My Certificates Section --}}
+    @if($user->certificates && $user->certificates->count() > 0)
+        <div class="profile-section">
+            <h2 class="section-title">
+                <i class="fas fa-certificate section-icon"></i>
+                My Certificates
+            </h2>
+            <div class="section-description">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                    @foreach($user->certificates as $certificate)
+                        <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 8px; padding: 1.25rem; position: relative;">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #f59e0b, #fbbf24); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                                    <i class="fas fa-certificate"></i>
+                                </div>
+                                <div>
+                                    <h3 style="color: var(--diamond-white); font-size: 1rem; font-weight: 600; margin: 0;">{{ $certificate->certificate_title }}</h3>
+                                    <p style="color: var(--cool-gray); font-size: 0.8rem; margin: 0;">{{ $certificate->course->title }}</p>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom: 1rem;">
+                                <p style="color: var(--cool-gray); font-size: 0.75rem; margin: 0;">Certificate No: {{ $certificate->certificate_number }}</p>
+                                <p style="color: var(--cool-gray); font-size: 0.75rem; margin: 0;">Issued: {{ $certificate->issued_at->format('M j, Y') }}</p>
+                            </div>
+                            
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <a href="{{ route('certificates.show', $certificate) }}" class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; flex: 1; text-align: center; text-decoration: none;">
+                                    <i class="fas fa-eye me-1"></i>View
+                                </a>
+                                <a href="{{ route('certificates.download', $certificate) }}" class="btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; flex: 1; text-align: center; text-decoration: none;">
+                                    <i class="fas fa-download me-1"></i>Download
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    @endif
 
     <div class="profile-section">
         <h2 class="section-title">
