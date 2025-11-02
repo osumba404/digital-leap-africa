@@ -1,0 +1,30 @@
+@extends('emails.base')
+
+@section('content')
+<div class="greeting">Great News, {{ $user->name }}! ✅</div>
+
+<div class="message">
+    Your enrollment for <strong>{{ $course->title }}</strong> has been <strong style="color: #00C9FF;">approved</strong>!
+</div>
+
+<div class="info-box">
+    <strong>🎓 Course Access Granted</strong><br>
+    You now have full access to all course materials, lessons, and resources. Start learning at your own pace!
+</div>
+
+<a href="{{ url('/courses/' . $course->id) }}" class="cta-button">
+    Access Your Course
+</a>
+
+<div class="message">
+    <strong>Your Learning Journey Starts Now:</strong><br>
+    • Complete lessons to earn 50 points each<br>
+    • Finish the entire course for 200 bonus points<br>
+    • Participate in discussions and forums<br>
+    • Earn your completion certificate
+</div>
+
+<div class="message">
+    Need help? Our support team is here to assist you every step of the way. Happy learning!
+</div>
+@endsection

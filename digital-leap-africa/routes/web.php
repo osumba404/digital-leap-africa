@@ -88,12 +88,58 @@ Route::get('/test-password-reset', function() {
     
     try {
         $token = \Illuminate\Support\Str::random(64);
-        \App\Services\EmailNotificationService::sendNotification('password_reset', auth()->user(), ['token' => $token]);
+        \App\Services\EmailNotificationService::sendNotification('password_reset', auth()->user(), ['resetUrl' => url('/reset-password/' . $token)]);
         return 'Password reset email sent successfully to ' . auth()->user()->email;
     } catch (\Exception $e) {
         return 'Error: ' . $e->getMessage();
     }
 })->middleware('auth')->name('test.password-reset');
+
+// Email template preview routes (remove in production)
+Route::get('/email-preview', function() {
+    return view('emails.preview');
+})->name('email.preview');
+
+Route::get('/email-template/{template}', function($template) {
+    $user = auth()->user() ?? new \App\Models\User([
+        'name' => 'John Doe',
+        'email' => 'john@example.com'
+    ]);
+    
+    $course = new \App\Models\Course([
+        'title' => 'Advanced Laravel Development',
+        'description' => 'Master Laravel framework with advanced concepts',
+        'price' => 2500,
+        'level' => 'intermediate',
+        'duration' => '8 weeks'
+    ]);
+    
+    $lesson = new \App\Models\Lesson([
+        'title' => 'Building RESTful APIs',
+        'content' => 'Learn to build robust APIs'
+    ]);
+    
+    $payment = new \App\Models\Payment([
+        'transaction_id' => 'TXN123456789',
+        'amount' => 2500,
+        'created_at' => now()
+    ]);
+    
+    $data = [
+        'user' => $user,
+        'course' => $course,
+        'lesson' => $lesson,
+        'payment' => $payment,
+        'resetUrl' => url('/reset-password/sample-token'),
+        'subject' => 'Sample Email Template'
+    ];
+    
+    try {
+        return view('emails.' . $template, $data);
+    } catch (\Exception $e) {
+        return 'Template not found: ' . $template;
+    }
+})->name('email.template');
 
 // --- PUBLIC ROUTES ---
 
