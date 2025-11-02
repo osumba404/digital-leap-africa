@@ -54,11 +54,75 @@
     100% { transform: rotate(360deg); }
 }
 
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .payment-status-container {
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+    
+    .status-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .status-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem !important;
+    }
+    
+    h3 {
+        font-size: 1.2rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .payment-status-container {
+        margin: 1rem auto;
+        padding: 0.5rem;
+    }
+    
+    .status-card {
+        padding: 1.5rem 1rem;
+    }
+    
+    .status-icon {
+        font-size: 2.5rem;
+    }
+    
+    h2 {
+        font-size: 1.3rem !important;
+    }
+    
+    div[style*="display: flex"] {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    
+    .btn-primary, .btn-outline {
+        width: 100% !important;
+        max-width: 250px !important;
+        justify-content: center !important;
+    }
+}
+
 /* Light Mode */
 [data-theme="light"] .status-card {
     background: #FFFFFF;
     border: 1px solid rgba(46, 120, 197, 0.2);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] h2,
+[data-theme="light"] h3 {
+    color: var(--primary-blue) !important;
+}
+
+[data-theme="light"] .status-icon.completed {
+    color: #059669 !important;
 }
 </style>
 
@@ -80,13 +144,25 @@
             <div class="status-icon completed">
                 <i class="fas fa-check-circle"></i>
             </div>
-            <h2 style="color: #10b981; margin-bottom: 1rem;">Payment Successful!</h2>
-            <p style="color: var(--cool-gray); margin-bottom: 2rem;">
-                You have been successfully enrolled in <strong>{{ $payment->course->title }}</strong>
+            <h2 style="color: #10b981; margin-bottom: 1rem;">🎉 Payment Successful!</h2>
+            <p style="color: var(--cool-gray); margin-bottom: 1rem;">
+                Congratulations! You have been successfully enrolled in
             </p>
-            <a href="{{ route('courses.show', $payment->course) }}" class="btn-primary" style="padding: 0.75rem 2rem;">
-                <i class="fas fa-play me-2"></i>Start Learning
-            </a>
+            <h3 style="color: var(--diamond-white); margin-bottom: 1rem; font-size: 1.3rem;">
+                {{ $payment->course->title }}
+            </h3>
+            <p style="color: var(--cool-gray); margin-bottom: 2rem; font-size: 0.95rem;">
+                You've earned <strong style="color: #10b981;">120 points</strong> for this purchase! 
+                Start learning now and unlock your potential.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="{{ route('courses.show', $payment->course) }}" class="btn-primary" style="padding: 0.75rem 2rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-play"></i>Start Learning Now
+                </a>
+                <a href="{{ route('dashboard') }}" class="btn-outline" style="padding: 0.75rem 2rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-tachometer-alt"></i>Go to Dashboard
+                </a>
+            </div>
         @elseif($payment->status === 'failed')
             <div class="status-icon failed">
                 <i class="fas fa-times-circle"></i>

@@ -127,24 +127,44 @@ class PaymentController extends Controller
             
             $payment->markAsCompleted($mpesaReceiptNumber, $data);
             
-            // Enroll user in course
-            $payment->user->courses()->attach($payment->course_id);
+            // Enroll user in course with active status (if not already enrolled)
+            if (!$payment->user->courses()->where('course_id', $payment->course_id)->exists()) {
+                $payment->user->courses()->attach($payment->course_id, [
+                    'status' => 'active',
+                    'enrolled_at' => now()
+                ]);
+            }
             
-            // Award points
+            // Award enrollment points
             GamificationPoint::create([
                 'user_id' => $payment->user_id,
-                'points' => 50,
+                'points' => 20,
                 'reason' => 'Enrolled in course: ' . $payment->course->title,
             ]);
             
-            // Send notification
+            // Award purchase points
+            GamificationPoint::create([
+                'user_id' => $payment->user_id,
+                'points' => 100,
+                'reason' => 'Purchased premium course: ' . $payment->course->title,
+            ]);
+            
+            // Send in-app notification
             Notification::createNotification(
                 $payment->user_id,
                 'payment_success',
                 'Payment Successful',
-                "Your payment for {$payment->course->title} was successful. You are now enrolled!",
+                "Your payment for {$payment->course->title} was successful. You are now enrolled and can start learning!",
                 route('courses.show', $payment->course_id)
             );
+            
+            // Send email notification
+            try {
+                \Illuminate\Support\Facades\Mail::to($payment->user->email)
+                    ->send(new \App\Mail\PaymentSuccessNotification($payment));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Failed to send payment success email: ' . $e->getMessage());
+            }
         } else {
             // Payment failed
             $payment->markAsFailed($data);

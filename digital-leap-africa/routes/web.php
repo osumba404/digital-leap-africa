@@ -46,9 +46,10 @@ Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\GoogleAuthContro
 // Authentication Routes
 require __DIR__.'/auth.php';
 
-// Simple Password Reset (without email)
-Route::get('/password/simple-reset', [\App\Http\Controllers\Auth\PasswordResetController::class, 'showResetForm'])->name('password.simple-reset.form');
-Route::post('/password/simple-reset', [\App\Http\Controllers\Auth\PasswordResetController::class, 'reset'])->name('password.simple-reset');
+// Email-based Password Reset
+Route::post('/forgot-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/reset-password/{token}', [\App\Http\Controllers\Auth\PasswordResetController::class, 'showResetPasswordForm'])->name('password.reset');
+Route::post('/reset-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'resetPassword'])->name('password.update');
 
 
 // Payment routes
@@ -60,6 +61,39 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // M-Pesa callback (no auth required)
 Route::post('/mpesa/callback', [PaymentController::class, 'callback'])->name('mpesa.callback');
+
+// Test email notification route (remove in production)
+Route::get('/test-email', function() {
+    if (!auth()->check()) {
+        return 'Please login first';
+    }
+    
+    try {
+        \App\Services\EmailNotificationService::sendNotification('generic', auth()->user(), [
+            'title' => 'Test Email Notification',
+            'message' => 'This is a test email to verify that the email notification system is working correctly.',
+            'url' => route('dashboard')
+        ]);
+        return 'Test email sent successfully to ' . auth()->user()->email;
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+})->middleware('auth')->name('test.email');
+
+// Test password reset email route (remove in production)
+Route::get('/test-password-reset', function() {
+    if (!auth()->check()) {
+        return 'Please login first';
+    }
+    
+    try {
+        $token = \Illuminate\Support\Str::random(64);
+        \App\Services\EmailNotificationService::sendNotification('password_reset', auth()->user(), ['token' => $token]);
+        return 'Password reset email sent successfully to ' . auth()->user()->email;
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+})->middleware('auth')->name('test.password-reset');
 
 // --- PUBLIC ROUTES ---
 

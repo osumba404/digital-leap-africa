@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\GamificationPoint;
 use App\Models\Notification;
 use App\Services\GamificationService;
+use App\Services\EmailNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -66,6 +67,9 @@ class CourseController extends Controller
                 route('courses.show', $course->id)
             );
 
+            // Send email notification
+            EmailNotificationService::sendNotification('course_enrollment', $user, ['course' => $course]);
+
             return redirect()->route('courses.show', $course)->with('success', 'You have successfully enrolled!');
         } else {
             // Premium Course: Pending approval
@@ -81,6 +85,13 @@ class CourseController extends Controller
                 "Your enrollment in {$course->title} is pending admin approval. You'll be notified once approved.",
                 route('courses.show', $course->id)
             );
+
+            // Send email notification for pending enrollment
+            EmailNotificationService::sendNotification('generic', $user, [
+                'title' => 'Enrollment Pending Approval',
+                'message' => "Your enrollment in {$course->title} is pending admin approval. You'll be notified once approved.",
+                'url' => route('courses.show', $course->id)
+            ]);
 
             return redirect()->route('courses.show', $course)->with('info', 'Your enrollment is pending admin approval. You will be notified once approved.');
         }

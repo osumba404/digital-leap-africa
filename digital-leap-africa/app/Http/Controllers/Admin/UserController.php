@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Notification;
+use App\Services\EmailNotificationService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -27,6 +28,9 @@ class UserController extends Controller
             route('dashboard')
         );
 
+        // Send email notification
+        EmailNotificationService::sendNotification('account_verified', $user);
+
         return redirect()->back()->with('success', 'User verified successfully.');
     }
 
@@ -41,6 +45,9 @@ class UserController extends Controller
             'Your account verification has been removed. Some features may be limited.',
             route('dashboard')
         );
+
+        // Send email notification
+        EmailNotificationService::sendNotification('account_unverified', $user);
 
         return redirect()->back()->with('success', 'User verification removed.');
     }

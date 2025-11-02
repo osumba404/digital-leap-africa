@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Testimonial;
 use App\Models\Notification;
+use App\Services\EmailNotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -36,6 +37,13 @@ class TestimonialController extends Controller
             'Your testimonial has been approved and is now visible on the site',
             route('testimonials.index')
         );
+
+        // Send email notification
+        EmailNotificationService::sendNotification('generic', $testimonial->user, [
+            'title' => 'Testimonial Approved',
+            'message' => 'Great news! Your testimonial has been approved and is now visible on our website. Thank you for sharing your experience!',
+            'url' => route('testimonials.index')
+        ]);
         
         return back()->with('success', 'Testimonial approved.');
     }

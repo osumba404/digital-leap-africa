@@ -328,10 +328,6 @@
         <div class="auth-footer">
             Remember your password? 
             <a href="{{ route('login') }}" class="auth-link">Sign in here</a>
-            <br><br>
-            <a href="{{ route('password.simple-reset.form') }}" class="auth-link">
-                <i class="fas fa-key me-1"></i>Direct Password Reset (No Email Required)
-            </a>
         </div>
     </div>
 </div>

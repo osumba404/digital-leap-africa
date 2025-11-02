@@ -6,6 +6,7 @@ use App\Models\Lesson;
 use App\Models\Notification;
 use App\Models\GamificationPoint;
 use App\Services\GamificationService;
+use App\Services\EmailNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -59,6 +60,9 @@ class LessonController extends Controller
             route('courses.show', $course->id)
         );
 
+        // Send email notification
+        EmailNotificationService::sendNotification('lesson_completed', $user, ['lesson' => $lesson]);
+
         // Check if user has completed all lessons in the course
         $totalLessons = $course->lessons()->count();
         $completedLessons = $user->lessons()
@@ -76,6 +80,9 @@ class LessonController extends Controller
                 "Congratulations! You've completed {$course->title}",
                 route('courses.show', $course->id)
             );
+
+            // Send email notification
+            EmailNotificationService::sendNotification('course_completed', $user, ['course' => $course]);
 
             return redirect()->back()->with('success', 'Congratulations! You completed the entire course!');
         }

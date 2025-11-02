@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course; // Make sure this model is imported
 use App\Models\User;
 use App\Models\Notification;
+use App\Services\EmailNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -64,6 +65,9 @@ class CourseController extends Controller
                     "Check out our new course: {$course->title}",
                     route('courses.show', $course->id)
                 );
+
+                // Send email notification
+                EmailNotificationService::sendNotification('new_course', $user, ['course' => $course]);
             }
         }
 
@@ -147,6 +151,9 @@ class CourseController extends Controller
             route('courses.show', $enrollment->course_id)
         );
 
+        // Send email notification
+        EmailNotificationService::sendNotification('course_enrollment_approved', $enrollment->user, ['course' => $enrollment->course]);
+
         return redirect()->back()->with('success', 'Enrollment approved successfully.');
     }
 
@@ -161,6 +168,9 @@ class CourseController extends Controller
             "Your enrollment in {$enrollment->course->title} has been rejected. Please contact support for more information.",
             route('courses.show', $enrollment->course_id)
         );
+
+        // Send email notification
+        EmailNotificationService::sendNotification('course_enrollment_rejected', $enrollment->user, ['course' => $enrollment->course]);
 
         return redirect()->back()->with('success', 'Enrollment rejected.');
     }

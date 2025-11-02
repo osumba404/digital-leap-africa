@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Thread;
 use App\Models\Reply;
 use App\Models\Notification;
+use App\Services\EmailNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -66,6 +67,13 @@ class ForumController extends Controller
                 "{$request->user()->name} replied to your thread: {$thread->title}",
                 route('forum.show', $thread->id)
             );
+
+            // Send email notification
+            EmailNotificationService::sendNotification('generic', $thread->user, [
+                'title' => 'New Reply on Your Thread',
+                'message' => "{$request->user()->name} replied to your thread: {$thread->title}. Join the conversation!",
+                'url' => route('forum.show', $thread->id)
+            ]);
         }
 
         return redirect()->route('forum.show', $thread->id)->with('success', 'Reply posted successfully!');
