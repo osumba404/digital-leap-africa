@@ -125,13 +125,14 @@ All major features have been implemented with modern design, full mobile respons
 
 ### **Public Pages**
 - ✅ **Homepage**: Hero section, features, statistics with animations
-- ✅ **Courses**: Course catalog with enrollment and progress tracking
+- ✅ **Courses**: Course catalog with search, enrollment and progress tracking
 - ✅ **Projects**: Project showcase with filtering and details
 - ✅ **Jobs**: Job board with application links and filtering
 - ✅ **eLibrary**: Digital resources with categorization
 - ✅ **Forum**: Discussion threads with reply functionality
 - ✅ **Blog**: Articles with commenting system
 - ✅ **Auth Pages**: Modern login/register with animations
+- ✅ **Legal Pages**: Privacy Policy and Terms of Service with responsive design
 
 ### **User Dashboard**
 - ✅ **Personal Dashboard**: Progress tracking, enrolled courses, quick actions
@@ -224,6 +225,14 @@ MAIL_FROM_ADDRESS="noreply@digitaleapafrica.com"
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
+### **Course Search Configuration**
+The search functionality is automatically enabled and searches through:
+- Course titles
+- Course descriptions
+- Real-time results with pagination
+- Mobile-responsive interface
+- Clear search and empty state handling
+
 ### **Advanced Site Configuration**
 All site settings are now managed through the comprehensive admin settings panel:
 
@@ -279,7 +288,14 @@ User::create([
 
 ## 🆕 Latest Updates & Features
 
-### **Version 6.0 - User Verification & Password Reset System** 🆕 **LATEST**
+### **Version 7.0 - Search & Legal Pages** 🆕 **LATEST**
+- **Course Search Functionality**: Real-time search with filters, pagination, and results counter
+- **Legal Pages**: Complete Privacy Policy and Terms of Service pages with modern design
+- **Enhanced Mobile Responsiveness**: Fixed text overflow issues across all testimonial pages
+- **Footer Integration**: Legal pages properly linked in footer navigation
+- **Search UX**: Clear search option, empty states, and mobile-optimized interface
+
+### **Version 6.0 - User Verification & Password Reset System**
 - **Admin User Verification**: Manual verify/unverify users with gold medal badges
 - **Gold Medal Badges**: Premium verification badges on user avatars (Twitter/WhatsApp style)
 - **Dual Password Reset**: Email-based and direct reset (no email required)
@@ -347,6 +363,7 @@ SettingsHelper::all() // Get all settings
 ### **Completed Features** ✅
 - [x] User Authentication & Authorization (Google OAuth included)
 - [x] **ALX-Style Enrollment System** (free vs premium course flows)
+- [x] **Course Search System** (real-time search with pagination and filters)
 - [x] Course Management System (with rich text editor)
 - [x] Project Showcase Platform
 - [x] Job Board with Applications
@@ -384,6 +401,8 @@ SettingsHelper::all() // Get all settings
 - [x] **Gold Medal Verification Badges** (Twitter/WhatsApp-style badges on user avatars)
 - [x] **Dual Password Reset System** (email-based and direct reset without email)
 - [x] **User Management Interface** (admin panel for user verification and management)
+- [x] **Legal Pages System** (Privacy Policy and Terms of Service with modern design)
+- [x] **Enhanced Mobile Responsiveness** (fixed text overflow and card layout issues)
 
 ### **Technical Achievements** 🏆
 - [x] Role-based Access Control
@@ -537,6 +556,53 @@ MAIL_ENCRYPTION=tls
 - **Database Optimization**: Indexed queries and relationship optimization
 - **File Management**: Efficient file storage and retrieval system
 - **Cache Management**: Automatic cache invalidation for settings updates
+
+## 🔍 Search Features
+
+### **Course Search System**
+- **Real-time Search**: Instant results as you type
+- **Database Queries**: Searches course titles and descriptions
+- **Pagination Support**: Maintains search parameters across pages
+- **Mobile Optimized**: Touch-friendly interface with responsive design
+- **Results Counter**: Shows number of courses found
+- **Empty States**: Helpful messages when no results found
+- **Clear Search**: Easy option to reset search and view all courses
+
+### **Search Implementation**
+```php
+// Controller handles search parameter
+public function index(Request $request): View
+{
+    $search = $request->get('search');
+    $query = Course::query()->where('active', true);
+    
+    if ($search) {
+        $query->where(function($q) use ($search) {
+            $q->where('title', 'LIKE', "%{$search}%")
+              ->orWhere('description', 'LIKE', "%{$search}%");
+        });
+    }
+    
+    $courses = $query->latest()->paginate(9)->appends(['search' => $search]);
+    return view('pages.courses.index', compact('courses', 'search'));
+}
+```
+
+## 📄 Legal Pages
+
+### **Privacy Policy & Terms of Service**
+- **Modern Design**: Consistent with site theme and responsive layout
+- **Comprehensive Content**: Professional legal content covering all aspects
+- **Easy Navigation**: Linked in footer and accessible via direct URLs
+- **Mobile Responsive**: Optimized for all device sizes
+- **Light/Dark Theme**: Supports both theme modes
+- **Dynamic Dates**: Shows current date as "Last updated"
+
+### **Legal Pages Routes**
+```php
+Route::view('/privacy-policy', 'legal.privacy')->name('privacy.policy');
+Route::view('/terms-of-service', 'legal.terms')->name('terms.service');
+```
 
 ## 🤝 Contributing
 
