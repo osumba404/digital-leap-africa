@@ -24,10 +24,7 @@ class PointRedemptionController extends Controller
         $rewards = [
             'premium_courses' => ['cost' => 500, 'name' => 'Premium Course Access', 'description' => 'Unlock advanced courses'],
             'profile_customization' => ['cost' => 100, 'name' => 'Profile Customization', 'description' => 'Custom profile themes'],
-            'forum_privileges' => ['cost' => 250, 'name' => 'Forum Privileges', 'description' => 'Create polls and pin posts'],
-            'job_priority' => ['cost' => 300, 'name' => 'Job Board Priority', 'description' => 'Featured job applications'],
             'mentorship' => ['cost' => 500, 'name' => 'Mentorship Access', 'description' => 'Connect with mentors'],
-            'certification' => ['cost' => 1000, 'name' => 'Certification Exam', 'description' => 'Take certification exams'],
         ];
 
         return view('points.index', compact('userPoints', 'userLevel', 'rewards'));
@@ -45,10 +42,7 @@ class PointRedemptionController extends Controller
         $costs = [
             'premium_courses' => 500,
             'profile_customization' => 100,
-            'forum_privileges' => 250,
-            'job_priority' => 300,
             'mentorship' => 500,
-            'certification' => 1000,
         ];
 
         if (!isset($costs[$rewardType])) {

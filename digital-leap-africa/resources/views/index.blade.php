@@ -3,212 +3,1048 @@
 @section('title', 'Home')
 
 @section('content')
-<section class="hero-section" style="padding:0; margin:0;">
-    @php
-        $slides = [];
-        if (!empty($siteSettings['hero_slides'])) {
-            $decoded = json_decode($siteSettings['hero_slides'], true);
-            if (is_array($decoded)) {
-                foreach ($decoded as $s) {
-                    if (!empty($s['enabled'])) { $slides[] = $s; }
-                }
-            }
-        }
-    @endphp
-
-    @if(count($slides))
-        <div class="hero-rtl hero-slides-container" data-interval="6000">
-            <div class="hero-fader" style="position:relative;width:100%;height:100%;">
-                @foreach($slides as $idx => $s)
-                    @php $isAltA = ($idx % 2) === 0; @endphp
-                    @php
-                        $bgUrl = !empty($s['image']) ? $s['image'] : ($isAltA
-                            ? 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'
-                            : 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
-                        $bgStyle = $isAltA
-                            ? "background: linear-gradient(135deg, rgba(10, 15, 28, 0.85) 0%, rgba(10, 15, 28, 0.75) 100%), url('{$bgUrl}');"
-                            : "background: linear-gradient(90deg, var(--dark-bg) 40%, transparent 70%), url('{$bgUrl}');";
-                    @endphp
-                    <section class="hero-item hero-slide fade-slide {{ $isAltA ? 'slide-2' : 'slide-8' }}{{ $idx===0 ? ' is-active' : '' }}" style="{{ $bgStyle }} background-size:cover;background-position:center;background-attachment:fixed;position:absolute;inset:0;">
-                        @if($isAltA)
-                            <div class="floating-shapes">
-                                <div class="floating-shape"></div>
-                                <div class="floating-shape"></div>
-                                <div class="floating-shape"></div>
-                            </div>
-                        @endif
-                        <div class="slide-content">
-                            @if(!empty($s['mini']))
-                                <p class="mini-title">{{ $s['mini'] }}</p>
-                            @endif
-                            @if(!empty($s['title']))
-                                <h1 class="main-title">{{ $s['title'] }}</h1>
-                            @endif
-                            @if(!empty($s['sub']))
-                                <p class="hero-text">{{ $s['sub'] }}</p>
-                            @endif
-                            <div class="cta-buttons">
-                                @if(!empty($s['cta1_label']))
-                                    <a href="{{ !empty($s['cta1_route']) && Route::has($s['cta1_route']) ? route($s['cta1_route']) : '#' }}" class="btn btn-primary">
-                                        <i class="fas {{ $isAltA ? 'fa-bolt' : 'fa-cloud' }}"></i>
-                                        {{ $s['cta1_label'] }}
-                                    </a>
-                                @endif
-                                @if(!empty($s['cta2_label']))
-                                    <a href="{{ !empty($s['cta2_route']) && Route::has($s['cta2_route']) ? route($s['cta2_route']) : '#' }}" class="btn btn-secondary">
-                                        <i class="fas {{ $isAltA ? 'fa-book' : 'fa-server' }}"></i>
-                                        {{ $s['cta2_label'] }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </section>
-                @endforeach
-                <div class="hero-stars" aria-hidden="true"></div>
-            </div>
-            <div class="hero-dots" style="position:absolute;left:0;right:0;bottom:14px;display:flex;gap:8px;justify-content:center;z-index:5;">
-                @foreach($slides as $idx => $s)
-                    <button class="hero-dot{{ $idx===0 ? ' is-active' : '' }}" data-index="{{ $idx }}" style="width:9px;height:9px;border-radius:50%;border:none;background:{{ $idx===0 ? '#64b5f6' : 'rgba(255,255,255,.6)' }};cursor:pointer; padding:0;"></button>
-                @endforeach
+<!-- Modern Hero Section -->
+<section class="hero-section">
+    <div class="hero-background">
+        <div class="hero-overlay"></div>
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+    </div>
+    
+    <div class="hero-content">
+        <div class="container">
+            <div class="hero-text-content">
+                <div class="hero-badge">
+                    <i class="fas fa-users"></i>
+                    <span>Empowering African Youth</span>
+                </div>
+                
+                <h1 class="hero-title">
+                    Welcome to <span class="gradient-text">Digital Leap Africa</span>
+                </h1>
+                
+                <p class="hero-description">
+                    Empowering learners across Africa with courses, projects, jobs, events, and a vibrant community.
+                </p>
+                
+                <div class="hero-actions">
+                    <a href="{{ route('courses.index') }}" class="btn-primary hero-btn">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Browse Courses</span>
+                    </a>
+                    <a href="{{ route('elibrary.index') }}" class="btn-outline hero-btn">
+                        <i class="fas fa-book-open"></i>
+                        <span>Visit eLibrary</span>
+                    </a>
+                    <a href="{{ route('about') }}" class="btn-outline hero-btn">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About Us</span>
+                    </a>
+                    <a href="{{ route('contact') }}" class="btn-outline hero-btn">
+                        <i class="fas fa-envelope"></i>
+                        <span>Contact</span>
+                    </a>
+                </div>
             </div>
         </div>
-    @else
-        <div class="container" style="padding:3rem 0;">
-            <h1 style="margin:0 0 1rem 0;">Welcome to {{ $siteSettings['site_name'] ?? config('app.name') }}</h1>
-            <p style="color: var(--cool-gray); max-width: 700px;">
-                Empowering learners across Africa with courses, projects, jobs, events, and a vibrant community.
-            </p>
-            <div style="margin-top:1.5rem; display:flex; gap:.75rem; flex-wrap:wrap;">
-                <a class="btn-primary" href="{{ route('courses.index') }}"><i class="fas fa-graduation-cap" style="margin-right: 0.5rem;"></i>Browse Courses</a>
-                <a class="btn-outline" href="{{ route('projects.index') }}"><i class="fas fa-rocket" style="margin-right: 0.5rem;"></i>Explore Projects</a>
-                <a class="btn-outline" href="{{ route('elibrary.index') }}"><i class="fas fa-book-open" style="margin-right: 0.5rem;"></i>Visit eLibrary</a>
-            </div>
-        </div>
-    @endif
+    </div>
 </section>
 
- 
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            @php
+                $statsData = [
+                    ['label' => 'Courses', 'value' => $stats['courses'], 'icon' => 'fa-graduation-cap', 'color' => 'cyan'],
+                    ['label' => 'Articles', 'value' => $stats['articles'], 'icon' => 'fa-newspaper', 'color' => 'purple'],
+                    ['label' => 'Partners', 'value' => $stats['partners'], 'icon' => 'fa-handshake', 'color' => 'blue'],
+                    ['label' => 'Members', 'value' => $stats['members'], 'icon' => 'fa-users', 'color' => 'green'],
+                ];
+            @endphp
+            
+            @foreach($statsData as $stat)
+                <div class="stat-card {{ $stat['color'] }}">
+                    <div class="stat-icon">
+                        <i class="fas {{ $stat['icon'] }}"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ number_format($stat['value']) }}</div>
+                        <div class="stat-label">{{ $stat['label'] }}</div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
 
 <style>
-:root{--dark-bg:#0a0f1c;--card-bg:#131a2a;--accent-blue:#3b82f6;--neon-blue:#00d4ff;--light-blue:#60a5fa;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--shadow:0 10px 25px rgba(0,0,0,0.5);--transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275)}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
-body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
+/* Modern Hero Section */
+.hero-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
 
-/* New styles for hero slides */
-.hero-slide{min-height:100vh;display:flex;align-items:center;padding:0 5%;position:relative;overflow:hidden}
-.slide-content{max-width:1200px;margin:0 auto;width:100%}
+.hero-background {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #0C121C 0%, #1E293B 50%, #0F172A 100%);
+    z-index: 1;
+}
 
-/* Optional nav (not rendered) */
-.slides-nav{position:fixed;top:20px;right:20px;z-index:1000;display:flex;gap:10px}
-.nav-btn{background:rgba(19,26,42,0.8);color:var(--text-primary);border:1px solid rgba(59,130,246,0.3);padding:8px 15px;border-radius:20px;cursor:pointer;transition:var(--transition);font-size:.9rem}
-.nav-btn:hover{background:var(--accent-blue);transform:translateY(-2px)}
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 40%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(0, 201, 255, 0.1) 0%, transparent 50%);
+    z-index: 2;
+}
 
-    .hero-slides-container{min-height:100vh}
-    .mini-title{color:#00d4ff;font-size:1rem;font-weight:600;margin-bottom:15px;text-transform:uppercase;letter-spacing:2px}
-    .main-title{font-size:3.5rem;font-weight:800;margin-bottom:20px;line-height:1.1}
-    .hero-text{color:#94a3b8;font-size:1.1rem;line-height:1.6;margin-bottom:30px;max-width:600px}
-    .cta-buttons{display:flex;gap:15px;flex-wrap:wrap}
-    .btn{padding:14px 30px;border-radius:30px;font-weight:600;font-size:1rem;cursor:pointer;transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);text-decoration:none;display:inline-flex;align-items:center;gap:10px}
+.floating-elements {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.floating-element {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(0, 201, 255, 0.1));
+    animation: float 8s ease-in-out infinite;
+}
+
+.floating-element:nth-child(1) {
+    width: 120px;
+    height: 120px;
+    top: 15%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.floating-element:nth-child(2) {
+    width: 80px;
+    height: 80px;
+    top: 60%;
+    right: 15%;
+    animation-delay: 2s;
+}
+
+.floating-element:nth-child(3) {
+    width: 60px;
+    height: 60px;
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 4s;
+}
+
+.floating-element:nth-child(4) {
+    width: 100px;
+    height: 100px;
+    top: 30%;
+    right: 30%;
+    animation-delay: 6s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(180deg); }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    padding: 2rem 0;
+}
+
+.hero-text-content {
+    max-width: 800px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: var(--cyan-accent);
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(10px);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: var(--diamond-white);
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, var(--cyan-accent), var(--purple-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-description {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--cool-gray);
+    margin-bottom: 3rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    justify-content: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.hero-btn:hover::before {
+    left: 100%;
+}
+
+.hero-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Stats Section */
+.stats-section {
+    padding: 4rem 0;
+    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-color), transparent);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.stat-card:hover::before {
+    height: 100%;
+    opacity: 0.1;
+}
+
+.stat-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-color-light));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.stat-value {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--diamond-white);
+    margin-bottom: 0.5rem;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 1.1rem;
+    color: var(--cool-gray);
+    font-weight: 500;
+}
+
+/* Color Variants */
+.stat-card.cyan {
+    --accent-color: var(--cyan-accent);
+    --accent-color-light: #22D3EE;
+}
+
+.stat-card.purple {
+    --accent-color: var(--purple-accent);
+    --accent-color-light: #A855F7;
+}
+
+.stat-card.blue {
+    --accent-color: var(--primary-blue);
+    --accent-color-light: #60A5FA;
+}
+
+.stat-card.green {
+    --accent-color: #10B981;
+    --accent-color-light: #34D399;
+}
+
+/* Light Mode Styles */
+[data-theme="light"] .hero-background {
+    background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 50%, #F1F5F9 100%);
+}
+
+[data-theme="light"] .hero-overlay {
+    background: radial-gradient(circle at 30% 40%, rgba(46, 120, 197, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(0, 201, 255, 0.08) 0%, transparent 50%);
+}
+
+[data-theme="light"] .hero-title {
+    color: var(--charcoal);
+}
+
+[data-theme="light"] .hero-description {
+    color: var(--cool-gray);
+}
+
+[data-theme="light"] .hero-badge {
+    background: rgba(46, 120, 197, 0.1);
+    border-color: rgba(46, 120, 197, 0.3);
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .stats-section {
+    background: rgba(46, 120, 197, 0.02);
+    border-top-color: rgba(46, 120, 197, 0.1);
+}
+
+[data-theme="light"] .stat-card {
+    background: #FFFFFF;
+    border-color: rgba(46, 120, 197, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .stat-card:hover {
+    background: #FFFFFF;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .stat-value {
+    color: var(--charcoal);
+}
+
+/* Section Styles */
+.articles-section,
+.courses-section {
+    padding: 6rem 0;
+    position: relative;
+}
+
+.articles-section {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.courses-section {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(0, 201, 255, 0.03) 100%);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    color: var(--cyan-accent);
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.section-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--diamond-white);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.section-description {
+    font-size: 1.1rem;
+    color: var(--cool-gray);
+    line-height: 1.6;
+}
+
+/* Articles Grid */
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.article-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    position: relative;
+}
+
+.article-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+.article-image {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+
+.article-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.article-card:hover .article-image img {
+    transform: scale(1.05);
+}
+
+.article-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--purple-accent), var(--cyan-accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+}
+
+.article-category {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(59, 130, 246, 0.9);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+}
+
+.article-content {
+    padding: 2rem;
+}
+
+.article-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--cool-gray);
+}
+
+.article-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--diamond-white);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+
+.article-excerpt {
+    color: var(--cool-gray);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.article-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--cyan-accent);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.article-link:hover {
+    gap: 1rem;
+    color: var(--purple-accent);
+}
+
+/* Courses List */
+.courses-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.course-horizontal-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    transition: all 0.3s ease;
+    min-height: 160px;
+}
+
+.course-horizontal-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(0, 201, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.course-image-wrapper {
+    flex: 0 0 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.course-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.course-horizontal-card:hover .course-img {
+    transform: scale(1.02);
+}
+
+.course-img-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
+}
+
+.course-details {
+    flex: 1;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.course-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--diamond-white);
+    margin: 0;
+    line-height: 1.3;
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.course-price {
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.course-price.free {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.course-price.premium {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.course-info {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--cool-gray);
+}
+
+.course-lessons,
+.course-instructor {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.course-description {
+    color: var(--cool-gray);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.course-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--cyan-accent), var(--primary-blue));
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+}
+
+.course-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 201, 255, 0.3);
+    gap: 0.75rem;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--cool-gray);
+}
+
+.empty-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--cyan-accent);
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--diamond-white);
+}
+
+/* Section Footer */
+.section-footer {
+    text-align: center;
+}
+
+.btn-outline-large {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2.5rem;
+    background: transparent;
+    border: 2px solid var(--cyan-accent);
+    color: var(--cyan-accent);
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-outline-large::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--cyan-accent);
+    transition: left 0.3s ease;
+    z-index: -1;
+}
+
+.btn-outline-large:hover::before {
+    left: 0;
+}
+
+.btn-outline-large:hover {
+    color: var(--charcoal);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 201, 255, 0.3);
+}
+
+/* Light Mode Styles */
+[data-theme="light"] .articles-section {
+    background: rgba(46, 120, 197, 0.02);
+}
+
+[data-theme="light"] .courses-section {
+    background: linear-gradient(135deg, rgba(46, 120, 197, 0.05) 0%, rgba(0, 201, 255, 0.03) 100%);
+}
+
+[data-theme="light"] .section-title {
+    color: var(--charcoal);
+}
+
+[data-theme="light"] .section-badge {
+    background: rgba(46, 120, 197, 0.1);
+    border-color: rgba(46, 120, 197, 0.2);
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .article-card,
+[data-theme="light"] .course-horizontal-card {
+    background: #FFFFFF;
+    border-color: rgba(46, 120, 197, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .article-card:hover,
+[data-theme="light"] .course-horizontal-card:hover {
+    background: #FFFFFF;
+    border-color: rgba(46, 120, 197, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .article-title,
+[data-theme="light"] .course-name {
+    color: var(--charcoal);
+}
+
+[data-theme="light"] .article-link {
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .article-link:hover {
+    color: var(--deep-blue);
+}
+
+[data-theme="light"] .course-price.free {
+    background: rgba(16, 185, 129, 0.15);
+    color: #059669;
+}
+
+[data-theme="light"] .course-price.premium {
+    background: rgba(245, 158, 11, 0.15);
+    color: #d97706;
+}
+
+[data-theme="light"] .empty-state {
+    color: var(--cool-gray);
+}
+
+[data-theme="light"] .empty-state h3 {
+    color: var(--charcoal);
+}
+
+[data-theme="light"] .empty-icon {
+    background: rgba(46, 120, 197, 0.1);
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .btn-outline-large {
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+}
+
+[data-theme="light"] .btn-outline-large::before {
+    background: var(--primary-blue);
+}
+
+[data-theme="light"] .btn-outline-large:hover {
+    color: white;
+    box-shadow: 0 10px 30px rgba(46, 120, 197, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .hero-title {
+        font-size: 3.5rem;
+    }
     
-    /* Dark Mode Secondary Button */
-    .btn-secondary{background:rgba(59, 130, 246, 0.08);color:#64b5f6;border:2px solid #3b82f6}
-    .btn-secondary:hover{background:rgba(59,130,246,0.2);border-color:#64b5f6;color:#64b5f6;transform:translateY(-3px)}
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+    }
     
-    /* Light Mode Hero Styles */
-    [data-theme="light"] .hero-slide{background:linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 242, 255, 0.9) 100%), url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') !important;background-size:cover !important;background-position:center !important}
-    [data-theme="light"] .mini-title{color:#2E78C5}
-    [data-theme="light"] .main-title{color:#1a202c}
-    [data-theme="light"] .hero-text{color:#4A5568}
-    [data-theme="light"] .btn-secondary{background:rgba(46, 120, 197, 0.05);color:#2E78C5;border:2px solid #2E78C5}
-    [data-theme="light"] .btn-secondary:hover{background:rgba(46, 120, 197, 0.15);border-color:#1E4C7C;color:#1E4C7C;transform:translateY(-3px)}
-    [data-theme="light"] .slide-2{background:linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 242, 255, 0.9) 100%), url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') !important}
-    [data-theme="light"] .slide-8{background:linear-gradient(90deg, rgba(255, 255, 255, 0.95) 40%, rgba(230, 242, 255, 0.85) 70%), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') !important}
-    [data-theme="light"] .slide-2 .main-title{background:linear-gradient(90deg,#2E78C5,#1E4C7C);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    [data-theme="light"] .slide-8 .main-title{background:linear-gradient(90deg,#1a202c,#2E78C5);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    [data-theme="light"] .floating-shape{background:rgba(46, 120, 197, 0.08)}
+    .section-title {
+        font-size: 2.5rem;
+    }
+    
+    .articles-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .course-horizontal-card {
+        flex-direction: column;
+        min-height: auto;
+    }
+    
+    .course-image-wrapper {
+        flex: none;
+        height: 180px;
+    }
+    
+    .course-details {
+        padding: 1.25rem;
+    }
+}
 
-    /* Slide 2 background and effects */
-    .slide-2{background:linear-gradient(135deg, rgba(10, 15, 28, 0.85) 0%, rgba(10, 15, 28, 0.75) 100%), url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');background-size:cover;background-position:center;background-attachment:fixed;position:relative}
-    .slide-2::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 30% 50%, rgba(59,130,246,0.15) 0%, transparent 50%);pointer-events:none}
-    .slide-2 .slide-content{max-width:700px;position:relative;z-index:2}
-    .slide-2 .main-title{background:linear-gradient(90deg,#3b82f6,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 5px 15px rgba(0,0,0,0.3)}
-    .slide-2 .hero-text{font-size:1.3rem;padding:20px}
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 80vh;
+        padding: 2rem 0;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-description {
+        font-size: 1.1rem;
+    }
+    
+    .hero-actions {
+        grid-template-columns: 1fr;
+        max-width: 300px;
+    }
+    
+    .hero-btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1.5rem;
+    }
+    
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+    }
+    
+    .articles-section,
+    .courses-section {
+        padding: 4rem 0;
+    }
+    
+    .section-header {
+        margin-bottom: 3rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .section-description {
+        font-size: 1rem;
+    }
+    
+    .articles-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .course-horizontal-card {
+        flex-direction: column;
+    }
+    
+    .course-image-wrapper {
+        height: 160px;
+    }
+    
+    .course-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .course-name {
+        margin-right: 0;
+        font-size: 1.1rem;
+    }
+    
+    .course-info {
+        gap: 1rem;
+    }
+    
+    .article-content,
+    .course-content {
+        padding: 1.5rem;
+    }
+    
+    .article-image,
+    .course-image {
+        height: 180px;
+    }
+    
+    .btn-outline-large {
+        padding: 0.875rem 2rem;
+        font-size: 1rem;
+    }
+}
 
-    .floating-shapes{position:absolute;width:100%;height:100%;pointer-events:none;z-index:1}
-    .floating-shape{position:absolute;border-radius:50%;background:rgba(59,130,246,0.1);animation:float 8s ease-in-out infinite}
-    .floating-shape:nth-child(1){width:80px;height:80px;top:20%;left:10%;animation-delay:0s}
-    .floating-shape:nth-child(2){width:120px;height:120px;top:60%;left:85%;animation-delay:2s}
-    .floating-shape:nth-child(3){width:60px;height:60px;top:80%;left:15%;animation-delay:4s}
-    @keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-20px) rotate(10deg)}}
-
-    /* Slide 8 background and effects */
-    .slide-8{background:linear-gradient(90deg, var(--dark-bg) 40%, transparent 70%), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');background-size:cover;background-position:center;background-attachment:fixed;position:relative}
-    .slide-8::before{content:'';position:absolute;top:0;right:0;width:100%;height:100%;background:linear-gradient(45deg, transparent 60%, #3b82f6 200%);opacity:.1;z-index:1}
-    .slide-8 .slide-content{max-width:650px;position:relative;z-index:2}
-    .slide-8 .main-title{font-size:3.8rem;margin-bottom:15px;background:linear-gradient(90deg,#ffffff,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 5px 15px rgba(0,0,0,0.3)}
-    .slide-8 .hero-text{font-size:1.1rem;margin-bottom:25px;padding:20px;border-radius:15px}
-
-    @media (max-width:1024px){
-        .slide-8{background:linear-gradient(rgba(10,15,28,0.9), rgba(10,15,28,0.8)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');background-size:cover;background-position:center}
-        .main-title{font-size:2.8rem}
-        .slide-8 .main-title{font-size:3.2rem}
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
     }
-    @media (max-width:768px){
-        .hero-slide{padding:0 5%}
-        .slide-content{max-width:100%;padding:0 1rem}
-        .main-title{font-size:2.2rem}
-        .slide-8 .main-title{font-size:2.5rem}
-        .hero-text{font-size:1rem}
-        .btn{padding:12px 25px;font-size:.9rem;width:100%;justify-content:center}
-        .cta-buttons{flex-direction:column;gap:0.75rem}
+    
+    .hero-description {
+        font-size: 1rem;
     }
-    @media (max-width:480px){
-        .hero-slide{padding:0 4%}
-        .slide-content{padding:0 1.5rem}
-        .main-title{font-size:1.8rem}
-        .slide-8 .main-title{font-size:2rem}
-        .hero-text{font-size:0.95rem}
-        .cta-buttons{flex-direction:column;align-items:stretch}
-        .btn{width:100%;justify-content:center;padding:10px 20px;font-size:0.85rem}
+    
+    .hero-badge {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
     }
-
-    /* Light Mode Hero Styles */
-    [data-theme="light"] .hero-slide {
-        background: linear-gradient(135deg, rgba(230, 242, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%), var(--bg-image) !important;
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
     }
-    [data-theme="light"] .slide-2 {
-        background: linear-gradient(135deg, rgba(230, 242, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%), url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') !important;
+    
+    .stat-value {
+        font-size: 1.75rem;
     }
-    [data-theme="light"] .slide-8 {
-        background: linear-gradient(90deg, rgba(230, 242, 255, 0.95) 40%, rgba(248, 250, 252, 0.85) 70%), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') !important;
+    
+    .section-title {
+        font-size: 1.75rem;
     }
-    [data-theme="light"] .mini-title {
-        color: var(--primary-blue);
+    
+    .section-badge {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
     }
-    [data-theme="light"] .main-title {
-        color: var(--diamond-white);
+    
+    .article-content,
+    .course-content {
+        padding: 1.25rem;
     }
-    [data-theme="light"] .hero-text {
-        color: var(--cool-gray);
+    
+    .article-title,
+    .course-title {
+        font-size: 1.2rem;
     }
-    [data-theme="light"] .btn-secondary {
-        border-color: var(--primary-blue);
-        color: var(--primary-blue);
+    
+    .empty-state {
+        padding: 3rem 1rem;
     }
-    [data-theme="light"] .btn-secondary:hover {
-        background: rgba(46, 120, 197, 0.1);
+    
+    .empty-icon {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
     }
+}
 </style>
 
-{{-- Stats strip --}}
-  @php
-    $stats = [
-      ['label'=>'Courses',  'value'=> \App\Models\Course::count(),      'icon'=>'fa-book-open'],
-      ['label'=>'Articles', 'value'=> \App\Models\Article::count(),     'icon'=>'fa-diagram-project'],
-      ['label'=>'Partners', 'value'=> \App\Models\Partner::count(),     'icon'=>'fa-handshake'],
-      ['label'=>'Members',  'value'=> \App\Models\User::count(),  'icon'=>'fa-users'],
-    ];
-  @endphp
+
 
 <!-- About, Mission & Vision, Stats -->
 @php
@@ -362,272 +1198,207 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
 
 
 
-    {{-- Stats strip --}}
-    <div class="mt-4">
-      <div class="container">
-        <div class="stats-grid">
-        @foreach($stats as $s)
-          <div class="stat-card">
-            <div style="font-size:1.25rem;color:var(--cyan-accent);margin-bottom:.25rem;">
-              <i class="fa-solid {{ $s['icon'] }}"></i>
-            </div>
-            <div class="stat-value">{{ number_format((float)$s['value']) }}</div>
-            <div class="stat-label">{{ $s['label'] }}</div>
-          </div>
-        @endforeach
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+
 
  
 
 <!-- Latest Articles -->
-<section id="articles-section" style="padding:2rem 0;">
-  @php
-      try {
-          $latestArticles = \App\Models\Article::query()->latest()->take(2)->get();
-      } catch (\Throwable $e) {
-          $latestArticles = collect();
-      }
-      // Helper to pick an image field if present
-      $pickImage = function($article) {
-          return $article->featured_image_url
-              ?? $article->image_url
-              ?? $article->cover_image
-              ?? $article->thumbnail
-              ?? $article->featured_image
-              ?? null;
-      };
-  @endphp
-
-  <div class="container">
-    <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
-      <h2 class="m-0">Latest Articles</h2>
-    </div>
-
-    @if($latestArticles->count())
-      <div class="cards-grid">
-        @foreach($latestArticles as $post)
-          @php
-            $image = $pickImage($post);
-            $title = $post->title ?? 'Untitled';
-            $excerpt = method_exists($post, 'getExcerptAttribute')
-              ? $post->excerpt
-              : (\Illuminate\Support\Str::limit(strip_tags($post->content ?? $post->body ?? ''), 140));
-            $readMinutes = max(1, ceil(str_word_count(strip_tags($post->content ?? $post->body ?? ''))/200));
-            $category = $post->category_name ?? $post->category ?? null;
-            $dateText = !empty($post->created_at) ? $post->created_at->format('M j, Y') : null;
-          @endphp
-
-          <div class="card">
-            <div class="card-image-container">
-              @if($image)
-                <img src="{{ $image }}" alt="{{ $title }}" class="card-image">
-              @else
-                <img src="https://via.placeholder.com/1000x600.png?text=Article" alt="{{ $title }}" class="card-image">
-              @endif
-              @if($category)
-                <div class="card-category">{{ $category }}</div>
-              @endif
-              <h3 class="card-title">{{ $title }}</h3>
+<section class="articles-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-badge">
+                <i class="fas fa-newspaper"></i>
+                <span>Blog</span>
             </div>
-            <div class="card-content">
-              <div class="card-meta">
-                <span><i class="far fa-clock"></i> {{ $readMinutes }} min read</span>
-                @if($dateText)
-                  <span><i class="far fa-calendar"></i> {{ $dateText }}</span>
-                @endif
-              </div>
-              <p class="card-body">{{ $excerpt }}</p>
-              {{-- Force the Read button to specific URL as requested --}}
-              <a class="card-button" href="http://127.0.0.1:8000/blog/cybersecurity-in-2025-safeguarding-your-digital-life">
-                <i class="fas fa-book-reader" style="margin-right: 0.5rem;"></i>Read Article <i class="fas fa-arrow-right"></i>
-              </a>
+            <h2 class="section-title">Latest Articles</h2>
+            <p class="section-description">Stay updated with the latest insights, tutorials, and industry trends</p>
+        </div>
+
+        @php
+            $pickImage = function($article) {
+                return $article->featured_image_url
+                    ?? $article->image_url
+                    ?? $article->cover_image
+                    ?? $article->thumbnail
+                    ?? $article->featured_image
+                    ?? null;
+            };
+        @endphp
+
+        @if($latestArticles->count())
+            <div class="articles-grid">
+                @foreach($latestArticles as $post)
+                    @php
+                        $image = $pickImage($post);
+                        $title = $post->title ?? 'Untitled';
+                        $excerpt = method_exists($post, 'getExcerptAttribute')
+                            ? $post->excerpt
+                            : (\Illuminate\Support\Str::limit(strip_tags($post->content ?? $post->body ?? ''), 120));
+                        $readMinutes = max(1, ceil(str_word_count(strip_tags($post->content ?? $post->body ?? ''))/200));
+                        $category = $post->category_name ?? $post->category ?? null;
+                        $dateText = !empty($post->created_at) ? $post->created_at->format('M j, Y') : null;
+                    @endphp
+
+                    <article class="article-card">
+                        <div class="article-image">
+                            @if($image)
+                                <img src="{{ $image }}" alt="{{ $title }}">
+                            @else
+                                <div class="article-placeholder">
+                                    <i class="fas fa-newspaper"></i>
+                                </div>
+                            @endif
+                            @if($category)
+                                <div class="article-category">{{ $category }}</div>
+                            @endif
+                        </div>
+                        
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span class="read-time">
+                                    <i class="far fa-clock"></i>
+                                    {{ $readMinutes }} min read
+                                </span>
+                                @if($dateText)
+                                    <span class="article-date">
+                                        <i class="far fa-calendar"></i>
+                                        {{ $dateText }}
+                                    </span>
+                                @endif
+                            </div>
+                            
+                            <h3 class="article-title">{{ $title }}</h3>
+                            <p class="article-excerpt">{{ $excerpt }}</p>
+                            
+                            <a href="{{ route('blog.show', $post) }}" class="article-link">
+                                <span>Read Article</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                @endforeach
             </div>
-          </div>
-        @endforeach
-      </div>
-    @else
-      <div class="text-muted">No articles published yet.</div>
-    @endif
-    <div class="text-center mt-3" style="padding-top:1rem !important">
-      <a class="btn-outline btn-wide" href="{{ \Illuminate\Support\Facades\Route::has('articles.index') ? route('articles.index') : url('/articles') }}"><i class="fas fa-newspaper" style="margin-right: 0.5rem;"></i>View all articles</a>
+        @else
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-newspaper"></i>
+                </div>
+                <h3>No Articles Yet</h3>
+                <p>Stay tuned for exciting content coming soon!</p>
+            </div>
+        @endif
+
+        <div class="section-footer">
+            <a href="{{ route('blog.index') }}" class="btn-outline-large">
+                <span>View All Articles</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
     </div>
-  </div>
 </section>
 
-<style>
-  /* Articles overlay card styles (scoped) */
-  #articles-section .cards-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(320px,1fr));gap:2rem}
-  #articles-section .card{background-color:#112240;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(2,12,27,0.7);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);height:100%;display:flex;flex-direction:column;padding:0}
-  #articles-section .card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(2,12,27,0.9)}
-  #articles-section .card-image-container{position:relative;overflow:hidden;margin:0;padding:0;line-height:0;border-top-left-radius:12px;border-top-right-radius:12px}
-  #articles-section .card-image{width:100%;height:200px;object-fit:cover;display:block;margin:0;transition:transform .5s ease}
-  #articles-section .card:hover .card-image{transform:scale(1.05)}
-  #articles-section .card-title{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent, rgba(10,25,47,0.95));padding:1.5rem 1.5rem .75rem;margin:0;font-size:1.3rem;font-weight:600;line-height:1.4;text-shadow:0 2px 4px rgba(0,0,0,0.5)}
-  #articles-section .card-content{padding:1.5rem;flex-grow:1;display:flex;flex-direction:column}
-  #articles-section .card-body{color:#8892b0;line-height:1.6;margin-bottom:1.5rem;flex-grow:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-  #articles-section .card-meta{display:flex;justify-content:space-between;color:#8892b0;font-size:.85rem;margin-bottom:1rem;border-bottom:1px solid rgba(136,146,176,0.2);padding-bottom:.75rem}
-  #articles-section .card-button{display:inline-flex;align-items:center;justify-content:center;background-color:transparent;color:#3b82f6;padding:.6rem 1.2rem;border:1px solid #3b82f6;border-radius:6px;text-decoration:none;font-size:.9rem;font-weight:500;transition:all .3s ease;cursor:pointer;gap:.5rem}
-  #articles-section .card-button:hover{background-color:rgba(59,130,246,.1);transform:translateY(-2px);box-shadow:0 4px 12px rgba(59,130,246,.2)}
-  #articles-section .card-category{position:absolute;top:1rem;left:1rem;background:rgba(100,255,218,0.9);color:#0a192f;padding:.3rem .8rem;border-radius:20px;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-  @media (max-width:768px){#articles-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.5rem}#articles-section .card-title{font-size:1.2rem;padding:1.25rem 1.25rem .5rem}}
-
-  /* Light Mode Articles */
-  [data-theme="light"] #articles-section .card {
-      background-color: #FFFFFF;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(46, 120, 197, 0.15);
-  }
-  [data-theme="light"] #articles-section .card:hover {
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-  }
-  [data-theme="light"] #articles-section .card-title {
-      background: linear-gradient(transparent, rgba(230, 242, 255, 0.95));
-      color: var(--diamond-white);
-  }
-  [data-theme="light"] #articles-section .card-body,
-  [data-theme="light"] #articles-section .card-meta {
-      color: var(--cool-gray);
-  }
-  [data-theme="light"] #articles-section .card-button {
-      color: var(--primary-blue);
-      border-color: var(--primary-blue);
-  }
-  [data-theme="light"] #articles-section .card-button:hover {
-      background-color: rgba(46, 120, 197, 0.1);
-      box-shadow: 0 4px 12px rgba(46, 120, 197, 0.2);
-  }
-  [data-theme="light"] #articles-section .card-category {
-      background: rgba(46, 120, 197, 0.9);
-      color: #FFFFFF;
-  }
-</style>
-
-<style>
-  /* Courses overlay card styles (scoped) */
-  #courses-section .cards-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(320px,1fr));gap:2rem}
-  #courses-section .card{background-color:#112240;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(2,12,27,0.7);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);height:100%;display:flex;flex-direction:column;padding:0}
-  #courses-section .card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(2,12,27,0.9)}
-  #courses-section .card-image-container{position:relative;overflow:hidden;margin:0;padding:0;line-height:0;border-top-left-radius:12px;border-top-right-radius:12px}
-  #courses-section .card-image{width:100%;height:200px;object-fit:cover;display:block;margin:0;transition:transform .5s ease}
-  #courses-section .card:hover .card-image{transform:scale(1.05)}
-  #courses-section .card-title{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent, rgba(10,25,47,0.95));padding:1.25rem 1.25rem .6rem;margin:0;font-size:1.1rem;font-weight:700;line-height:1.35;text-shadow:0 2px 4px rgba(0,0,0,0.5)}
-  #courses-section .card-content{padding:1.25rem;flex-grow:1;display:flex;flex-direction:column}
-  #courses-section .card-body{color:#8892b0;line-height:1.6;margin-bottom:1rem;flex-grow:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-  #courses-section .card-meta{display:flex;justify-content:space-between;color:#8892b0;font-size:.85rem;margin-bottom:.85rem;border-bottom:1px solid rgba(136,146,176,0.2);padding-bottom:.6rem}
-  #courses-section .card-button{display:inline-flex;align-items:center;justify-content:center;background-color:transparent;color:#3b82f6;padding:.6rem 1.2rem;border:1px solid #3b82f6;border-radius:6px;text-decoration:none;font-size:.9rem;font-weight:600;transition:all .3s ease;cursor:pointer;gap:.5rem}
-  #courses-section .card-button:hover{background-color:rgba(59,130,246,.1);transform:translateY(-2px);box-shadow:0 4px 12px rgba(59,130,246,.2)}
-  .btn-wide{width: 100%;}
-  @media (max-width:768px){#courses-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.5rem}#courses-section .card-title{font-size:1rem;padding:1rem 1rem .45rem}}
-
-  /* Light Mode Courses */
-  [data-theme="light"] #courses-section .card {
-      background-color: #FFFFFF;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(46, 120, 197, 0.15);
-  }
-  [data-theme="light"] #courses-section .card:hover {
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-  }
-  [data-theme="light"] #courses-section .card-title {
-      background: linear-gradient(transparent, rgba(230, 242, 255, 0.95));
-      color: var(--diamond-white);
-  }
-  [data-theme="light"] #courses-section .card-body,
-  [data-theme="light"] #courses-section .card-meta {
-      color: var(--cool-gray);
-  }
-  [data-theme="light"] #courses-section .card-button {
-      color: var(--primary-blue);
-      border-color: var(--primary-blue);
-  }
-  [data-theme="light"] #courses-section .card-button:hover {
-      background-color: rgba(46, 120, 197, 0.1);
-      box-shadow: 0 4px 12px rgba(46, 120, 197, 0.2);
-  }
-</style>
 
 
 
 
 
-<!-- Latest Courses -->
-<section id="courses-section" style="padding:2rem 0;">
-  @php
-    try {
-      $latestCourses = \App\Models\Course::query()
-        ->where('active', true)
-        ->latest()
-        ->take(3)
-        ->get();
-    } catch (\Throwable $e) {
-      $latestCourses = collect();
-    }
-    $pickCourseImage = function($course) {
-      return $course->image_url
-          ?? $course->thumbnail
-          ?? $course->cover_image
-          ?? $course->banner_image
-          ?? null;
-    };
-  @endphp
 
-  <div class="container">
-    <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
-      <h2 class="m-0">Available Courses</h2>
-    </div>
-
-    @if($latestCourses->count())
-      <div class="cards-grid">
-        @foreach($latestCourses as $course)
-          @php
-            $courseImage   = $pickCourseImage($course);
-            $courseTitle   = $course->title ?? 'Untitled';
-            $courseExcerpt = \Illuminate\Support\Str::limit(strip_tags($course->short_description ?? $course->description ?? $course->summary ?? ''), 140);
-            $showUrl       = \Illuminate\Support\Facades\Route::has('courses.show') ? route('courses.show', $course) : url('/courses/'.$course->id);
-            // Lessons count (relation preferred, fallback to *_count fields)
-            $lessonsCount = 0;
-            if (method_exists($course, 'lessons')) {
-              $lessonsCount = $course->relationLoaded('lessons') ? $course->lessons->count() : $course->lessons()->count();
-            } else {
-              $lessonsCount = $course->lessons_count ?? $course->lectures_count ?? 0;
-            }
-          @endphp
-
-          <div class="card">
-            <div class="card-image-container">
-              @if($courseImage)
-                <img src="{{ $courseImage }}" alt="{{ $courseTitle }}" class="card-image">
-              @else
-                <img src="https://via.placeholder.com/1000x600.png?text=Course" alt="{{ $courseTitle }}" class="card-image">
-              @endif
-              <h3 class="card-title">{{ $courseTitle }}</h3>
+<!-- Available Courses -->
+<section class="courses-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-badge">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Learning</span>
             </div>
-            <div class="card-content">
-              <div class="card-meta">
-                <span><i class="fas fa-play-circle"></i> {{ $lessonsCount }} lessons</span>
-                @if(!empty($course->created_at))
-                  <span><i class="far fa-calendar"></i> {{ $course->created_at->format('M j, Y') }}</span>
-                @endif
-              </div>
-              <p class="card-body">{{ $courseExcerpt }}</p>
-              <a class="card-button" href="{{ $showUrl }}">
-                <i class="fas fa-play-circle" style="margin-right: 0.5rem;"></i>View Course <i class="fas fa-arrow-right"></i>
-              </a>
+            <h2 class="section-title">Available Courses</h2>
+            <p class="section-description">Master new skills with our expert-led courses designed for African learners</p>
+        </div>
+
+        @php
+            $pickCourseImage = function($course) {
+                return $course->image_url
+                    ?? $course->thumbnail
+                    ?? $course->cover_image
+                    ?? $course->banner_image
+                    ?? null;
+            };
+        @endphp
+
+        @if($latestCourses->count())
+            <div class="courses-list">
+                @foreach($latestCourses as $course)
+                    @php
+                        $courseImage = $pickCourseImage($course);
+                        $courseTitle = $course->title ?? 'Untitled';
+                        $courseExcerpt = \Illuminate\Support\Str::limit(strip_tags($course->short_description ?? $course->description ?? $course->summary ?? ''), 120);
+                        $showUrl = route('courses.show', $course);
+                        $lessonsCount = $course->lessons_count ?? 0;
+                        $courseType = $course->is_free ? 'Free' : 'Premium';
+                        $coursePrice = $course->price ?? 0;
+                    @endphp
+
+                    <div class="course-horizontal-card">
+                        <div class="course-image-wrapper">
+                            @if($courseImage)
+                                <img src="{{ $courseImage }}" alt="{{ $courseTitle }}" class="course-img">
+                            @else
+                                <div class="course-img-placeholder">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                            @endif
+                        </div>
+                        
+                        <div class="course-details">
+                            <div class="course-header">
+                                <h3 class="course-name">{{ $courseTitle }}</h3>
+                                <div class="course-price {{ $course->is_free ? 'free' : 'premium' }}">
+                                    @if(!$course->is_free && $coursePrice > 0)
+                                        KES {{ number_format($coursePrice) }}
+                                    @else
+                                        {{ $courseType }}
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <div class="course-info">
+                                <span class="course-lessons">
+                                    <i class="fas fa-play-circle"></i>
+                                    {{ $lessonsCount }} lessons
+                                </span>
+                                <span class="course-instructor">
+                                    <i class="fas fa-user"></i>
+                                    {{ $course->instructor ?? 'Instructor' }}
+                                </span>
+                            </div>
+                            
+                            <p class="course-description">{{ $courseExcerpt }}</p>
+                            
+                            <a href="{{ $showUrl }}" class="course-btn">
+                                View Course
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
             </div>
-          </div>
-        @endforeach
-      </div>
-    @else
-      <div class="text-muted">No courses available yet.</div>
-    @endif
-    <div class="text-center mt-3" style="padding-top:1rem !important">
-      <a class="btn-outline btn-wide" href="{{ \Illuminate\Support\Facades\Route::has('courses.index') ? route('courses.index') : url('/courses') }}"><i class="fas fa-graduation-cap" style="margin-right: 0.5rem;"></i>View all courses</a>
+        @else
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>No Courses Available</h3>
+                <p>New courses are being prepared. Check back soon!</p>
+            </div>
+        @endif
+
+        <div class="section-footer">
+            <a href="{{ route('courses.index') }}" class="btn-outline-large">
+                <span>View All Courses</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
     </div>
-  </div>
 </section>
 
 <!-- Testimonials Carousel -->
@@ -747,6 +1518,8 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
   flex-direction: column;
   gap: 1rem;
   transition: all 0.3s ease;
+  min-height: 200px;
+  max-height: 280px;
 }
 
 .testimonial-content:hover {
@@ -788,6 +1561,9 @@ body{background:var(--dark-bg);color:var(--text-primary);overflow-x:hidden}
   text-align: left;
   position: relative;
   flex: 1;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .quote-icon {

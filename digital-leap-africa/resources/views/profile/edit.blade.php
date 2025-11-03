@@ -763,27 +763,15 @@
             </div>
         </div>
         
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1.5rem 0;">
-            <div style="text-align: center; padding: 1rem; background: rgba(0, 201, 255, 0.1); border-radius: 8px; border: 1px solid rgba(0, 201, 255, 0.2);">
-                <i class="fas fa-coins" style="font-size: 1.5rem; color: var(--cyan-accent); margin-bottom: 0.5rem; display: block;"></i>
-                <div style="font-size: 2rem; font-weight: 700; color: var(--cyan-accent);">{{ $totalPoints ?? 0 }}</div>
-                <div style="color: var(--cool-gray); font-size: 0.9rem;">Points</div>
-            </div>
-            <div style="text-align: center; padding: 1rem; background: rgba(122, 95, 255, 0.1); border-radius: 8px; border: 1px solid rgba(122, 95, 255, 0.2);">
-                <i class="fas fa-trophy" style="font-size: 1.5rem; color: var(--purple-accent); margin-bottom: 0.5rem; display: block;"></i>
-                <div style="font-size: 2rem; font-weight: 700; color: var(--purple-accent);">{{ $userLevel ?? 'Beginner' }}</div>
-                <div style="color: var(--cool-gray); font-size: 0.9rem;">Level</div>
-            </div>
-        </div>
+
         
         <div class="mobile-action-buttons" style="display:flex; gap:0.75rem; flex-wrap:wrap; justify-content:center; margin-top: 1rem;">
             <button type="button" class="btn-primary mobile-btn" onclick="document.getElementById('updateProfileModal').style.display='flex'">
-                <i class="fas fa-user-edit" style="margin-right:8px;"></i>Profile
+                <i class="fas fa-user-edit" style="margin-right:8px;"></i>Edit Profile
             </button>
-            <button type="button" class="btn-outline mobile-btn" onclick="document.getElementById('changePasswordModal').style.display='flex'">
-                <i class="fas fa-lock" style="margin-right:8px;"></i>Password
-            </button>
-
+            <a href="{{ route('leaderboard') }}" class="btn-outline mobile-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-trophy" style="margin-right:8px;"></i>Leaderboard
+            </a>
         </div>
         
 
@@ -955,40 +943,99 @@
 
 </div>
 
-<div id="updateProfileModal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
-    <div class="mobile-modal" style="background: var(--charcoal); padding: 2rem; border-radius: var(--radius); max-width: 640px; width: 92%;">
-        <h3 style="margin-top:0; margin-bottom:1rem;">Update Profile</h3>
-        <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
-            @csrf
-            @method('patch')
-            <div class="form-group">
-                <label for="name" class="form-label">Name</label>
-                <input id="name" name="name" type="text" class="form-control" value="{{ old('name', $user->name) }}" required>
-                @error('name')
-                    <div class="error-message">{{ $message }}</div>
-                @enderror
-            </div>
-            <div class="form-group">
-                <label for="email" class="form-label">Email</label>
-                <input id="email" name="email" type="email" class="form-control" value="{{ old('email', $user->email) }}" required>
-                @error('email')
-                    <div class="error-message">{{ $message }}</div>
-                @enderror
-            </div>
-            <div class="form-group">
-                <label for="profile_photo" class="form-label">Profile Photo</label>
-                <input id="profile_photo" name="profile_photo" type="file" class="form-control" accept="image/*">
-                @error('profile_photo')
-                    <div class="error-message">{{ $message }}</div>
-                @enderror
-            </div>
-            <div style="display:flex; gap: 0.75rem; justify-content:flex-end; margin-top:1rem;">
-                <button type="button" class="btn-outline" onclick="document.getElementById('updateProfileModal').style.display='none'">Cancel</button>
-                <button type="submit" class="btn-save">Save Changes</button>
-            </div>
-        </form>
+<div id="updateProfileModal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 1rem;">
+    <div class="mobile-modal" style="background: var(--charcoal); border-radius: 12px; max-width: 400px; width: 100%; border: 1px solid rgba(0, 201, 255, 0.2); max-height: 90vh; overflow-y: auto;">
+        <!-- Header -->
+        <div style="padding: 1rem; border-bottom: 1px solid rgba(0, 201, 255, 0.1); display: flex; align-items: center; justify-content: space-between;">
+            <h3 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: var(--diamond-white);">Update Profile</h3>
+            <button type="button" onclick="document.getElementById('updateProfileModal').style.display='none'" style="background: none; border: none; color: var(--cool-gray); font-size: 1.2rem; cursor: pointer; padding: 0.25rem;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- Body -->
+        <div style="padding: 1rem;">
+            <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+                @csrf
+                @method('patch')
+                <input type="hidden" name="update_password" value="1">
+                
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--diamond-white); font-size: 0.9rem;">
+                        <i class="fas fa-user" style="color: var(--cyan-accent); margin-right: 0.5rem;"></i>Name
+                    </label>
+                    <input id="name" name="name" type="text" value="{{ old('name', $user->name) }}" required style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: var(--diamond-white); font-size: 0.9rem;">
+                    @error('name')
+                        <div style="color: #ef4444; font-size: 0.8rem; margin-top: 0.25rem;">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--diamond-white); font-size: 0.9rem;">
+                        <i class="fas fa-envelope" style="color: var(--purple-accent); margin-right: 0.5rem;"></i>Email
+                    </label>
+                    <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}" required style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: var(--diamond-white); font-size: 0.9rem;">
+                    @error('email')
+                        <div style="color: #ef4444; font-size: 0.8rem; margin-top: 0.25rem;">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="profile_photo" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--diamond-white); font-size: 0.9rem;">
+                        <i class="fas fa-camera" style="color: #22c55e; margin-right: 0.5rem;"></i>Profile Photo
+                    </label>
+                    <input id="profile_photo" name="profile_photo" type="file" accept="image/*" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: var(--diamond-white); font-size: 0.9rem;">
+                    @error('profile_photo')
+                        <div style="color: #ef4444; font-size: 0.8rem; margin-top: 0.25rem;">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <!-- Password Fields -->
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="current_password" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--diamond-white); font-size: 0.9rem;">
+                        <i class="fas fa-lock" style="color: var(--purple-accent); margin-right: 0.5rem;"></i>Current Password
+                    </label>
+                    <input id="current_password" name="current_password" type="password" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: var(--diamond-white); font-size: 0.9rem;">
+                    @error('current_password')
+                        <div style="color: #ef4444; font-size: 0.8rem; margin-top: 0.25rem;">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="password" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--diamond-white); font-size: 0.9rem;">
+                        <i class="fas fa-key" style="color: var(--cyan-accent); margin-right: 0.5rem;"></i>New Password
+                    </label>
+                    <input id="password" name="password" type="password" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: var(--diamond-white); font-size: 0.9rem;">
+                    @error('password')
+                        <div style="color: #ef4444; font-size: 0.8rem; margin-top: 0.25rem;">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="password_confirmation" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--diamond-white); font-size: 0.9rem;">
+                        <i class="fas fa-check" style="color: #22c55e; margin-right: 0.5rem;"></i>Confirm Password
+                    </label>
+                    <input id="password_confirmation" name="password_confirmation" type="password" style="width: 100%; padding: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: var(--diamond-white); font-size: 0.9rem;">
+                    @error('password_confirmation')
+                        <div style="color: #ef4444; font-size: 0.8rem; margin-top: 0.25rem;">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <!-- Buttons -->
+                <div style="display: flex; gap: 0.5rem;">
+                    <button type="button" onclick="document.getElementById('updateProfileModal').style.display='none'" style="flex: 1; padding: 0.75rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 0.9rem;">
+                        Cancel
+                    </button>
+                    <button type="submit" style="flex: 1; padding: 0.75rem; background: linear-gradient(135deg, var(--cyan-accent), var(--purple-accent)); color: white; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 0.9rem;">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+
 
 <div id="changePasswordModal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
     <div class="mobile-modal" style="background: var(--charcoal); padding: 2rem; border-radius: var(--radius); max-width: 640px; width: 92%;">

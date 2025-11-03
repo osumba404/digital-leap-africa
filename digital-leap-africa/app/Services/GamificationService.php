@@ -10,7 +10,6 @@ use App\Models\Notification;
 class GamificationService
 {
     const POINTS = [
-        'lesson_complete' => 50,
         'course_complete' => 200,
         'forum_post' => 10,
         'forum_reply' => 5,
@@ -21,11 +20,16 @@ class GamificationService
     ];
 
     const LEVELS = [
-        'Beginner' => 0,
-        'Learner' => 500,
-        'Contributor' => 1000,
-        'Expert' => 2500,
-        'Master' => 5000,
+        1 => 0,
+        2 => 100,
+        3 => 250,
+        4 => 500,
+        5 => 1000,
+        6 => 2000,
+        7 => 3500,
+        8 => 5000,
+        9 => 7500,
+        10 => 10000,
     ];
 
     public function awardPoints(User $user, string $action, string $reason = null)
@@ -58,14 +62,14 @@ class GamificationService
         return true;
     }
 
-    public function getUserLevel(User $user): string
+    public function getUserLevel(User $user): int
     {
         $totalPoints = $user->gamificationPoints()->sum('points');
         
-        $level = 'Beginner';
-        foreach (self::LEVELS as $levelName => $requiredPoints) {
+        $level = 1;
+        foreach (self::LEVELS as $levelNumber => $requiredPoints) {
             if ($totalPoints >= $requiredPoints) {
-                $level = $levelName;
+                $level = $levelNumber;
             }
         }
         

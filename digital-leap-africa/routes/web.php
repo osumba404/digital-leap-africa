@@ -261,6 +261,7 @@ Route::get('/forum/{id}', [ForumController::class, 'show'])->name('forum.show');
 Route::post('/forum/{thread}/reply', [ForumController::class, 'storeReply'])->middleware(['auth', 'verified'])->name('forum.reply');
 Route::get('/blog', [ArticlesController::class, 'index'])->name('blog.index');
 Route::get('/blog/{article:slug}', [ArticlesController::class, 'show'])->name('blog.show');
+Route::get('/leaderboard', [\App\Http\Controllers\LeaderboardController::class, 'index'])->name('leaderboard');
 Route::post('/blog/{article:slug}/comments', [ArticlesController::class, 'storeComment'])->middleware(['auth', 'verified'])->name('blog.comments.store');
 Route::post('/blog/{article}/like', [ArticlesController::class, 'like'])->middleware(['auth', 'verified'])->name('blog.like');
 Route::post('/blog/{article}/bookmark', [ArticlesController::class, 'bookmark'])->middleware(['auth', 'verified'])->name('blog.bookmark');

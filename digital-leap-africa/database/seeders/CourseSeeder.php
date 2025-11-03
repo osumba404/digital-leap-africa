@@ -16,6 +16,8 @@ class CourseSeeder extends Seeder
             'description' => 'Learn the fundamentals of HTML, CSS, and JavaScript to build modern websites.',
             'instructor' => 'Collins Otieno',
             'image_url' => 'https://via.placeholder.com/640x480.png/020b13/ffffff?text=Web+Dev',
+            'is_free' => true,
+            'price' => 0,
         ]);
 
         Course::create([
@@ -24,6 +26,8 @@ class CourseSeeder extends Seeder
             'description' => 'Dive deep into the Laravel framework and build robust, scalable applications.',
             'instructor' => 'Evans Osumba',
             'image_url' => 'https://via.placeholder.com/640x480.png/020b13/ffffff?text=Laravel',
+            'is_free' => false,
+            'price' => 2500,
         ]);
 
         Course::create([
@@ -32,6 +36,8 @@ class CourseSeeder extends Seeder
             'description' => 'Understand SEO, SEM, and social media strategies to grow online businesses.',
             'instructor' => 'Tony Wangolo',
             'image_url' => 'https://via.placeholder.com/640x480.png/020b13/ffffff?text=Marketing',
+            'is_free' => false,
+            'price' => 1000,
         ]);
     }
 }

@@ -13,15 +13,23 @@ class ArticlesController extends Controller
     public function index(Request $request): View
     {
         $tag = $request->query('tag');
+        $search = $request->query('search');
 
         $articles = Article::query()
             ->whereNotNull('published_at')
             ->when($tag, fn($q) => $q->withTag($tag))
+            ->when($search, function($q) use ($search) {
+                $q->where(function($query) use ($search) {
+                    $query->where('title', 'LIKE', "%{$search}%")
+                          ->orWhere('content', 'LIKE', "%{$search}%")
+                          ->orWhere('excerpt', 'LIKE', "%{$search}%");
+                });
+            })
             ->orderByDesc('published_at')
             ->paginate(9)
-            ->appends(['tag' => $tag]);
+            ->appends(['tag' => $tag, 'search' => $search]);
 
-        return view('articles.index', compact('articles', 'tag'));
+        return view('articles.index', compact('articles', 'tag', 'search'));
     }
 
     public function show(Article $article): View

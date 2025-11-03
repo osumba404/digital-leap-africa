@@ -9,6 +9,9 @@ class Partner extends Model
 {
     protected $fillable = [
         'name',
+        'contact_person',
+        'email',
+        'phone',
         'logo_path',
         'website_url',
         'order',

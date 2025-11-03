@@ -474,13 +474,7 @@
                 <p style="color: var(--cool-gray);">Read experiences</p>
             </a>
             
-            <a href="{{ route('points.index') }}" class="action-card">
-                <div class="action-icon">
-                    <i class="fas fa-shopping-cart"></i>
-                </div>
-                <h3 style="color: var(--diamond-white);">Redeem Points</h3>
-                <p style="color: var(--cool-gray);">Spend your points</p>
-            </a>
+
             
             @if(Auth::user()->badges && Auth::user()->badges->count() > 0)
             <a href="#badges" onclick="document.getElementById('badges-section').scrollIntoView({behavior: 'smooth'})" class="action-card">

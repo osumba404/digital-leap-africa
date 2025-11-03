@@ -50,6 +50,16 @@ class User extends Authenticatable
     ];
 
     /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'points' => 0,
+        'level' => 1,
+    ];
+
+    /**
      * Get the enrollments for the user.
      */
     public function enrollments()

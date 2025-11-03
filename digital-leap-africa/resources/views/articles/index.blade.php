@@ -10,23 +10,9 @@
       <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--diamond-white); margin-bottom: 1rem; background: linear-gradient(90deg, #64b5f6, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
         📚 Digital Insights Blog
       </h1>
-      <p style="font-size: 1.1rem; color: var(--cool-gray); max-width: 600px; margin: 0 auto 2rem; line-height: 1.6;">
+      <p style="font-size: 1.1rem; color: var(--cool-gray); max-width: 600px; margin: 0 auto; line-height: 1.6;">
         Discover the latest trends, tutorials, and insights in web development, technology, and digital transformation across Africa.
       </p>
-      <div class="blog-stats" style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-        <div class="stat-item" style="text-align: center;">
-          <div style="font-size: 1.5rem; font-weight: 700; color: #64b5f6;">{{ $articles->total() ?? 0 }}</div>
-          <div style="font-size: 0.9rem; color: var(--cool-gray);">Articles</div>
-        </div>
-        <div class="stat-item" style="text-align: center;">
-          <div style="font-size: 1.5rem; font-weight: 700; color: #00d4ff;">{{ collect($articles->items())->sum('likes_count') ?? 0 }}</div>
-          <div style="font-size: 0.9rem; color: var(--cool-gray);">Total Likes</div>
-        </div>
-        <div class="stat-item" style="text-align: center;">
-          <div style="font-size: 1.5rem; font-weight: 700; color: #7a5fff;">{{ collect($articles->items())->sum(fn($a) => $a->comments->count()) ?? 0 }}</div>
-          <div style="font-size: 0.9rem; color: var(--cool-gray);">Comments</div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -51,8 +37,37 @@
   @endphp
 
   <div class="container">
+    <!-- Search Bar -->
+    <div class="search-container" style="max-width: 500px; margin: 0 auto 2rem; position: relative;">
+      <form method="GET" action="{{ route('blog.index') }}" style="position: relative;">
+        <input type="text" 
+               name="search" 
+               value="{{ $search ?? '' }}" 
+               placeholder="Search articles..." 
+               class="search-input"
+               style="width: 100%; padding: 0.875rem 3rem 0.875rem 1rem; border: 1px solid rgba(100, 181, 246, 0.3); border-radius: 50px; background: rgba(255, 255, 255, 0.05); color: var(--diamond-white); font-size: 1rem; outline: none; transition: all 0.3s ease;">
+        <button type="submit" 
+                class="search-btn"
+                style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: linear-gradient(135deg, #64b5f6, #00d4ff); border: none; border-radius: 50%; width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center; color: var(--navy-bg); cursor: pointer; transition: all 0.3s ease;">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+      @if($search ?? false)
+        <div style="text-align: center; margin-top: 0.75rem; color: var(--cool-gray); font-size: 0.9rem;">
+          Showing results for "<strong style="color: #64b5f6;">{{ $search }}</strong>" 
+          <a href="{{ route('blog.index') }}" style="color: #64b5f6; text-decoration: none; margin-left: 0.5rem;">
+            <i class="fas fa-times"></i> Clear
+          </a>
+        </div>
+      @endif
+    </div>
 
     @if($articles->count())
+      @if($search && $articles->total() > 0)
+        <div style="text-align: center; margin-bottom: 1.5rem; color: var(--cool-gray);">
+          Found {{ $articles->total() }} article{{ $articles->total() !== 1 ? 's' : '' }}
+        </div>
+      @endif
       <!-- Featured Article -->
       @if($articles->items() && count($articles->items()) > 0)
         @php $featured = $articles->items()[0]; @endphp
@@ -66,7 +81,7 @@
                   <i class="fas fa-newspaper" style="font-size: 4rem; color: rgba(255,255,255,0.3);"></i>
                 </div>
               @endif
-              <div style="position: absolute; top: 1rem; left: 1rem; background: rgba(100, 181, 246, 0.9); color: var(--navy-bg); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">✨ Featured</div>
+              <div style="position: absolute; top: 1rem; left: 1rem; background: rgba(100, 181, 246, 0.9); color: var(--navy-bg); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">Featured</div>
             </div>
             <div class="featured-content" style="padding: 2rem; display: flex; flex-direction: column; justify-content: center;">
               <div style="margin-bottom: 1rem;">
@@ -215,9 +230,14 @@
       
     @else
       <div class="empty-state" style="text-align: center; padding: 4rem 2rem; color: var(--cool-gray);">
-        <i class="fas fa-newspaper" style="font-size: 4rem; opacity: 0.3; margin-bottom: 1rem;"></i>
-        <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">No Articles Yet</h3>
-        <p>We're working on bringing you amazing content. Check back soon!</p>
+        <i class="fas fa-search" style="font-size: 4rem; opacity: 0.3; margin-bottom: 1rem;"></i>
+        @if($search ?? false)
+          <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">No articles found for "{{ $search }}"</h3>
+          <p>Try searching with different keywords or <a href="{{ route('blog.index') }}" style="color: #64b5f6;">browse all articles</a></p>
+        @else
+          <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">No Articles Yet</h3>
+          <p>We're working on bringing you amazing content. Check back soon!</p>
+        @endif
       </div>
     @endif
     
@@ -441,6 +461,20 @@
   [data-theme="light"] .newsletter-form button {
       background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent));
       color: #FFFFFF;
+  }
+  
+  /* Light Mode Search */
+  [data-theme="light"] .search-input {
+      background: #FFFFFF !important;
+      border-color: rgba(46, 120, 197, 0.3) !important;
+      color: #1A202C !important;
+  }
+  [data-theme="light"] .search-input::placeholder {
+      color: #4A5568 !important;
+  }
+  [data-theme="light"] .search-btn {
+      background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent)) !important;
+      color: #FFFFFF !important;
   }
 </style>
 

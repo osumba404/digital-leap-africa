@@ -20,6 +20,9 @@ class PartnerPublicController extends Controller
     {
         $data = $request->validate([
             'name' => ['required','string','max:255'],
+            'contact_person' => ['required','string','max:255'],
+            'email' => ['required','email','max:255'],
+            'phone' => ['nullable','string','max:20'],
             'website_url' => ['nullable','url','max:255'],
             'logo' => ['required','image','mimes:jpg,jpeg,png,webp,svg','max:2048'],
         ]);
@@ -33,6 +36,9 @@ class PartnerPublicController extends Controller
 
         Partner::create([
             'name' => $data['name'],
+            'contact_person' => $data['contact_person'],
+            'email' => $data['email'],
+            'phone' => $data['phone'] ?? null,
             'website_url' => $data['website_url'] ?? null,
             'logo_path' => $path,
             'order' => 0,

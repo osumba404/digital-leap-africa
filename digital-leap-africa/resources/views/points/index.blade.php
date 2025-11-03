@@ -512,11 +512,7 @@
             How to Earn More Points
         </h3>
         <ul class="earning-list">
-            <li class="earning-item">
-                <i class="fas fa-book-open earning-icon"></i>
-                <span class="earning-text">Complete Lessons</span>
-                <span class="earning-points">50 points</span>
-            </li>
+
             <li class="earning-item">
                 <i class="fas fa-graduation-cap earning-icon"></i>
                 <span class="earning-text">Complete Courses</span>

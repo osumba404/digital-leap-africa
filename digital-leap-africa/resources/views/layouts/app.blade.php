@@ -1689,9 +1689,9 @@
             <div class="nav-main-group"> 
                 <ul class="nav-links">
                     <li><a href="{{ route('home') }}" class="@if(request()->routeIs('home')) active @endif">Home</a></li>
-                    <li><a href="{{ route('about') }}" class="@if(request()->routeIs('about')) active @endif">About</a></li>                    
                     <li><a href="{{ route('courses.index') }}" class="@if(request()->routeIs('courses.*')) active @endif">Courses</a></li>
                     <li><a href="{{ route('blog.index') }}" class="@if(request()->routeIs('blog.*')) active @endif">Blog</a></li>
+
                     
 
                     <li class="dropdown" onmouseenter="clearTimeout(this.hideTimer); this.querySelector('.dropdown-menu').style.display='block'" onmouseleave="this.hideTimer = setTimeout(() => this.querySelector('.dropdown-menu').style.display='none', 300)">
@@ -1702,9 +1702,6 @@
                             <li><a href="{{ route('elibrary.index') }}" class="@if(request()->routeIs('elibrary.*')) active @endif" style="display:block;padding:.5rem 1rem;">eLibrary</a></li>
                             <li><a href="{{ route('events.index') }}" class="@if(request()->routeIs('events.*')) active @endif" style="display:block;padding:.5rem 1rem;">Events</a></li>
                             <li><a href="{{ route('forum.index') }}" class="@if(request()->routeIs('forum.*')) active @endif" style="display:block;padding:.5rem 1rem;">Forum</a></li>
-                            <li><a href="{{ route('contact') }}" class="@if(request()->routeIs('contact')) active @endif" style="display:block;padding:.5rem 1rem;">Contact</a></li>
-                            
-                            
                         </ul>
                     </li>
 
@@ -1892,12 +1889,12 @@
             <ul class="nav-links">
                
                 <li><a href="{{ route('home') }}">Home</a></li>
-                <li><a href="{{ route('about') }}">About</a></li>
                 <li><a href="{{ route('courses.index') }}">Courses</a></li>
                 <li><a href="{{ route('elibrary.index') }}">eLibrary</a></li>
                 <li><a href="{{ route('events.index') }}">Events</a></li>
                 <li><a href="{{ route('blog.index') }}">Blog</a></li>
-                <li><a href="{{ route('contact') }}">Contact</a></li>
+
+
                 @auth
                     <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
                 @endauth
@@ -2037,6 +2034,8 @@
                 <div class="footer-section">
                     <h3 class="footer-heading">Legal & Contact</h3>
                     <ul class="footer-links">
+                        <li><a href="{{ route('about') }}"><i class="fas fa-info-circle"></i> About Us</a></li>
+                        <li><a href="{{ route('contact') }}"><i class="fas fa-envelope"></i> Contact</a></li>
                         <li><a href="{{ route('privacy.policy') }}"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
                         <li><a href="{{ route('terms.service') }}"><i class="fas fa-file-contract"></i> Terms of Service</a></li>
                         @if(!empty($siteSettings['contact_email']))

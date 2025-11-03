@@ -63,6 +63,30 @@
           </div>
 
           <div class="mb-3">
+            <label class="form-label">Contact Person</label>
+            <input type="text" name="contact_person" value="{{ old('contact_person') }}" class="form-control" required>
+            @error('contact_person')
+              <div class="text-danger" style="margin-top:.25rem;">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <input type="email" name="email" value="{{ old('email') }}" class="form-control" required>
+            @error('email')
+              <div class="text-danger" style="margin-top:.25rem;">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Phone Number (optional)</label>
+            <input type="tel" name="phone" value="{{ old('phone') }}" class="form-control" placeholder="+254 700 000 000">
+            @error('phone')
+              <div class="text-danger" style="margin-top:.25rem;">{{ $message }}</div>
+            @enderror
+          </div>
+
+          <div class="mb-3">
             <label class="form-label">Website URL (optional)</label>
             <input type="url" name="website_url" value="{{ old('website_url') }}" class="form-control" placeholder="https://example.org">
             @error('website_url')
