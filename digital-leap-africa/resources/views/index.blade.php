@@ -3,7 +3,77 @@
 @section('title', 'Home')
 
 @section('content')
-<!-- Modern Hero Section -->
+{{-- Hero Carousel from Database --}}
+@php
+  $heroSlides = $siteSettings['hero_slides'] ?? [];
+@endphp
+
+@if(!empty($heroSlides) && is_array($heroSlides))
+<section class="hero-carousel">
+  <div class="hero-rtl" data-interval="6000">
+    <div class="hero-fader">
+      @foreach($heroSlides as $i => $slide)
+        @if(($slide['enabled'] ?? true))
+        <div class="fade-slide {{ $i === 0 ? 'is-active' : '' }}">
+          @if(!empty($slide['image']))
+            <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] ?? 'Hero Slide' }}" class="hero-img">
+          @endif
+          <div class="hero-overlay"></div>
+          <div class="hero-stars"></div>
+          <div class="hero-caption">
+            <div class="slide-content">
+              @if(!empty($slide['mini']))
+                <div class="hero-badge" style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: white; padding: 0.75rem 1.5rem; border-radius: 50px; font-size: 0.9rem; font-weight: 600; margin-bottom: 1.5rem; backdrop-filter: blur(10px);">
+                  <i class="fas fa-star"></i>
+                  <span>{{ $slide['mini'] }}</span>
+                </div>
+              @endif
+              
+              @if(!empty($slide['title']))
+                <h1 class="main-title" style="font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 1rem; line-height: 1.1;">{{ $slide['title'] }}</h1>
+              @endif
+              
+              @if(!empty($slide['sub']))
+                <p class="hero-text hero-sub" style="font-size: 1.3rem; margin-bottom: 2rem; max-width: 600px; color: #f1f3f5;">{{ $slide['sub'] }}</p>
+              @endif
+              
+              @if(!empty($slide['cta1_label']) || !empty($slide['cta2_label']))
+                <div class="cta-buttons" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                  @if(!empty($slide['cta1_label']) && !empty($slide['cta1_route']))
+                    <a href="{{ route($slide['cta1_route']) }}" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #00C9FF, #2E78C5); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; transition: all 0.3s ease;">
+                      <i class="fas fa-graduation-cap" style="color: white;"></i>
+                      {{ $slide['cta1_label'] }}
+                    </a>
+                  @endif
+                  
+                  @if(!empty($slide['cta2_label']) && !empty($slide['cta2_route']))
+                    <a href="{{ route($slide['cta2_route']) }}" class="btn btn-outline" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: transparent; border: 2px solid rgba(255,255,255,0.3); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; transition: all 0.3s ease;">
+                      <i class="fas fa-info-circle" style="color: white;"></i>
+                      {{ $slide['cta2_label'] }}
+                    </a>
+                  @endif
+                </div>
+              @endif
+            </div>
+          </div>
+        </div>
+        @endif
+      @endforeach
+    </div>
+    
+    {{-- Navigation Dots --}}
+    @if(count($heroSlides) > 1)
+      <div style="position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.75rem; z-index: 10;">
+        @foreach($heroSlides as $i => $slide)
+          <button class="hero-dot {{ $i === 0 ? 'is-active' : '' }}" data-index="{{ $i }}" 
+                  style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.6); background: {{ $i === 0 ? '#64b5f6' : 'rgba(255,255,255,0.6)' }}; cursor: pointer; transition: all 0.3s ease;"></button>
+        @endforeach
+      </div>
+    @endif
+  </div>
+</section>
+@else
+<!-- Fallback Static Hero Section -->
 <section class="hero-section">
     <div class="hero-background">
         <div class="hero-overlay"></div>
@@ -53,6 +123,7 @@
         </div>
     </div>
 </section>
+@endif
 
 <!-- Stats Section -->
 <section class="stats-section">
@@ -311,13 +382,13 @@
     width: 80px;
     height: 80px;
     margin: 0 auto 1.5rem;
-    background: linear-gradient(135deg, var(--accent-color), var(--accent-color-light));
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2rem;
-    color: white;
+    color: inherit;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
@@ -335,26 +406,7 @@
     font-weight: 500;
 }
 
-/* Color Variants */
-.stat-card.cyan {
-    --accent-color: var(--cyan-accent);
-    --accent-color-light: #22D3EE;
-}
-
-.stat-card.purple {
-    --accent-color: var(--purple-accent);
-    --accent-color-light: #A855F7;
-}
-
-.stat-card.blue {
-    --accent-color: var(--primary-blue);
-    --accent-color-light: #60A5FA;
-}
-
-.stat-card.green {
-    --accent-color: #10B981;
-    --accent-color-light: #34D399;
-}
+/* Color Variants - Removed */
 
 /* Light Mode Styles */
 [data-theme="light"] .hero-background {
@@ -766,6 +818,95 @@
     color: var(--charcoal);
     transform: translateY(-3px);
     box-shadow: 0 10px 30px rgba(0, 201, 255, 0.3);
+}
+
+/***** Hero Carousel *****/
+.hero-carousel { width: 100%; }
+
+.hero-slide {
+  position: relative;
+  width: 100%;
+  height: min(75vh, 720px);
+  min-height: 420px;
+}
+
+.hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+}
+
+.hero-caption {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  bottom: 8%;
+  text-align: center;
+  padding: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.slide-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .hero-caption {
+    text-align: left;
+    align-items: flex-end;
+    height: auto;
+    bottom: 8%;
+  }
+  .slide-content {
+    max-width: 100%;
+  }
+}
+
+.hero-caption h1 { color: #fff; }
+.hero-sub { max-width: 760px; color: #f1f3f5; }
+
+/* Light mode hero text */
+[data-theme="light"] .hero-caption h1 { color: var(--charcoal); }
+[data-theme="light"] .hero-sub { color: var(--cool-gray); }
+[data-theme="light"] .hero-badge { color: var(--primary-blue) !important; }
+[data-theme="light"] .main-title { color: var(--charcoal) !important; }
+[data-theme="light"] .hero-text { color: var(--cool-gray) !important; }
+
+/* Fade slider */
+.fade-slide{opacity:0;transition:opacity .8s ease;}
+.fade-slide.is-active{opacity:1}
+/* Ensure hero reserves height */
+.hero-rtl{position:relative; height: 100vh; min-height:100vh}
+.hero-fader{position:relative; width:100%; height:100%}
+.hero-stars{position:absolute;inset:0;pointer-events:none;z-index:3;opacity:0;transition:opacity .6s ease;background-image:
+  radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.9) 40%, transparent 41%),
+  radial-gradient(1.5px 1.5px at 60% 20%, rgba(255,255,255,.8) 40%, transparent 41%),
+  radial-gradient(2.5px 2.5px at 80% 70%, rgba(255,255,255,.85) 40%, transparent 41%),
+  radial-gradient(1.2px 1.2px at 35% 75%, rgba(255,255,255,.7) 40%, transparent 41%),
+  radial-gradient(1.8px 1.8px at 70% 55%, rgba(255,255,255,.75) 40%, transparent 41%);
+animation: twinkle 2s infinite ease-in-out;
+}
+.hero-rtl.is-transitioning .hero-stars{opacity:.85}
+@keyframes twinkle{0%,100%{filter:brightness(1)}50%{filter:brightness(1.6)}}
+
+@media (max-width: 768px) {
+  .hero-slide { height: 80vh; min-height: 360px; }
+  .hero-rtl, .hero-fader { height:80vh; min-height:360px }
+  .hero-caption { bottom: 6%; text-align: left; align-items: flex-end; height: auto; }
+  .hero-caption h1 { font-size: 1.75rem; }
 }
 
 /* Light Mode Styles */
@@ -1405,7 +1546,7 @@
 <section id="testimonials-section" style="padding:3rem 0; background: rgba(255, 255, 255, 0.02);">
   <div class="container">
     <div class="text-center mb-4" style="text-align:center !important; margin-bottom: 2rem !important;">
-      <h2 class="m-0" style="color: #64b5f6; font-size: 28px; margin-bottom: 0.5rem !important;">What People Say About Us</h2>
+      <h2 class="m-0" style="color: #64b5f6; font-size: 28px; margin-bottom: 0.5rem !important;"><i class="fas fa-comments"></i> What People Say About Us</h2>
       <p style="color: var(--cool-gray); font-size: 1rem;">Hear from our community members</p>
     </div>
 
@@ -1800,7 +1941,7 @@ window.addEventListener('beforeunload', () => {
 
   <div class="container">
     <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
-      <h2 class="m-0">Our Partners</h2>
+      <h2 class="m-0"><i class="fas fa-handshake"></i> Our Partners</h2>
     </div>
 
     @if($partners->count())
@@ -1943,7 +2084,7 @@ window.addEventListener('beforeunload', () => {
 
   <div class="container">
     <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
-      <h2 class="m-0">Upcoming Events</h2>
+      <h2 class="m-0"><i class="fas fa-calendar-alt"></i> Upcoming Events</h2>
     </div>
 
     @if($upcomingTop3->count())
@@ -2025,7 +2166,7 @@ window.addEventListener('beforeunload', () => {
 
   <div class="container">
     <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
-      <h2 class="m-0">Frequently Asked Questions</h2>
+      <h2 class="m-0"><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
     </div>
 
     @if($faqs->count())
@@ -2073,67 +2214,6 @@ window.addEventListener('beforeunload', () => {
 
 @push('styles')
 <style>
-/***** Hero Carousel *****/
-.hero-carousel { width: 100%; }
-
-.hero-slide {
-  position: relative;
-  width: 100%;
-  height: min(75vh, 720px);
-  min-height: 420px;
-}
-
-.hero-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-}
-
-.hero-caption {
-  position: absolute;
-  left: 5%;
-  right: 5%;
-  bottom: 8%;
-  text-align: left;
-  padding: 0;
-}
-
-.hero-caption h1 { color: #fff; }
-.hero-sub { max-width: 760px; color: #f1f3f5; }
-
-/* Fade slider */
-.fade-slide{opacity:0;transition:opacity .8s ease;}
-.fade-slide.is-active{opacity:1}
-/* Ensure hero reserves height */
-.hero-rtl{position:relative; height: 100vh; min-height:100vh}
-.hero-fader{position:relative; width:100%; height:100%}
-.hero-stars{position:absolute;inset:0;pointer-events:none;z-index:3;opacity:0;transition:opacity .6s ease;background-image:
-  radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.9) 40%, transparent 41%),
-  radial-gradient(1.5px 1.5px at 60% 20%, rgba(255,255,255,.8) 40%, transparent 41%),
-  radial-gradient(2.5px 2.5px at 80% 70%, rgba(255,255,255,.85) 40%, transparent 41%),
-  radial-gradient(1.2px 1.2px at 35% 75%, rgba(255,255,255,.7) 40%, transparent 41%),
-  radial-gradient(1.8px 1.8px at 70% 55%, rgba(255,255,255,.75) 40%, transparent 41%);
-animation: twinkle 2s infinite ease-in-out;
-}
-.hero-rtl.is-transitioning .hero-stars{opacity:.85}
-@keyframes twinkle{0%,100%{filter:brightness(1)}50%{filter:brightness(1.6)}}
-
-@media (max-width: 768px) {
-  .hero-slide { height: 80vh; min-height: 360px; }
-  .hero-rtl, .hero-fader { height:80vh; min-height:360px }
-  .hero-caption { bottom: 6%; }
-  .hero-caption h1 { font-size: 1.75rem; }
-}
-
-
 /* Article image and fallback avatar */
 .post-thumb {
   width: 100%;

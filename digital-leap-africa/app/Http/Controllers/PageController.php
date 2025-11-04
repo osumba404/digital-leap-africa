@@ -10,7 +10,8 @@ use App\Models\{
     Event,
     Faq,
     User,
-    AboutSection
+    AboutSection,
+    SiteSetting
 };
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -106,6 +107,29 @@ class PageController extends Controller
             'partners' => Partner::count(),
             'members' => User::count(),
         ];
+
+        // Fetch site settings for carousel
+        try {
+            $siteSettings = SiteSetting::pluck('value', 'key')->toArray();
+            // Decode JSON values
+            foreach ($siteSettings as $key => $value) {
+                $decoded = json_decode($value, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $siteSettings[$key] = $decoded;
+                }
+            }
+        } catch (\Exception $e) {
+            $siteSettings = [];
+        }
+        
+        // Debug: Check if hero_slides exists
+        if (empty($siteSettings['hero_slides'])) {
+            // Force load hero slides if empty
+            $heroSlidesJson = SiteSetting::where('key', 'hero_slides')->value('value');
+            if ($heroSlidesJson) {
+                $siteSettings['hero_slides'] = json_decode($heroSlidesJson, true);
+            }
+        }
         
         return view('index', compact(
             'testimonials',
@@ -115,7 +139,8 @@ class PageController extends Controller
             'upcomingEvents',
             'faqs',
             'aboutSection',
-            'stats'
+            'stats',
+            'siteSettings'
         ));
     }
 

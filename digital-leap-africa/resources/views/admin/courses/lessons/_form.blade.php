@@ -171,70 +171,18 @@ document.addEventListener('DOMContentLoaded', function() {
         theme: 'snow',
         placeholder: 'Enter lesson content...',
         modules: {
-            toolbar: {
-                container: [
-                    [{ 'header': [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['blockquote', 'code-block'],
-                    ['link', 'image'],
-                    ['clean']
-                ],
-                handlers: {
-                    image: imageHandler
-                }
-            }
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['blockquote', 'code-block'],
+                ['link', 'image'],
+                ['clean']
+            ]
         }
     });
     
-    // Custom image handler to upload images
-    function imageHandler() {
-        const input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
-        input.click();
-        
-        input.onchange = async () => {
-            const file = input.files[0];
-            if (!file) return;
-            
-            // Show loading state
-            const range = quill.getSelection(true);
-            quill.insertText(range.index, 'Uploading image...');
-            quill.setSelection(range.index + 19);
-            
-            // Upload image
-            const formData = new FormData();
-            formData.append('image', file);
-            
-            try {
-                const response = await fetch('{{ route('admin.lessons.upload-image') }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: formData
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Remove loading text
-                    quill.deleteText(range.index, 19);
-                    // Insert uploaded image
-                    quill.insertEmbed(range.index, 'image', data.url);
-                    quill.setSelection(range.index + 1);
-                } else {
-                    alert('Image upload failed: ' + (data.message || 'Unknown error'));
-                    quill.deleteText(range.index, 19);
-                }
-            } catch (error) {
-                console.error('Upload error:', error);
-                alert('Image upload failed. Please try again.');
-                quill.deleteText(range.index, 19);
-            }
-        };
-    }
+
     
     // Set initial content
     const initialContent = document.getElementById('content').value;
