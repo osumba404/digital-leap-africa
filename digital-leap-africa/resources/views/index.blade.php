@@ -1601,7 +1601,7 @@ animation: twinkle 2s infinite ease-in-out;
 
     <div class="text-center mt-4" style="padding-top:2rem !important">
       <a class="btn-outline btn-wide" href="{{ route('testimonials.index') }}" style="text-decoration: none;">
-        <i class="fas fa-comments" style="margin-right: 0.5rem;"></i>View All Testimonials <i class="fas fa-arrow-right"></i>
+        <i class="fas fa-star" style="margin-right: 0.5rem;"></i>View Testimonials <i class="fas fa-arrow-right"></i>
       </a>
     </div>
     @else
