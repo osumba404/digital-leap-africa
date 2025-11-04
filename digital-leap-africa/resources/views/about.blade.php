@@ -811,10 +811,7 @@
       <h2 style="font-size:2rem; font-weight:700; color:var(--diamond-white); margin-bottom: .75rem;">Ready to join our mission?</h2>
       <p class="muted" style="margin-bottom: 1.25rem;">Become a partner, volunteer, or support our initiatives.</p>
       <div style="display:flex; gap:.75rem; justify-content:center; flex-wrap:wrap;">
-        <a href="{{ route('partners.apply') }}" class="btn-outline">
-          <i class="fas fa-handshake"></i>
-          Become a Partner
-        </a>
+        <a class="btn-outline btn-wide" href="{{ route('partners.apply') }}"><i class="fas fa-handshake" style="margin-right: 0.5rem;"></i>Become a Partner</a>
         <a href="{{ route('contact') }}" class="btn-outline">Contact Us</a>
         <a href="{{ route('donate') }}" class="btn-outline">Donate Now</a>
       </div>

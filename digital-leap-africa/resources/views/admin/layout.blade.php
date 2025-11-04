@@ -621,6 +621,11 @@
                         </a>
                     </li>
                     <li>
+                        <a class="sidebar-link {{ request()->routeIs('admin.contact-messages.*') ? 'active' : '' }}" href="{{ route('admin.contact-messages.index') }}">
+                            <i class="fas fa-envelope"></i><span class="sidebar-label">Messages</span>
+                        </a>
+                    </li>
+                    <li>
                         <a class="sidebar-link {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}" href="{{ route('admin.faqs.index') }}">
                             <i class="fas fa-circle-question"></i><span class="sidebar-label">FAQs</span>
                         </a>

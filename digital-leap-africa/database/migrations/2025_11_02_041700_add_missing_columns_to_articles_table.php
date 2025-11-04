@@ -16,20 +16,20 @@ return new class extends Migration
         Schema::table('articles', function (Blueprint $table) {
             // Add tags column if it doesn't exist
             if (!Schema::hasColumn('articles', 'tags')) {
-                $table->json('tags')->nullable()->after('author_id');
+                $table->json('tags')->nullable();
             }
             
             // Add engagement columns if they don't exist
             if (!Schema::hasColumn('articles', 'likes_count')) {
-                $table->integer('likes_count')->default(0)->after('tags');
+                $table->integer('likes_count')->default(0);
             }
             
             if (!Schema::hasColumn('articles', 'bookmarks_count')) {
-                $table->integer('bookmarks_count')->default(0)->after('likes_count');
+                $table->integer('bookmarks_count')->default(0);
             }
             
             if (!Schema::hasColumn('articles', 'shares_count')) {
-                $table->integer('shares_count')->default(0)->after('bookmarks_count');
+                $table->integer('shares_count')->default(0);
             }
         });
     }

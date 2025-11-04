@@ -266,7 +266,8 @@ Route::post('/blog/{article:slug}/comments', [ArticlesController::class, 'storeC
 Route::post('/blog/{article}/like', [ArticlesController::class, 'like'])->middleware(['auth', 'verified'])->name('blog.like');
 Route::post('/blog/{article}/bookmark', [ArticlesController::class, 'bookmark'])->middleware(['auth', 'verified'])->name('blog.bookmark');
 Route::post('/blog/{article}/share', [ArticlesController::class, 'share'])->name('blog.share');
-Route::view('/contact', 'contact')->name('contact');
+Route::get('/contact', [\App\Http\Controllers\ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
 Route::view('/donate', 'donate')->name('donate');
 Route::view('/privacy-policy', 'legal.privacy')->name('privacy.policy');
 Route::view('/terms-of-service', 'legal.terms')->name('terms.service');
@@ -558,6 +559,14 @@ Route::prefix('admin')
             Route::get('/', [\App\Http\Controllers\Admin\CertificateController::class, 'index'])->name('index');
             Route::put('/', [\App\Http\Controllers\Admin\CertificateController::class, 'update'])->name('update');
         });
+
+        // Contact Messages
+        Route::resource('contact-messages', \App\Http\Controllers\Admin\ContactMessageController::class)->only(['index', 'show', 'destroy'])->names([
+            'index' => 'contact-messages.index',
+            'show' => 'contact-messages.show',
+            'destroy' => 'contact-messages.destroy',
+        ]);
+        Route::post('contact-messages/{contactMessage}/reply', [\App\Http\Controllers\Admin\ContactMessageController::class, 'reply'])->name('contact-messages.reply');
 
         // Settings
         Route::prefix('settings')->name('settings.')->group(function () {
