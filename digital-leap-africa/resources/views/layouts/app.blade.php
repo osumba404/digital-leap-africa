@@ -1689,6 +1689,7 @@
             <div class="nav-main-group"> 
                 <ul class="nav-links">
                     <li><a href="{{ route('home') }}" class="@if(request()->routeIs('home')) active @endif">Home</a></li>
+                    <li><a href="{{ route('about') }}" class="@if(request()->routeIs('about')) active @endif">About</a></li>
                     <li><a href="{{ route('courses.index') }}" class="@if(request()->routeIs('courses.*')) active @endif">Courses</a></li>
                     <li><a href="{{ route('blog.index') }}" class="@if(request()->routeIs('blog.*')) active @endif">Blog</a></li>
 
@@ -1889,6 +1890,7 @@
             <ul class="nav-links">
                
                 <li><a href="{{ route('home') }}">Home</a></li>
+                <li><a href="{{ route('about') }}">About</a></li>
                 <li><a href="{{ route('courses.index') }}">Courses</a></li>
                 <li><a href="{{ route('elibrary.index') }}">eLibrary</a></li>
                 <li><a href="{{ route('events.index') }}">Events</a></li>

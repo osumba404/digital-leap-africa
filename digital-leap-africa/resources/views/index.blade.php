@@ -131,22 +131,20 @@
         <div class="stats-grid">
             @php
                 $statsData = [
-                    ['label' => 'Courses', 'value' => $stats['courses'], 'icon' => 'fa-graduation-cap', 'color' => 'cyan'],
-                    ['label' => 'Articles', 'value' => $stats['articles'], 'icon' => 'fa-newspaper', 'color' => 'purple'],
-                    ['label' => 'Partners', 'value' => $stats['partners'], 'icon' => 'fa-handshake', 'color' => 'blue'],
-                    ['label' => 'Members', 'value' => $stats['members'], 'icon' => 'fa-users', 'color' => 'green'],
+                    ['label' => 'Courses', 'value' => $stats['courses'], 'icon' => 'fa-book-open'],
+                    ['label' => 'Articles', 'value' => $stats['articles'], 'icon' => 'fa-diagram-project'],
+                    ['label' => 'Partners', 'value' => $stats['partners'], 'icon' => 'fa-handshake'],
+                    ['label' => 'Members', 'value' => $stats['members'], 'icon' => 'fa-users'],
                 ];
             @endphp
             
             @foreach($statsData as $stat)
-                <div class="stat-card {{ $stat['color'] }}">
-                    <div class="stat-icon">
-                        <i class="fas {{ $stat['icon'] }}"></i>
+                <div class="stat-card">
+                    <div style="font-size:1.25rem;color:var(--cyan-accent);margin-bottom:.25rem;">
+                        <i class="fa-solid {{ $stat['icon'] }}"></i>
                     </div>
-                    <div class="stat-content">
-                        <div class="stat-value">{{ number_format($stat['value']) }}</div>
-                        <div class="stat-label">{{ $stat['label'] }}</div>
-                    </div>
+                    <div class="stat-value">{{ number_format($stat['value']) }}</div>
+                    <div class="stat-label">{{ $stat['label'] }}</div>
                 </div>
             @endforeach
         </div>
@@ -1346,13 +1344,9 @@ animation: twinkle 2s infinite ease-in-out;
 <!-- Latest Articles -->
 <section class="articles-section">
     <div class="container">
-        <div class="section-header">
-            <div class="section-badge">
-                <i class="fas fa-newspaper"></i>
-                <span>Blog</span>
-            </div>
-            <h2 class="section-title">Latest Articles</h2>
-            <p class="section-description">Stay updated with the latest insights, tutorials, and industry trends</p>
+        <div class="section-title" style="text-align:center; margin-bottom: 2rem;">
+            <h2 style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-newspaper"></i> Latest Articles</h2>
+            <p style="color: var(--cool-gray); font-size: 1rem;">Stay updated with the latest insights, tutorials, and industry trends</p>
         </div>
 
         @php
@@ -1447,13 +1441,9 @@ animation: twinkle 2s infinite ease-in-out;
 <!-- Available Courses -->
 <section class="courses-section">
     <div class="container">
-        <div class="section-header">
-            <div class="section-badge">
-                <i class="fas fa-graduation-cap"></i>
-                <span>Learning</span>
-            </div>
-            <h2 class="section-title">Available Courses</h2>
-            <p class="section-description">Master new skills with our expert-led courses designed for African learners</p>
+        <div class="section-title" style="text-align:center; margin-bottom: 2rem;">
+            <h2 style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-graduation-cap"></i> Available Courses</h2>
+            <p style="color: var(--cool-gray); font-size: 1rem;">Master new skills with our expert-led courses designed for African learners</p>
         </div>
 
         @php
@@ -1545,8 +1535,8 @@ animation: twinkle 2s infinite ease-in-out;
 <!-- Testimonials Carousel -->
 <section id="testimonials-section" style="padding:3rem 0; background: rgba(255, 255, 255, 0.02);">
   <div class="container">
-    <div class="text-center mb-4" style="text-align:center !important; margin-bottom: 2rem !important;">
-      <h2 class="m-0" style="color: #64b5f6; font-size: 28px; margin-bottom: 0.5rem !important;"><i class="fas fa-comments"></i> What People Say About Us</h2>
+    <div class="section-title" style="text-align:center; margin-bottom: 2rem;">
+      <h2 style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-comments"></i> What People Say About Us</h2>
       <p style="color: var(--cool-gray); font-size: 1rem;">Hear from our community members</p>
     </div>
 
@@ -1940,8 +1930,9 @@ window.addEventListener('beforeunload', () => {
   @endphp
 
   <div class="container">
-    <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
-      <h2 class="m-0"><i class="fas fa-handshake"></i> Our Partners</h2>
+    <div class="section-title" style="text-align:center; margin-bottom: 2rem;">
+      <h2 style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-handshake"></i> Our Partners</h2>
+      <p style="color: var(--cool-gray); font-size: 1rem;">We collaborate with leading organizations to amplify impact</p>
     </div>
 
     @if($partners->count())
@@ -2083,8 +2074,9 @@ window.addEventListener('beforeunload', () => {
   @endphp
 
   <div class="container">
-    <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
-      <h2 class="m-0"><i class="fas fa-calendar-alt"></i> Upcoming Events</h2>
+    <div class="section-title" style="text-align:center; margin-bottom: 2rem;">
+      <h2 style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-calendar-alt"></i> Upcoming Events</h2>
+      <p style="color: var(--cool-gray); font-size: 1rem;">Join our upcoming workshops and community events</p>
     </div>
 
     @if($upcomingTop3->count())
@@ -2165,8 +2157,9 @@ window.addEventListener('beforeunload', () => {
   @endphp
 
   <div class="container">
-    <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
-      <h2 class="m-0"><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
+    <div class="section-title" style="text-align:center; margin-bottom: 2rem;">
+      <h2 style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
+      <p style="color: var(--cool-gray); font-size: 1rem;">Find answers to common questions about our platform</p>
     </div>
 
     @if($faqs->count())
