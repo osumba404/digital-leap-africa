@@ -18,6 +18,7 @@ class Lesson extends Model
         'code_snippet',
         'resource_url',
         'attachment_path',
+        'questions',
         'order',
     ];
     

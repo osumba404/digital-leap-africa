@@ -197,6 +197,25 @@ code {
     color: #7c4dff;
 }
 
+/* Light mode tables */
+[data-theme="light"] .lesson-content-body table {
+    border: 1px solid rgba(46, 120, 197, 0.3);
+}
+
+[data-theme="light"] .lesson-content-body table td,
+[data-theme="light"] .lesson-content-body table th {
+    border: 1px solid rgba(46, 120, 197, 0.3);
+}
+
+[data-theme="light"] .lesson-content-body table th {
+    background: rgba(46, 120, 197, 0.1);
+    color: #1e293b;
+}
+
+[data-theme="light"] .lesson-content-body table tr:nth-child(even) {
+    background: rgba(46, 120, 197, 0.05);
+}
+
 .completion-section {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -431,6 +450,47 @@ code {
     border-top-color: #e2e8f0 !important;
 }
 
+/* Table styling */
+.lesson-content-body table {
+    border-collapse: collapse;
+    width: calc(100% - 0rem);
+    margin: 2.5rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    table-layout: fixed;
+}
+
+.lesson-content-body p + table,
+.lesson-content-body ol + table,
+.lesson-content-body ul + table,
+.lesson-content-body h1 + table,
+.lesson-content-body h2 + table,
+.lesson-content-body h3 + table {
+    margin-top: 3rem;
+}
+
+.lesson-content-body table td,
+.lesson-content-body table th {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 16px;
+    text-align: left;
+    vertical-align: top;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+}
+
+.lesson-content-body table th {
+    background: rgba(255, 255, 255, 0.1);
+    font-weight: 600;
+    color: var(--diamond-white);
+}
+
+.lesson-content-body table tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.05);
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
     .lesson-header,
@@ -445,6 +505,10 @@ code {
     
     .lesson-content-body {
         font-size: 0.95rem;
+    }
+    
+    .lesson-content-body table {
+        font-size: 0.9rem;
     }
     
     .res-grid {
@@ -510,6 +574,22 @@ code {
                 <div class="lesson-content-body">
                     {!! $lesson->content !!}                    
                       
+                </div>
+            </div>
+        @endif
+
+        {{-- Test/Assignment Questions --}}
+        @if($lesson->questions && in_array($lesson->type, ['quiz', 'assignment']))
+            <div class="lesson-content">
+                <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">
+                    @if($lesson->type === 'quiz')
+                        <i class="fas fa-question-circle me-2"></i>Quiz Questions
+                    @else
+                        <i class="fas fa-tasks me-2"></i>Assignment Instructions
+                    @endif
+                </h3>
+                <div class="lesson-content-body">
+                    {!! nl2br(e($lesson->questions)) !!}
                 </div>
             </div>
         @endif

@@ -50,6 +50,7 @@ class LessonController extends Controller
             'type' => 'required|in:note,video,assignment,quiz',
             'content' => 'nullable|string',
             'video_url' => 'nullable|url',
+            'questions' => 'nullable|string',
             'code_snippet' => 'nullable|array',
             'code_snippet.*' => 'nullable|string',
             'resource_files' => 'nullable|array',
@@ -63,6 +64,7 @@ class LessonController extends Controller
             'type' => $validated['type'],
             'content' => $validated['content'] ?? null,
             'video_url' => $validated['video_url'] ?? null,
+            'questions' => $validated['questions'] ?? null,
             'code_snippet' => collect($request->input('code_snippet', []))
             ->filter(fn ($v) => filled($v))
             ->values()
@@ -108,6 +110,7 @@ class LessonController extends Controller
             'type' => 'required|in:note,video,assignment,quiz',
             'content' => 'nullable|string',
             'video_url' => 'nullable|url',
+            'questions' => 'nullable|string',
             'code_snippet' => 'nullable|array',
             'code_snippet.*' => 'nullable|string',
             'resource_files' => 'nullable|array',
@@ -121,6 +124,7 @@ class LessonController extends Controller
             'type' => $validated['type'],
             'content' => $validated['content'] ?? null,
             'video_url' => $validated['video_url'] ?? null,
+            'questions' => $validated['questions'] ?? null,
             'code_snippet' => collect($request->input('code_snippet', []))
                 ->filter(fn ($v) => filled($v))
                 ->values()
