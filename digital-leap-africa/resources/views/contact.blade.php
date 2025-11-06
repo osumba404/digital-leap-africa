@@ -71,21 +71,21 @@
                         <i class="fas fa-envelope"></i>
                         <div>
                             <h3>Email</h3>
-                            <p>info@digitaleapafrica.com</p>
+                            <p>{{ \App\Helpers\SettingsHelper::get('contact_email', 'info@digitaleapafrica.com') }}</p>
                         </div>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
                         <div>
                             <h3>Phone</h3>
-                            <p>+254 700 000 000</p>
+                            <p>{{ \App\Helpers\SettingsHelper::get('phone_number', '+254 700 000 000') }}</p>
                         </div>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h3>Address</h3>
-                            <p>Nairobi, Kenya</p>
+                            <p>{{ \App\Helpers\SettingsHelper::get('address', 'Nairobi, Kenya') }}</p>
                         </div>
                     </div>
                 </div>
