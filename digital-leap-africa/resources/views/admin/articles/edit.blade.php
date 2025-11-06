@@ -21,18 +21,66 @@
       var hidden = document.getElementById('content');
       var editorEl = document.getElementById('quill-article-editor');
       if(!hidden || !editorEl) return;
+      
+      // Register inline code format
+      var Inline = Quill.import('blots/inline');
+      class CodeInline extends Inline {
+        static create() {
+          let node = super.create();
+          node.setAttribute('style', 'background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 3px; font-family: monospace;');
+          return node;
+        }
+      }
+      CodeInline.blotName = 'code';
+      CodeInline.tagName = 'code';
+      Quill.register(CodeInline);
+      
       var quill = new Quill('#quill-article-editor', {
         theme: 'snow',
         placeholder: 'Write your article content...',
-        modules: { toolbar: [
-          [{ 'header': [1, 2, 3, false] }],
-          ['bold','italic','underline','strike'],
-          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-          ['blockquote','code-block'],
-          ['link','image'],
-          ['clean']
-        ]}
+        modules: { toolbar: {
+          container: [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold','italic','underline','strike'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            ['blockquote','code-block'],
+            ['link','image'],
+            [{ 'color': [] }, { 'background': [] }],
+            ['code-inline'],
+            ['clean']
+          ],
+          handlers: {
+            'code-inline': function() {
+              var range = this.quill.getSelection();
+              if (range) {
+                var text = this.quill.getText(range.index, range.length);
+                this.quill.deleteText(range.index, range.length);
+                this.quill.insertText(range.index, '`' + text + '`', 'code', true);
+              }
+            }
+          }
+        }}
       });
+      
+      // Add custom button styling
+      var toolbar = quill.getModule('toolbar');
+      toolbar.addHandler('code-inline', function() {
+        var range = quill.getSelection();
+        if (range) {
+          var text = quill.getText(range.index, range.length);
+          quill.deleteText(range.index, range.length);
+          quill.insertText(range.index, '`' + text + '`');
+        }
+      });
+      
+      // Style the custom button
+      setTimeout(() => {
+        var btn = document.querySelector('.ql-code-inline');
+        if (btn) {
+          btn.innerHTML = '<>';
+          btn.title = 'Inline Code';
+        }
+      }, 100);
       if (hidden.value) {
         quill.root.innerHTML = hidden.value;
       }

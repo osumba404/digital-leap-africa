@@ -607,7 +607,7 @@ document.addEventListener('DOMContentLoaded', function() {
             toolbar: {
                 items: [
                     'heading', '|',
-                    'bold', 'italic', 'underline', 'strikethrough', '|',
+                    'bold', 'italic', 'underline', 'strikethrough', 'code', '|',
                     'fontSize', 'fontColor', 'fontBackgroundColor', '|',
                     'bulletedList', 'numberedList', 'todoList', '|',
                     'outdent', 'indent', '|',
@@ -757,8 +757,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('CKEditor initialization error:', error);
         });
 });
-</script>
-
 </script>
 @endpush
 
