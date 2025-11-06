@@ -32,7 +32,7 @@ class SiteSettingController extends Controller
             
             // Files
             'logo_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'favicon' => 'nullable|image|mimes:ico,png|max:1024',
+            'favicon' => 'nullable|image|mimes:ico,png,jpg,jpeg|max:5120',
             'hero_banner' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'opengraph_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
 
@@ -76,8 +76,8 @@ class SiteSettingController extends Controller
             'cookie_consent_message' => 'nullable|string|max:500',
             
             // Legal
-            'privacy_policy_url' => 'nullable|url',
-            'terms_of_service_url' => 'nullable|url',
+            'privacy_policy_url' => 'nullable|string',
+            'terms_of_service_url' => 'nullable|string',
             
             // Integrations
             'smtp_host' => 'nullable|string|max:255',

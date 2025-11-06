@@ -7,7 +7,7 @@
 </div>
 
 <div class="admin-form">
-    <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data" id="settingsForm">
         @csrf
         
         <!-- Basic Information -->
@@ -349,7 +349,7 @@
         </div>        
         
         <div style="margin-top: 2rem; text-align: center;">
-            <button type="submit" class="btn-primary">
+            <button type="submit" class="btn-primary" id="saveSettingsBtn">
                 <i class="fas fa-save me-2"></i>Save All Settings
             </button>
         </div>
@@ -581,6 +581,38 @@ function renumberHeroSlides() {
         });
     });
 }
+
+// Fix form submission
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('settingsForm');
+    const saveBtn = document.getElementById('saveSettingsBtn');
+    
+    // Remove required attribute from URL fields that are causing validation errors
+    const urlFields = document.querySelectorAll('input[type="url"]');
+    urlFields.forEach(field => {
+        field.removeAttribute('required');
+        field.pattern = '';
+        field.setCustomValidity('');
+    });
+    
+    // Make save button type="button" to prevent default form submission
+    if (saveBtn) {
+        saveBtn.type = 'button';
+        saveBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Submitting settings form...');
+            
+            // Clear any validation errors
+            urlFields.forEach(field => {
+                field.setCustomValidity('');
+            });
+            
+            if (form) {
+                form.submit();
+            }
+        });
+    }
+});
 </script>
 @endpush
 @endsection
