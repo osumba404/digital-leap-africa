@@ -238,10 +238,11 @@
       </div>
     @endif
     
-    <!-- Pagination -->
-    @if($courses->hasPages())
-      <div style="margin-top: 3rem; display: flex; justify-content: center;">
-        {{ $courses->links() }}
+    @if(method_exists($courses, 'links'))
+      <div class="pagination-wrapper" style="display: flex; justify-content: center; margin-top: 3rem;">
+        <div class="pagination-container" style="background: var(--charcoal); border-radius: 12px; padding: 1rem; border: 1px solid rgba(100, 181, 246, 0.1);">
+          {{ $courses->links() }}
+        </div>
       </div>
     @endif
    
