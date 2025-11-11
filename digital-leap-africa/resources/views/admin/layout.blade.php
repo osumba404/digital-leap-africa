@@ -193,6 +193,8 @@
     transition: all 0.3s ease;
 }
 
+
+
 /* Enhanced Content Area */
 .admin-content {
     background: rgba(255, 255, 255, 0.02);
@@ -559,17 +561,13 @@
                         <i class="fas fa-angles-left"></i>
                     </button>
                 </div>
+
                 <ul class="sidebar-nav">
                     <li>
                         <a class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
                             <i class="fas fa-gauge"></i><span class="sidebar-label">Dashboard</span>
                         </a>
                     </li>
-                    <!-- <li>
-                        <a class="sidebar-link {{ request()->routeIs('admin.content.*') ? 'active' : '' }}" href="{{ route('admin.content.index') }}">
-                            <i class="fas fa-layer-group"></i><span class="sidebar-label">Content</span>
-                        </a>
-                    </li> -->
                     <li>
                         <a class="sidebar-link {{ request()->routeIs('admin.about.*') ? 'active' : '' }}" href="{{ route('admin.about.index') }}">
                             <i class="fas fa-circle-info"></i><span class="sidebar-label">About</span>
@@ -578,11 +576,13 @@
                     <li>
                         <a class="sidebar-link {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}" href="{{ route('admin.articles.index') }}">
                             <i class="fas fa-newspaper"></i><span class="sidebar-label">Articles</span>
+
                         </a>
                     </li>
                     <li>
                         <a class="sidebar-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}" href="{{ route('admin.courses.index') }}">
                             <i class="fas fa-graduation-cap"></i><span class="sidebar-label">Courses</span>
+
                         </a>
                     </li>
                     <li>
@@ -608,6 +608,7 @@
                     <li>
                         <a class="sidebar-link {{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}" href="{{ route('admin.testimonials.index') }}">
                             <i class="fas fa-quote-left"></i><span class="sidebar-label">Testimonials</span>
+
                         </a>
                     </li>
                     <li>
@@ -623,6 +624,7 @@
                     <li>
                         <a class="sidebar-link {{ request()->routeIs('admin.contact-messages.*') ? 'active' : '' }}" href="{{ route('admin.contact-messages.index') }}">
                             <i class="fas fa-envelope"></i><span class="sidebar-label">Messages</span>
+
                         </a>
                     </li>
                     <li>
