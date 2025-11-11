@@ -1,6 +1,161 @@
 @extends('layouts.app')
 
-@section('title', 'Events')
+@section('title', 'Tech Events & Workshops - Digital Leap Africa Community Events')
+@section('meta_description', 'Join our technology events, workshops, and community meetups. Connect with fellow developers, learn new skills, and advance your tech career in Africa.')
+@section('meta_keywords', 'tech events, programming workshops, developer meetups, technology conferences, coding bootcamps, web development events, Africa tech community, networking events')
+@section('canonical', route('events.index'))
+
+@push('meta')
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ route('events.index') }}">
+<meta property="og:title" content="Tech Events & Workshops - Digital Leap Africa Community Events">
+<meta property="og:description" content="Join our technology events, workshops, and community meetups. Connect with fellow developers, learn new skills, and advance your tech career in Africa.">
+<meta property="og:image" content="{{ asset('images/events-og-image.jpg') }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Digital Leap Africa">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="{{ route('events.index') }}">
+<meta property="twitter:title" content="Tech Events & Workshops - Digital Leap Africa Community Events">
+<meta property="twitter:description" content="Join our technology events, workshops, and community meetups. Connect with fellow developers and advance your tech career.">
+<meta property="twitter:image" content="{{ asset('images/events-og-image.jpg') }}">
+<meta property="twitter:creator" content="@DigitalLeapAfrica">
+<meta property="twitter:site" content="@DigitalLeapAfrica">
+
+<!-- Additional SEO -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="Digital Leap Africa">
+<meta name="publisher" content="Digital Leap Africa">
+<meta name="geo.region" content="KE">
+<meta name="geo.country" content="Kenya">
+<meta name="geo.placename" content="Nairobi">
+<meta name="language" content="English">
+<meta name="theme-color" content="#0a192f">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Digital Leap Africa Events",
+  "description": "Technology events, workshops, and community meetups for developers and tech enthusiasts in Africa",
+  "url": "{{ route('events.index') }}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Digital Leap Africa",
+    "url": "{{ url('/') }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ asset('images/logo.png') }}"
+    }
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": {{ $ongoing->count() + $upcoming->count() + $past->count() }},
+    "itemListElement": [
+      @php $allEvents = $ongoing->concat($upcoming)->concat($past); @endphp
+      @if($allEvents->count())
+        @foreach($allEvents->take(5) as $index => $event)
+          {
+            "@type": "Event",
+            "position": {{ $index + 1 }},
+            "name": "{{ addslashes($event->title ?? 'Tech Event') }}",
+            "description": "{{ addslashes(Str::limit(strip_tags($event->description ?? ''), 160)) }}",
+            "startDate": "{{ $event->date ? $event->date->toISOString() : '' }}",
+            @if($event->ends_at)
+              "endDate": "{{ $event->ends_at->toISOString() }}",
+            @endif
+            "eventStatus": "{{ $event->date && $event->date->isFuture() ? 'https://schema.org/EventScheduled' : 'https://schema.org/EventPostponed' }}",
+            "eventAttendanceMode": "https://schema.org/MixedEventAttendanceMode",
+            @if($event->location)
+              "location": {
+                "@type": "Place",
+                "name": "{{ addslashes($event->location) }}",
+                "address": "{{ addslashes($event->location) }}"
+              },
+            @endif
+            "organizer": {
+              "@type": "Organization",
+              "name": "Digital Leap Africa",
+              "url": "{{ url('/') }}"
+            },
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "availability": "https://schema.org/InStock",
+              "url": "{{ $event->registration_url ?? route('events.index') }}"
+            }
+          }{{ $index < min(4, $allEvents->count() - 1) ? ',' : '' }}
+        @endforeach
+      @endif
+    ]
+  }
+}
+</script>
+
+<!-- Organization Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Digital Leap Africa",
+  "url": "{{ url('/') }}",
+  "logo": "{{ asset('images/logo.png') }}",
+  "description": "Leading technology education platform organizing events, workshops, and community meetups across Africa",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "Kenya",
+    "addressRegion": "Nairobi"
+  },
+  "sameAs": [
+    "https://twitter.com/DigitalLeapAfrica",
+    "https://linkedin.com/company/digital-leap-africa"
+  ],
+  "event": [
+    @if($upcoming->count())
+      @foreach($upcoming->take(3) as $index => $event)
+        {
+          "@type": "Event",
+          "name": "{{ addslashes($event->title ?? 'Tech Event') }}",
+          "startDate": "{{ $event->date ? $event->date->toISOString() : '' }}",
+          "location": {
+            "@type": "Place",
+            "name": "{{ addslashes($event->location ?? 'Online') }}"
+          }
+        }{{ $index < min(2, $upcoming->count() - 1) ? ',' : '' }}
+      @endforeach
+    @endif
+  ]
+}
+</script>
+
+<!-- Breadcrumb Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ url('/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Events",
+      "item": "{{ route('events.index') }}"
+    }
+  ]
+}
+</script>
+@endpush
 
 @section('content')
 

@@ -1,5 +1,139 @@
 @extends('layouts.app')
 
+@section('title', 'Digital Library - Learning Resources & Educational Materials | Digital Leap Africa')
+@section('meta_description', 'Access our comprehensive digital library with books, videos, tutorials, and educational resources for web development, programming, and technology skills in Africa.')
+@section('meta_keywords', 'digital library, learning resources, educational materials, programming books, web development tutorials, technology resources, online learning Africa, digital education')
+@section('canonical', route('elibrary.index'))
+
+@push('meta')
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ route('elibrary.index') }}">
+<meta property="og:title" content="Digital Library - Learning Resources & Educational Materials">
+<meta property="og:description" content="Access our comprehensive digital library with books, videos, tutorials, and educational resources for web development, programming, and technology skills.">
+<meta property="og:image" content="{{ asset('images/elibrary-og-image.jpg') }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Digital Leap Africa">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="{{ route('elibrary.index') }}">
+<meta property="twitter:title" content="Digital Library - Learning Resources & Educational Materials">
+<meta property="twitter:description" content="Access our comprehensive digital library with books, videos, tutorials, and educational resources for web development and technology skills.">
+<meta property="twitter:image" content="{{ asset('images/elibrary-og-image.jpg') }}">
+<meta property="twitter:creator" content="@DigitalLeapAfrica">
+<meta property="twitter:site" content="@DigitalLeapAfrica">
+
+<!-- Additional SEO -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="Digital Leap Africa">
+<meta name="publisher" content="Digital Leap Africa">
+<meta name="geo.region" content="KE">
+<meta name="geo.country" content="Kenya">
+<meta name="geo.placename" content="Nairobi">
+<meta name="language" content="English">
+<meta name="theme-color" content="#0a192f">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Digital Leap Africa Library",
+  "description": "Comprehensive digital library with educational resources, books, videos, and tutorials for technology and programming skills",
+  "url": "{{ route('elibrary.index') }}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Digital Leap Africa",
+    "url": "{{ url('/') }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ asset('images/logo.png') }}"
+    }
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": {{ $elibraryItems->total() ?? $elibraryItems->count() }},
+    "itemListElement": [
+      @if($elibraryItems->count())
+        @foreach($elibraryItems->take(5) as $index => $item)
+          {
+            "@type": "CreativeWork",
+            "position": {{ $index + 1 }},
+            "name": "{{ addslashes($item->title) }}",
+            "description": "{{ addslashes(Str::limit($item->description ?? '', 160)) }}",
+            "url": "{{ $item->file_url ?? route('elibrary.index') }}",
+            "author": {
+              "@type": "Person",
+              "name": "{{ $item->author ?? 'Digital Leap Africa' }}"
+            },
+            "genre": "{{ ucfirst($item->type ?? 'Educational Resource') }}",
+            "educationalLevel": "Intermediate",
+            "learningResourceType": "{{ ucfirst($item->type ?? 'Resource') }}"
+          }{{ $index < min(4, $elibraryItems->count() - 1) ? ',' : '' }}
+        @endforeach
+      @endif
+    ]
+  }
+}
+</script>
+
+<!-- Educational Organization Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "name": "Digital Leap Africa",
+  "url": "{{ url('/') }}",
+  "logo": "{{ asset('images/logo.png') }}",
+  "description": "Leading digital education platform in Africa providing comprehensive learning resources and technology training",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "Kenya",
+    "addressRegion": "Nairobi"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Digital Library Resources",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Course",
+          "name": "Programming & Web Development Resources",
+          "description": "Comprehensive collection of books, videos, and tutorials for learning programming and web development"
+        }
+      }
+    ]
+  }
+}
+</script>
+
+<!-- Breadcrumb Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ url('/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Digital Library",
+      "item": "{{ route('elibrary.index') }}"
+    }
+  ]
+}
+</script>
+@endpush
+
 @section('content')
 <style>
 .library-grid {
