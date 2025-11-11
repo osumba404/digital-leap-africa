@@ -35,7 +35,12 @@ use App\Http\Controllers\Admin\{
     AboutController as AdminAboutController,
     AssignmentController as AdminAssignmentController,
     TestimonialController as AdminTestimonialController,
-    FaqController as AdminFaqController
+    FaqController as AdminFaqController,
+    EmailTemplateController,
+    EmailLogController,
+    PointTransactionController,
+    CertificateTemplateController,
+    PointRuleController
    
 };
 
@@ -567,6 +572,51 @@ Route::prefix('admin')
             'destroy' => 'contact-messages.destroy',
         ]);
         Route::post('contact-messages/{contactMessage}/reply', [\App\Http\Controllers\Admin\ContactMessageController::class, 'reply'])->name('contact-messages.reply');
+
+        // Email Management
+        Route::resource('email-templates', EmailTemplateController::class)->names([
+            'index' => 'email-templates.index',
+            'create' => 'email-templates.create',
+            'store' => 'email-templates.store',
+            'show' => 'email-templates.show',
+            'edit' => 'email-templates.edit',
+            'update' => 'email-templates.update',
+            'destroy' => 'email-templates.destroy'
+        ]);
+        
+        Route::resource('email-logs', EmailLogController::class)->only(['index', 'show'])->names([
+            'index' => 'email-logs.index',
+            'show' => 'email-logs.show'
+        ]);
+        
+        // Points Management
+        Route::resource('point-transactions', PointTransactionController::class)->only(['index', 'create', 'store', 'show'])->names([
+            'index' => 'point-transactions.index',
+            'create' => 'point-transactions.create',
+            'store' => 'point-transactions.store',
+            'show' => 'point-transactions.show'
+        ]);
+        
+        // Certificate Templates
+        Route::resource('certificate-templates', CertificateTemplateController::class)->names([
+            'index' => 'certificate-templates.index',
+            'create' => 'certificate-templates.create',
+            'store' => 'certificate-templates.store',
+            'show' => 'certificate-templates.show',
+            'edit' => 'certificate-templates.edit',
+            'update' => 'certificate-templates.update',
+            'destroy' => 'certificate-templates.destroy'
+        ]);
+        
+        // Point Rules
+        Route::resource('point-rules', PointRuleController::class)->names([
+            'index' => 'point-rules.index',
+            'create' => 'point-rules.create',
+            'store' => 'point-rules.store',
+            'edit' => 'point-rules.edit',
+            'update' => 'point-rules.update',
+            'destroy' => 'point-rules.destroy'
+        ]);
 
         // Settings
         Route::prefix('settings')->name('settings.')->group(function () {

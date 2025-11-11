@@ -278,6 +278,36 @@
         <div class="action-title">Add Project</div>
         <div class="action-desc">Showcase community work</div>
     </a>
+    
+    <a href="{{ route('admin.email-templates.index') }}" class="action-card">
+        <div class="action-icon"><i class="fas fa-envelope"></i></div>
+        <div class="action-title">Email Templates</div>
+        <div class="action-desc">Manage email notifications</div>
+    </a>
+    
+    <a href="{{ route('admin.point-transactions.index') }}" class="action-card">
+        <div class="action-icon"><i class="fas fa-coins"></i></div>
+        <div class="action-title">Points System</div>
+        <div class="action-desc">Manage user points</div>
+    </a>
+    
+    <a href="{{ route('admin.certificate-templates.index') }}" class="action-card">
+        <div class="action-icon"><i class="fas fa-certificate"></i></div>
+        <div class="action-title">Certificates</div>
+        <div class="action-desc">Design certificate templates</div>
+    </a>
+    
+    <a href="{{ route('admin.email-logs.index') }}" class="action-card">
+        <div class="action-icon"><i class="fas fa-paper-plane"></i></div>
+        <div class="action-title">Email Logs</div>
+        <div class="action-desc">View email delivery status</div>
+    </a>
+    
+    <a href="{{ route('admin.point-rules.index') }}" class="action-card">
+        <div class="action-icon"><i class="fas fa-cogs"></i></div>
+        <div class="action-title">Point Rules</div>
+        <div class="action-desc">Manage gamification rules</div>
+    </a>
 </div>
 
 @if(isset($recentActivities) && count($recentActivities) > 0)
