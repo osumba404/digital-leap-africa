@@ -1,5 +1,122 @@
 @extends('layouts.app')
 
+@section('title', 'Online Courses - Digital Leap Africa | Programming, Web Development & Digital Skills Training')
+
+@push('meta')
+<meta name="description" content="Explore comprehensive online courses at Digital Leap Africa. Learn programming, web development, digital marketing, and essential tech skills. Free and premium courses available for African learners.">
+<meta name="keywords" content="online courses Africa, programming courses Kenya, web development training, digital skills courses, e-learning platform Africa, tech education, coding bootcamp, software development courses, digital marketing training, free programming courses">
+<meta name="author" content="Digital Leap Africa">
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ route('courses.index') }}">
+<meta property="og:title" content="Online Courses - Digital Leap Africa | Programming & Digital Skills Training">
+<meta property="og:description" content="Master programming, web development, and digital skills with our comprehensive online courses. Join thousands of African learners advancing their tech careers.">
+<meta property="og:image" content="{{ asset('images/courses-og-image.jpg') }}">
+<meta property="og:site_name" content="Digital Leap Africa">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="{{ route('courses.index') }}">
+<meta name="twitter:title" content="Online Courses - Digital Leap Africa">
+<meta name="twitter:description" content="Master programming, web development, and digital skills with our comprehensive online courses designed for African learners.">
+<meta name="twitter:image" content="{{ asset('images/courses-og-image.jpg') }}">
+<meta name="twitter:image:alt" content="Digital Leap Africa Online Courses - Programming and Digital Skills Training">
+
+<!-- Additional SEO Meta Tags -->
+<meta name="geo.region" content="KE">
+<meta name="geo.placename" content="Kenya">
+<meta name="language" content="English">
+<meta name="coverage" content="Africa">
+<meta name="distribution" content="global">
+<meta name="rating" content="general">
+<meta name="revisit-after" content="3 days">
+<meta name="target" content="all">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ route('courses.index') }}">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Online Courses - Digital Leap Africa",
+  "description": "Comprehensive online courses in programming, web development, and digital skills for African learners",
+  "url": "{{ route('courses.index') }}",
+  "provider": {
+    "@type": "EducationalOrganization",
+    "name": "Digital Leap Africa",
+    "url": "{{ url('/') }}"
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": "{{ $courses->total() ?? $courses->count() }}",
+    "itemListElement": [
+      @if(isset($courses) && $courses->count() > 0)
+        @foreach($courses->take(10) as $index => $course)
+        {
+          "@type": "Course",
+          "position": {{ $index + 1 }},
+          "name": "{{ $course->title }}",
+          "description": "{{ strip_tags($course->short_description ?? $course->description ?? '') }}",
+          "url": "{{ route('courses.show', $course) }}",
+          "provider": {
+            "@type": "Organization",
+            "name": "Digital Leap Africa"
+          },
+          "courseMode": "online",
+          "educationalLevel": "{{ $course->level ?? 'beginner' }}",
+          "inLanguage": "en",
+          @if(!$course->is_free && $course->price)
+          "offers": {
+            "@type": "Offer",
+            "price": "{{ $course->price }}",
+            "priceCurrency": "KES",
+            "availability": "https://schema.org/InStock"
+          },
+          @endif
+          "hasCourseInstance": {
+            "@type": "CourseInstance",
+            "courseMode": "online",
+            "instructor": {
+              "@type": "Person",
+              "name": "{{ $course->instructor ?? 'Digital Leap Africa Instructor' }}"
+            }
+          }
+        }@if(!$loop->last),@endif
+        @endforeach
+      @endif
+    ]
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ url('/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Courses",
+      "item": "{{ route('courses.index') }}"
+    }
+  ]
+}
+</script>
+@endpush
+
 @section('content')
 
 

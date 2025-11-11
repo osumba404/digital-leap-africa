@@ -1,5 +1,114 @@
 @extends('layouts.app')
 
+@section('title', 'Digital Insights Blog - Web Development & Technology Articles | Digital Leap Africa')
+@section('meta_description', 'Discover the latest web development tutorials, technology insights, and digital transformation articles from Digital Leap Africa. Expert content on Laravel, JavaScript, PHP, and more.')
+@section('meta_keywords', 'web development blog, technology articles, Laravel tutorials, JavaScript guides, PHP development, digital transformation Africa, programming tutorials, tech insights')
+@section('canonical', route('blog.index'))
+
+@push('meta')
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ route('blog.index') }}">
+<meta property="og:title" content="Digital Insights Blog - Web Development & Technology Articles">
+<meta property="og:description" content="Discover the latest web development tutorials, technology insights, and digital transformation articles from Digital Leap Africa. Expert content on Laravel, JavaScript, PHP, and more.">
+<meta property="og:image" content="{{ asset('images/blog-og-image.jpg') }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Digital Leap Africa">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="{{ route('blog.index') }}">
+<meta property="twitter:title" content="Digital Insights Blog - Web Development & Technology Articles">
+<meta property="twitter:description" content="Discover the latest web development tutorials, technology insights, and digital transformation articles from Digital Leap Africa.">
+<meta property="twitter:image" content="{{ asset('images/blog-og-image.jpg') }}">
+<meta property="twitter:creator" content="@DigitalLeapAfrica">
+<meta property="twitter:site" content="@DigitalLeapAfrica">
+
+<!-- Additional SEO -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="Digital Leap Africa">
+<meta name="publisher" content="Digital Leap Africa">
+<meta name="geo.region" content="KE">
+<meta name="geo.country" content="Kenya">
+<meta name="geo.placename" content="Nairobi">
+<meta name="language" content="English">
+<meta name="theme-color" content="#0a192f">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "Digital Leap Africa Blog",
+  "description": "Web development tutorials, technology insights, and digital transformation articles from Digital Leap Africa",
+  "url": "{{ route('blog.index') }}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Digital Leap Africa",
+    "url": "{{ url('/') }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ asset('images/logo.png') }}"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ route('blog.index') }}"
+  },
+  "blogPost": [
+    @if(isset($articles) && $articles->count())
+      @foreach($articles->take(5) as $index => $article)
+        {
+          "@type": "BlogPosting",
+          "headline": "{{ addslashes($article->title) }}",
+          "description": "{{ addslashes(Str::limit(strip_tags($article->content ?? ''), 160)) }}",
+          "url": "{{ route('blog.show', $article) }}",
+          "datePublished": "{{ $article->created_at->toISOString() }}",
+          "dateModified": "{{ $article->updated_at->toISOString() }}",
+          "author": {
+            "@type": "Person",
+            "name": "{{ $article->author->name ?? 'Digital Leap Africa' }}"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Digital Leap Africa",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "{{ asset('images/logo.png') }}"
+            }
+          }
+        }{{ $index < min(4, $articles->count() - 1) ? ',' : '' }}
+      @endforeach
+    @endif
+  ]
+}
+</script>
+
+<!-- Breadcrumb Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ url('/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "{{ route('blog.index') }}"
+    }
+  ]
+}
+</script>
+@endpush
+
 @section('content')
 
 

@@ -1,5 +1,164 @@
 @extends('layouts.app')
 
+@section('title', $article->title . ' | Digital Leap Africa Blog')
+@section('meta_description', Str::limit(strip_tags($article->content ?? ''), 160))
+@section('meta_keywords', implode(', ', array_merge(is_array($article->tags ?? null) ? $article->tags : [], ['web development', 'technology', 'programming', 'digital transformation', 'Africa'])))
+@section('canonical', route('blog.show', $article))
+
+@push('meta')
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ route('blog.show', $article) }}">
+<meta property="og:title" content="{{ $article->title }}">
+<meta property="og:description" content="{{ Str::limit(strip_tags($article->content ?? ''), 160) }}">
+<meta property="og:image" content="{{ $article->featured_image_url ?? asset('images/blog-default.jpg') }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Digital Leap Africa">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="{{ $article->author->name ?? 'Digital Leap Africa' }}">
+<meta property="article:published_time" content="{{ $article->created_at->toISOString() }}">
+<meta property="article:modified_time" content="{{ $article->updated_at->toISOString() }}">
+<meta property="article:section" content="Technology">
+@if(is_array($article->tags ?? null))
+  @foreach($article->tags as $tag)
+    <meta property="article:tag" content="{{ $tag }}">
+  @endforeach
+@endif
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="{{ route('blog.show', $article) }}">
+<meta property="twitter:title" content="{{ $article->title }}">
+<meta property="twitter:description" content="{{ Str::limit(strip_tags($article->content ?? ''), 160) }}">
+<meta property="twitter:image" content="{{ $article->featured_image_url ?? asset('images/blog-default.jpg') }}">
+<meta property="twitter:creator" content="@DigitalLeapAfrica">
+<meta property="twitter:site" content="@DigitalLeapAfrica">
+
+<!-- Additional SEO -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="{{ $article->author->name ?? 'Digital Leap Africa' }}">
+<meta name="publisher" content="Digital Leap Africa">
+<meta name="geo.region" content="KE">
+<meta name="geo.country" content="Kenya">
+<meta name="geo.placename" content="Nairobi">
+<meta name="language" content="English">
+<meta name="theme-color" content="#0a192f">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ addslashes($article->title) }}",
+  "description": "{{ addslashes(Str::limit(strip_tags($article->content ?? ''), 160)) }}",
+  "image": {
+    "@type": "ImageObject",
+    "url": "{{ $article->featured_image_url ?? asset('images/blog-default.jpg') }}",
+    "width": 1200,
+    "height": 630
+  },
+  "url": "{{ route('blog.show', $article) }}",
+  "datePublished": "{{ $article->created_at->toISOString() }}",
+  "dateModified": "{{ $article->updated_at->toISOString() }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ $article->author->name ?? 'Digital Leap Africa' }}",
+    "url": "{{ url('/') }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Digital Leap Africa",
+    "url": "{{ url('/') }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ asset('images/logo.png') }}",
+      "width": 200,
+      "height": 60
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ route('blog.show', $article) }}"
+  },
+  "wordCount": {{ str_word_count(strip_tags($article->content ?? '')) }},
+  "timeRequired": "PT{{ max(1, ceil(str_word_count(strip_tags($article->content ?? ''))/200)) }}M",
+  "articleSection": "Technology",
+  "keywords": "{{ implode(', ', array_merge(is_array($article->tags ?? null) ? $article->tags : [], ['web development', 'technology', 'programming'])) }}",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "interactionStatistic": [
+    {
+      "@type": "InteractionCounter",
+      "interactionType": "https://schema.org/LikeAction",
+      "userInteractionCount": {{ $article->likes_count ?? 0 }}
+    },
+    {
+      "@type": "InteractionCounter",
+      "interactionType": "https://schema.org/CommentAction",
+      "userInteractionCount": {{ $article->comments->count() }}
+    },
+    {
+      "@type": "InteractionCounter",
+      "interactionType": "https://schema.org/ShareAction",
+      "userInteractionCount": {{ $article->shares_count ?? 0 }}
+    }
+  ]
+}
+</script>
+
+<!-- Breadcrumb Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ url('/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "{{ route('blog.index') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ $article->title }}",
+      "item": "{{ route('blog.show', $article) }}"
+    }
+  ]
+}
+</script>
+
+<!-- FAQ Structured Data (if comments exist) -->
+@if($article->comments->count() > 0)
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "QAPage",
+  "mainEntity": {
+    "@type": "Question",
+    "name": "{{ addslashes($article->title) }}",
+    "text": "{{ addslashes(Str::limit(strip_tags($article->content ?? ''), 200)) }}",
+    "answerCount": {{ $article->comments->count() }},
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "{{ addslashes(strip_tags($article->content ?? '')) }}",
+      "author": {
+        "@type": "Person",
+        "name": "{{ $article->author->name ?? 'Digital Leap Africa' }}"
+      }
+    }
+  }
+}
+</script>
+@endif
+@endpush
 
 <style>
   :root {

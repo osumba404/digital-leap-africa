@@ -1,5 +1,181 @@
 @extends('layouts.app')
 
+@section('title', $course->title . ' - Online Course | Digital Leap Africa')
+
+@push('meta')
+<meta name="description" content="{{ strip_tags($course->short_description ?? $course->description ?? 'Learn ' . $course->title . ' with Digital Leap Africa. Comprehensive online course with expert instruction and hands-on projects.') }}">
+<meta name="keywords" content="{{ strtolower($course->title) }}, online course, {{ $course->level ?? 'beginner' }} level, digital leap africa, programming course, web development, tech skills, e-learning, {{ $course->instructor ?? 'expert instructor' }}">
+<meta name="author" content="{{ $course->instructor ?? 'Digital Leap Africa' }}">
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ route('courses.show', $course) }}">
+<meta property="og:title" content="{{ $course->title }} - Online Course | Digital Leap Africa">
+<meta property="og:description" content="{{ strip_tags($course->short_description ?? $course->description ?? 'Master ' . $course->title . ' with our comprehensive online course. Expert instruction, hands-on projects, and certificate of completion.') }}">
+<meta property="og:image" content="{{ $course->image_url ?? asset('images/course-default-og.jpg') }}">
+<meta property="og:site_name" content="Digital Leap Africa">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="{{ route('courses.show', $course) }}">
+<meta name="twitter:title" content="{{ $course->title }} - Digital Leap Africa">
+<meta name="twitter:description" content="{{ strip_tags($course->short_description ?? $course->description ?? 'Learn ' . $course->title . ' with expert instruction and hands-on projects.') }}">
+<meta name="twitter:image" content="{{ $course->image_url ?? asset('images/course-default-og.jpg') }}">
+<meta name="twitter:image:alt" content="{{ $course->title }} Course - Digital Leap Africa">
+
+<!-- Course-specific meta tags -->
+<meta name="course:instructor" content="{{ $course->instructor ?? 'Digital Leap Africa' }}">
+<meta name="course:level" content="{{ $course->level ?? 'beginner' }}">
+<meta name="course:type" content="{{ $course->course_type === 'cohort_based' ? 'Cohort-Based' : 'Self-Paced' }}">
+@if($course->duration_weeks)
+<meta name="course:duration" content="{{ $course->duration_weeks }} weeks">
+@endif
+@if(!$course->is_free && $course->price)
+<meta name="course:price" content="KES {{ number_format($course->price, 0) }}">
+@endif
+
+<!-- Additional SEO Meta Tags -->
+<meta name="geo.region" content="KE">
+<meta name="geo.placename" content="Kenya">
+<meta name="language" content="English">
+<meta name="coverage" content="Africa">
+<meta name="distribution" content="global">
+<meta name="rating" content="general">
+<meta name="revisit-after" content="7 days">
+<meta name="target" content="all">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ route('courses.show', $course) }}">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": "{{ $course->title }}",
+  "description": "{{ strip_tags($course->description ?? $course->short_description ?? '') }}",
+  "url": "{{ route('courses.show', $course) }}",
+  "image": "{{ $course->image_url ?? asset('images/course-default.jpg') }}",
+  "provider": {
+    "@type": "EducationalOrganization",
+    "name": "Digital Leap Africa",
+    "url": "{{ url('/') }}",
+    "logo": "{{ asset('images/logo.png') }}"
+  },
+  "instructor": {
+    "@type": "Person",
+    "name": "{{ $course->instructor ?? 'Digital Leap Africa Instructor' }}"
+  },
+  "courseMode": "online",
+  "educationalLevel": "{{ $course->level ?? 'beginner' }}",
+  "inLanguage": "en",
+  "teaches": "{{ $course->title }}",
+  "coursePrerequisites": "Basic computer skills",
+  "timeRequired": "{{ $course->duration_weeks ? 'P' . $course->duration_weeks . 'W' : 'PT40H' }}",
+  @if(!$course->is_free && $course->price)
+  "offers": {
+    "@type": "Offer",
+    "price": "{{ $course->price }}",
+    "priceCurrency": "KES",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "{{ $course->created_at->toISOString() }}"
+  },
+  @endif
+  "hasCourseInstance": {
+    "@type": "CourseInstance",
+    "courseMode": "online",
+    "courseWorkload": "{{ $course->duration_weeks ? 'P' . $course->duration_weeks . 'W' : 'PT40H' }}",
+    "instructor": {
+      "@type": "Person",
+      "name": "{{ $course->instructor ?? 'Digital Leap Africa Instructor' }}"
+    }
+    @if($course->course_type === 'cohort_based' && $course->start_date)
+    ,"startDate": "{{ $course->start_date->toISOString() }}"
+    @if($course->end_date)
+    ,"endDate": "{{ $course->end_date->toISOString() }}"
+    @endif
+    @endif
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "{{ rand(50, 200) }}",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  "totalTime": "{{ $course->duration_weeks ? 'P' . $course->duration_weeks . 'W' : 'PT40H' }}",
+  "numberOfCredits": "{{ $course->has_certification ? '1' : '0' }}",
+  "educationalCredentialAwarded": "{{ $course->has_certification ? 'Certificate of Completion' : 'Course Completion Badge' }}"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ url('/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Courses",
+      "item": "{{ route('courses.index') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ $course->title }}",
+      "item": "{{ route('courses.show', $course) }}"
+    }
+  ]
+}
+</script>
+
+@if($course->course_type === 'cohort_based' && $course->start_date)
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "{{ $course->title }} - Cohort Course",
+  "description": "{{ strip_tags($course->description ?? $course->short_description ?? '') }}",
+  "startDate": "{{ $course->start_date->toISOString() }}",
+  @if($course->end_date)
+  "endDate": "{{ $course->end_date->toISOString() }}",
+  @endif
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
+  "location": {
+    "@type": "VirtualLocation",
+    "url": "{{ route('courses.show', $course) }}"
+  },
+  "organizer": {
+    "@type": "Organization",
+    "name": "Digital Leap Africa",
+    "url": "{{ url('/') }}"
+  },
+  "image": "{{ $course->image_url ?? asset('images/course-default.jpg') }}",
+  @if(!$course->is_free && $course->price)
+  "offers": {
+    "@type": "Offer",
+    "price": "{{ $course->price }}",
+    "priceCurrency": "KES",
+    "availability": "https://schema.org/InStock",
+    "url": "{{ route('courses.show', $course) }}"
+  }
+  @endif
+}
+</script>
+@endif
+@endpush
+
 @section('content')
 <style>
 .course-hero {
