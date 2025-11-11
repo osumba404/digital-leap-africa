@@ -131,7 +131,7 @@ class PageController extends Controller
             }
         }
         
-        return view('index', compact(
+        return view('pages.home', compact(
             'testimonials',
             'latestCourses',
             'latestArticles',

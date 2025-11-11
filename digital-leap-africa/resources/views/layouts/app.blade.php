@@ -5,37 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $siteSettings['meta_title'] ?? $siteSettings['site_name'] ?? config('app.name', 'Digital Leap Africa') }}</title>
+    <!-- SEO Meta Tags -->
+    <title>@yield('title', $siteSettings['meta_title'] ?? 'Digital Leap Africa - Premier Tech Education Platform in Africa | Programming Courses & Career Development')</title>
+    <meta name="description" content="@yield('meta_description', $siteSettings['meta_description'] ?? 'Transform your tech career with Digital Leap Africa. Expert-led programming courses, web development training, and career opportunities across Kenya, Nigeria, Ghana, and all of Africa. Join 10,000+ successful graduates.')">
+    <meta name="keywords" content="@yield('meta_keywords', $siteSettings['keywords'] ?? 'programming courses Africa, web development Kenya, tech education Nigeria, coding bootcamp Ghana, software development training, digital skills Africa, tech careers Kenya, programming jobs Nigeria, web developer course, full stack development Africa')">
+    <meta name="author" content="Digital Leap Africa">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     
-    @if(!empty($siteSettings['meta_description']))
-    <meta name="description" content="{{ $siteSettings['meta_description'] }}">
-    @endif
+    <!-- Canonical URL -->
+    <link rel="canonical" href="@yield('canonical', url()->current())">
     
-    @if(!empty($siteSettings['keywords']))
-    <meta name="keywords" content="{{ $siteSettings['keywords'] }}">
-    @endif
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:site_name" content="Digital Leap Africa">
+    <meta property="og:title" content="@yield('og_title', $siteSettings['meta_title'] ?? 'Digital Leap Africa - Premier Tech Education Platform in Africa')">
+    <meta property="og:description" content="@yield('og_description', $siteSettings['meta_description'] ?? 'Transform your tech career with expert-led programming courses, web development training, and career opportunities across Africa.')">
+    <meta property="og:url" content="@yield('og_url', url()->current())">
+    <meta property="og:image" content="@yield('og_image', $siteSettings['opengraph_image'] ?? asset('images/og-default.jpg'))">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="en_KE">
     
-    @if(!empty($siteSettings['opengraph_image']))
-    <meta property="og:image" content="{{ $siteSettings['opengraph_image'] }}">
-    @endif
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@DigitalLeapAfrica">
+    <meta name="twitter:creator" content="@DigitalLeapAfrica">
+    <meta name="twitter:title" content="@yield('twitter_title', $siteSettings['meta_title'] ?? 'Digital Leap Africa - Premier Tech Education Platform in Africa')">
+    <meta name="twitter:description" content="@yield('twitter_description', $siteSettings['meta_description'] ?? 'Transform your tech career with expert-led programming courses and career opportunities across Africa.')">
+    <meta name="twitter:image" content="@yield('twitter_image', $siteSettings['opengraph_image'] ?? asset('images/twitter-card.jpg'))">
     
+    <!-- Favicon -->
     @if(!empty($siteSettings['favicon']))
     <link rel="icon" type="image/x-icon" href="{{ $siteSettings['favicon'] }}">
     @endif
     
     @stack('meta')
     
+    <!-- Structured Data - Organization -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "EducationalOrganization",
+        "name": "Digital Leap Africa",
+        "url": "{{ url('/') }}",
+        "logo": "{{ $siteSettings['logo_url'] ?? asset('images/logo.png') }}",
+        "description": "Premier technology education platform empowering African youth with programming skills, web development training, and career opportunities across Kenya, Nigeria, Ghana, and all of Africa.",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "Kenya",
+            "addressRegion": "Nairobi"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "email": "{{ $siteSettings['contact_email'] ?? 'info@digitalleap.africa' }}",
+            "contactType": "customer service"
+        },
+        "sameAs": [
+            @if($siteSettings['facebook_url'])"{{ $siteSettings['facebook_url'] }}",@endif
+            @if($siteSettings['twitter_url'])"{{ $siteSettings['twitter_url'] }}",@endif
+            @if($siteSettings['linkedin_url'])"{{ $siteSettings['linkedin_url'] }}",@endif
+            @if($siteSettings['youtube_url'])"{{ $siteSettings['youtube_url'] }}",@endif
+            @if($siteSettings['instagram_url'])"{{ $siteSettings['instagram_url'] }}"@endif
+        ]
+    }
+    </script>
+    
+    @stack('structured-data')
+    
     @if(!empty($siteSettings['google_analytics_id']))
-    <!-- Google Analytics -->
+    <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ $siteSettings['google_analytics_id'] }}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', '{{ $siteSettings['google_analytics_id'] }}');
+        gtag('config', '{{ $siteSettings['google_analytics_id'] }}', {
+            page_title: document.title,
+            page_location: window.location.href
+        });
     </script>
     @endif
 
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Fonts and Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -1662,6 +1718,9 @@
 
     </style>
 
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#0a192f">
+    
     @stack('styles')
     
 

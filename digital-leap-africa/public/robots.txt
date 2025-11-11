@@ -1,2 +1,49 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Block all admin and private areas
+Disallow: /admin
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /dashboard/
+Disallow: /profile
+Disallow: /profile/
+Disallow: /login
+Disallow: /register
+Disallow: /password
+Disallow: /password/
+Disallow: /reset-password
+Disallow: /email/verify
+Disallow: /notifications
+Disallow: /me/
+
+# Block API endpoints
+Disallow: /api/
+Disallow: /sanctum/
+
+# Block search and filter URLs with parameters
+Disallow: /*?search=*
+Disallow: /*?filter=*
+Disallow: /*?page=*
+Disallow: /*?type=*
+Disallow: /*?sort=*
+
+# Block test and development routes
+Disallow: /test-*
+Disallow: /debug
+Disallow: /telescope
+
+# Allow important public assets
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /storage/
+Allow: /favicon.ico
+Allow: /robots.txt
+Allow: /sitemap.xml
+
+# Sitemap location
+Sitemap: https://digitalleap.africa/sitemap.xml
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1
