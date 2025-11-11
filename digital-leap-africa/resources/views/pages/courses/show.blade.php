@@ -508,11 +508,53 @@
     @endauth
 
     {{-- Course Curriculum Section --}}
-    @if(Auth::check() && $enrollment && $enrollment->pivot->status === 'active')
+    @if(Auth::check() && (($enrollment && $enrollment->pivot->status === 'active') || !$course->is_free))
+        @php
+            $now = now();
+            $canAccessContent = true;
+            $accessMessage = '';
+            $isEnrolled = $enrollment && $enrollment->pivot->status === 'active';
+            
+            // Check if user is not enrolled in a paid course
+            if(!$course->is_free && !$isEnrolled) {
+                $canAccessContent = false;
+                $accessMessage = 'Purchase this course to unlock all lessons and materials.';
+            }
+            // Check cohort-based restrictions for enrolled users
+            elseif($course->course_type === 'cohort_based' && $isEnrolled) {
+                if($course->start_date && $now->lt($course->start_date)) {
+                    $canAccessContent = false;
+                    $accessMessage = 'Course content will be available when the cohort starts on ' . $course->start_date->format('M j, Y');
+                } elseif($course->end_date && $now->gt($course->end_date)) {
+                    $canAccessContent = false;
+                    $accessMessage = 'This cohort has ended on ' . $course->end_date->format('M j, Y') . '. Content is no longer accessible.';
+                }
+            }
+        @endphp
+        
         <div style="margin-top: 3rem;">
             <h2 style="font-size: 2rem; font-weight: 600; margin-bottom: 2rem; color: var(--diamond-white);">
                 <i class="fas fa-list-ul me-2"></i>Course Curriculum
             </h2>
+            
+            @if(!$canAccessContent)
+                @if(!$course->is_free && !$isEnrolled)
+                    <div style="text-align: center; padding: 3rem; background: rgba(59, 130, 246, 0.1); border: 2px solid #3b82f6; border-radius: var(--radius); margin-bottom: 2rem;">
+                        <i class="fas fa-lock" style="font-size: 3rem; color: #3b82f6; margin-bottom: 1rem;"></i>
+                        <h3 style="color: #3b82f6; margin-bottom: 1rem;">Premium Content</h3>
+                        <p style="color: var(--cool-gray); margin-bottom: 1.5rem;">{{ $accessMessage }}</p>
+                        <a href="#enrollment" onclick="document.querySelector('.enrollment-section').scrollIntoView({behavior: 'smooth'})" class="btn-primary" style="padding: 0.75rem 1.5rem;">
+                            <i class="fas fa-credit-card me-2"></i>Purchase Course
+                        </a>
+                    </div>
+                @else
+                    <div style="text-align: center; padding: 3rem; background: rgba(239, 68, 68, 0.1); border: 2px solid #ef4444; border-radius: var(--radius); margin-bottom: 2rem;">
+                        <i class="fas fa-lock" style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;"></i>
+                        <h3 style="color: #ef4444; margin-bottom: 1rem;">Content Not Available</h3>
+                        <p style="color: var(--cool-gray); margin: 0;">{{ $accessMessage }}</p>
+                    </div>
+                @endif
+            @endif
             
             @forelse ($course->topics as $topic)
                 <div class="topic-section">
@@ -523,9 +565,16 @@
                     @forelse ($topic->lessons as $lesson)
                         <div class="lesson-item">
                             <i class="fas fa-play-circle" style="color: var(--cool-gray); margin-right: 1rem;"></i>
-                            <a href="{{ route('lessons.show', $lesson) }}" class="lesson-link">
-                                {{ $lesson->title }}
-                            </a>
+                            @if($canAccessContent)
+                                <a href="{{ route('lessons.show', $lesson) }}" class="lesson-link">
+                                    {{ $lesson->title }}
+                                </a>
+                            @else
+                                <span class="lesson-link" style="color: var(--cool-gray); opacity: 0.5; cursor: not-allowed;">
+                                    {{ $lesson->title }}
+                                    <i class="fas fa-lock" style="margin-left: 0.5rem; font-size: 0.8rem;"></i>
+                                </span>
+                            @endif
                             @if(Auth::user()->lessons()->where('lesson_id', $lesson->id)->exists())
                                 <i class="fas fa-check-circle completed-icon"></i>
                             @endif
