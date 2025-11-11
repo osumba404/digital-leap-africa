@@ -397,116 +397,340 @@
     </div>
   </section>
 
-  {{-- About block (hexagon card) --}}
+  {{-- About section with new card layout --}}
   @php $about = \App\Models\AboutSection::where('section_type', 'about')->active()->first(); @endphp
   @if($about)
   <section class="section">
     <style>
-      /* Scoped styles for About hex card on the About page */
-      .about-hex-card{background:#131a2a;border-radius:24px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.5);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);max-width:1000px;width:100%;display:flex;position:relative;border:1px solid rgba(59,130,246,0.1);margin:0 auto}
-      .about-hex-card::before{content:'';position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;background:linear-gradient(45deg,#3b82f6,#00d4ff,#3b82f6);z-index:-1;border-radius:26px;opacity:0;transition:opacity .5s ease}
-      .about-hex-card:hover::before{opacity:0;animation:none}
-      @keyframes abouthex-rotate{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
-
-      .about-hex-image{min-width:30%;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-      .about-hex{width:320px;height:370px;background:linear-gradient(135deg,#3b82f6,#00d4ff);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;position:relative}
-      .about-hex-inner{width:300px;height:350px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);overflow:hidden;background:#131a2a;display:flex;align-items:center;justify-content:center}
-      .about-hex-inner img{width:100%;height:100%;object-fit:cover;transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);filter:grayscale(30%)}
-      .about-hex-card:hover .about-hex-inner img{transform:none;filter:grayscale(30%)}
-
-      .about-hex-floating{position:absolute;width:100%;height:100%;pointer-events:none}
-      .about-hex-f{position:absolute;width:40px;height:40px;background:rgba(59,130,246,0.2);border-radius:50%;animation:abouthex-float 6s ease-in-out infinite}
-      .about-hex-f:nth-child(1){top:20%;left:10%;animation-delay:0s;width:30px;height:30px}
-      .about-hex-f:nth-child(2){top:60%;left:80%;animation-delay:1s;width:25px;height:25px}
-      .about-hex-f:nth-child(3){top:80%;left:20%;animation-delay:2s;width:35px;height:35px}
-      @keyframes abouthex-float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-20px) rotate(180deg)}}
-
-      .about-hex-content{padding:40px;flex-grow:1;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2}
-      .about-hex-badge{position:absolute;top:30px;right:30px;background:linear-gradient(45deg,#3b82f6,#00d4ff);color:#fff;padding:8px 20px;border-radius:20px;font-size:.9rem;font-weight:600;box-shadow:0 4px 15px rgba(59,130,246,.4)}
-      .about-hex-title{font-size:2.5rem;color:#f1f5f9;margin-bottom:15px;font-weight:800;background:linear-gradient(90deg,#3b82f6,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative;display:inline-block}
-      .about-hex-title::after{content:'';position:absolute;bottom:-8px;left:0;width:80px;height:4px;background:linear-gradient(90deg,#3b82f6,#00d4ff);border-radius:2px}
-      .about-hex-sub{color:#94a3b8;font-size:1.2rem;margin-bottom:25px;font-weight:500}
-      .about-hex-desc{color:#94a3b8;line-height:1.7;margin-bottom:30px;font-size:1.05rem}
-      .about-hex-features{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:30px}
-      .about-hex-feature{display:flex;align-items:center;gap:10px;color:#94a3b8;font-size:.95rem}
-      .about-hex-feature i{color:#3b82f6;font-size:1rem}
-
-      @media (max-width:900px){
-        .about-hex-card{flex-direction:column;max-width:600px}
-        .about-hex-image{width:100%;height:400px}
-        .about-hex{width:280px;height:320px}
-        .about-hex-inner{width:260px;height:300px}
-        .about-hex-content{padding:30px 25px}
-        .about-hex-title{font-size:2rem}
+      :root {
+          --dark-blue: #0a1f3a;
+          --medium-blue: #1a3a5f;
+          --light-blue: #2a4a7a;
+          --accent: #4a7fc8;
+          --accent-light: #6ba1e6;
+          --text-light: #f0f4f8;
+          --text-muted: #a8c2e0;
       }
-      @media (max-width:480px){
-        .about-hex-card{max-width:100%}
-        .about-hex-image{height:300px}
-        .about-hex{width:220px;height:250px}
-        .about-hex-inner{width:200px;height:230px}
-        .about-hex-features{grid-template-columns:1fr}
+      
+      .about-card {
+          background: rgba(255, 255, 255, 0.03);
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          max-width: 1000px;
+          width: 100%;
+          position: relative;
+          display: flex;
+          flex-direction: row;
+          min-height: 400px;
+          margin: 0 auto;
       }
-
-      /* Light Mode About Hex Card */
-      [data-theme="light"] .about-hex-card {
-          background: #FFFFFF;
-          border: 1px solid rgba(46, 120, 197, 0.2);
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      
+      .about-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
       }
-      [data-theme="light"] .about-hex-card::before {
-          background: linear-gradient(45deg, var(--primary-blue), var(--cyan-accent), var(--primary-blue));
+      
+      .about-card-image-section {
+          width: 40%;
+          position: relative;
+          display: flex;
       }
-      [data-theme="light"] .about-hex-inner {
-          background: #FFFFFF;
+      
+      .about-card-image {
+          flex: 1;
+          background-color: var(--medium-blue);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          position: relative;
       }
-      [data-theme="light"] .about-hex-title {
-          color: var(--primary-blue);
-          background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
+      
+      .about-card-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.7s ease;
+      }
+      
+      .about-card:hover .about-card-image img {
+          transform: scale(1.05);
+      }
+      
+      .about-image-overlay {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: linear-gradient(to top, rgba(10, 31, 58, 0.85), transparent);
+          padding: 25px 20px 15px;
+          color: white;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+      }
+      
+      .about-icon-circle {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.15);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.3rem;
+          color: var(--accent-light);
+          flex-shrink: 0;
+      }
+      
+      .about-overlay-text {
+          font-size: 0.95rem;
+          line-height: 1.4;
+      }
+      
+      .about-card-content-section {
+          width: 60%;
+          display: flex;
+          flex-direction: column;
+      }
+      
+      .about-card-header {
+          padding: 30px 30px 20px;
+          position: relative;
+      }
+      
+      .about-mini-title {
+          font-size: 0.85rem;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          color: var(--accent);
+          margin-bottom: 12px;
+          font-weight: 600;
+          display: inline-block;
+          padding: 5px 15px;
+          background: rgba(74, 127, 200, 0.15);
+          border-radius: 20px;
+      }
+      
+      .about-title {
+          font-size: 1.8rem;
+          font-weight: 700;
+          margin-bottom: 12px;
+          background: linear-gradient(to right, #ffffff, #a8c2e0);
           -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          color: transparent;
+          line-height: 1.2;
       }
-      [data-theme="light"] .about-hex-sub,
-      [data-theme="light"] .about-hex-desc,
-      [data-theme="light"] .about-hex-feature {
+      
+      .about-tagline {
+          font-size: 1.05rem;
+          color: var(--text-muted);
+          margin-bottom: 5px;
+          font-style: italic;
+      }
+      
+      .about-card-content {
+          padding: 0 30px 20px;
+          color: var(--text-light);
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+      }
+      
+      .about-card-content p {
+          margin-bottom: 25px;
+          font-size: 1rem;
+          line-height: 1.6;
+      }
+      
+      .about-bullets {
+          margin-top: 5px;
+          list-style: none;
+          padding: 0;
+      }
+      
+      .about-bullets li {
+          margin-bottom: 15px;
+          position: relative;
+          padding-left: 35px;
+          display: flex;
+          align-items: flex-start;
+      }
+      
+      .about-bullets li:before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 3px;
+          width: 22px;
+          height: 22px;
+          background: rgba(74, 127, 200, 0.2);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.8rem;
+          color: var(--accent);
+          font-weight: bold;
+      }
+      
+      .about-bullets li:nth-child(1):before { content: "1"; }
+      .about-bullets li:nth-child(2):before { content: "2"; }
+      .about-bullets li:nth-child(3):before { content: "3"; }
+      .about-bullets li:nth-child(4):before { content: "4"; }
+      
+      .about-bullet-text {
+          flex: 1;
+      }
+      
+      .about-bullet-title {
+          font-weight: 600;
+          color: var(--accent-light);
+          margin-bottom: 3px;
+          font-size: 0.95rem;
+      }
+      
+      .about-mobile-header {
+          display: none;
+          padding: 25px 25px 15px;
+          text-align: center;
+      }
+      
+      @media (max-width: 900px) {
+          .about-card {
+              flex-direction: column;
+              max-width: 500px;
+              min-height: auto;
+          }
+          
+          .about-card-image-section,
+          .about-card-content-section {
+              width: 100%;
+          }
+          
+          .about-card-image {
+              height: 250px;
+          }
+          
+          .about-card-header {
+              display: none;
+          }
+          
+          .about-mobile-header {
+              display: block;
+          }
+          
+          .about-card-content {
+              padding: 20px 25px;
+          }
+      }
+      
+      @media (max-width: 480px) {
+          .about-mobile-header,
+          .about-card-content {
+              padding-left: 20px;
+              padding-right: 20px;
+          }
+          
+          .about-title {
+              font-size: 1.6rem;
+          }
+          
+          .about-mobile-header .about-title {
+              font-size: 1.7rem;
+          }
+      }
+
+      /* Light Mode */
+      [data-theme="light"] .about-card {
+          background: linear-gradient(145deg, #FFFFFF, #F8FAFC);
+          border-color: var(--primary-blue);
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      }
+      [data-theme="light"] .about-card:hover {
+          box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+      }
+      [data-theme="light"] .about-card::before {
+          background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
+      }
+      [data-theme="light"] .about-mini-title {
+          color: var(--primary-blue);
+          background: rgba(46, 120, 197, 0.15);
+      }
+      [data-theme="light"] .about-title {
+          background: linear-gradient(to right, var(--primary-blue), var(--deep-blue));
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+      }
+      [data-theme="light"] .about-tagline,
+      [data-theme="light"] .about-card-content p {
           color: var(--cool-gray);
       }
-      [data-theme="light"] .about-hex-feature i {
+      [data-theme="light"] .about-bullet-title {
+          color: var(--primary-blue);
+      }
+      [data-theme="light"] .about-bullets li:before {
+          background: rgba(46, 120, 197, 0.2);
           color: var(--primary-blue);
       }
     </style>
     <div class="container">
-      <div class="about-hex-card fade-in-up">
-        <div class="about-hex-image">
-          <div class="about-hex">
-            <div class="about-hex-inner">
-              @if($about->image_path)
-                <img src="{{ Storage::url($about->image_path) }}" alt="{{ $about->title }}">
-              @else
-                <img src="https://via.placeholder.com/1000x800.png?text=About" alt="{{ $about->title }}">
-              @endif
-            </div>
+      <div class="about-card fade-in-up">
+          <!-- Mobile header (only visible on small screens) -->
+          <div class="about-mobile-header">
+              <div class="about-mini-title">{{ $about->mini_title ?? 'Our Approach' }}</div>
+              <h1 class="about-title">{{ $about->title }}</h1>
           </div>
-          <div class="about-hex-floating">
-            <div class="about-hex-f"></div>
-            <div class="about-hex-f"></div>
-            <div class="about-hex-f"></div>
+          
+          <div class="about-card-image-section">
+              <div class="about-card-image">
+                  @if($about->image_path)
+                      <img src="{{ Storage::url($about->image_path) }}" alt="{{ $about->title }}">
+                  @else
+                      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="{{ $about->title }}">
+                  @endif
+                  <div class="about-image-overlay">
+                      <div class="about-icon-circle">
+                          <i class="fas fa-graduation-cap"></i>
+                      </div>
+                      <div class="about-overlay-text">
+                          Empowering African youth through technology and education
+                      </div>
+                  </div>
+              </div>
           </div>
-        </div>
-        <div class="about-hex-content">
-          <div class="about-hex-badge">{{ $about->mini_title ?? 'About Us' }}</div>
-          <h1 class="about-hex-title">{{ $about->title }}</h1>
-          @if(!empty($about->mini_title))
-            <p class="about-hex-sub">{{ $about->mini_title }}</p>
-          @endif
-          <div class="about-hex-desc">{!! nl2br(e($about->content)) !!}</div>
-          @if(!empty($about->bullet_points) && is_array($about->bullet_points) && count($about->bullet_points))
-            <div class="about-hex-features">
-              @foreach($about->bullet_points as $bp)
-                <div class="about-hex-feature"><i class="fa-solid fa-circle-check"></i><span>{{ $bp }}</span></div>
-              @endforeach
-            </div>
-          @endif
-        </div>
+          
+          <div class="about-card-content-section">
+              <!-- Desktop header (hidden on mobile) -->
+              <div class="about-card-header">
+                  <div class="about-mini-title">{{ $about->mini_title ?? 'Our Approach' }}</div>
+                  <h1 class="about-title">{{ $about->title }}</h1>
+              </div>
+              
+              <div class="about-card-content">
+                  <div>
+                      <p>{!! nl2br(e($about->content)) !!}</p>
+                      
+                      @if(!empty($about->bullet_points) && is_array($about->bullet_points))
+                      <ul class="about-bullets">
+                          @foreach($about->bullet_points as $bp)
+                          <li>
+                              <div class="about-bullet-text">
+                                  <div class="about-bullet-title">{{ $bp }}</div>
+                              </div>
+                          </li>
+                          @endforeach
+                      </ul>
+                      @endif
+                  </div>
+              </div>
+          </div>
       </div>
     </div>
   </section>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us Card Templates</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --dark-blue: #0a1f3a;
+            --medium-blue: #1a3a5f;
+            --light-blue: #2a4a7a;
+            --accent: #4a7fc8;
+            --text-light: #f0f4f8;
+            --text-muted: #a8c2e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a1f3a, #1a3a5f);
+            color: var(--text-light);
+            padding: 20px;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #4a7fc8, #6ba1e6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .card {
+            background: linear-gradient(145deg, #1a3a5f, #0a1f3a);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(74, 127, 200, 0.2);
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .card-header {
+            padding: 25px 25px 15px;
+            position: relative;
+        }
+        
+        .card-image {
+            height: 200px;
+            background-color: var(--medium-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .card:hover .card-image img {
+            transform: scale(1.05);
+        }
+        
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(10, 31, 58, 0.8), transparent);
+            padding: 20px;
+            color: white;
+        }
+        
+        .mini-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ffffff, #a8c2e0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .tagline {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .card-content {
+            padding: 0 25px 25px;
+            color: var(--text-light);
+        }
+        
+        .card-content p {
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .bullets {
+            margin-top: 20px;
+            padding-left: 20px;
+        }
+        
+        .bullets li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 10px;
+        }
+        
+        .bullets li:before {
+            content: "▸";
+            color: var(--accent);
+            font-weight: bold;
+            position: absolute;
+            left: -15px;
+        }
+        
+        .card-footer {
+            padding: 15px 25px;
+            background: rgba(10, 31, 58, 0.5);
+            border-top: 1px solid rgba(74, 127, 200, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-icons a {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            color: var(--accent);
+        }
+        
+        .btn {
+            background: linear-gradient(to right, var(--accent), #6ba1e6);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 127, 200, 0.4);
+        }
+        
+        /* Template-specific styles */
+        
+        /* Template 1: Image on top with overlay */
+        .template-1 .card-image {
+            height: 220px;
+        }
+        
+        /* Template 2: Side layout */
+        .template-2 {
+            display: flex;
+            flex-direction: row;
+        }
+        
+        .template-2 .card-image {
+            width: 40%;
+            height: auto;
+            border-radius: 0;
+            margin-bottom: 0;
+        }
+        
+        .template-2 .card-body {
+            width: 60%;
+        }
+        
+        /* Template 3: Minimalist with icon */
+        .template-3 .card-header {
+            text-align: center;
+        }
+        
+        .template-3 .card-image {
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+            overflow: hidden;
+            border: 3px solid var(--accent);
+        }
+        
+        /* Template 4: Modern with accent bar */
+        .template-4 .card-header {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .template-4 .card-header:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #6ba1e6);
+        }
+        
+        /* Template 5: Card with border accent */
+        .template-5 {
+            border: 2px solid var(--accent);
+            box-shadow: 0 10px 30px rgba(74, 127, 200, 0.2);
+        }
+        
+        /* Template 6: Gradient background */
+        .template-6 {
+            background: linear-gradient(145deg, #1a3a5f, #2a4a7a);
+        }
+        
+        .template-6 .card-header {
+            background: rgba(10, 31, 58, 0.7);
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 1100px) {
+            .templates-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .template-2 {
+                flex-direction: column;
+            }
+            
+            .template-2 .card-image,
+            .template-2 .card-body {
+                width: 100%;
+            }
+            
+            .template-2 .card-image {
+                height: 200px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .card-header,
+            .card-content,
+            .card-footer {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            
+            .title {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>About Us Card Templates</h1>
+            <p class="subtitle">Six responsive card designs with dark blue theme - hover over cards to see effects</p>
+        </header>
+        
+        <div class="templates-grid">
+            <!-- Template 1: Image on top with overlay -->
+            <div class="card template-1">
+                <div class="card-header">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Our Team">
+                        <div class="image-overlay">
+                            <div class="mini-title">Our Story</div>
+                        </div>
+                    </div>
+                    <h2 class="title">Innovating Since 2010</h2>
+                    <p class="tagline">Building the future, one solution at a time</p>
+                </div>
+                <div class="card-content">
+                    <p>We started with a simple vision: to create technology that makes life easier. Over the years, we've grown into a team of passionate innovators dedicated to excellence.</p>
+                    <ul class="bullets">
+                        <li>Founded in 2010 with just 5 team members</li>
+                        <li>Expanded to 3 continents by 2020</li>
+                        <li>Award-winning solutions for 5 consecutive years</li>
+                        <li>100+ successful projects delivered</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    </div>
+                    <button class="btn">Learn More</button>
+                </div>
+            </div>
+            
+            <!-- Template 2: Side layout -->
+            <div class="card template-2">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Our Mission">
+                </div>
+                <div class="card-body">
+                    <div class="card-header">
+                        <div class="mini-title">Our Mission</div>
+                        <h2 class="title">Empowering Businesses</h2>
+                        <p class="tagline">Your success is our priority</p>
+                    </div>
+                    <div class="card-content">
+                        <p>We believe in the power of technology to transform businesses. Our mission is to provide cutting-edge solutions that drive growth and efficiency.</p>
+                        <ul class="bullets">
+                            <li>Custom solutions tailored to your needs</li>
+                            <li>24/7 customer support</li>
+                            <li>Continuous innovation and updates</li>
+                            <li>Proven track record with Fortune 500 companies</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <div class="social-icons">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                        <button class="btn">Our Services</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Template 3: Minimalist with icon -->
+            <div class="card template-3">
+                <div class="card-header">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Our Values">
+                    </div>
+                    <div class="mini-title">Our Values</div>
+                    <h2 class="title">Integrity & Excellence</h2>
+                    <p class="tagline">Doing the right thing, always</p>
+                </div>
+                <div class="card-content">
+                    <p>Our core values guide everything we do. We're committed to ethical practices, transparency, and delivering exceptional quality in all our products and services.</p>
+                    <ul class="bullets">
+                        <li>Customer-first approach in all decisions</li>
+                        <li>Sustainable and ethical business practices</li>
+                        <li>Continuous learning and improvement</li>
+                        <li>Diversity and inclusion as core principles</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    <button class="btn">Our Values</button>
+                </div>
+            </div>
+            
+            <!-- Template 4: Modern with accent bar -->
+            <div class="card template-4">
+                <div class="card-header">
+                    <div class="mini-title">Our Team</div>
+                    <h2 class="title">Experts in Our Field</h2>
+                    <p class="tagline">Passionate professionals driving innovation</p>
+                </div>
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Our Team">
+                </div>
+                <div class="card-content">
+                    <p>Our diverse team brings together expertise from various industries and backgrounds. We collaborate to solve complex challenges and deliver outstanding results.</p>
+                    <ul class="bullets">
+                        <li>50+ team members across 10 countries</li>
+                        <li>Average 10+ years of industry experience</li>
+                        <li>Regular training and skill development</li>
+                        <li>Multiple industry awards and recognition</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                    <button class="btn">Meet Our Team</button>
+                </div>
+            </div>
+            
+            <!-- Template 5: Card with border accent -->
+            <div class="card template-5">
+                <div class="card-header">
+                    <div class="mini-title">Our Approach</div>
+                    <h2 class="title">Collaborative Solutions</h2>
+                    <p class="tagline">Working together for better outcomes</p>
+                </div>
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Our Approach">
+                </div>
+                <div class="card-content">
+                    <p>We don't just deliver products; we build partnerships. Our collaborative approach ensures we understand your unique challenges and create solutions that work.</p>
+                    <ul class="bullets">
+                        <li>Comprehensive discovery process</li>
+                        <li>Iterative development with client feedback</li>
+                        <li>Ongoing optimization and support</li>
+                        <li>Transparent communication at all stages</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    </div>
+                    <button class="btn">Our Process</button>
+                </div>
+            </div>
+            
+            <!-- Template 6: Gradient background -->
+            <div class="card template-6">
+                <div class="card-header">
+                    <div class="mini-title">Our Impact</div>
+                    <h2 class="title">Making a Difference</h2>
+                    <p class="tagline">Creating value beyond business</p>
+                </div>
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1559028012-481c04fa702d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Our Impact">
+                </div>
+                <div class="card-content">
+                    <p>We measure our success not just by profits, but by the positive impact we create. From community initiatives to environmental responsibility, we're committed to making a difference.</p>
+                    <ul class="bullets">
+                        <li>Carbon-neutral operations since 2018</li>
+                        <li>Annual community outreach programs</li>
+                        <li>Pro bono services for non-profits</li>
+                        <li>Partnerships with educational institutions</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                    <button class="btn">Our Impact</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
