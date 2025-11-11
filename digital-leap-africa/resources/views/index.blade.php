@@ -1548,380 +1548,377 @@ animation: twinkle 2s infinite ease-in-out;
 
 @if($about)
 <section id="about-section" class="section" role="region" aria-labelledby="about-heading" itemscope itemtype="https://schema.org/AboutPage" style="padding:2.5rem 0;">
-  <h2 id="about-heading" class="sr-only">About Digital Leap Africa</h2>
+  <div class="container">
+    <h2 id="about-heading" class="sr-only">About Digital Leap Africa</h2>
   <style>
-    :root {
-        --dark-blue: #0a1f3a;
-        --medium-blue: #1a3a5f;
-        --light-blue: #2a4a7a;
-        --accent: #4a7fc8;
-        --accent-light: #6ba1e6;
-        --text-light: #f0f4f8;
-        --text-muted: #a8c2e0;
-    }
-    
-    #about-section .card {
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        width: 100%;
-        position: relative;
-        display: flex;
-        flex-direction: row;
-        min-height: 400px;
-        margin: 0 auto;
-    }
-    
-    #about-section .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
-    }
-    
-    #about-section .card-image-section {
-        width: 40%;
-        position: relative;
-        display: flex;
-    }
-    
-    #about-section .card-image {
-        flex: 1;
-        background: linear-gradient(135deg, var(--primary-blue), var(--deep-blue));
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        position: relative;
-    }
-    
-    #about-section .card-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.7s ease;
-    }
-    
-    #about-section .card:hover .card-image img {
-        transform: scale(1.05);
-    }
-    
-    #about-section .image-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-        padding: 20px 15px 10px;
-        color: white;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    #about-section .icon-circle {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.15);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        color: var(--cyan-accent);
-        flex-shrink: 0;
-    }
-    
-    #about-section .overlay-text {
-        font-size: 0.85rem;
-        line-height: 1.3;
-    }
-    
-    #about-section .card-content-section {
-        width: 60%;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    #about-section .card-header {
-        padding: 20px 20px 10px;
-        position: relative;
-    }
-    
-    #about-section .mini-title {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: var(--cyan-accent);
-        margin-bottom: 8px;
-        font-weight: 600;
-        display: inline-block;
-        padding: 4px 12px;
-        background: rgba(59, 130, 246, 0.15);
-        border-radius: 15px;
-    }
-    
-    #about-section .title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 0;
-        color: var(--diamond-white);
-        line-height: 1.2;
-    }
-    
-    #about-section .tagline {
-        font-size: 1.05rem;
-        color: var(--text-muted);
-        margin-bottom: 5px;
-        font-style: italic;
-    }
-    
-    #about-section .card-content {
-        padding: 0 20px 15px;
-        color: var(--cool-gray);
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-    
-    #about-section .card-content p {
-        margin-bottom: 15px;
-        font-size: 0.9rem;
-        line-height: 1.4;
-    }
-    
-    #about-section .bullets {
-        margin-top: 0;
-        list-style: none;
-        padding: 0;
-    }
-    
-    #about-section .bullets li {
-        margin-bottom: 8px;
-        position: relative;
-        padding-left: 25px;
-        display: flex;
-        align-items: flex-start;
-    }
-    
-    #about-section .bullets li:before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 2px;
-        width: 18px;
-        height: 18px;
-        background: rgba(59, 130, 246, 0.2);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.7rem;
-        color: var(--cyan-accent);
-        font-weight: bold;
-    }
-    
-    #about-section .bullets li:nth-child(1):before { content: "1"; }
-    #about-section .bullets li:nth-child(2):before { content: "2"; }
-    #about-section .bullets li:nth-child(3):before { content: "3"; }
-    #about-section .bullets li:nth-child(4):before { content: "4"; }
-    
-    #about-section .bullet-text {
-        flex: 1;
-    }
-    
-    #about-section .bullet-title {
-        font-weight: 600;
-        color: var(--diamond-white);
-        margin-bottom: 0;
-        font-size: 0.85rem;
-        line-height: 1.3;
-    }
-    
-    #about-section .card-footer {
-        padding: 15px 20px;
-        background: rgba(0, 0, 0, 0.2);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-    }
-    
-    #about-section .btn {
-        background: linear-gradient(135deg, var(--cyan-accent), var(--primary-blue));
-        color: white;
-        border: none;
-        padding: 8px 18px;
-        border-radius: 25px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        text-decoration: none;
-    }
-    
-    #about-section .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 12px rgba(59, 130, 246, 0.4);
-    }
-    
-    #about-section .mobile-header {
-        display: none;
-        padding: 25px 25px 15px;
-        text-align: center;
-    }
-    
-    @media (max-width: 900px) {
-        #about-section .card {
-            flex-direction: column;
-            max-width: 500px;
-            min-height: auto;
-        }
-        
-        #about-section .card-image-section,
-        #about-section .card-content-section {
-            width: 100%;
-        }
-        
-        #about-section .card-image {
-            height: 250px;
-        }
-        
-        #about-section .card-header {
-            display: none;
-        }
-        
-        #about-section .mobile-header {
-            display: block;
-        }
-        
-        #about-section .card-content {
-            padding: 20px 25px;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        #about-section .mobile-header,
-        #about-section .card-content,
-        #about-section .card-footer {
-            padding-left: 20px;
-            padding-right: 20px;
-        }
-        
-        #about-section .title {
-            font-size: 1.6rem;
-        }
-        
-        #about-section .mobile-header .title {
-            font-size: 1.7rem;
-        }
-    }
+      :root {
+          --dark-blue: #0a1f3a;
+          --medium-blue: #1a3a5f;
+          --light-blue: #2a4a7a;
+          --accent: #4a7fc8;
+          --accent-light: #6ba1e6;
+          --text-light: #f0f4f8;
+          --text-muted: #a8c2e0;
+      }
+      
+      #about-section .about-card {
+          background: rgba(255, 255, 255, 0.03);
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          width: 100%;
+          position: relative;
+          display: flex;
+          flex-direction: row;
+          min-height: 400px;
+          margin: 0 auto;
+      }
+      
+      #about-section .about-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+      }
+      
+      #about-section .about-card-image-section {
+          width: 40%;
+          position: relative;
+          display: flex;
+      }
+      
+      #about-section .about-card-image {
+          flex: 1;
+          background-color: var(--medium-blue);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          position: relative;
+      }
+      
+      #about-section .about-card-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.7s ease;
+      }
+      
+      #about-section .about-card:hover .about-card-image img {
+          transform: scale(1.05);
+      }
+      
+      #about-section .about-image-overlay {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: linear-gradient(to top, rgba(10, 31, 58, 0.85), transparent);
+          padding: 25px 20px 15px;
+          color: white;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+      }
+      
+      #about-section .about-icon-circle {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.15);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.3rem;
+          color: var(--accent-light);
+          flex-shrink: 0;
+      }
+      
+      #about-section .about-overlay-text {
+          font-size: 0.95rem;
+          line-height: 1.4;
+      }
+      
+      #about-section .about-card-content-section {
+          width: 60%;
+          display: flex;
+          flex-direction: column;
+      }
+      
+      #about-section .about-card-header {
+          padding: 30px 30px 20px;
+          position: relative;
+      }
+      
+      #about-section .about-mini-title {
+          font-size: 0.85rem;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          color: var(--accent);
+          margin-bottom: 12px;
+          font-weight: 600;
+          display: inline-block;
+          padding: 5px 15px;
+          background: rgba(74, 127, 200, 0.15);
+          border-radius: 20px;
+      }
+      
+      #about-section .about-title {
+          font-size: 1.8rem;
+          font-weight: 700;
+          margin-bottom: 12px;
+          background: linear-gradient(to right, #ffffff, #a8c2e0);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          line-height: 1.2;
+      }
+      
+      #about-section .about-tagline {
+          font-size: 1.05rem;
+          color: var(--text-muted);
+          margin-bottom: 5px;
+          font-style: italic;
+      }
+      
+      #about-section .about-card-content {
+          padding: 0 30px 20px;
+          color: var(--text-light);
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+      }
+      
+      #about-section .about-card-content p {
+          margin-bottom: 25px;
+          font-size: 1rem;
+          line-height: 1.6;
+      }
+      
+      #about-section .about-bullets {
+          margin-top: 5px;
+          list-style: none;
+          padding: 0;
+      }
+      
+      #about-section .about-bullets li {
+          margin-bottom: 15px;
+          position: relative;
+          padding-left: 35px;
+          display: flex;
+          align-items: flex-start;
+      }
+      
+      #about-section .about-bullets li:before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 3px;
+          width: 22px;
+          height: 22px;
+          background: rgba(74, 127, 200, 0.2);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.8rem;
+          color: var(--accent);
+          font-weight: bold;
+      }
+      
+      #about-section .about-bullets li:nth-child(1):before { content: "1"; }
+      #about-section .about-bullets li:nth-child(2):before { content: "2"; }
+      #about-section .about-bullets li:nth-child(3):before { content: "3"; }
+      #about-section .about-bullets li:nth-child(4):before { content: "4"; }
+      
+      #about-section .about-bullet-text {
+          flex: 1;
+      }
+      
+      #about-section .about-bullet-title {
+          font-weight: 600;
+          color: var(--accent-light);
+          margin-bottom: 3px;
+          font-size: 0.95rem;
+      }
+      
+      #about-section .about-card-footer {
+          padding: 20px 30px;
+          background: rgba(10, 31, 58, 0.6);
+          border-top: 1px solid rgba(74, 127, 200, 0.2);
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+      }
+      
+      #about-section .about-btn {
+          background: linear-gradient(to right, var(--accent), var(--accent-light));
+          color: white;
+          border: none;
+          padding: 10px 22px;
+          border-radius: 30px;
+          font-size: 0.95rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          text-decoration: none;
+      }
+      
+      #about-section .about-btn:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 7px 15px rgba(74, 127, 200, 0.4);
+      }
+      
+      #about-section .about-btn i {
+          font-size: 0.9rem;
+      }
+      
+      #about-section .about-mobile-header {
+          display: none;
+          padding: 25px 25px 15px;
+          text-align: center;
+      }
+      
+      @media (max-width: 900px) {
+          #about-section .about-card {
+              flex-direction: column;
+              max-width: 500px;
+              min-height: auto;
+          }
+          
+          #about-section .about-card-image-section,
+          #about-section .about-card-content-section {
+              width: 100%;
+          }
+          
+          #about-section .about-card-image {
+              height: 250px;
+          }
+          
+          #about-section .about-card-header {
+              display: none;
+          }
+          
+          #about-section .about-mobile-header {
+              display: block;
+          }
+          
+          #about-section .about-card-content {
+              padding: 20px 25px;
+          }
+      }
+      
+      @media (max-width: 480px) {
+          #about-section .about-mobile-header,
+          #about-section .about-card-content {
+              padding-left: 20px;
+              padding-right: 20px;
+          }
+          
+          #about-section .about-title {
+              font-size: 1.6rem;
+          }
+          
+          #about-section .about-mobile-header .about-title {
+              font-size: 1.7rem;
+          }
+      }
 
-    /* Light Mode */
-    [data-theme="light"] #about-section .card {
-        background: linear-gradient(145deg, #FFFFFF, #F8FAFC);
-        border-color: var(--primary-blue);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    }
-    [data-theme="light"] #about-section .card:hover {
-        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
-    }
-    [data-theme="light"] #about-section .card::before {
-        background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
-    }
-    [data-theme="light"] #about-section .mini-title {
-        color: var(--primary-blue);
-        background: rgba(46, 120, 197, 0.15);
-    }
-    [data-theme="light"] #about-section .title {
-        background: linear-gradient(to right, var(--primary-blue), var(--deep-blue));
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
-    [data-theme="light"] #about-section .tagline,
-    [data-theme="light"] #about-section .card-content p {
-        color: var(--cool-gray);
-    }
-    [data-theme="light"] #about-section .bullet-title {
-        color: var(--primary-blue);
-    }
-    [data-theme="light"] #about-section .bullets li:before {
-        background: rgba(46, 120, 197, 0.2);
-        color: var(--primary-blue);
-    }
-    [data-theme="light"] #about-section .card-footer {
-        background: rgba(46, 120, 197, 0.05);
-        border-top-color: rgba(46, 120, 197, 0.2);
-    }
-    [data-theme="light"] #about-section .btn {
-        background: linear-gradient(to right, var(--primary-blue), var(--cyan-accent));
-    }
-    [data-theme="light"] #about-section .btn:hover {
-        box-shadow: 0 7px 15px rgba(46, 120, 197, 0.4);
-    }
-  </style>
+      /* Light Mode */
+      [data-theme="light"] #about-section .about-card {
+          background: linear-gradient(145deg, #FFFFFF, #F8FAFC);
+          border-color: var(--primary-blue);
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      }
+      [data-theme="light"] #about-section .about-card:hover {
+          box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+      }
+      [data-theme="light"] #about-section .about-card::before {
+          background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
+      }
+      [data-theme="light"] #about-section .about-mini-title {
+          color: var(--primary-blue);
+          background: rgba(46, 120, 197, 0.15);
+      }
+      [data-theme="light"] #about-section .about-title {
+          background: linear-gradient(to right, var(--primary-blue), var(--deep-blue));
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+      }
+      [data-theme="light"] #about-section .about-tagline,
+      [data-theme="light"] #about-section .about-card-content p {
+          color: var(--cool-gray);
+      }
+      [data-theme="light"] #about-section .about-bullet-title {
+          color: var(--primary-blue);
+      }
+      [data-theme="light"] #about-section .about-bullets li:before {
+          background: rgba(46, 120, 197, 0.2);
+          color: var(--primary-blue);
+      }
+    </style>
   
-  <div class="card">
-      <!-- Mobile header (only visible on small screens) -->
-      <div class="mobile-header">
-          <div class="mini-title">{{ $about->mini_title ?? 'Our Approach' }}</div>
-          <h2 class="title">{{ $about->title }}</h2>
-      </div>
-      
-      <div class="card-image-section">
-          <div class="card-image">
-              @if($about->image_path)
-                  <img src="{{ Storage::url($about->image_path) }}" alt="{{ $about->title }}">
-              @else
-                  <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="{{ $about->title }}">
-              @endif
-              <div class="image-overlay">
-                  <div class="icon-circle">
-                      <i class="fas fa-graduation-cap"></i>
-                  </div>
-                  <div class="overlay-text">
-                      Empowering African youth through technology and education
-                  </div>
-              </div>
-          </div>
-      </div>
-      
-      <div class="card-content-section">
-          <!-- Desktop header (hidden on mobile) -->
-          <div class="card-header">
-              <div class="mini-title">{{ $about->mini_title ?? 'Our Approach' }}</div>
-              <h2 class="title">{{ $about->title }}</h2>
+      <div class="about-card fade-in-up">
+          <!-- Mobile header (only visible on small screens) -->
+          <div class="about-mobile-header">
+              <div class="about-mini-title">{{ $about->mini_title ?? 'Our Approach' }}</div>
+              <h1 class="about-title">{{ $about->title }}</h1>
           </div>
           
-          <div class="card-content">
-              <div>
-                  <p>{!! nl2br(e($about->content)) !!}</p>
-                  
-                  @if(!empty($about->bullet_points) && is_array($about->bullet_points))
-                  <ul class="bullets">
-                      @foreach($about->bullet_points as $bp)
-                      <li>
-                          <div class="bullet-text">
-                              <div class="bullet-title">{{ $bp }}</div>
-                          </div>
-                      </li>
-                      @endforeach
-                  </ul>
+          <div class="about-card-image-section">
+              <div class="about-card-image">
+                  @if($about->image_path)
+                      <img src="{{ Storage::url($about->image_path) }}" alt="{{ $about->title }}">
+                  @else
+                      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="{{ $about->title }}">
                   @endif
+                  <div class="about-image-overlay">
+                      <div class="about-icon-circle">
+                          <i class="fas fa-graduation-cap"></i>
+                      </div>
+                      <div class="about-overlay-text">
+                          Empowering African youth through technology and education
+                      </div>
+                  </div>
               </div>
           </div>
           
-          <div class="card-footer">                
-              <a href="{{ route('about') }}" class="btn">
-                  <span>Learn More</span>
-                  <i class="fas fa-arrow-right"></i>
-              </a>
+          <div class="about-card-content-section">
+              <!-- Desktop header (hidden on mobile) -->
+              <div class="about-card-header">
+                  <div class="about-mini-title">{{ $about->mini_title ?? 'Our Approach' }}</div>
+                  <h1 class="about-title">{{ $about->title }}</h1>
+              </div>
+              
+              <div class="about-card-content">
+                  <div>
+                      <p>{!! nl2br(e($about->content)) !!}</p>
+                      
+                      @if(!empty($about->bullet_points) && is_array($about->bullet_points))
+                      <ul class="about-bullets">
+                          @foreach($about->bullet_points as $bp)
+                          <li>
+                              <div class="about-bullet-text">
+                                  <div class="about-bullet-title">{{ $bp }}</div>
+                              </div>
+                          </li>
+                          @endforeach
+                      </ul>
+                      @endif
+                  </div>
+              </div>
+              
+              <div class="about-card-footer">
+                  <a href="{{ route('about') }}" class="about-btn">
+                      <span>Learn More</span>
+                      <i class="fas fa-arrow-right"></i>
+                  </a>
+              </div>
           </div>
       </div>
   </div>
