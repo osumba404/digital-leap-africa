@@ -489,6 +489,7 @@
             @endforeach
         </div>
         
+        {{-- Pagination --}}
         @if(method_exists($elibraryItems, 'links'))
             <div class="pagination-wrapper" style="display: flex; justify-content: center; margin-top: 3rem;">
                 <div class="pagination-container" style="background: var(--charcoal); border-radius: 12px; padding: 1rem; border: 1px solid rgba(100, 181, 246, 0.1);">

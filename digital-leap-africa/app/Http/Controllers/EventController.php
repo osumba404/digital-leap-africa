@@ -25,6 +25,9 @@ class EventController extends Controller
         $past = Event::where('date', '<', $startOfToday)
             ->orderBy('date', 'desc')
             ->paginate(12);
+            
+        // Append query parameters to pagination links
+        $past->appends(request()->query());
 
         // $lessons = $topic->lessons()->latest()->paginate(20);
         // return view('admin.lessons.index', compact('topic','lessons'));

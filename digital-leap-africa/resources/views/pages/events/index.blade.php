@@ -263,20 +263,8 @@
         ->orderBy('date', 'asc')
         ->get();
 
-      // Past: ended before now, or started before today with no ends_at
-      $past = \App\Models\Event::query()
-        ->where(function($q) use ($now) {
-          $q->where(function($q2) use ($now) {
-              $q2->whereNotNull('ends_at')
-                 ->where('ends_at', '<', $now);
-            })
-            ->orWhere(function($q2) use ($now) {
-              $q2->whereNull('ends_at')
-                 ->where('date', '<', $now->startOfDay());
-            });
-        })
-        ->orderBy('date', 'desc')
-        ->get();
+      // Use the paginated past events from controller
+      // Don't redefine $past here since it comes from controller
     } catch (\Throwable $e) {
       $ongoing = collect();
       $upcoming = collect();
@@ -470,6 +458,15 @@
           </div>
         @endforeach
       </div>
+      
+      {{-- Pagination for Past Events --}}
+      @if(method_exists($past, 'links'))
+        <div class="pagination-wrapper" style="display: flex; justify-content: center; margin-top: 3rem;">
+          <div class="pagination-container" style="background: var(--charcoal); border-radius: 12px; padding: 1rem; border: 1px solid rgba(100, 181, 246, 0.1);">
+            {{ $past->links() }}
+          </div>
+        </div>
+      @endif
     @endif
 
   </div>
