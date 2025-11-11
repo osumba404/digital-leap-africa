@@ -240,8 +240,8 @@
                         <div class="thread-header">
                             <div style="flex-grow: 1; display:flex; gap:.75rem; align-items:flex-start;">
                                 <div style="flex:0 0 auto;">
-                                    @if(optional($thread->user)->profile_photo_url)
-                                        <img src="{{ $thread->user->profile_photo_url }}" alt="{{ $thread->user->name }}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:block;">
+                                    @if($thread->user && $thread->user->profile_photo)
+                                        <img src="{{ route('me.photo', ['user_id' => $thread->user->id]) }}" alt="{{ $thread->user->name }}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:block;">
                                     @else
                                         <div style="width:40px;height:40px;border-radius:50%;background: var(--charcoal);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;">
                                             {{ strtoupper(substr($thread->user->name, 0, 1)) }}
@@ -275,8 +275,8 @@
                             <div style="padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1); color: var(--cool-gray); font-size: 0.9rem; display:flex; align-items:center; gap:.5rem;">
                                 <i class="fas fa-reply me-1"></i>
                                 @php $lrUser = $thread->latestReply->user; @endphp
-                                @if(optional($lrUser)->profile_photo_url)
-                                    <img src="{{ $lrUser->profile_photo_url }}" alt="{{ $lrUser->name }}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;">
+                                @if($lrUser && $lrUser->profile_photo)
+                                    <img src="{{ route('me.photo', ['user_id' => $lrUser->id]) }}" alt="{{ $lrUser->name }}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;">
                                 @else
                                     <span style="width:20px;height:20px;border-radius:50%;background: var(--charcoal);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;">{{ strtoupper(substr($lrUser->name,0,1)) }}</span>
                                 @endif

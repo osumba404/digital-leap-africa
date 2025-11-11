@@ -26,9 +26,10 @@
   #courses-section .card-button{display:inline-flex;align-items:center;justify-content:center;background-color:transparent;color:#3b82f6;padding:.6rem 1.2rem;border:1px solid #3b82f6;border-radius:6px;text-decoration:none;font-size:.9rem;font-weight:600;transition:all .3s ease;cursor:pointer;gap:.5rem}
   #courses-section .card-button:hover{background-color:rgba(59,130,246,.1);transform:translateY(-2px);box-shadow:0 4px 12px rgba(59,130,246,.2)}
   .btn-wide{width: 100%;}
-  #courses-section .price-badge{position:absolute;top:1rem;right:1rem;padding:.4rem .8rem;border-radius:6px;font-weight:700;font-size:.85rem;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
-  #courses-section .price-badge.free{background:#10b981;color:#fff}
-  #courses-section .price-badge.paid{background:#3b82f6;color:#fff}
+  #courses-section .price-badge{position:absolute;top:1rem;right:1rem;padding:.5rem 1rem;border-radius:25px;font-weight:800;font-size:.8rem;z-index:10;box-shadow:0 4px 15px rgba(0,0,0,0.4);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:0.5px;transition:all 0.3s ease}
+  #courses-section .price-badge.free{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+  #courses-section .price-badge.paid{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff}
+  #courses-section .price-badge:hover{transform:scale(1.05);box-shadow:0 6px 20px rgba(0,0,0,0.5)}
   @media (max-width:768px){#courses-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.5rem}#courses-section .card-title{font-size:1rem;padding:1rem 1rem .45rem}.search-container{margin:0 1rem 2rem!important}.search-input{font-size:0.9rem!important;padding:0.75rem 2.75rem 0.75rem 0.875rem!important}.search-btn{width:2.25rem!important;height:2.25rem!important;right:0.375rem!important}}
 
   /* Light Mode Courses */

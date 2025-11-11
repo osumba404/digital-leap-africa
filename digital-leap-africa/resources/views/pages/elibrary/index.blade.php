@@ -87,15 +87,24 @@
     position: absolute;
     top: 1rem;
     right: 1rem;
-    padding: .4rem .8rem;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: .85rem;
+    padding: .5rem 1rem;
+    border-radius: 25px;
+    font-weight: 800;
+    font-size: .8rem;
     z-index: 10;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    background: #3b82f6;
-    color: #fff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.2);
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    color: #fff;
+}
+
+.resource-type:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
 }
 
 .resource-description {

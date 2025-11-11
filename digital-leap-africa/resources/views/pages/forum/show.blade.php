@@ -211,8 +211,8 @@
         <div class="thread-post">
             <div class="post-header">
                 <div class="user-avatar">
-                    @if($thread->user && $thread->user->profile_photo_url)
-                        <img src="{{ $thread->user->profile_photo_url }}" alt="{{ $thread->user->name }}">
+                    @if($thread->user && $thread->user->profile_photo)
+                        <img src="{{ route('me.photo', ['user_id' => $thread->user->id]) }}" alt="{{ $thread->user->name }}">
                     @else
                         {{ strtoupper(substr($thread->user->name ?? 'U', 0, 1)) }}
                     @endif
@@ -251,8 +251,8 @@
                     <div class="reply-post">
                         <div class="post-header">
                             <div class="user-avatar">
-                                @if($reply->user && $reply->user->profile_photo_url)
-                                    <img src="{{ $reply->user->profile_photo_url }}" alt="{{ $reply->user->name }}">
+                                @if($reply->user && $reply->user->profile_photo)
+                                    <img src="{{ route('me.photo', ['user_id' => $reply->user->id]) }}" alt="{{ $reply->user->name }}">
                                 @else
                                     {{ strtoupper(substr($reply->user->name ?? 'U', 0, 1)) }}
                                 @endif
