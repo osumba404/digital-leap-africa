@@ -736,7 +736,7 @@
             right: 0;
             width: 320px;
             max-width: 85vw;
-            height: 100%;
+            max-height: 75vh;
             background: linear-gradient(180deg, var(--charcoal) 0%, var(--navy-bg) 100%);
             box-shadow: -4px 0 20px rgba(0, 0, 0, 0.7);
             z-index: 1002;
@@ -745,6 +745,7 @@
             transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             backdrop-filter: blur(10px);
             border-left: 2px solid rgba(0, 201, 255, 0.2);
+            border-radius: 0 0 0 20px;
         }
 
         .off-canvas-sidebar.is-open {
@@ -821,25 +822,27 @@
             flex-direction: column;
             align-items: flex-start;
             width: 100%;
-            gap: 0.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            gap: 0;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             list-style: none;
             margin: 0;
             padding-left: 0;
         }
         
         .off-canvas-sidebar .nav-links a {
-            display: block;
-            padding: 1rem 1.5rem;
-            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
             font-weight: 500;
             transition: all 0.3s ease;
-            border-radius: 8px;
-            margin: 0.25rem 0;
+            border-radius: 0;
+            margin: 0;
             color: #ffffff;
             width: 100%;
             position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .off-canvas-sidebar .nav-links a::before {
@@ -1878,15 +1881,12 @@
     </header>
 
     <div class="off-canvas-sidebar">
-        <div class="sidebar-header">
-            <h3 class="sidebar-title">Menu</h3>
-            <button class="close-btn" 
-                    onclick="document.querySelector('.off-canvas-sidebar').classList.remove('is-open'); document.querySelector('.sidebar-overlay').classList.remove('is-open')">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+        <button class="close-btn" style="position: absolute; top: 1rem; right: 1rem; z-index: 1003;" 
+                onclick="document.querySelector('.off-canvas-sidebar').classList.remove('is-open'); document.querySelector('.sidebar-overlay').classList.remove('is-open')">
+            <i class="fas fa-times"></i>
+        </button>
         
-        <div class="sidebar-content">
+        <div class="sidebar-content" style="padding-top: 1rem;">
             <ul class="nav-links">
                
                 <li><a href="{{ route('home') }}">Home</a></li>

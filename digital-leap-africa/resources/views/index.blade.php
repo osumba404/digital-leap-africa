@@ -504,7 +504,7 @@
 /* Articles Grid */
 .articles-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 2rem;
     margin-bottom: 3rem;
 }
@@ -1349,7 +1349,7 @@ animation: twinkle 2s infinite ease-in-out;
 <section class="articles-section">
     <div class="container">
         <div class="section-title" style="text-align:center; margin-bottom: 2rem;">
-            <h2 style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-newspaper"></i> Latest Articles</h2>
+            <h2 style="font-weight: 700; color: #64b5f6; font-size: 1.5rem; margin-bottom: 0.5rem;"><i class="fas fa-newspaper"></i> Latest Articles</h2>
             <p style="color: var(--cool-gray); font-size: 1rem;">Stay updated with the latest insights, tutorials, and industry trends</p>
         </div>
 
@@ -1545,7 +1545,7 @@ animation: twinkle 2s infinite ease-in-out;
     </div>
 
     @if(isset($testimonials) && $testimonials->count())
-    <div class="testimonials-carousel-wrapper" style="position: relative; overflow: hidden; padding: 0 3rem;">
+    <div class="testimonials-carousel-wrapper" style="position: relative; overflow: hidden;">
       <button class="carousel-nav carousel-prev" onclick="scrollTestimonials('prev')" aria-label="Previous testimonial">
         <i class="fas fa-chevron-left"></i>
       </button>
@@ -1599,11 +1599,21 @@ animation: twinkle 2s infinite ease-in-out;
       </button>
     </div>
 
-    <div class="text-center mt-4" style="padding-top:2rem !important">
-      <a class="btn-outline btn-wide" href="{{ route('testimonials.index') }}" style="text-decoration: none;">
-        <i class="fas fa-star" style="margin-right: 0.5rem;"></i>View Testimonials <i class="fas fa-arrow-right"></i>
-      </a>
+    <div class="testimonial-mobile-nav">
+      <button class="mobile-nav-btn mobile-prev" onclick="scrollTestimonials('prev')">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="mobile-nav-btn mobile-next" onclick="scrollTestimonials('next')">
+        <i class="fas fa-chevron-right"></i>
+      </button>
     </div>
+
+    <div class="text-center mt-4" style="padding-top:2rem !important; display: flex; justify-content: center;">
+      <a href="{{ route('testimonials.index') }}" class="btn-outline-large">
+        <i class="fas fa-star"></i>
+        <span>View Testimonials</span>
+        <i class="fas fa-arrow-right"></i>
+      </a>
     @else
     <div class="text-center" style="color: var(--cool-gray); padding: 2rem;">
       <p>No testimonials yet. Be the first to share your experience!</p>
@@ -1622,6 +1632,7 @@ animation: twinkle 2s infinite ease-in-out;
   position: relative;
   margin: 0 auto;
   max-width: 1200px;
+  padding: 0 3rem;
 }
 
 .testimonials-carousel {
@@ -1639,8 +1650,77 @@ animation: twinkle 2s infinite ease-in-out;
 }
 
 .testimonial-slide {
-  flex: 0 0 350px;
-  min-width: 350px;
+  flex: 0 0 330px;
+  min-width: 330px;
+}
+
+.testimonial-mobile-nav {
+  display: none;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.mobile-nav-btn {
+  background: rgba(0, 201, 255, 0.2);
+  border: 1px solid rgba(0, 201, 255, 0.4);
+  color: var(--cyan-accent);
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.mobile-nav-btn:hover {
+  background: rgba(0, 201, 255, 0.3);
+  border-color: var(--cyan-accent);
+  transform: scale(1.1);
+}
+
+.btn-outline-large {
+  margin: 0 auto;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .testimonials-carousel-wrapper {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  
+  .testimonial-slide {
+    flex: 0 0 100% !important;
+    min-width: 100% !important;
+    width: 100% !important;
+    scroll-snap-align: start;
+    padding: 0 !important;
+  }
+  
+  .testimonial-content {
+    margin: 0 1rem !important;
+    width: calc(100% - 2rem) !important;
+  }
+  
+  .testimonials-carousel {
+    scroll-snap-type: x mandatory;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+  
+  .carousel-nav {
+    display: none !important;
+  }
+  
+  .testimonial-mobile-nav {
+    display: flex !important;
+  }
 }
 
 .testimonial-content {
@@ -1792,21 +1872,29 @@ animation: twinkle 2s infinite ease-in-out;
 }
 
 .carousel-prev {
-  left: 0;
+  left: -10px;
 }
 
 .carousel-next {
-  right: 0;
+  right: -10px;
+}
+
+@media (max-width: 768px) {
+  .carousel-prev,
+  .carousel-next {
+    display: none !important;
+  }
 }
 
 @media (max-width: 768px) {
   .testimonials-carousel-wrapper {
-    padding: 0 2.5rem;
+    padding: 0 3rem;
   }
   
   .testimonial-slide {
-    flex: 0 0 280px;
-    min-width: 280px;
+    flex: 0 0 100%;
+    min-width: 100%;
+    scroll-snap-align: start;
   }
   
   .testimonial-content {
@@ -1817,16 +1905,26 @@ animation: twinkle 2s infinite ease-in-out;
     width: 40px;
     height: 40px;
   }
+
+  .testimonials-carousel {
+    scroll-snap-type: x mandatory;
+  }
+
+  .carousel-prev {
+    left: -25px;
+  }
+  .carousel-next {
+    right: -25px;
+  }
 }
 
 @media (max-width: 480px) {
   .testimonials-carousel-wrapper {
-    padding: 0 2rem;
+    padding: 0 2.5rem;
   }
-  
   .testimonial-slide {
-    flex: 0 0 260px;
-    min-width: 260px;
+    flex: 0 0 100%;
+    min-width: 100%;
   }
   
   .testimonial-content {
@@ -1845,6 +1943,13 @@ animation: twinkle 2s infinite ease-in-out;
     height: 35px;
     font-size: 0.9rem;
   }
+
+  .carousel-prev {
+    left: -20px;
+  }
+  .carousel-next {
+    right: -20px;
+  }
 }
 </style>
 
@@ -1855,7 +1960,7 @@ let isUserScrolling = false;
 function scrollTestimonials(direction) {
   const carousel = document.getElementById('testimonialsCarousel');
   if (!carousel) return;
-  
+
   const scrollAmount = 370; // slide width + gap
   const currentScroll = carousel.scrollLeft;
   
@@ -1864,7 +1969,14 @@ function scrollTestimonials(direction) {
   } else {
     carousel.scrollLeft = currentScroll - scrollAmount;
   }
-  
+
+  // For mobile snap scrolling
+  if (window.innerWidth <= 768) {
+    const slideWidth = carousel.querySelector('.testimonial-slide').offsetWidth;
+    const newScrollLeft = direction === 'next' ? currentScroll + slideWidth : currentScroll - slideWidth;
+    carousel.scrollTo({ left: newScrollLeft, behavior: 'smooth' });
+  }
+
   // Reset auto-scroll after manual interaction
   isUserScrolling = true;
   clearInterval(autoScrollInterval);
@@ -1891,7 +2003,12 @@ function startAutoScroll() {
       carousel.scrollLeft = 0;
     } else {
       // Scroll to next
-      carousel.scrollLeft = currentScroll + 370;
+      if (window.innerWidth <= 768) {
+        const slideWidth = carousel.querySelector('.testimonial-slide').offsetWidth;
+        carousel.scrollLeft += slideWidth;
+      } else {
+        carousel.scrollLeft = currentScroll + 370;
+      }
     }
   }, 4000); // Auto-scroll every 4 seconds
 }
@@ -1955,8 +2072,12 @@ window.addEventListener('beforeunload', () => {
       <div class="text-muted" style="text-align:center">No partners yet.</div>
     @endif
 
-    <div class="text-center mt-3" style="padding-top:1rem !important">
-      <a class="btn-outline btn-wide" href="{{ $applyUrl }}"><i class="fas fa-handshake" style="margin-right: 0.5rem;"></i>Become a Partner</a>
+    <div class="text-center mt-3" style="padding-top:1rem !important; display: flex; justify-content: center;">
+      <a href="{{ $applyUrl }}" class="btn-outline-large">
+        <i class="fas fa-handshake"></i>
+        <span>Become a Partner</span>
+        <i class="fas fa-arrow-right"></i>
+      </a>
     </div>
   </div>
 </section>
@@ -2144,8 +2265,12 @@ window.addEventListener('beforeunload', () => {
     @else
       <div class="text-muted">No upcoming events.</div>
     @endif
-    <div class="text-center mt-3" style="padding-top:1rem !important">
-      <a class="btn-outline btn-wide" href="{{ $eventsIndexUrl }}"><i class="fas fa-calendar-alt" style="margin-right: 0.5rem;"></i>View all events</a>
+    <div class="text-center mt-3" style="padding-top:1rem !important; display: flex; justify-content: center;">
+      <a href="{{ $eventsIndexUrl }}" class="btn-outline-large">
+        <i class="fas fa-calendar-alt"></i>
+        <span>View all events</span>
+        <i class="fas fa-arrow-right"></i>
+      </a>
     </div>
   </div>
 </section>
@@ -2319,12 +2444,12 @@ window.addEventListener('beforeunload', () => {
     
     /* Testimonials */
     .testimonials-carousel-wrapper {
-      padding: 0 1rem;
+      padding: 0 3rem;
     }
     
     .testimonial-slide {
-      flex: 0 0 280px;
-      min-width: 280px;
+      flex: 0 0 100%;
+      min-width: 100%;
     }
     
     .testimonial-content {
@@ -2441,8 +2566,8 @@ window.addEventListener('beforeunload', () => {
     
     /* Testimonials */
     .testimonial-slide {
-      flex: 0 0 260px;
-      min-width: 260px;
+      flex: 0 0 100%;
+      min-width: 100%;
     }
     
     .testimonial-content {
@@ -2619,4 +2744,4 @@ window.addEventListener('beforeunload', () => {
   dots.forEach(function(d){ d.addEventListener('click', function(){ clearInterval(timer); show(parseInt(d.getAttribute('data-index'),10)); timer=setInterval(nextSlide,intv); }); });
 })();
 </script>
-@endpush
+@endpu
