@@ -354,10 +354,7 @@
         </div>
         
         <div class="stat-card">
-            @php
-                $points = Auth::user()->gamificationPoints()->sum('points') ?? 0;
-            @endphp
-            <span class="stat-number">{{ $points }}</span>
+            <span class="stat-number">Coming Soon</span>
             <div class="stat-label">Points Earned</div>
         </div>
         
@@ -409,9 +406,15 @@
                             @endif
                         </div>
                         
-                        <a href="{{ route('courses.show', $course) }}" class="btn-primary" style="padding: 0.4rem 0.85rem; font-size: 0.85rem; white-space: nowrap;">
-                            Continue
-                        </a>
+                        @if($progress >= 100)
+                            <span class="btn-completed" style="padding: 0.4rem 0.85rem; font-size: 0.85rem; white-space: nowrap; background: #22c55e; color: white; border-radius: 6px; font-weight: 600;">
+                                Completed
+                            </span>
+                        @else
+                            <a href="{{ route('courses.show', $course) }}" class="btn-primary" style="padding: 0.4rem 0.85rem; font-size: 0.85rem; white-space: nowrap;">
+                                Continue
+                            </a>
+                        @endif
                     </div>
                     
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">

@@ -1,6 +1,26 @@
 @extends('layouts.app')
 
 @section('content')
+<!-- Coming Soon Banner -->
+<div class="coming-soon-container">
+  <div class="container">
+    <div class="coming-soon-banner">
+      <div class="banner-icon">
+        <i class="fas fa-trophy"></i>
+      </div>
+      <div class="banner-content">
+        <h1>Coming Soon</h1>
+        <p>We are working to bring you an amazing leaderboard experience. Stay tuned for exciting competitions, and rankings!</p>
+        <a href="{{ route('dashboard') }}" class="back-btn">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{-- 
+<!-- ORIGINAL LEADERBOARD CONTENT (COMMENTED OUT) -->
 <div class="leaderboard-page">
   <div class="container">
     <!-- Header Section -->
@@ -138,6 +158,7 @@
     </div>
   </div>
 </div>
+--}}
 
 <!-- Points Modal -->
 <div id="pointsModal" class="points-modal">
@@ -193,7 +214,145 @@
 </div>
 
 <style>
-/* Modern Leaderboard Design */
+/* Coming Soon Banner Styles */
+.coming-soon-container {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.coming-soon-banner {
+  background: var(--charcoal);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  border: 1px solid rgba(100, 181, 246, 0.2);
+  box-shadow: 0 10px 30px rgba(2, 12, 27, 0.7);
+  max-width: 600px;
+  width: 100%;
+}
+
+.banner-icon {
+  font-size: 4rem;
+  color: #64b5f6;
+  margin-bottom: 1.5rem;
+}
+
+.banner-content h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--diamond-white);
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #64b5f6, #00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.banner-content p {
+  color: var(--cool-gray);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #64b5f6, #00d4ff);
+  color: var(--navy-bg);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(100, 181, 246, 0.3);
+  color: var(--navy-bg);
+}
+
+/* Light Mode Coming Soon */
+[data-theme="light"] .coming-soon-banner {
+  background: #FFFFFF;
+  border-color: rgba(46, 120, 197, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .banner-icon {
+  color: var(--primary-blue);
+}
+
+[data-theme="light"] .banner-content h1 {
+  background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .back-btn {
+  background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent));
+  color: #FFFFFF;
+}
+
+[data-theme="light"] .back-btn:hover {
+  color: #FFFFFF;
+  box-shadow: 0 8px 25px rgba(46, 120, 197, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .coming-soon-container {
+    padding: 1.5rem 0;
+  }
+  
+  .coming-soon-banner {
+    padding: 2rem 1.5rem;
+    margin: 0 1rem;
+  }
+  
+  .banner-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .banner-content h1 {
+    font-size: 2rem;
+  }
+  
+  .banner-content p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .coming-soon-banner {
+    padding: 1.5rem 1rem;
+  }
+  
+  .banner-icon {
+    font-size: 2.5rem;
+  }
+  
+  .banner-content h1 {
+    font-size: 1.75rem;
+  }
+  
+  .banner-content p {
+    font-size: 0.9rem;
+  }
+  
+  .back-btn {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Modern Leaderboard Design (COMMENTED OUT) */
 .leaderboard-page {
   min-height: 80vh;
   padding: 1rem 0;
