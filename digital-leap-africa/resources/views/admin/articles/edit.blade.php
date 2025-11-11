@@ -44,12 +44,85 @@
             ['bold','italic','underline','strike'],
             [{ 'list': 'ordered' }, { 'list': 'bullet' }],
             ['blockquote','code-block'],
-            ['link','image'],
+            ['link','image','table-insert'],
             [{ 'color': [] }, { 'background': [] }],
             ['code-inline'],
             ['clean']
           ],
           handlers: {
+            'table-insert': function() {
+              var btn = document.querySelector('.ql-table-insert');
+              var existing = document.querySelector('.table-grid-popup');
+              if (existing) existing.remove();
+              
+              var popup = document.createElement('div');
+              popup.className = 'table-grid-popup';
+              popup.style.cssText = 'position: absolute; background: #fff; border: 1px solid #ccc; padding: 10px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2);';
+              
+              var grid = document.createElement('div');
+              grid.style.cssText = 'display: grid; grid-template-columns: repeat(8, 20px); grid-template-rows: repeat(8, 20px); gap: 1px;';
+              
+              for (var i = 0; i < 64; i++) {
+                var cell = document.createElement('div');
+                cell.style.cssText = 'width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer;';
+                cell.dataset.row = Math.floor(i / 8) + 1;
+                cell.dataset.col = (i % 8) + 1;
+                
+                cell.onmouseover = function() {
+                  var r = parseInt(this.dataset.row);
+                  var c = parseInt(this.dataset.col);
+                  grid.querySelectorAll('div').forEach(function(d, idx) {
+                    var dr = Math.floor(idx / 8) + 1;
+                    var dc = (idx % 8) + 1;
+                    d.style.background = (dr <= r && dc <= c) ? '#007acc' : '#fff';
+                  });
+                };
+                
+                cell.onclick = function() {
+                  var rows = parseInt(this.dataset.row);
+                  var cols = parseInt(this.dataset.col);
+                  var range = quill.getSelection();
+                  if (range) {
+                    var tableText = '\n';
+                    for (var r = 0; r < rows; r++) {
+                      var rowText = '| ';
+                      for (var c = 0; c < cols; c++) {
+                        rowText += 'Cell | ';
+                      }
+                      tableText += rowText + '\n';
+                      if (r === 0) {
+                        var separator = '| ';
+                        for (var c = 0; c < cols; c++) {
+                          separator += '--- | ';
+                        }
+                        tableText += separator + '\n';
+                      }
+                    }
+                    tableText += '\n';
+                    quill.insertText(range.index, tableText);
+                  }
+                  popup.remove();
+                };
+                
+                grid.appendChild(cell);
+              }
+              
+              popup.appendChild(grid);
+              document.body.appendChild(popup);
+              
+              var rect = btn.getBoundingClientRect();
+              popup.style.left = rect.left + 'px';
+              popup.style.top = (rect.bottom + 5) + 'px';
+              popup.style.position = 'fixed';
+              
+              setTimeout(function() {
+                document.addEventListener('click', function(e) {
+                  if (!popup.contains(e.target) && e.target !== btn) {
+                    popup.remove();
+                  }
+                }, { once: true });
+              }, 100);
+            },
             'code-inline': function() {
               var range = this.quill.getSelection();
               if (range) {
@@ -73,12 +146,18 @@
         }
       });
       
-      // Style the custom button
+      // Style the custom buttons
       setTimeout(() => {
-        var btn = document.querySelector('.ql-code-inline');
-        if (btn) {
-          btn.innerHTML = '<>';
-          btn.title = 'Inline Code';
+        var codeBtn = document.querySelector('.ql-code-inline');
+        if (codeBtn) {
+          codeBtn.innerHTML = '<>';
+          codeBtn.title = 'Inline Code';
+        }
+        
+        var tableBtn = document.querySelector('.ql-table-insert');
+        if (tableBtn) {
+          tableBtn.innerHTML = '⊞';
+          tableBtn.title = 'Insert Table';
         }
       }, 100);
       if (hidden.value) {

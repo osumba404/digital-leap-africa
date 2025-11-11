@@ -27,9 +27,8 @@
   {{-- Content --}}
   <div id="group-content" class="form-group">
     <x-input-label for="content" value="Content / Description" class="form-label" />
-    <div id="ckeditor-container">
-      <textarea id="content" name="content">{{ old('content', $lesson->content ?? '') }}</textarea>
-    </div>
+    <div id="quill-lesson-editor" style="min-height: 320px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;"></div>
+    <textarea id="content" name="content" class="d-none">{{ old('content', $lesson->content ?? '') }}</textarea>
     <x-input-error :messages="$errors->get('content')" class="mt-2" />
   </div>
 
@@ -596,166 +595,147 @@
 @endpush
 
 @push('scripts')
-<script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const textarea = document.getElementById('content');
-    if (!textarea) return;
+document.addEventListener('DOMContentLoaded', function(){
+  var hidden = document.getElementById('content');
+  var editorEl = document.getElementById('quill-lesson-editor');
+  if(!hidden || !editorEl) return;
+  
+  // Register inline code format
+  var Inline = Quill.import('blots/inline');
+  class CodeInline extends Inline {
+    static create() {
+      let node = super.create();
+      node.setAttribute('style', 'background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 3px; font-family: monospace;');
+      return node;
+    }
+  }
+  CodeInline.blotName = 'code';
+  CodeInline.tagName = 'code';
+  Quill.register(CodeInline);
+  
+  var quill = new Quill('#quill-lesson-editor', {
+    theme: 'snow',
+    placeholder: 'Write your lesson content...',
+    modules: { toolbar: {
+      container: [
+        [{ 'header': [1, 2, 3, false] }],
+        ['bold','italic','underline','strike'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        ['blockquote','code-block'],
+        ['link','image','table-insert'],
+        [{ 'color': [] }, { 'background': [] }],
+        ['code-inline'],
+        ['clean']
+      ],
+      handlers: {
+        'table-insert': function() {
+          var btn = document.querySelector('.ql-table-insert');
+          var existing = document.querySelector('.table-grid-popup');
+          if (existing) existing.remove();
+          
+          var popup = document.createElement('div');
+          popup.className = 'table-grid-popup';
+          popup.style.cssText = 'position: fixed; background: #fff; border: 1px solid #ccc; padding: 10px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2);';
+          
+          var grid = document.createElement('div');
+          grid.style.cssText = 'display: grid; grid-template-columns: repeat(8, 20px); grid-template-rows: repeat(8, 20px); gap: 1px;';
+          
+          for (var i = 0; i < 64; i++) {
+            var cell = document.createElement('div');
+            cell.style.cssText = 'width: 20px; height: 20px; border: 1px solid #ddd; cursor: pointer;';
+            cell.dataset.row = Math.floor(i / 8) + 1;
+            cell.dataset.col = (i % 8) + 1;
+            
+            cell.onmouseover = function() {
+              var r = parseInt(this.dataset.row);
+              var c = parseInt(this.dataset.col);
+              grid.querySelectorAll('div').forEach(function(d, idx) {
+                var dr = Math.floor(idx / 8) + 1;
+                var dc = (idx % 8) + 1;
+                d.style.background = (dr <= r && dc <= c) ? '#007acc' : '#fff';
+              });
+            };
+            
+            cell.onclick = function() {
+              var rows = parseInt(this.dataset.row);
+              var cols = parseInt(this.dataset.col);
+              var range = quill.getSelection();
+              if (range) {
+                var tableText = '\n';
+                for (var r = 0; r < rows; r++) {
+                  var rowText = '| ';
+                  for (var c = 0; c < cols; c++) {
+                    rowText += 'Cell | ';
+                  }
+                  tableText += rowText + '\n';
+                  if (r === 0) {
+                    var separator = '| ';
+                    for (var c = 0; c < cols; c++) {
+                      separator += '--- | ';
+                    }
+                    tableText += separator + '\n';
+                  }
+                }
+                tableText += '\n';
+                quill.insertText(range.index, tableText);
+              }
+              popup.remove();
+            };
+            
+            grid.appendChild(cell);
+          }
+          
+          popup.appendChild(grid);
+          document.body.appendChild(popup);
+          
+          var rect = btn.getBoundingClientRect();
+          popup.style.left = rect.left + 'px';
+          popup.style.top = (rect.bottom + 5) + 'px';
+          
+          setTimeout(function() {
+            document.addEventListener('click', function(e) {
+              if (!popup.contains(e.target) && e.target !== btn) {
+                popup.remove();
+              }
+            }, { once: true });
+          }, 100);
+        },
+        'code-inline': function() {
+          var range = this.quill.getSelection();
+          if (range) {
+            var text = this.quill.getText(range.index, range.length);
+            this.quill.deleteText(range.index, range.length);
+            this.quill.insertText(range.index, '`' + text + '`', 'code', true);
+          }
+        }
+      }
+    }}
+  });
+  
+  // Style the custom buttons
+  setTimeout(() => {
+    var codeBtn = document.querySelector('.ql-code-inline');
+    if (codeBtn) {
+      codeBtn.innerHTML = '<>';
+      codeBtn.title = 'Inline Code';
+    }
     
-    ClassicEditor
-        .create(textarea, {
-            toolbar: {
-                items: [
-                    'heading', '|',
-                    'bold', 'italic', 'underline', 'strikethrough', 'code', '|',
-                    'fontSize', 'fontColor', 'fontBackgroundColor', '|',
-                    'bulletedList', 'numberedList', 'todoList', '|',
-                    'outdent', 'indent', '|',
-                    'alignment', '|',
-                    'link', 'insertImage', 'insertTable', '|',
-                    'blockQuote', 'codeBlock', '|',
-                    'specialCharacters', 'horizontalLine', '|',
-                    'findAndReplace', '|',
-                    'removeFormat', 'undo', 'redo'
-                ],
-                shouldNotGroupWhenFull: true
-            },
-            heading: {
-                options: [
-                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                    { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-                    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-                    { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
-                    { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' }
-                ]
-            },
-            fontSize: {
-                options: [ 9, 11, 13, 'default', 17, 19, 21 ],
-                supportAllValues: true
-            },
-            fontColor: {
-                colors: [
-                    { color: '#000000', label: 'Black' },
-                    { color: '#ffffff', label: 'White' },
-                    { color: '#00C9FF', label: 'Cyan' },
-                    { color: '#7A5FFF', label: 'Purple' },
-                    { color: '#2E78C5', label: 'Blue' },
-                    { color: '#10B981', label: 'Green' },
-                    { color: '#F59E0B', label: 'Yellow' },
-                    { color: '#EF4444', label: 'Red' }
-                ]
-            },
-            fontBackgroundColor: {
-                colors: [
-                    { color: 'transparent', label: 'Transparent' },
-                    { color: 'rgba(0, 201, 255, 0.1)', label: 'Light Cyan' },
-                    { color: 'rgba(122, 95, 255, 0.1)', label: 'Light Purple' },
-                    { color: 'rgba(46, 120, 197, 0.1)', label: 'Light Blue' },
-                    { color: 'rgba(16, 185, 129, 0.1)', label: 'Light Green' },
-                    { color: 'rgba(245, 158, 11, 0.1)', label: 'Light Yellow' },
-                    { color: 'rgba(239, 68, 68, 0.1)', label: 'Light Red' }
-                ]
-            },
-            table: {
-                contentToolbar: [
-                    'tableColumn', 'tableRow', 'mergeTableCells',
-                    'tableProperties', 'tableCellProperties', 'tableResize'
-                ],
-                tableProperties: {
-                    borderColors: [
-                        { color: 'rgba(255, 255, 255, 0.2)', label: 'Light border' },
-                        { color: '#00C9FF', label: 'Cyan border' },
-                        { color: '#7A5FFF', label: 'Purple border' }
-                    ],
-                    backgroundColors: [
-                        { color: 'transparent', label: 'Transparent' },
-                        { color: 'rgba(255, 255, 255, 0.05)', label: 'Light background' },
-                        { color: 'rgba(0, 201, 255, 0.1)', label: 'Cyan background' }
-                    ]
-                },
-                tableCellProperties: {
-                    borderColors: [
-                        { color: 'rgba(255, 255, 255, 0.2)', label: 'Light border' },
-                        { color: '#00C9FF', label: 'Cyan border' }
-                    ],
-                    backgroundColors: [
-                        { color: 'transparent', label: 'Transparent' },
-                        { color: 'rgba(255, 255, 255, 0.05)', label: 'Light background' },
-                        { color: 'rgba(0, 201, 255, 0.1)', label: 'Cyan background' }
-                    ]
-                }
-            },
-            image: {
-                toolbar: [
-                    'imageTextAlternative', 'imageStyle:inline', 'imageStyle:block', 'imageStyle:side',
-                    'linkImage', 'imageResize'
-                ],
-                resizeOptions: [
-                    { name: 'imageResize:original', label: 'Original', value: null },
-                    { name: 'imageResize:50', label: '50%', value: '50' },
-                    { name: 'imageResize:75', label: '75%', value: '75' }
-                ]
-            },
-            link: {
-                decorators: {
-                    openInNewTab: {
-                        mode: 'manual',
-                        label: 'Open in a new tab',
-                        attributes: {
-                            target: '_blank',
-                            rel: 'noopener noreferrer'
-                        }
-                    }
-                }
-            },
-            codeBlock: {
-                languages: [
-                    { language: 'plaintext', label: 'Plain text' },
-                    { language: 'html', label: 'HTML' },
-                    { language: 'css', label: 'CSS' },
-                    { language: 'javascript', label: 'JavaScript' },
-                    { language: 'php', label: 'PHP' },
-                    { language: 'python', label: 'Python' },
-                    { language: 'java', label: 'Java' },
-                    { language: 'sql', label: 'SQL' }
-                ]
-            },
-            placeholder: 'Start typing your lesson content...',
-            removePlugins: ['MediaEmbedToolbar']
-        })
-        .then(editor => {
-            window.ckEditor = editor;
-            
-            // Force dark theme on all CKEditor elements after initialization
-            setTimeout(() => {
-                const ckElements = document.querySelectorAll('.ck');
-                ckElements.forEach(el => {
-                    if (el.classList.contains('ck-dropdown__panel') || 
-                        el.classList.contains('ck-list') ||
-                        el.classList.contains('ck-balloon-panel') ||
-                        el.classList.contains('ck-form')) {
-                        el.style.setProperty('background', '#252A32', 'important');
-                        el.style.setProperty('color', '#fff', 'important');
-                    }
-                });
-            }, 100);
-            
-            // Sync content on change
-            editor.model.document.on('change:data', () => {
-                textarea.value = editor.getData();
-            });
-            
-            // Handle form submission
-            const form = textarea.closest('form');
-            if (form) {
-                form.addEventListener('submit', function() {
-                    textarea.value = editor.getData();
-                });
-            }
-        })
-        .catch(error => {
-            console.error('CKEditor initialization error:', error);
-        });
+    var tableBtn = document.querySelector('.ql-table-insert');
+    if (tableBtn) {
+      tableBtn.innerHTML = '⊞';
+      tableBtn.title = 'Insert Table';
+    }
+  }, 100);
+  
+  if (hidden.value) {
+    quill.root.innerHTML = hidden.value;
+  }
+  quill.on('text-change', function(){ hidden.value = quill.root.innerHTML; });
+  var form = hidden.closest('form');
+  if(form){ form.addEventListener('submit', function(){ hidden.value = quill.root.innerHTML; }); }
 });
 </script>
 @endpush
