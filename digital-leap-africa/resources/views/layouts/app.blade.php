@@ -23,6 +23,8 @@
     <link rel="icon" type="image/x-icon" href="{{ $siteSettings['favicon'] }}">
     @endif
     
+    @stack('meta')
+    
     @if(!empty($siteSettings['google_analytics_id']))
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ $siteSettings['google_analytics_id'] }}"></script>

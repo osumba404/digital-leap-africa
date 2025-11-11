@@ -1,5 +1,130 @@
 @extends('layouts.app')
 
+@section('title', 'About Digital Leap Africa - Empowering African Youth Through Technology Education')
+
+@push('meta')
+<meta name="description" content="Learn about Digital Leap Africa's mission to empower African youth through comprehensive e-learning, technology education, and community building. Meet our team and discover our vision for Africa's digital future.">
+<meta name="keywords" content="about Digital Leap Africa, African education technology, e-learning platform Africa, tech education mission, digital skills Africa, African youth empowerment, online learning Kenya, technology training Africa">
+<meta name="author" content="Digital Leap Africa">
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ route('about') }}">
+<meta property="og:title" content="About Digital Leap Africa - Empowering African Youth Through Technology">
+<meta property="og:description" content="Discover Digital Leap Africa's mission to transform education across Africa through innovative e-learning solutions, community building, and technology empowerment.">
+<meta property="og:image" content="{{ asset('images/about-og-image.jpg') }}">
+<meta property="og:site_name" content="Digital Leap Africa">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="{{ route('about') }}">
+<meta name="twitter:title" content="About Digital Leap Africa - Empowering African Youth">
+<meta name="twitter:description" content="Learn about our mission to transform education across Africa through innovative e-learning solutions and community building.">
+<meta name="twitter:image" content="{{ asset('images/about-og-image.jpg') }}">
+<meta name="twitter:image:alt" content="Digital Leap Africa Team - Empowering African Youth Through Technology">
+
+<!-- Additional Social Media Tags -->
+<meta property="article:section" content="About">
+<meta property="article:tag" content="Education,Technology,Africa,Mission,Team">
+<meta name="pinterest-rich-pin" content="true">
+
+<!-- Geographic and Language Tags -->
+<meta name="geo.region" content="KE">
+<meta name="geo.placename" content="Kenya">
+<meta name="language" content="English">
+<meta name="coverage" content="Africa">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ route('about') }}">
+
+<!-- Breadcrumb Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ url('/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "About",
+      "item": "{{ route('about') }}"
+    }
+  ]
+}
+</script>
+
+<!-- Organization Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "name": "Digital Leap Africa",
+  "alternateName": "DLA",
+  "description": "Empowering African youth through comprehensive e-learning courses, technology education, and community building initiatives.",
+  "url": "{{ url('/') }}",
+  "logo": "{{ asset('images/logo.png') }}",
+  "foundingDate": "2024",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "Kenya",
+    "addressRegion": "Nairobi",
+    "addressLocality": "Nairobi"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "email": "info@digitalleapafrica.com",
+    "availableLanguage": "English"
+  },
+  "sameAs": [
+    "https://facebook.com/digitalleapafrica",
+    "https://twitter.com/digitalleapafrica",
+    "https://linkedin.com/company/digitalleapafrica",
+    "https://instagram.com/digitalleapafrica"
+  ],
+  "areaServed": {
+    "@type": "Place",
+    "name": "Africa"
+  },
+  "knowsAbout": [
+    "E-learning",
+    "Programming Education",
+    "Web Development Training",
+    "Digital Marketing",
+    "Technology Education",
+    "Career Development",
+    "Community Building",
+    "African Youth Empowerment"
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Educational Services",
+    "itemListElement": [
+      {
+        "@type": "Course",
+        "name": "Programming Courses",
+        "description": "Comprehensive programming and web development courses"
+      },
+      {
+        "@type": "Course",
+        "name": "Digital Skills Training",
+        "description": "Essential digital skills for the modern workforce"
+      }
+    ]
+  }
+}
+</script>
+@endpush
+
 @push('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
@@ -256,80 +381,6 @@
       background: rgba(46, 120, 197, 0.1);
   }
   [data-theme="light"] .contact-item i {
-      color: var(--primary-blue);
-  }
-
-  /* Light Mode About Hex Card */
-  [data-theme="light"] .about-hex-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(46, 120, 197, 0.2);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  }
-  [data-theme="light"] .about-hex-card::before {
-      background: linear-gradient(45deg, var(--primary-blue), var(--cyan-accent), var(--primary-blue));
-  }
-  [data-theme="light"] .about-hex-inner {
-      background: #FFFFFF;
-  }
-  [data-theme="light"] .about-hex-title {
-      color: var(--primary-blue);
-      background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-  }
-  [data-theme="light"] .about-hex-sub,
-  [data-theme="light"] .about-hex-desc,
-  [data-theme="light"] .about-hex-feature {
-      color: var(--cool-gray);
-  }
-  [data-theme="light"] .about-hex-feature i {
-      color: var(--primary-blue);
-  }
-
-  /* Light Mode Mission/Vision Cards */
-  [data-theme="light"] .vision-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(46, 120, 197, 0.2);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  }
-  [data-theme="light"] .vision-title {
-      color: var(--primary-blue);
-      background: linear-gradient(90deg, #8b5cf6, var(--primary-blue));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-  }
-  [data-theme="light"] .vision-subtitle,
-  [data-theme="light"] .vision-body,
-  [data-theme="light"] .vision-goal {
-      color: var(--cool-gray);
-  }
-  [data-theme="light"] .vision-goal i {
-      color: #8b5cf6;
-  }
-  [data-theme="light"] .vision-overlay {
-      background: linear-gradient(to bottom, transparent, rgba(230, 242, 255, 0.95));
-  }
-
-  [data-theme="light"] .geometric-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(46, 120, 197, 0.2);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  }
-  [data-theme="light"] .geometric-card::before {
-      background: linear-gradient(45deg, transparent 40%, rgba(46, 120, 197, 0.05) 100%);
-  }
-  [data-theme="light"] .geometric-title {
-      color: var(--primary-blue);
-      background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-  }
-  [data-theme="light"] .geometric-subtitle,
-  [data-theme="light"] .geometric-body,
-  [data-theme="light"] .timeline-feature {
-      color: var(--cool-gray);
-  }
-  [data-theme="light"] .timeline-feature i {
       color: var(--primary-blue);
   }
 </style>

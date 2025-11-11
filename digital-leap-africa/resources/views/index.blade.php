@@ -1,15 +1,337 @@
 @extends('layouts.app')
 
-@section('title', 'Home')
+@section('title', 'Digital Leap Africa - E-Learning Platform for African Youth | Courses, Jobs & Community')
+
+@push('meta')
+<meta name="description" content="Empowering African youth through comprehensive e-learning courses, job opportunities, and vibrant community. Join Digital Leap Africa for tech skills, career development, and professional growth.">
+<meta name="keywords" content="e-learning Africa, online courses Kenya, tech education Africa, digital skills training, African youth empowerment, programming courses, job opportunities Africa, community learning">
+<meta name="author" content="Digital Leap Africa">
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ url('/') }}">
+<meta property="og:title" content="Digital Leap Africa - E-Learning Platform for African Youth">
+<meta property="og:description" content="Empowering African youth through comprehensive e-learning courses, job opportunities, and vibrant community. Join Digital Leap Africa for tech skills and career development.">
+<meta property="og:image" content="{{ asset('images/og-image.jpg') }}">
+<meta property="og:site_name" content="Digital Leap Africa">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="{{ url('/') }}">
+<meta name="twitter:title" content="Digital Leap Africa - E-Learning Platform for African Youth">
+<meta name="twitter:description" content="Empowering African youth through comprehensive e-learning courses, job opportunities, and vibrant community.">
+<meta name="twitter:image" content="{{ asset('images/og-image.jpg') }}">
+<meta name="twitter:image:alt" content="Digital Leap Africa - Empowering African Youth Through Technology Education">
+<meta name="twitter:label1" content="Courses Available">
+<meta name="twitter:data1" content="{{ $stats['courses'] ?? 0 }}+">
+<meta name="twitter:label2" content="Community Members">
+<meta name="twitter:data2" content="{{ $stats['members'] ?? 0 }}+">
+
+<!-- Additional SEO Meta Tags -->
+<meta name="geo.region" content="KE">
+<meta name="geo.placename" content="Kenya">
+<meta name="geo.position" content="-1.286389;36.817223">
+<meta name="ICBM" content="-1.286389, 36.817223">
+<meta name="language" content="English">
+<meta name="distribution" content="global">
+<meta name="rating" content="general">
+<meta name="revisit-after" content="7 days">
+<meta name="coverage" content="Worldwide">
+<meta name="target" content="all">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- Dublin Core Metadata -->
+<meta name="DC.title" content="Digital Leap Africa - E-Learning Platform for African Youth">
+<meta name="DC.creator" content="Digital Leap Africa">
+<meta name="DC.subject" content="E-learning, Education, Technology, Africa, Programming, Digital Skills">
+<meta name="DC.description" content="Empowering African youth through comprehensive e-learning courses, job opportunities, and vibrant community.">
+<meta name="DC.publisher" content="Digital Leap Africa">
+<meta name="DC.contributor" content="Digital Leap Africa Team">
+<meta name="DC.date" content="{{ date('Y-m-d') }}">
+<meta name="DC.type" content="Text">
+<meta name="DC.format" content="text/html">
+<meta name="DC.identifier" content="{{ url('/') }}">
+<meta name="DC.source" content="{{ url('/') }}">
+<meta name="DC.language" content="en">
+<meta name="DC.coverage" content="Africa">
+<meta name="DC.rights" content="© {{ date('Y') }} Digital Leap Africa. All rights reserved.">
+
+<!-- Additional Social Media Tags -->
+<meta property="fb:app_id" content="your-facebook-app-id">
+<meta name="twitter:site" content="@digitalleapafrica">
+<meta name="twitter:creator" content="@digitalleapafrica">
+<meta name="twitter:domain" content="{{ parse_url(url('/'), PHP_URL_HOST) }}">
+
+<!-- LinkedIn -->
+<meta property="og:site_name" content="Digital Leap Africa">
+<meta property="article:publisher" content="https://linkedin.com/company/digitalleapafrica">
+<meta property="article:author" content="Digital Leap Africa">
+<meta property="article:section" content="Education">
+<meta property="article:tag" content="E-learning,Education,Technology,Africa,Programming">
+
+<!-- Pinterest -->
+<meta name="pinterest-rich-pin" content="true">
+<meta property="og:type" content="website">
+
+<!-- WhatsApp -->
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Search Engine Specific -->
+<meta name="googlebot" content="index,follow,snippet,archive">
+<meta name="bingbot" content="index,follow">
+<meta name="slurp" content="index,follow">
+<meta name="msnbot" content="index,follow">
+
+<!-- Content Classification -->
+<meta name="classification" content="Education">
+<meta name="category" content="Education Technology">
+<meta name="news_keywords" content="e-learning, africa, education, technology, programming, digital skills">
+
+<!-- Technical SEO -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="referrer" content="origin-when-cross-origin">
+<meta name="format-detection" content="telephone=no,address=no,email=no">
+<meta name="skype_toolbar" content="skype_toolbar_parser_compatible">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ url('/') }}">
+
+<!-- Performance Hints -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="//fonts.gstatic.com">
+<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+
+<!-- Additional SEO Meta Tags -->
+<meta name="theme-color" content="#2E78C5">
+<meta name="msapplication-TileColor" content="#2E78C5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Alternate Languages -->
+<link rel="alternate" hreflang="en" href="{{ url('/') }}">
+<link rel="alternate" hreflang="x-default" href="{{ url('/') }}">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "name": "Digital Leap Africa",
+  "description": "Empowering African youth through comprehensive e-learning courses, job opportunities, and vibrant community.",
+  "url": "{{ url('/') }}",
+  "logo": "{{ asset('images/logo.png') }}",
+  "sameAs": [
+    "https://facebook.com/digitalleapafrica",
+    "https://twitter.com/digitalleapafrica",
+    "https://linkedin.com/company/digitalleapafrica"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "Kenya",
+    "addressRegion": "Nairobi"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "email": "info@digitalleapafrica.com"
+  },
+  "offers": {
+    "@type": "AggregateOffer",
+    "offerCount": "{{ $stats['courses'] ?? 0 }}",
+    "lowPrice": "0",
+    "highPrice": "10000",
+    "priceCurrency": "KES"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Course Catalog",
+    "itemListElement": [
+      {
+        "@type": "Course",
+        "name": "Programming Courses",
+        "description": "Learn programming languages and web development"
+      },
+      {
+        "@type": "Course",
+        "name": "Digital Marketing",
+        "description": "Master digital marketing strategies and tools"
+      }
+    ]
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Digital Leap Africa",
+  "url": "{{ url('/') }}",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "{{ url('/courses') }}?search={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ url('/') }}"
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Digital Leap Africa",
+  "alternateName": "DLA",
+  "url": "{{ url('/') }}",
+  "logo": "{{ asset('images/logo.png') }}",
+  "foundingDate": "2024",
+  "founders": [
+    {
+      "@type": "Person",
+      "name": "Digital Leap Africa Team"
+    }
+  ],
+  "areaServed": {
+    "@type": "Place",
+    "name": "Africa"
+  },
+  "knowsAbout": [
+    "E-learning",
+    "Programming",
+    "Web Development",
+    "Digital Marketing",
+    "Technology Education",
+    "Career Development"
+  ],
+  "memberOf": {
+    "@type": "Organization",
+    "name": "African Education Technology Network"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Digital Leap Africa - Home",
+  "description": "Empowering African youth through comprehensive e-learning courses, job opportunities, and vibrant community.",
+  "url": "{{ url('/') }}",
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": {{ ($latestCourses->count() + $latestArticles->count()) }},
+    "itemListElement": [
+      @foreach($latestCourses as $index => $course)
+      {
+        "@type": "Course",
+        "position": {{ $index + 1 }},
+        "name": "{{ $course->title }}",
+        "description": "{{ strip_tags($course->short_description ?? $course->description ?? '') }}",
+        "url": "{{ route('courses.show', $course) }}",
+        "provider": {
+          "@type": "Organization",
+          "name": "Digital Leap Africa"
+        },
+        "courseMode": "online",
+        "educationalLevel": "beginner",
+        "inLanguage": "en"
+      }@if(!$loop->last || $latestArticles->count() > 0),@endif
+      @endforeach
+      @foreach($latestArticles as $index => $article)
+      {
+        "@type": "Article",
+        "position": {{ $latestCourses->count() + $index + 1 }},
+        "headline": "{{ $article->title }}",
+        "description": "{{ \Illuminate\Support\Str::limit(strip_tags($article->content ?? ''), 160) }}",
+        "url": "{{ route('blog.show', $article) }}",
+        "author": {
+          "@type": "Organization",
+          "name": "Digital Leap Africa"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Digital Leap Africa"
+        },
+        "datePublished": "{{ $article->created_at->toISOString() }}"
+      }@if(!$loop->last),@endif
+      @endforeach
+    ]
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SiteNavigationElement",
+  "name": "Main Navigation",
+  "url": "{{ url('/') }}",
+  "hasPart": [
+    {
+      "@type": "SiteNavigationElement",
+      "name": "Home",
+      "url": "{{ route('home') }}"
+    },
+    {
+      "@type": "SiteNavigationElement", 
+      "name": "About",
+      "url": "{{ route('about') }}"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "name": "Courses",
+      "url": "{{ route('courses.index') }}"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "name": "Blog",
+      "url": "{{ route('blog.index') }}"
+    },
+    {
+      "@type": "SiteNavigationElement",
+      "name": "eLibrary",
+      "url": "{{ route('elibrary.index') }}"
+    }
+  ]
+}
+</script>
+@endpush
 
 @section('content')
 {{-- Hero Carousel from Database --}}
+<header role="banner" itemscope itemtype="https://schema.org/WPHeader">
 @php
   $heroSlides = $siteSettings['hero_slides'] ?? [];
 @endphp
 
 @if(!empty($heroSlides) && is_array($heroSlides))
-<section class="hero-carousel">
+<section class="hero-carousel" role="banner" aria-label="Featured content carousel" itemscope itemtype="https://schema.org/ImageGallery">
   <div class="hero-rtl" data-interval="6000">
     <div class="hero-fader">
       @foreach($heroSlides as $i => $slide)
@@ -30,7 +352,7 @@
               @endif
               
               @if(!empty($slide['title']))
-                <h1 class="main-title" style="font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 1rem; line-height: 1.1;">{{ $slide['title'] }}</h1>
+                <h1 class="main-title" style="font-size: 3.5rem; font-weight: 800; color: #fff; margin-bottom: 1rem; line-height: 1.1;" itemprop="headline">{{ $slide['title'] }}</h1>
               @endif
               
               @if(!empty($slide['sub']))
@@ -74,7 +396,7 @@
 </section>
 @else
 <!-- Fallback Static Hero Section -->
-<section class="hero-section">
+<section class="hero-section" role="banner" aria-label="Welcome section" itemscope itemtype="https://schema.org/WebPageElement">
     <div class="hero-background">
         <div class="hero-overlay"></div>
         <div class="floating-elements">
@@ -93,7 +415,7 @@
                     <span>Empowering African Youth</span>
                 </div>
                 
-                <h1 class="hero-title">
+                <h1 class="hero-title" itemprop="headline">
                     Welcome to <span class="gradient-text">Digital Leap Africa</span>
                 </h1>
                 
@@ -124,9 +446,11 @@
     </div>
 </section>
 @endif
+</header>
 
 <!-- Stats Section -->
-<section class="stats-section">
+<section class="stats-section" role="region" aria-labelledby="stats-heading" itemscope itemtype="https://schema.org/AboutPage">
+    <h2 id="stats-heading" class="sr-only">Platform Statistics</h2>
     <div class="container">
         <div class="stats-grid">
             @php
@@ -139,12 +463,13 @@
             @endphp
             
             @foreach($statsData as $stat)
-                <div class="stat-card">
+                <div class="stat-card" itemscope itemtype="https://schema.org/QuantitativeValue">
                     <div style="font-size:1.25rem;color:var(--cyan-accent);margin-bottom:.25rem;">
                         <i class="fa-solid {{ $stat['icon'] }}"></i>
                     </div>
-                    <div class="stat-value">{{ number_format($stat['value']) }}</div>
-                    <div class="stat-label">{{ $stat['label'] }}</div>
+                    <div class="stat-value" itemprop="value">{{ number_format($stat['value']) }}</div>
+                    <div class="stat-label" itemprop="name">{{ $stat['label'] }}</div>
+                    <meta itemprop="unitText" content="count">
                 </div>
             @endforeach
         </div>
@@ -152,6 +477,19 @@
 </section>
 
 <style>
+/* Screen reader only class for accessibility */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
 /* Modern Hero Section */
 .hero-section {
     position: relative;
@@ -1211,7 +1549,8 @@ animation: twinkle 2s infinite ease-in-out;
 @endphp
 
 @if($about)
-<section id="about-section" class="section" style="padding:2.5rem 0;">
+<section id="about-section" class="section" role="region" aria-labelledby="about-heading" itemscope itemtype="https://schema.org/AboutPage" style="padding:2.5rem 0;">
+  <h2 id="about-heading" class="sr-only">About Digital Leap Africa</h2>
   <style>
     /* Hexagon About card (scoped to #about-section to avoid collisions) */
     #about-section .aboutx-card{background:#131a2a;border-radius:24px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.5);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);max-width:100%;width:100%;display:flex;position:relative;border:1px solid rgba(59,130,246,0.1);margin:0 auto}
@@ -1311,11 +1650,11 @@ animation: twinkle 2s infinite ease-in-out;
       </div>
       <div class="aboutx-content">
         <div class="aboutx-badge">{{ $about->mini_title ?? 'About Us' }}</div>
-        <h1 class="aboutx-title">{{ $about->title }}</h1>
+        <h2 class="aboutx-title" itemprop="name">{{ $about->title }}</h2>
         @if(!empty($about->mini_title))
           <p class="aboutx-sub">{{ $about->mini_title }}</p>
         @endif
-        <div class="aboutx-desc">{!! nl2br(e($about->content)) !!}</div>
+        <div class="aboutx-desc" itemprop="description">{!! nl2br(e($about->content)) !!}</div>
         @if(!empty($about->bullet_points) && is_array($about->bullet_points))
           <div class="aboutx-features">
             @foreach($about->bullet_points as $bp)
@@ -1346,10 +1685,10 @@ animation: twinkle 2s infinite ease-in-out;
  
 
 <!-- Latest Articles -->
-<section class="articles-section">
+<section class="articles-section" itemscope itemtype="https://schema.org/ItemList" aria-labelledby="articles-heading">
     <div class="container">
         <div class="section-title" style="text-align:center; margin-bottom: 2rem;">
-            <h2 style="font-weight: 700; color: #64b5f6; font-size: 1.5rem; margin-bottom: 0.5rem;"><i class="fas fa-newspaper"></i> Latest Articles</h2>
+            <h2 id="articles-heading" style="font-weight: 700; color: #64b5f6; font-size: 1.5rem; margin-bottom: 0.5rem;"><i class="fas fa-newspaper" aria-hidden="true"></i> Latest Articles</h2>
             <p style="color: var(--cool-gray); font-size: 1rem;">Stay updated with the latest insights, tutorials, and industry trends</p>
         </div>
 
@@ -1378,10 +1717,10 @@ animation: twinkle 2s infinite ease-in-out;
                         $dateText = !empty($post->created_at) ? $post->created_at->format('M j, Y') : null;
                     @endphp
 
-                    <article class="article-card">
+                    <article class="article-card" itemscope itemtype="https://schema.org/Article" itemprop="itemListElement">
                         <div class="article-image">
                             @if($image)
-                                <img src="{{ $image }}" alt="{{ $title }}">
+                                <img src="{{ $image }}" alt="{{ $title }} - Digital Leap Africa Article" itemprop="image">
                             @else
                                 <div class="article-placeholder">
                                     <i class="fas fa-newspaper"></i>
@@ -1406,8 +1745,10 @@ animation: twinkle 2s infinite ease-in-out;
                                 @endif
                             </div>
                             
-                            <h3 class="article-title">{{ $title }}</h3>
-                            <p class="article-excerpt">{{ $excerpt }}</p>
+                            <h3 class="article-title" itemprop="headline">{{ $title }}</h3>
+                            <p class="article-excerpt" itemprop="description">{{ $excerpt }}</p>
+                            <meta itemprop="datePublished" content="{{ $post->created_at?->toISOString() }}">
+                            <meta itemprop="author" content="Digital Leap Africa">
                             
                             <a href="{{ route('blog.show', $post) }}" class="article-link">
                                 <span>Read Article</span>
@@ -1443,10 +1784,10 @@ animation: twinkle 2s infinite ease-in-out;
 
 
 <!-- Available Courses -->
-<section class="courses-section">
+<section class="courses-section" itemscope itemtype="https://schema.org/ItemList" aria-labelledby="courses-heading">
     <div class="container">
         <div class="section-title" style="text-align:center; margin-bottom: 2rem;">
-            <h2 style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-graduation-cap"></i> Available Courses</h2>
+            <h2 id="courses-heading" style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Available Courses</h2>
             <p style="color: var(--cool-gray); font-size: 1rem;">Master new skills with our expert-led courses designed for African learners</p>
         </div>
 
@@ -1473,10 +1814,10 @@ animation: twinkle 2s infinite ease-in-out;
                         $coursePrice = $course->price ?? 0;
                     @endphp
 
-                    <div class="course-horizontal-card">
+                    <div class="course-horizontal-card" itemscope itemtype="https://schema.org/Course" itemprop="itemListElement">
                         <div class="course-image-wrapper">
                             @if($courseImage)
-                                <img src="{{ $courseImage }}" alt="{{ $courseTitle }}" class="course-img">
+                                <img src="{{ $courseImage }}" alt="{{ $courseTitle }} - Online Course at Digital Leap Africa" class="course-img" itemprop="image">
                             @else
                                 <div class="course-img-placeholder">
                                     <i class="fas fa-graduation-cap"></i>
@@ -1486,7 +1827,14 @@ animation: twinkle 2s infinite ease-in-out;
                         
                         <div class="course-details">
                             <div class="course-header">
-                                <h3 class="course-name">{{ $courseTitle }}</h3>
+                                <h3 class="course-name" itemprop="name">{{ $courseTitle }}</h3>
+                                <meta itemprop="description" content="{{ $courseExcerpt }}">
+                                <meta itemprop="provider" content="Digital Leap Africa">
+                                @if(!$course->is_free && $coursePrice > 0)
+                                    <meta itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                                    <meta itemprop="price" content="{{ $coursePrice }}">
+                                    <meta itemprop="priceCurrency" content="KES">
+                                @endif
                                 <div class="course-price {{ $course->is_free ? 'free' : 'premium' }}">
                                     @if(!$course->is_free && $coursePrice > 0)
                                         KES {{ number_format($coursePrice) }}
@@ -1537,10 +1885,10 @@ animation: twinkle 2s infinite ease-in-out;
 </section>
 
 <!-- Testimonials Carousel -->
-<section id="testimonials-section" style="padding:3rem 0; background: rgba(255, 255, 255, 0.02);">
+<section id="testimonials-section" role="region" aria-labelledby="testimonials-heading" itemscope itemtype="https://schema.org/ItemList" style="padding:3rem 0; background: rgba(255, 255, 255, 0.02);">
   <div class="container">
     <div class="section-title" style="text-align:center; margin-bottom: 2rem;">
-      <h2 style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-comments"></i> What People Say About Us</h2>
+      <h2 id="testimonials-heading" style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-comments" aria-hidden="true"></i> What People Say About Us</h2>
       <p style="color: var(--cool-gray); font-size: 1rem;">Hear from our community members</p>
     </div>
 
@@ -1552,17 +1900,17 @@ animation: twinkle 2s infinite ease-in-out;
       
       <div class="testimonials-carousel" id="testimonialsCarousel">
         @foreach($testimonials as $testimonial)
-        <div class="testimonial-slide">
+        <div class="testimonial-slide" itemscope itemtype="https://schema.org/Review" itemprop="itemListElement">
           <div class="testimonial-content">
-            <div class="testimonial-quote-home">
-              <i class="fas fa-quote-left quote-icon"></i>
+            <div class="testimonial-quote-home" itemprop="reviewBody">
+              <i class="fas fa-quote-left quote-icon" aria-hidden="true"></i>
               {{ \Illuminate\Support\Str::limit($testimonial->quote, 200) }}
             </div>
             <div class="testimonial-author-home">
               <div class="testimonial-avatar-wrapper">
                 @if($testimonial->user && $testimonial->user->profile_photo)
                   <img src="{{ route('me.photo') }}?user_id={{ $testimonial->user_id }}" 
-                       alt="{{ $testimonial->name }}" 
+                       alt="{{ $testimonial->name }} - Digital Leap Africa Community Member" 
                        class="testimonial-avatar-home"
                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                   <div class="testimonial-avatar-placeholder-home" style="display:none;">
@@ -1570,7 +1918,7 @@ animation: twinkle 2s infinite ease-in-out;
                   </div>
                 @elseif($testimonial->avatar_path)
                   <img src="{{ Storage::url($testimonial->avatar_path) }}" 
-                       alt="{{ $testimonial->name }}" 
+                       alt="{{ $testimonial->name }} - Digital Leap Africa Community Member" 
                        class="testimonial-avatar-home"
                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                   <div class="testimonial-avatar-placeholder-home" style="display:none;">
@@ -1583,10 +1931,16 @@ animation: twinkle 2s infinite ease-in-out;
                 @endif
               </div>
               <div class="testimonial-author-info">
-                <div class="author-name">{{ $testimonial->name ?? 'Anonymous' }}</div>
-                <div class="author-date">
-                  <i class="far fa-calendar"></i> {{ $testimonial->created_at?->format('M d, Y') }}
+                <div class="author-name" itemprop="author" itemscope itemtype="https://schema.org/Person">
+                  <span itemprop="name">{{ $testimonial->name ?? 'Anonymous' }}</span>
                 </div>
+                <div class="author-date">
+                  <i class="far fa-calendar" aria-hidden="true"></i> 
+                  <time itemprop="datePublished" datetime="{{ $testimonial->created_at?->toISOString() }}">{{ $testimonial->created_at?->format('M d, Y') }}</time>
+                </div>
+                <meta itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                <meta itemprop="ratingValue" content="5">
+                <meta itemprop="bestRating" content="5">
               </div>
             </div>
           </div>
@@ -2038,7 +2392,7 @@ window.addEventListener('beforeunload', () => {
 </script>
 
 <!-- Partners Logos -->
-<section id="partners-section" style="padding:2rem 0;">
+<section id="partners-section" role="region" aria-labelledby="partners-heading" itemscope itemtype="https://schema.org/ItemList" style="padding:2rem 0;">
   @php
     try {
       $partners = \App\Models\Partner::query()->active()->ordered()->get();
@@ -2052,18 +2406,22 @@ window.addEventListener('beforeunload', () => {
 
   <div class="container">
     <div class="section-title" style="text-align:center; margin-bottom: 2rem;">
-      <h2 style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-handshake"></i> Our Partners</h2>
+      <h2 id="partners-heading" style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-handshake" aria-hidden="true"></i> Our Partners</h2>
       <p style="color: var(--cool-gray); font-size: 1rem;">We collaborate with leading organizations to amplify impact</p>
     </div>
 
     @if($partners->count())
       <div class="partners-grid">
         @foreach($partners as $p)
-          <a class="partner-item" href="{{ $p->website_url ?: '#' }}" @if(!empty($p->website_url)) target="_blank" rel="noopener" @endif title="{{ $p->name }}">
+          <a class="partner-item" href="{{ $p->website_url ?: '#' }}" @if(!empty($p->website_url)) target="_blank" rel="noopener" @endif title="{{ $p->name }}" itemscope itemtype="https://schema.org/Organization" itemprop="itemListElement">
             @if(!empty($p->logo_url))
-              <img src="{{ $p->logo_url }}" alt="{{ $p->name }}">
+              <img src="{{ $p->logo_url }}" alt="{{ $p->name }} - Digital Leap Africa Partner" itemprop="logo">
             @else
-              <div class="partner-fallback">{{ \Illuminate\Support\Str::limit($p->name, 20) }}</div>
+              <div class="partner-fallback" itemprop="name">{{ \Illuminate\Support\Str::limit($p->name, 20) }}</div>
+            @endif
+            <meta itemprop="name" content="{{ $p->name }}">
+            @if(!empty($p->website_url))
+              <meta itemprop="url" content="{{ $p->website_url }}">
             @endif
           </a>
         @endforeach
@@ -2171,7 +2529,7 @@ window.addEventListener('beforeunload', () => {
 </style>
 
 <!-- Upcoming Events -->
-<section id="events-section" style="padding:2rem 0;">
+<section id="events-section" role="region" aria-labelledby="events-heading" itemscope itemtype="https://schema.org/ItemList" style="padding:2rem 0;">
   @php
     try {
       $todayEnd = now()->copy()->endOfDay();
@@ -2200,7 +2558,7 @@ window.addEventListener('beforeunload', () => {
 
   <div class="container">
     <div class="section-title" style="text-align:center; margin-bottom: 2rem;">
-      <h2 style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-calendar-alt"></i> Upcoming Events</h2>
+      <h2 id="events-heading" style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Upcoming Events</h2>
       <p style="color: var(--cool-gray); font-size: 1rem;">Join our upcoming workshops and community events</p>
     </div>
 
@@ -2228,7 +2586,7 @@ window.addEventListener('beforeunload', () => {
             $ctaText = !empty($event->registration_url) ? 'Join Event' : 'View Event';
           @endphp
 
-          <div class="card card-style-2">
+          <article class="card card-style-2" itemscope itemtype="https://schema.org/Event" itemprop="itemListElement">
             @if($image)
               <img src="{{ $image }}" alt="{{ $title }}" class="card-image">
             @else
@@ -2245,7 +2603,11 @@ window.addEventListener('beforeunload', () => {
             @endif
 
             <div class="card-content">
-              <h3 class="card-title">{{ $title }}</h3>
+              <h3 class="card-title" itemprop="name">{{ $title }}</h3>
+              <meta itemprop="description" content="{{ $excerpt }}">
+              @if($start)
+                <meta itemprop="startDate" content="{{ $start->toISOString() }}">
+              @endif
               <div class="event-meta">
                 @if($timeText)
                   <span class="event-date"><i class="far fa-clock"></i> {{ $timeText }}</span>
@@ -2276,7 +2638,7 @@ window.addEventListener('beforeunload', () => {
 </section>
 
 <!-- FAQs -->
-<section id="faq-section" style="padding:2rem 0;">
+<section id="faq-section" role="region" aria-labelledby="faq-heading" itemscope itemtype="https://schema.org/FAQPage" style="padding:2rem 0;">
   @php
     try {
       $faqs = \App\Models\Faq::query()->where('is_active', true)->latest()->take(6)->get();
@@ -2287,16 +2649,18 @@ window.addEventListener('beforeunload', () => {
 
   <div class="container">
     <div class="section-title" style="text-align:center; margin-bottom: 2rem;">
-      <h2 style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
+      <h2 id="faq-heading" style="font-weight: 700; color: #64b5f6; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-question-circle" aria-hidden="true"></i> Frequently Asked Questions</h2>
       <p style="color: var(--cool-gray); font-size: 1rem;">Find answers to common questions about our platform</p>
     </div>
 
     @if($faqs->count())
       <div class="faq-accordion">
         @foreach($faqs as $i => $f)
-          <details class="faq-item" @if($i===0) open @endif>
-            <summary class="faq-q">{{ $f->question }}</summary>
-            <div class="faq-a">{!! nl2br(e($f->answer)) !!}</div>
+          <details class="faq-item" @if($i===0) open @endif itemscope itemtype="https://schema.org/Question" itemprop="mainEntity">
+            <summary class="faq-q" itemprop="name">{{ $f->question }}</summary>
+            <div class="faq-a" itemscope itemtype="https://schema.org/Answer" itemprop="acceptedAnswer">
+              <div itemprop="text">{!! nl2br(e($f->answer)) !!}</div>
+            </div>
           </details>
         @endforeach
       </div>
