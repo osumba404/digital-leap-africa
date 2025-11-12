@@ -42,6 +42,8 @@
     position: relative;
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
+    z-index: 1;
+    pointer-events: auto;
 }
 
 .stat-card:hover {
@@ -82,6 +84,8 @@
     padding: 1rem;
     margin-bottom: 0.75rem;
     transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    z-index: 1;
 }
 
 .course-card:hover {
@@ -140,6 +144,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    cursor: pointer;
+    pointer-events: auto;
+    position: relative;
+    z-index: 1;
 }
 
 .action-card:hover {
@@ -147,6 +155,7 @@
     transform: translateY(-2px);
     color: inherit;
     border-color: rgba(255, 255, 255, 0.15);
+    text-decoration: none;
 }
 
 .action-icon {
@@ -225,11 +234,14 @@
 [data-theme="light"] .action-card {
     background: rgba(46, 120, 197, 0.05);
     border: 1px solid rgba(46, 120, 197, 0.15);
+    cursor: pointer;
+    pointer-events: auto;
 }
 
 [data-theme="light"] .action-card:hover {
     background: rgba(46, 120, 197, 0.1);
     border-color: rgba(46, 120, 197, 0.3);
+    text-decoration: none;
 }
 
 [data-theme="light"] .action-card h3 {
@@ -238,6 +250,55 @@
 
 [data-theme="light"] .action-icon {
     color: var(--primary-blue);
+}
+
+/* Ensure all interactive elements are clickable */
+a, button, .btn-primary, .btn-outline, .btn-completed, .action-card {
+    cursor: pointer;
+    pointer-events: auto;
+    position: relative;
+    z-index: 2;
+}
+
+a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
+    text-decoration: none;
+}
+
+.btn-primary, .btn-outline, .btn-completed {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.btn-primary {
+    background: var(--cyan-accent);
+    color: var(--navy-bg);
+}
+
+.btn-primary:hover {
+    background: var(--purple-accent);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--cyan-accent);
+    color: var(--cyan-accent);
+}
+
+.btn-outline:hover {
+    background: var(--cyan-accent);
+    color: var(--navy-bg);
+    transform: translateY(-1px);
 }
 
 /* Mobile Responsive */
