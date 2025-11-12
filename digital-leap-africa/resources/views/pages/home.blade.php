@@ -39,18 +39,16 @@
     font-size: 3rem;
     font-weight: 700;
     margin-bottom: 1rem;
-    background: linear-gradient(90deg, var(--cyan-accent), var(--purple-accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    color: #ffffff;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.9), 0 0 20px rgba(0, 212, 255, 0.5);
 }
 
 .hero-subtitle {
     font-size: 1.2rem;
-    color: rgba(245, 247, 250, 0.95);
+    color: #00d4ff;
     margin-bottom: 2rem;
     max-width: 600px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    text-shadow: 0 3px 6px rgba(0,0,0,0.9), 0 0 15px rgba(0, 212, 255, 0.3);
 }
 
 .hero-actions {
@@ -235,11 +233,17 @@
     }
     
     .hero-title {
-        font-size: 1.75rem;
+        font-size: 2rem;
+        line-height: 1.2;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
     }
     
     .hero-slide {
-        padding: 2rem 1rem;
+        padding: 1.5rem 1rem;
+        background-attachment: scroll !important;
     }
     
     .section-header h2 {
