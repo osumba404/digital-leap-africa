@@ -183,6 +183,18 @@
     font-size: 1.1rem;
 }
 
+/* Fade in animation */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity .4s ease, transform .4s ease;
+}
+
+.fade-in-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .hero-title {
@@ -237,6 +249,21 @@
     .container {
         padding: 0 0.5rem;
     }
+    
+    .testimonial-slide {
+        padding: 0 0.5rem !important;
+    }
+    
+    .testimonial-slide > div {
+        height: 350px !important;
+        padding: 1rem !important;
+    }
+    
+    .testimonial-prev, .testimonial-next {
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 0.9rem !important;
+    }
 }
 </style>
 
@@ -276,7 +303,30 @@
     @endif
 </section>
 
-
+<!-- Statistics Section -->
+@php
+  $stats = [
+    ['label'=>'Courses',  'value'=> \App\Models\Course::count(),      'icon'=>'fa-book-open'],
+    ['label'=>'Articles', 'value'=> \App\Models\Article::count(),     'icon'=>'fa-diagram-project'],
+    ['label'=>'Partners', 'value'=> \App\Models\Partner::count(),     'icon'=>'fa-handshake'],
+    ['label'=>'Members',  'value'=> \App\Models\User::count(),        'icon'=>'fa-users'],
+  ];
+@endphp
+<section class="section">
+  <div class="container">
+    <div class="stats-grid">
+      @foreach($stats as $s)
+        <div class="stat-card fade-in-up">
+          <div style="font-size:1.25rem;color:var(--cyan-accent);margin-bottom:.25rem;">
+            <i class="fa-solid {{ $s['icon'] }}"></i>
+          </div>
+          <div class="stat-value">{{ number_format($s['value']) }}</div>
+          <div class="stat-label">{{ $s['label'] }}</div>
+        </div>
+      @endforeach
+    </div>
+  </div>
+</section>
 
 <!-- Blog Posts Section -->
 <section class="section">
@@ -455,34 +505,59 @@
         </div>
         
         @php
-            $testimonials = \App\Models\Testimonial::where('is_active', true)->latest()->take(3)->get();
+            $testimonials = \App\Models\Testimonial::with('user')->where('is_active', true)->latest()->take(3)->get();
         @endphp
         
         @if($testimonials->count() > 0)
-            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px,1fr));gap:1.5rem;">
-                @foreach($testimonials as $testimonial)
-                    <div style="background: rgba(255, 255, 255, 0.05);border-radius: 12px;padding: 2rem;border: 1px solid rgba(255, 255, 255, 0.1);">
-                        <div style="color: var(--cyan-accent);font-size: 2rem;margin-bottom: 1rem;">
-                            <i class="fas fa-quote-left"></i>
-                        </div>
-                        <p style="color: var(--cool-gray);font-style: italic;margin-bottom: 1.5rem;">"{{ $testimonial->content }}"</p>
-                        <div style="display: flex;align-items: center;gap: 1rem;">
-                            <div style="width: 50px;height: 50px;border-radius: 50%;overflow: hidden;">
-                                @if($testimonial->image)
-                                    <img src="{{ Storage::url($testimonial->image) }}" alt="{{ $testimonial->name }}" style="width: 100%;height: 100%;object-fit: cover;">
-                                @else
-                                    <div style="width: 100%;height: 100%;background: var(--cyan-accent);display: flex;align-items: center;justify-content: center;color: var(--navy-bg);font-weight: 700;">
-                                        {{ substr($testimonial->name, 0, 1) }}
+            <div style="position: relative; overflow: hidden;">
+                <div class="testimonials-slider" style="display: flex; transition: transform 0.5s ease;">
+                    @foreach($testimonials as $testimonial)
+                        <div class="testimonial-slide" style="min-width: 100%; padding: 0 1rem; display: flex; align-items: stretch; justify-content: center;">
+                            <div style="background: rgba(255, 255, 255, 0.05);border-radius: 12px;padding: 1.5rem;border: 1px solid rgba(255, 255, 255, 0.1); width: 100%; max-width: 600px; height: 400px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;">
+                                <div style="flex-grow: 1; display: flex; flex-direction: column;">
+                                    <div style="color: var(--cyan-accent);font-size: 1.8rem;margin-bottom: 1rem; text-align: center;">
+                                        <i class="fas fa-quote-left"></i>
                                     </div>
-                                @endif
-                            </div>
-                            <div>
-                                <h4 style="color: var(--diamond-white);margin: 0;">{{ $testimonial->name }}</h4>
-                                <p style="color: var(--cool-gray);margin: 0;font-size: 0.85rem;">{{ $testimonial->position ?? 'Graduate' }}</p>
+                                    <div style="flex-grow: 1; overflow-y: auto; margin-bottom: 1rem;">
+                                        <p style="color: var(--cool-gray);font-style: italic; text-align: center; font-size: 0.95rem; line-height: 1.5; margin: 0; word-wrap: break-word; overflow-wrap: break-word;">"{{ $testimonial->quote }}"</p>
+                                    </div>
+                                </div>
+                                <div style="display: flex;align-items: center;gap: 1rem; justify-content: center; flex-shrink: 0;">
+                                    <div style="width: 45px;height: 45px;border-radius: 50%;overflow: hidden; flex-shrink: 0;">
+                                        @if($testimonial->user && $testimonial->user->profile_photo)
+                                            <img src="{{ route('me.photo') }}?user_id={{ $testimonial->user_id }}" alt="{{ $testimonial->name }}" style="width: 100%;height: 100%;object-fit: cover;">
+                                        @elseif($testimonial->avatar_path)
+                                            <img src="{{ Storage::url($testimonial->avatar_path) }}" alt="{{ $testimonial->name }}" style="width: 100%;height: 100%;object-fit: cover;">
+                                        @else
+                                            <div style="width: 100%;height: 100%;background: linear-gradient(135deg, var(--cyan-accent), var(--purple-accent));display: flex;align-items: center;justify-content: center;color: white;font-weight: 700; font-size: 0.9rem;">
+                                                {{ strtoupper(substr($testimonial->name ?? 'U', 0, 1)) }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <h4 style="color: var(--diamond-white);margin: 0; font-size: 0.95rem; word-wrap: break-word;">{{ $testimonial->name ?? 'Anonymous' }}</h4>
+                                        <p style="color: var(--cool-gray);margin: 0;font-size: 0.8rem;">{{ $testimonial->created_at?->format('M d, Y') }}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    @endforeach
+                </div>
+                
+                @if($testimonials->count() > 1)
+                    <button class="testimonial-prev" onclick="moveTestimonialSlide(-1)" style="position: absolute; left: 0.5rem; top: 50%; transform: translateY(-50%); background: rgba(0, 201, 255, 0.2); border: 2px solid var(--cyan-accent); color: var(--cyan-accent); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem; transition: all 0.3s ease; z-index: 10;" onmouseover="this.style.background='var(--cyan-accent)'; this.style.color='var(--navy-bg)';" onmouseout="this.style.background='rgba(0, 201, 255, 0.2)'; this.style.color='var(--cyan-accent)';">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="testimonial-next" onclick="moveTestimonialSlide(1)" style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: rgba(0, 201, 255, 0.2); border: 2px solid var(--cyan-accent); color: var(--cyan-accent); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1rem; transition: all 0.3s ease; z-index: 10;" onmouseover="this.style.background='var(--cyan-accent)'; this.style.color='var(--navy-bg)';" onmouseout="this.style.background='rgba(0, 201, 255, 0.2)'; this.style.color='var(--cyan-accent)';">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    
+                    <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem;">
+                        @foreach($testimonials as $index => $testimonial)
+                            <button class="testimonial-dot" onclick="goToTestimonialSlide({{ $index }})" style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--cyan-accent); background: {{ $loop->first ? 'var(--cyan-accent)' : 'transparent' }}; cursor: pointer; transition: all 0.3s;"></button>
+                        @endforeach
                     </div>
-                @endforeach
+                @endif
             </div>
             
             <div style="text-align: center; margin-top: 2rem;">
@@ -507,13 +582,13 @@
         @if($partners->count() > 0)
             <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px,1fr));gap:1.25rem;align-items:center;">
                 @foreach($partners as $partner)
-                    <div style="background: rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius: 8px;padding: 1.25rem;display:flex;align-items:center;justify-content:center;transition: all .3s;filter: grayscale(100%);opacity: .8;">
-                        @if($partner->logo)
-                            <img src="{{ Storage::url($partner->logo) }}" alt="{{ $partner->name }}" style="max-height: 42px;width:auto;object-fit:contain;">
+                    <a href="{{ $partner->website_url ?? '#' }}" target="_blank" style="background: rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius: 8px;padding: 1.25rem;display:flex;align-items:center;justify-content:center;transition: transform .3s, box-shadow .3s, filter .3s, opacity .3s;filter: grayscale(100%);opacity: .8;text-decoration: none;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.3)'; this.style.filter='grayscale(0%)'; this.style.opacity='1';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.filter='grayscale(100%)'; this.style.opacity='.8';">
+                        @if($partner->logo_path)
+                            <img src="{{ Storage::url($partner->logo_path) }}" alt="{{ $partner->name }}" style="max-height: 42px;width:auto;object-fit:contain;">
                         @else
                             <span style="color: var(--cool-gray);">{{ $partner->name }}</span>
                         @endif
-                    </div>
+                    </a>
                 @endforeach
             </div>
             
@@ -639,5 +714,51 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Testimonials slider
+let currentTestimonialSlide = 0;
+const testimonialSlides = document.querySelectorAll('.testimonial-slide');
+const testimonialDots = document.querySelectorAll('.testimonial-dot');
+
+function updateTestimonialSlider() {
+    const slider = document.querySelector('.testimonials-slider');
+    if (slider) {
+        slider.style.transform = `translateX(-${currentTestimonialSlide * 100}%)`;
+        
+        testimonialDots.forEach((dot, index) => {
+            dot.style.background = index === currentTestimonialSlide ? 'var(--cyan-accent)' : 'transparent';
+        });
+    }
+}
+
+function moveTestimonialSlide(direction) {
+    currentTestimonialSlide += direction;
+    if (currentTestimonialSlide < 0) currentTestimonialSlide = testimonialSlides.length - 1;
+    if (currentTestimonialSlide >= testimonialSlides.length) currentTestimonialSlide = 0;
+    updateTestimonialSlider();
+}
+
+function goToTestimonialSlide(index) {
+    currentTestimonialSlide = index;
+    updateTestimonialSlider();
+}
+
+// Auto-slide testimonials
+if (testimonialSlides.length > 1) {
+    setInterval(() => {
+        moveTestimonialSlide(1);
+    }, 6000);
+}
+
+// Fade in animation for stats
+const fadeElements = document.querySelectorAll('.fade-in-up');
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1 });
+fadeElements.forEach(el => observer.observe(el));
 </script>
 @endsection
