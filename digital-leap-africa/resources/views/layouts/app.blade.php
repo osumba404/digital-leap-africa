@@ -516,7 +516,7 @@
             background: linear-gradient(90deg, var(--cyan-accent), var(--purple-accent));
             color: #07101a;
             padding: 0.5rem 1rem;
-            border-radius: 999px;
+            border-radius: 25px;
             font-weight: 600;
             border: none;
             cursor: pointer;
@@ -540,7 +540,7 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
             color: #ffffff;
             padding: 0.5rem 1rem;
-            border-radius: 8px;
+            border-radius: 20px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
@@ -704,7 +704,7 @@
             align-items: center;
             justify-content: center;
             padding: 0.5rem 1rem;
-            border-radius: 8px;
+            border-radius: 18px;
             font-weight: 500;
             font-size: 0.9rem;
             cursor: pointer;

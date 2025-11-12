@@ -63,7 +63,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    border-radius: 25px;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.3s ease;
@@ -285,10 +285,34 @@
                 <p class="hero-subtitle">{{ $slide['sub'] }}</p>
                 <div class="hero-actions">
                     @if($slide['cta1_label'] && $slide['cta1_route'])
-                        <a href="{{ route($slide['cta1_route']) }}" class="btn-primary">{{ $slide['cta1_label'] }}</a>
+                        @php
+                            $cta1Icon = match($slide['cta1_route']) {
+                                'courses.index' => 'fas fa-graduation-cap',
+                                'about' => 'fas fa-info-circle',
+                                'blog.index' => 'fas fa-newspaper',
+                                'events.index' => 'fas fa-calendar-days',
+                                'forum.index' => 'fas fa-comments',
+                                'register' => 'fas fa-user-plus',
+                                'login' => 'fas fa-sign-in-alt',
+                                default => 'fas fa-rocket'
+                            };
+                        @endphp
+                        <a href="{{ route($slide['cta1_route']) }}" class="btn-primary"><i class="{{ $cta1Icon }}"></i> {{ $slide['cta1_label'] }}</a>
                     @endif
                     @if($slide['cta2_label'] && $slide['cta2_route'])
-                        <a href="{{ route($slide['cta2_route']) }}" class="btn-outline">{{ $slide['cta2_label'] }}</a>
+                        @php
+                            $cta2Icon = match($slide['cta2_route']) {
+                                'courses.index' => 'fas fa-graduation-cap',
+                                'about' => 'fas fa-compass',
+                                'blog.index' => 'fas fa-newspaper',
+                                'events.index' => 'fas fa-calendar-days',
+                                'forum.index' => 'fas fa-comments',
+                                'register' => 'fas fa-user-plus',
+                                'login' => 'fas fa-sign-in-alt',
+                                default => 'fas fa-users'
+                            };
+                        @endphp
+                        <a href="{{ route($slide['cta2_route']) }}" class="btn-outline"><i class="{{ $cta2Icon }}"></i> {{ $slide['cta2_label'] }}</a>
                     @endif
                 </div>
             </div>
@@ -300,8 +324,8 @@
             <h1 class="hero-title">Empowering African Tech Talent</h1>
             <p class="hero-subtitle">Transform your career with expert-led programming courses, real-world projects, and job opportunities across Africa.</p>
             <div class="hero-actions">
-                <a href="{{ route('courses.index') }}" class="btn-primary">Start Learning Today</a>
-                <a href="{{ route('about') }}" class="btn-outline">Discover Our Mission</a>
+                <a href="{{ route('courses.index') }}" class="btn-primary"><i class="fas fa-rocket"></i> Start Learning Today</a>
+                <a href="{{ route('about') }}" class="btn-outline"><i class="fas fa-compass"></i> Discover Our Mission</a>
             </div>
         </div>
     @endif
@@ -377,7 +401,7 @@
                                 <span><i class="fas fa-eye"></i> Article</span>
                             </div>
                             <p style="color:#8892b0;line-height:1.6;margin-bottom:1rem;flex-grow:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">{{ Str::limit(strip_tags($post->content), 140) }}</p>
-                            <span style="display:inline-flex;align-items:center;justify-content:center;background-color:transparent;color:#3b82f6;padding:.6rem 1.2rem;border:1px solid #3b82f6;border-radius:6px;text-decoration:none;font-size:.9rem;font-weight:600;transition:all .3s ease;cursor:pointer;gap:.5rem;">
+                            <span style="display:inline-flex;align-items:center;justify-content:center;background-color:transparent;color:#3b82f6;padding:.6rem 1.2rem;border:1px solid #3b82f6;border-radius:20px;text-decoration:none;font-size:.9rem;font-weight:600;transition:all .3s ease;cursor:pointer;gap:.5rem;">
                                 Read Article <i class="fas fa-arrow-right"></i>
                             </span>
                         </div>
@@ -386,7 +410,7 @@
             </div>
             
             <div style="text-align: center; margin-top: 2rem;">
-                <a href="{{ route('blog.index') }}" class="btn-outline">Read More Blogs</a>
+                <a href="{{ route('blog.index') }}" class="btn-outline"><i class="fas fa-newspaper"></i> Read More Blogs</a>
             </div>
         @endif
     </div>
@@ -494,7 +518,7 @@
             </div>
             
             <div style="text-align: center; margin-top: 2rem;">
-                <a href="{{ route('courses.index') }}" class="btn-outline">View All Courses</a>
+                <a href="{{ route('courses.index') }}" class="btn-outline"><i class="fas fa-graduation-cap"></i> View All Courses</a>
             </div>
         @endif
     </div>
@@ -565,7 +589,7 @@
             </div>
             
             <div style="text-align: center; margin-top: 2rem;">
-                <a href="{{ route('testimonials.index') }}" class="btn-outline">View All Testimonials</a>
+                <a href="{{ route('testimonials.index') }}" class="btn-outline"><i class="fas fa-quote-left"></i> View All Testimonials</a>
             </div>
         @endif
     </div>
@@ -597,7 +621,7 @@
             </div>
             
             <div style="text-align: center; margin-top: 2rem;">
-                <a href="{{ route('partners.apply') }}" class="btn-outline">Become a Partner</a>
+                <a href="{{ route('partners.apply') }}" class="btn-outline"><i class="fas fa-handshake"></i> Become a Partner</a>
             </div>
         @endif
     </div>
@@ -681,7 +705,7 @@
             </div>
             
             <div style="text-align: center; margin-top: 2rem;">
-                <a href="{{ route('events.index') }}" class="btn-outline">View All Events</a>
+                <a href="{{ route('events.index') }}" class="btn-outline"><i class="fas fa-calendar-days"></i> View All Events</a>
             </div>
         @endif
     </div>

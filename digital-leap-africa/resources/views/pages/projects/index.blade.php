@@ -4,8 +4,8 @@
 <style>
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
     margin: 2rem 0;
 }
 
@@ -15,6 +15,9 @@
     border-radius: var(--radius);
     overflow: hidden;
     transition: transform 0.3s, box-shadow 0.3s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .project-card:hover {
@@ -24,58 +27,125 @@
 
 .project-image {
     width: 100%;
-    height: 250px;
+    height: 200px;
     object-fit: cover;
     background: linear-gradient(135deg, var(--primary-blue), var(--deep-blue));
+    flex-shrink: 0;
 }
 
 .project-content {
-    padding: 1.5rem;
+    padding: 1.25rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .project-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     color: var(--diamond-white);
+    line-height: 1.3;
 }
 
 .project-description {
     color: var(--cool-gray);
     line-height: 1.6;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+    font-size: 0.95rem;
 }
 
 .project-meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 1rem;
+    margin-top: auto;
     padding-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 0.75rem;
 }
 
 .project-tech {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.4rem;
     margin-bottom: 1rem;
 }
 
 .tech-tag {
     background: rgba(0, 201, 255, 0.2);
     color: var(--cyan-accent);
-    padding: 0.25rem 0.75rem;
+    padding: 0.2rem 0.6rem;
     border-radius: 999px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+    
+    .project-content {
+        padding: 1rem;
+    }
+    
+    .project-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .project-description {
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .project-meta {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    
+    .project-meta .btn-primary {
+        width: 100%;
+        text-align: center;
+        padding: 0.75rem;
+    }
+    
+    .tech-tag {
+        font-size: 0.7rem;
+        padding: 0.15rem 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .project-image {
+        height: 180px;
+    }
+    
+    .project-content {
+        padding: 0.875rem;
+    }
+    
+    .project-title {
+        font-size: 1rem;
+    }
+    
+    .project-description {
+        font-size: 0.85rem;
+    }
 }
 </style>
 
 <div class="container">
     <div style="text-align: center; margin-bottom: 3rem;">
-        <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">Community Projects</h1>
-        <p style="color: var(--cool-gray); font-size: 1.1rem;">Explore real-world projects built by our community members</p>
+        <h1 style="font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1rem; line-height: 1.2;">Community Projects</h1>
+        <p style="color: var(--cool-gray); font-size: clamp(1rem, 2.5vw, 1.1rem); max-width: 600px; margin: 0 auto; padding: 0 1rem;">Explore real-world projects built by our community members</p>
     </div>
 
     @if($projects->count() > 0)

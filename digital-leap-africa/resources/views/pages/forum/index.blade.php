@@ -216,21 +216,7 @@
             </div>
         </div>
 
-        {{-- Forum Stats --}}
-        <div class="forum-stats">
-            <div class="stat-card">
-                <span class="stat-number">{{ $threads->total() ?? $threads->count() }}</span>
-                <div class="stat-label">Total Discussions</div>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">{{ $threads->sum('replies_count') }}</span>
-                <div class="stat-label">Total Replies</div>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">{{ $threads->unique('user_id')->count() }}</span>
-                <div class="stat-label">Active Members</div>
-            </div>
-        </div>
+
 
         {{-- Threads List --}}
         @if($threads->count() > 0)
