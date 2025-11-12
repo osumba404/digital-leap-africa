@@ -3356,4 +3356,3 @@ window.addEventListener('beforeunload', () => {
   dots.forEach(function(d){ d.addEventListener('click', function(){ clearInterval(timer); show(parseInt(d.getAttribute('data-index'),10)); timer=setInterval(nextSlide,intv); }); });
 })();
 </script>
-@endpu
