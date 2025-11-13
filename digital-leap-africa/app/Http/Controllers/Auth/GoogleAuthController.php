@@ -48,7 +48,7 @@ class GoogleAuthController extends Controller
                     ->with('google_signup', 'Welcome! Your account has been created with a temporary password: <strong>@africa1</strong> (no period). Please change your password immediately for security.');
             }
             
-            return redirect(RouteServiceProvider::HOME);
+            return redirect()->route('dashboard');
             
         } catch (\Exception $e) {
             return redirect()->route('register')
