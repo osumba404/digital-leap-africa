@@ -61,11 +61,11 @@
             "contactType": "customer service"
         },
         "sameAs": [
-            @if($siteSettings['facebook_url'])"{{ $siteSettings['facebook_url'] }}",@endif
-            @if($siteSettings['twitter_url'])"{{ $siteSettings['twitter_url'] }}",@endif
-            @if($siteSettings['linkedin_url'])"{{ $siteSettings['linkedin_url'] }}",@endif
-            @if($siteSettings['youtube_url'])"{{ $siteSettings['youtube_url'] }}",@endif
-            @if($siteSettings['instagram_url'])"{{ $siteSettings['instagram_url'] }}"@endif
+            @if(!empty($siteSettings['facebook_url']))"{{ $siteSettings['facebook_url'] }}",@endif
+            @if(!empty($siteSettings['twitter_url']))"{{ $siteSettings['twitter_url'] }}",@endif
+            @if(!empty($siteSettings['linkedin_url']))"{{ $siteSettings['linkedin_url'] }}",@endif
+            @if(!empty($siteSettings['youtube_url']))"{{ $siteSettings['youtube_url'] }}",@endif
+            @if(!empty($siteSettings['instagram_url']))"{{ $siteSettings['instagram_url'] }}"@endif
         ]
     }
     </script>
