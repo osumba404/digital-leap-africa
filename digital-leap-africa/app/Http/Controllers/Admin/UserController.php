@@ -51,4 +51,11 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', 'User verification removed.');
     }
+
+    public function destroy(User $user)
+    {
+        $user->delete();
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User deleted successfully.');
+    }
 }

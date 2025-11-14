@@ -59,4 +59,11 @@ class PointTransactionController extends Controller
     {
         return view('admin.point-transactions.show', compact('pointTransaction'));
     }
+
+    public function destroy(PointTransaction $pointTransaction): RedirectResponse
+    {
+        $pointTransaction->delete();
+        return redirect()->route('admin.point-transactions.index')
+            ->with('success', 'Point transaction deleted successfully.');
+    }
 }

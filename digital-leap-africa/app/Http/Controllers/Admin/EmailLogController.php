@@ -33,4 +33,11 @@ class EmailLogController extends Controller
     {
         return view('admin.email-logs.show', compact('emailLog'));
     }
+
+    public function destroy(EmailLog $emailLog)
+    {
+        $emailLog->delete();
+        return redirect()->route('admin.email-logs.index')
+            ->with('success', 'Email log deleted successfully.');
+    }
 }

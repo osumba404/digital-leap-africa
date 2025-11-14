@@ -193,4 +193,16 @@ class CourseController extends Controller
 
         return redirect()->back()->with('success', 'Enrollment rejected.');
     }
+
+    public function destroy(Course $course)
+    {
+        if ($course->image_url) {
+            $oldFile = public_path($course->image_url);
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
+        }
+        $course->delete();
+        return redirect()->route('admin.courses.index')->with('success', 'Course deleted successfully.');
+    }
 }
