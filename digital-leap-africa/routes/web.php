@@ -348,33 +348,29 @@ Route::get('/me/photo', function () {
         }
     }
 
-    $path = (string) ($user->profile_photo ?? '');
-
-    // Normalize: remove accidental leading 'storage/' and leading slashes
-    $path = ltrim(preg_replace('#^storage/#', '', $path), '/');
-
-    // If path is just a filename with no directory, assume 'profile-photos/'
-    if ($path !== '' && strpos($path, '/') === false) {
-        $candidate = 'profile-photos/' . $path;
-        if (Storage::disk('public')->exists($candidate)) {
-            $path = $candidate;
-        }
-    }
-
-    // Final existence check
-    if ($path === '' || !Storage::disk('public')->exists($path)) {
-        // Serve a local fallback avatar without needing storage symlink
-        $fallback = public_path('images/default-avatar.png');
-        if (is_file($fallback)) {
-            return response()->file($fallback);
+    // Use the model accessor to get the correct URL
+    if ($user->profile_photo_url) {
+        // If it's already a full URL, redirect to it
+        if (preg_match('/^https?:\/\//i', $user->profile_photo_url)) {
+            return redirect($user->profile_photo_url);
         }
         
-        // Return a transparent 1x1 pixel PNG to avoid 404 errors
-        $transparentPixel = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==');
-        return response($transparentPixel, 200)->header('Content-Type', 'image/png');
+        // If it's a local path, serve the file directly
+        $filePath = public_path(ltrim($user->profile_photo_url, '/'));
+        if (file_exists($filePath)) {
+            return response()->file($filePath);
+        }
     }
 
-    return Storage::disk('public')->response($path);
+    // Fallback to default avatar or transparent pixel
+    $fallback = public_path('images/default-avatar.svg');
+    if (is_file($fallback)) {
+        return response()->file($fallback, 200, ['Content-Type' => 'image/svg+xml']);
+    }
+    
+    // Return a transparent 1x1 pixel PNG to avoid 404 errors
+    $transparentPixel = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==');
+    return response($transparentPixel, 200)->header('Content-Type', 'image/png');
 })->name('me.photo');
 
 

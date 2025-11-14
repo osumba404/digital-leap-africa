@@ -27,7 +27,19 @@ class AboutSection extends Model
 
     public function getImageUrlAttribute()
     {
-        return $this->image_path ? Storage::url($this->image_path) : null;
+        if (!$this->image_path) {
+            return null;
+        }
+        // If already starts with /storage/, return as URL
+        if (str_starts_with($this->image_path, '/storage/')) {
+            return url($this->image_path);
+        }
+        // If it contains 'about/' already, use Storage::url for old format
+        if (str_contains($this->image_path, 'about/')) {
+            return Storage::disk('public')->url($this->image_path);
+        }
+        // Default: assume it's just a filename in about directory
+        return url('/storage/about/' . $this->image_path);
     }
 
     // Scopes

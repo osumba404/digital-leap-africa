@@ -27,7 +27,15 @@ class Partner extends Model
 
     public function getLogoUrlAttribute()
     {
-        return $this->logo_path ? Storage::url($this->logo_path) : null;
+        if (!$this->logo_path) {
+            return null;
+        }
+        // If already starts with /storage/, return as URL
+        if (str_starts_with($this->logo_path, '/storage/')) {
+            return url($this->logo_path);
+        }
+        // Otherwise use Storage::url for old format
+        return Storage::url($this->logo_path);
     }
 
     // Scopes

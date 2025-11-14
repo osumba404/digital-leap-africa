@@ -691,7 +691,7 @@
           <div class="about-card-image-section">
               <div class="about-card-image">
                   @if($about->image_path)
-                      <img src="{{ Storage::url($about->image_path) }}" alt="{{ $about->title }}">
+                      <img src="{{ $about->image_url }}" alt="{{ $about->title }}">
                   @else
                       <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="{{ $about->title }}">
                   @endif
@@ -883,7 +883,7 @@
           <div class="vision-header">
             <div class="vision-image">
               @if(!empty($mission->image_path))
-                <img src="{{ Storage::url($mission->image_path) }}" alt="{{ $mission->title }}">
+                <img src="{{ $mission->image_url }}" alt="{{ $mission->title }}">
               @else
                 <img src="https://via.placeholder.com/1000x600.png?text=Mission" alt="{{ $mission->title }}">
               @endif
@@ -934,7 +934,7 @@
           </div>
           <div class="geometric-image">
             @if(!empty($vision->image_path))
-              <img src="{{ Storage::url($vision->image_path) }}" alt="{{ $vision->title }}">
+              <img src="{{ $vision->image_url }}" alt="{{ $vision->title }}">
             @else
               <img src="https://via.placeholder.com/1000x600.png?text=Vision" alt="{{ $vision->title }}">
             @endif
@@ -961,7 +961,7 @@
           <div class="vision-header">
             <div class="vision-image">
               @if(!empty($value->image_path))
-                <img src="{{ Storage::url($value->image_path) }}" alt="{{ $value->title }}">
+                <img src="{{ $value->image_url }}" alt="{{ $value->title }}">
               @else
                 <img src="https://via.placeholder.com/1000x600.png?text=Value" alt="{{ $value->title }}">
               @endif
@@ -1067,7 +1067,7 @@
         @foreach($partners as $partner)
           <a href="{{ $partner->website_url }}" target="_blank" class="partner-card fade-in-up">
             @if($partner->logo_path)
-              <img src="{{ Storage::url($partner->logo_path) }}" alt="{{ $partner->name }}" style="max-height: 42px; width:auto; object-fit:contain;">
+              <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" style="max-height: 42px; width:auto; object-fit:contain;">
             @else
               <span class="muted">{{ $partner->name }}</span>
             @endif

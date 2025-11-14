@@ -20,7 +20,7 @@ class Article extends Model
         'featured_image',
         'published_at',
         'status',
-        'author_id',
+        'user_id',
         'tags',
         'likes_count',
         'bookmarks_count',
@@ -58,7 +58,7 @@ class Article extends Model
     // Relationships
     public function author()
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function comments()
@@ -69,6 +69,14 @@ class Article extends Model
     // Accessors
     public function getFeaturedImageUrlAttribute()
     {
-        return $this->featured_image ? Storage::url($this->featured_image) : null;
+        if (!$this->featured_image) {
+            return null;
+        }
+        // If already starts with /storage/, return as is
+        if (str_starts_with($this->featured_image, '/storage/')) {
+            return url($this->featured_image);
+        }
+        // Otherwise assume it's a direct filename in articles folder
+        return url('/storage/articles/' . $this->featured_image);
     }
 }

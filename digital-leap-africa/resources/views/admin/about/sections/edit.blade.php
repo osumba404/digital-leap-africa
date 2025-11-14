@@ -37,7 +37,7 @@
                 <label for="image" class="form-label text-gray-200">Image</label>
                 @if($section->image_path)
                     <div class="mb-2">
-                        <img src="{{ Storage::url($section->image_path) }}" alt="{{ $section->title }}"
+                        <img src="{{ $section->image_url }}" alt="{{ $section->title }}"
                             class="img-thumbnail" style="max-width: 300px; background: white; padding: 8px;">
                     </div>
                 @endif

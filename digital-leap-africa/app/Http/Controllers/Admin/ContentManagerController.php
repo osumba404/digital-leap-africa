@@ -34,10 +34,15 @@ class ContentManagerController extends Controller
         if ($request->hasFile('image')) {
             // Delete old image if exists
             if ($section->image_path) {
-                Storage::delete('public/' . $section->image_path);
+                $oldFile = public_path($section->image_path);
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
             }
-            $path = $request->file('image')->store('about', 'public');
-            $validated['image_path'] = $path;
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/about'), $filename);
+            $validated['image_path'] = '/storage/about/' . $filename;
         }
 
         $section->update($validated);
@@ -68,8 +73,10 @@ class ContentManagerController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('team', 'public');
-            $validated['image_path'] = $path;
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/team'), $filename);
+            $validated['image_path'] = '/storage/team/' . $filename;
         }
 
         TeamMember::create($validated);
@@ -97,10 +104,15 @@ class ContentManagerController extends Controller
         if ($request->hasFile('image')) {
             // Delete old image if exists
             if ($member->image_path) {
-                Storage::delete('public/' . $member->image_path);
+                $oldFile = public_path($member->image_path);
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
             }
-            $path = $request->file('image')->store('team', 'public');
-            $validated['image_path'] = $path;
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/team'), $filename);
+            $validated['image_path'] = '/storage/team/' . $filename;
         }
 
         $member->update($validated);
@@ -114,7 +126,10 @@ class ContentManagerController extends Controller
         
         // Delete image if exists
         if ($member->image_path) {
-            Storage::delete('public/' . $member->image_path);
+            $oldFile = public_path($member->image_path);
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
         }
         
         $member->delete();
@@ -139,8 +154,10 @@ class ContentManagerController extends Controller
         ]);
 
         if ($request->hasFile('logo')) {
-            $path = $request->file('logo')->store('partners', 'public');
-            $validated['logo_path'] = $path;
+            $file = $request->file('logo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/partners'), $filename);
+            $validated['logo_path'] = '/storage/partners/' . $filename;
         }
 
         Partner::create($validated);
@@ -162,10 +179,15 @@ class ContentManagerController extends Controller
         if ($request->hasFile('logo')) {
             // Delete old logo if exists
             if ($partner->logo_path) {
-                Storage::delete('public/' . $partner->logo_path);
+                $oldFile = public_path($partner->logo_path);
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
             }
-            $path = $request->file('logo')->store('partners', 'public');
-            $validated['logo_path'] = $path;
+            $file = $request->file('logo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/partners'), $filename);
+            $validated['logo_path'] = '/storage/partners/' . $filename;
         }
 
         $partner->update($validated);
@@ -179,7 +201,10 @@ class ContentManagerController extends Controller
         
         // Delete logo if exists
         if ($partner->logo_path) {
-            Storage::delete('public/' . $partner->logo_path);
+            $oldFile = public_path($partner->logo_path);
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
         }
         
         $partner->delete();

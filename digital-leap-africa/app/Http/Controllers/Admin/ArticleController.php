@@ -57,7 +57,7 @@ class ArticleController extends Controller
         'excerpt' => $data['excerpt'] ?? null,
         'content' => $data['content'],
         'slug' => $this->generateUniqueSlug($data['title']),
-        'author_id' => $request->user()->id,
+        'user_id' => $request->user()->id,
         'tags' => $tags,
     ];
 
@@ -70,7 +70,10 @@ class ArticleController extends Controller
     }
 
     if ($request->hasFile('featured_image')) {
-        $payload['featured_image'] = $request->file('featured_image')->store('public/articles');
+        $file = $request->file('featured_image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('storage/articles'), $filename);
+        $payload['featured_image'] = '/storage/articles/' . $filename;
     }
 
     $article = Article::create($payload);
@@ -147,9 +150,15 @@ public function update(Request $request, Article $article): RedirectResponse
 
     if ($request->hasFile('featured_image')) {
         if ($article->featured_image) {
-            Storage::delete($article->featured_image);
+            $oldFile = public_path($article->featured_image);
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
         }
-        $payload['featured_image'] = $request->file('featured_image')->store('public/articles');
+        $file = $request->file('featured_image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('storage/articles'), $filename);
+        $payload['featured_image'] = '/storage/articles/' . $filename;
     }
 
     $article->update($payload);
@@ -160,7 +169,10 @@ public function update(Request $request, Article $article): RedirectResponse
     public function destroy(Article $article): RedirectResponse
     {
         if ($article->featured_image) {
-            Storage::delete($article->featured_image);
+            $oldFile = public_path($article->featured_image);
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
         }
         $article->delete();
         return redirect()->route('admin.articles.index')->with('status', 'Article deleted');

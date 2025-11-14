@@ -45,6 +45,14 @@ class ProfileController extends Controller
         $request->user()->fill($request->validated());
 
         if ($request->hasFile('profile_photo')) {
+            // Delete old profile photo if exists
+            if ($request->user()->profile_photo) {
+                $oldFile = public_path('storage/profile-photos/' . $request->user()->profile_photo);
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
+            }
+            
             $file = $request->file('profile_photo');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('storage/profile-photos'), $filename);
