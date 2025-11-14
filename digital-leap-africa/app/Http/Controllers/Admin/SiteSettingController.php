@@ -95,10 +95,15 @@ class SiteSettingController extends Controller
             if ($request->hasFile($field)) {
                 $setting = SiteSetting::where('key', $field)->first();
                 if ($setting && $setting->value) {
-                    Storage::delete(str_replace('/storage', 'public', $setting->value));
+                    $oldFile = public_path($setting->value);
+                    if (file_exists($oldFile)) {
+                        unlink($oldFile);
+                    }
                 }
-                $path = $request->file($field)->store('public/site');
-                SiteSetting::updateOrCreate(['key' => $field], ['value' => Storage::url($path)]);
+                $file = $request->file($field);
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('storage/site'), $filename);
+                SiteSetting::updateOrCreate(['key' => $field], ['value' => '/storage/site/' . $filename]);
                 unset($validated[$field]);
             }
         }
@@ -113,10 +118,15 @@ class SiteSettingController extends Controller
             $imageUrl = $slide['existing_image'] ?? null;
             if ($request->hasFile("hero_slides.$idx.image")) {
                 if (!empty($imageUrl)) {
-                    Storage::delete(str_replace('/storage', 'public', $imageUrl));
+                    $oldFile = public_path($imageUrl);
+                    if (file_exists($oldFile)) {
+                        unlink($oldFile);
+                    }
                 }
-                $stored = $request->file("hero_slides.$idx.image")->store('public/site');
-                $imageUrl = Storage::url($stored);
+                $file = $request->file("hero_slides.$idx.image");
+                $filename = time() . '_' . $idx . '_' . $file->getClientOriginalName();
+                $file->move(public_path('storage/site'), $filename);
+                $imageUrl = '/storage/site/' . $filename;
             }
 
             $normalizedSlides[] = [

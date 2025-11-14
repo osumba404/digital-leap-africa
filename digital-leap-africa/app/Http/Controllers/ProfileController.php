@@ -45,9 +45,10 @@ class ProfileController extends Controller
         $request->user()->fill($request->validated());
 
         if ($request->hasFile('profile_photo')) {
-            $path = $request->file('profile_photo')->store('profile-photos', 'public');
-            // Save only the relative path (e.g., 'profile-photos/xyz.jpg')
-            $request->user()->profile_photo = basename($path);
+            $file = $request->file('profile_photo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/profile-photos'), $filename);
+            $request->user()->profile_photo = $filename;
         }
 
         if ($request->user()->isDirty('email')) {

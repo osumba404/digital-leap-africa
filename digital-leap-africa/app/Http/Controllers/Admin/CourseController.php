@@ -54,8 +54,10 @@ class CourseController extends Controller
         $validated['price'] = $validated['is_free'] ? 0 : ($validated['price'] ?? 0);
 
         if ($request->hasFile('image_url')) {
-            $path = $request->file('image_url')->store('public/courses');
-            $validated['image_url'] = Storage::url($path);
+            $file = $request->file('image_url');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/courses'), $filename);
+            $validated['image_url'] = '/storage/courses/' . $filename;
         }
 
         $course = Course::create($validated);
@@ -111,10 +113,15 @@ class CourseController extends Controller
 
         if ($request->hasFile('image_url')) {
             if ($course->image_url) {
-                Storage::delete(str_replace('/storage', 'public', $course->image_url));
+                $oldFile = public_path($course->image_url);
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
             }
-            $path = $request->file('image_url')->store('public/courses');
-            $validated['image_url'] = Storage::url($path);
+            $file = $request->file('image_url');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/courses'), $filename);
+            $validated['image_url'] = '/storage/courses/' . $filename;
         }
 
         $course->update($validated);

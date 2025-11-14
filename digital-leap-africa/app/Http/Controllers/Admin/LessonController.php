@@ -27,8 +27,10 @@ class LessonController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('public/lessons/content-images');
-            $url = \Illuminate\Support\Facades\Storage::url($path);
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/lessons/content-images'), $filename);
+            $url = '/storage/lessons/content-images/' . $filename;
             
             return response()->json([
                 'success' => true,
@@ -74,8 +76,9 @@ class LessonController extends Controller
         $resourcePaths = [];
         if ($request->hasFile('resource_files')) {
             foreach ($request->file('resource_files') as $file) {
-                $path = $file->store('public/lessons/resources');
-                $resourcePaths[] = \Illuminate\Support\Facades\Storage::url($path);
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('storage/lessons/resources'), $filename);
+                $resourcePaths[] = '/storage/lessons/resources/' . $filename;
             }
         }
       
@@ -84,8 +87,9 @@ class LessonController extends Controller
         $attachmentPaths = [];
         if ($request->hasFile('attachment_images')) {
             foreach ($request->file('attachment_images') as $file) {
-                $path = $file->store('public/lessons/attachments');
-                $attachmentPaths[] = \Illuminate\Support\Facades\Storage::url($path);
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('storage/lessons/attachments'), $filename);
+                $attachmentPaths[] = '/storage/lessons/attachments/' . $filename;
             }
         }
         $data['attachment_path'] = $attachmentPaths;
@@ -134,8 +138,9 @@ class LessonController extends Controller
         $resourcePaths = [];
         if ($request->hasFile('resource_files')) {
             foreach ($request->file('resource_files') as $file) {
-                $path = $file->store('public/lessons/resources');
-                $resourcePaths[] = \Illuminate\Support\Facades\Storage::url($path);
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('storage/lessons/resources'), $filename);
+                $resourcePaths[] = '/storage/lessons/resources/' . $filename;
             }
         }
 
@@ -144,8 +149,9 @@ class LessonController extends Controller
         $attachmentPaths = [];
         if ($request->hasFile('attachment_images')) {
             foreach ($request->file('attachment_images') as $file) {
-                $path = $file->store('public/lessons/attachments');
-                $attachmentPaths[] = \Illuminate\Support\Facades\Storage::url($path);
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('storage/lessons/attachments'), $filename);
+                $attachmentPaths[] = '/storage/lessons/attachments/' . $filename;
             }
         }
        

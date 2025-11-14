@@ -34,8 +34,10 @@ $validated = $request->validate([
 $validated['slug'] = Str::slug($validated['title']);
 
 if ($request->hasFile('image_url')) {
-$path = $request->file('image_url')->store('public/elibrary');
-$validated['image_url'] = Storage::url($path);
+$file = $request->file('image_url');
+$filename = time() . '_' . $file->getClientOriginalName();
+$file->move(public_path('storage/elibrary'), $filename);
+$validated['image_url'] = '/storage/elibrary/' . $filename;
 }
 
 ELibraryResource::create($validated);
@@ -67,10 +69,15 @@ $validated['slug'] = Str::slug($validated['title']);
 
 if ($request->hasFile('image_url')) {
 if ($elibraryResource->image_url) {
-Storage::delete(str_replace('/storage', 'public', $elibraryResource->image_url));
+$oldFile = public_path($elibraryResource->image_url);
+if (file_exists($oldFile)) {
+unlink($oldFile);
 }
-$path = $request->file('image_url')->store('public/elibrary');
-$validated['image_url'] = Storage::url($path);
+}
+$file = $request->file('image_url');
+$filename = time() . '_' . $file->getClientOriginalName();
+$file->move(public_path('storage/elibrary'), $filename);
+$validated['image_url'] = '/storage/elibrary/' . $filename;
 }
 
 $elibraryResource->update($validated);
@@ -80,7 +87,10 @@ return redirect()->route('admin.elibrary-resources.index')->with('success', 'eLi
 public function destroy(ELibraryResource $elibraryResource)
 {
 if ($elibraryResource->image_url) {
-Storage::delete(str_replace('/storage', 'public', $elibraryResource->image_url));
+$oldFile = public_path($elibraryResource->image_url);
+if (file_exists($oldFile)) {
+unlink($oldFile);
+}
 }
 $elibraryResource->delete();
 return redirect()->route('admin.elibrary-resources.index')->with('success', 'eLibrary item deleted successfully.');

@@ -81,7 +81,10 @@ class EventController extends Controller
     {
         // Delete attached image if exists
         if (!empty($event->image_path)) {
-            $this->deleteStoredUrl($event->image_path);
+            $oldFile = public_path($event->image_path);
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
         }
         $event->delete();
 
@@ -119,32 +122,29 @@ class EventController extends Controller
                 $extension = $m[1] === 'jpg' ? 'jpeg' : $m[1];
                 $data = base64_decode(substr($dataUrl, strpos($dataUrl, ',') + 1));
 
-                $path = 'public/events/' . uniqid('event_') . '.' . $extension;
-                Storage::put($path, $data);
-                $savedUrl = Storage::url($path);
+                $filename = uniqid('event_') . '.' . $extension;
+                file_put_contents(public_path('storage/events/' . $filename), $data);
+                $savedUrl = '/storage/events/' . $filename;
             }
         }
         // Priority 2: raw file upload
         elseif ($request->hasFile('image_file')) {
-            $stored = $request->file('image_file')->store('public/events');
-            $savedUrl = Storage::url($stored);
+            $file = $request->file('image_file');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/events'), $filename);
+            $savedUrl = '/storage/events/' . $filename;
         }
 
         // If we saved a new image and had an old one, delete the old file
         if ($savedUrl && $existingUrl) {
-            $this->deleteStoredUrl($existingUrl);
+            $oldFile = public_path($existingUrl);
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
         }
 
         return $savedUrl;
     }
 
-    // Helper to delete a public URL that was created via Storage::url
-    private function deleteStoredUrl(string $publicUrl): void
-    {
-        // Convert '/storage/foo/bar.jpg' to 'public/foo/bar.jpg'
-        $storagePath = preg_replace('#^/storage/#', 'public/', $publicUrl);
-        if ($storagePath) {
-            Storage::delete($storagePath);
-        }
-    }
+
 }
