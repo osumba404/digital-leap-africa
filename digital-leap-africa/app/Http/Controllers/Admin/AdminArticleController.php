@@ -40,7 +40,10 @@ class AdminArticleController extends Controller
 
         // Handle image upload (preferred)
         if ($request->hasFile('featured_image')) {
-            $data['featured_image'] = $request->file('featured_image')->store('public/articles');
+            $file = $request->file('featured_image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/articles'), $filename);
+            $data['featured_image'] = '/storage/articles/' . $filename;
         }
 
         $article = Article::create($data);
@@ -73,9 +76,15 @@ class AdminArticleController extends Controller
         // Handle image replacement
         if ($request->hasFile('featured_image')) {
             if ($article->featured_image) {
-                Storage::delete($article->featured_image);
+                $oldFile = public_path($article->featured_image);
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
             }
-            $data['featured_image'] = $request->file('featured_image')->store('public/articles');
+            $file = $request->file('featured_image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/articles'), $filename);
+            $data['featured_image'] = '/storage/articles/' . $filename;
         }
 
         $article->update($data);
@@ -87,7 +96,10 @@ class AdminArticleController extends Controller
     public function destroy(Article $article)
     {
         if ($article->featured_image) {
-            Storage::delete($article->featured_image);
+            $oldFile = public_path($article->featured_image);
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
         }
 
         $article->delete();

@@ -41,8 +41,10 @@ class AboutController extends Controller
         ]);
         
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('public/about');
-            $validated['image_path'] = $path;
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/about'), $filename);
+            $validated['image_path'] = '/storage/about/' . $filename;
         }
 
         // Transform bullet_points_text (one per line) to array
@@ -79,10 +81,15 @@ class AboutController extends Controller
         
         if ($request->hasFile('image')) {
             if ($section->image_path) {
-                Storage::delete($section->image_path);
+                $oldFile = public_path($section->image_path);
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
             }
-            $path = $request->file('image')->store('public/about');
-            $validated['image_path'] = $path;
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/about'), $filename);
+            $validated['image_path'] = '/storage/about/' . $filename;
         }
         
         // Transform bullet_points_text (one per line) to array
@@ -102,7 +109,10 @@ class AboutController extends Controller
     public function destroySection(AboutSection $section)
     {
         if ($section->image_path) {
-            Storage::delete($section->image_path);
+            $oldFile = public_path($section->image_path);
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
         }
         $section->delete();
         return back()->with('success', 'Section deleted successfully.');
@@ -131,8 +141,10 @@ class AboutController extends Controller
         ]);
         
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('public/team');
-            $validated['image_path'] = $path;
+            $file = $request->file('photo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/team'), $filename);
+            $validated['image_path'] = '/storage/team/' . $filename;
         }
 
         TeamMember::create($validated);
@@ -165,10 +177,15 @@ class AboutController extends Controller
         if ($request->hasFile('photo')) {
             // Delete old photo if exists
             if ($teamMember->photo_path) {
-                Storage::delete($teamMember->photo_path);
+                $oldFile = public_path($teamMember->photo_path);
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
             }
-            $path = $request->file('photo')->store('public/team');
-            $validated['image_path'] = $path;
+            $file = $request->file('photo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/team'), $filename);
+            $validated['image_path'] = '/storage/team/' . $filename;
         }
 
         $teamMember->update($validated);
@@ -180,7 +197,10 @@ class AboutController extends Controller
     public function destroyTeamMember(TeamMember $teamMember)
     {
         if ($teamMember->photo_path) {
-            Storage::delete($teamMember->photo_path);
+            $oldFile = public_path($teamMember->photo_path);
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
         }
         $teamMember->delete();
         return back()->with('success', 'Team member deleted successfully.');
@@ -202,8 +222,10 @@ class AboutController extends Controller
             'order' => 'integer',
         ]);
 
-        $path = $request->file('logo')->store('public/partners');
-        $validated['logo_path'] = $path;
+        $file = $request->file('logo');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('storage/partners'), $filename);
+        $validated['logo_path'] = '/storage/partners/' . $filename;
 
         Partner::create($validated);
 
@@ -229,10 +251,15 @@ class AboutController extends Controller
         if ($request->hasFile('logo')) {
             // Delete old logo if exists
             if ($partner->logo_path) {
-                Storage::delete($partner->logo_path);
+                $oldFile = public_path($partner->logo_path);
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
             }
-            $path = $request->file('logo')->store('public/partners');
-            $validated['logo_path'] = $path;
+            $file = $request->file('logo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/partners'), $filename);
+            $validated['logo_path'] = '/storage/partners/' . $filename;
         }
 
         $partner->update($validated);
@@ -244,7 +271,10 @@ class AboutController extends Controller
     public function destroyPartner(Partner $partner)
     {
         if ($partner->logo_path) {
-            Storage::delete($partner->logo_path);
+            $oldFile = public_path($partner->logo_path);
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
         }
         $partner->delete();
         return back()->with('success', 'Partner deleted successfully.');

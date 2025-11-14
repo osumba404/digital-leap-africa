@@ -35,11 +35,17 @@ class CertificateTemplateController extends Controller
         ]);
 
         if ($request->hasFile('signature_image')) {
-            $validated['signature_image'] = $request->file('signature_image')->store('certificates', 'public');
+            $file = $request->file('signature_image');
+            $filename = time() . '_signature_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/certificates'), $filename);
+            $validated['signature_image'] = '/storage/certificates/' . $filename;
         }
 
         if ($request->hasFile('logo_image')) {
-            $validated['logo_image'] = $request->file('logo_image')->store('certificates', 'public');
+            $file = $request->file('logo_image');
+            $filename = time() . '_logo_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/certificates'), $filename);
+            $validated['logo_image'] = '/storage/certificates/' . $filename;
         }
 
         CertificateTemplate::create($validated);
@@ -72,16 +78,28 @@ class CertificateTemplateController extends Controller
 
         if ($request->hasFile('signature_image')) {
             if ($certificateTemplate->signature_image) {
-                Storage::disk('public')->delete($certificateTemplate->signature_image);
+                $oldFile = public_path($certificateTemplate->signature_image);
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
             }
-            $validated['signature_image'] = $request->file('signature_image')->store('certificates', 'public');
+            $file = $request->file('signature_image');
+            $filename = time() . '_signature_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/certificates'), $filename);
+            $validated['signature_image'] = '/storage/certificates/' . $filename;
         }
 
         if ($request->hasFile('logo_image')) {
             if ($certificateTemplate->logo_image) {
-                Storage::disk('public')->delete($certificateTemplate->logo_image);
+                $oldFile = public_path($certificateTemplate->logo_image);
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
             }
-            $validated['logo_image'] = $request->file('logo_image')->store('certificates', 'public');
+            $file = $request->file('logo_image');
+            $filename = time() . '_logo_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/certificates'), $filename);
+            $validated['logo_image'] = '/storage/certificates/' . $filename;
         }
 
         $certificateTemplate->update($validated);
@@ -93,11 +111,17 @@ class CertificateTemplateController extends Controller
     public function destroy(CertificateTemplate $certificateTemplate): RedirectResponse
     {
         if ($certificateTemplate->signature_image) {
-            Storage::disk('public')->delete($certificateTemplate->signature_image);
+            $oldFile = public_path($certificateTemplate->signature_image);
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
         }
 
         if ($certificateTemplate->logo_image) {
-            Storage::disk('public')->delete($certificateTemplate->logo_image);
+            $oldFile = public_path($certificateTemplate->logo_image);
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
         }
 
         $certificateTemplate->delete();

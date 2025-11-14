@@ -41,8 +41,10 @@ class BadgeController extends Controller
 
         $imgUrl = null;
         if ($request->hasFile('badge_image')) {
-            $path = $request->file('badge_image')->store('badges', 'public');
-            $imgUrl = Storage::url($path);
+            $file = $request->file('badge_image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/badges'), $filename);
+            $imgUrl = '/storage/badges/' . $filename;
         }
 
         Badge::create([
@@ -78,12 +80,16 @@ class BadgeController extends Controller
         if ($request->hasFile('badge_image')) {
             // Delete old image if exists
             if ($badge->img_url) {
-                $oldPath = str_replace('/storage/', '', $badge->img_url);
-                Storage::disk('public')->delete($oldPath);
+                $oldFile = public_path($badge->img_url);
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
             }
             
-            $path = $request->file('badge_image')->store('badges', 'public');
-            $imgUrl = Storage::url($path);
+            $file = $request->file('badge_image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/badges'), $filename);
+            $imgUrl = '/storage/badges/' . $filename;
         }
 
         $badge->update([
@@ -103,8 +109,10 @@ class BadgeController extends Controller
     {
         // Delete image if exists
         if ($badge->img_url) {
-            $path = str_replace('/storage/', '', $badge->img_url);
-            Storage::disk('public')->delete($path);
+            $oldFile = public_path($badge->img_url);
+            if (file_exists($oldFile)) {
+                unlink($oldFile);
+            }
         }
 
         $badge->delete();
