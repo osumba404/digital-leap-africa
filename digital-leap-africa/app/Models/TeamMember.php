@@ -30,7 +30,27 @@ class TeamMember extends Model
 
     public function getImageUrlAttribute()
     {
-        return $this->image_path ? Storage::url($this->image_path) : asset('images/default-avatar.png');
+        if (!$this->image_path) {
+            return asset('images/default-avatar.svg');
+        }
+        
+        // If already an absolute URL, return as is
+        if (preg_match('/^https?:\/\//i', $this->image_path)) {
+            return $this->image_path;
+        }
+        
+        // If it's already a full path starting with /storage/, return as URL
+        if (str_starts_with($this->image_path, '/storage/')) {
+            return url($this->image_path);
+        }
+        
+        // If it contains 'team/' already, use Storage::url for old format
+        if (str_contains($this->image_path, 'team/')) {
+            return Storage::disk('public')->url($this->image_path);
+        }
+        
+        // Default: assume it's just a filename in team directory
+        return url('/storage/team/' . $this->image_path);
     }
 
     // Scopes

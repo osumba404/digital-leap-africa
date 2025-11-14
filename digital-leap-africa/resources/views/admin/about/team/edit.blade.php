@@ -30,9 +30,9 @@
             
             <div class="mb-3">
                 <label for="photo" class="form-label text-gray-200">Photo</label>
-                @if($teamMember->photo_path)
+                @if($teamMember->image_path)
                     <div class="mb-2">
-                        <img src="{{ Storage::url($teamMember->photo_path) }}" alt="{{ $teamMember->name }}" 
+                        <img src="{{ $teamMember->image_url }}" alt="{{ $teamMember->name }}" 
                              class="img-thumbnail" style="max-width: 150px;">
                     </div>
                 @endif
