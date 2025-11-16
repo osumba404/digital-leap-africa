@@ -43,7 +43,7 @@
                 <td class="muted">{{ optional($topic->created_at)->diffForHumans() }}</td>
                 <td style="text-align:right;">
                   <div style="display:inline-flex;gap:0.5rem;">
-                    <a href="{{ route('admin.courses.lessons.index', $course) }}" class="btn btn-edit" style="font-size:0.85rem;padding:0.5rem 0.75rem;">
+                    <a href="{{ route('admin.topics.lessons.index', [$course, $topic]) }}" class="btn btn-edit" style="font-size:0.85rem;padding:0.5rem 0.75rem;">
                       <i class="fas fa-book-open me-1"></i>Lessons
                     </a>
                     <a href="{{ route('admin.courses.topics.edit', [$course, $topic]) }}" class="btn-outline" style="font-size:0.85rem;padding:0.5rem 0.75rem;">Edit</a>

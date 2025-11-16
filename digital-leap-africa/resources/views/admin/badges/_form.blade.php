@@ -31,7 +31,7 @@
     <label for="badge_image">Badge Image</label>
     @if(isset($badge) && $badge->img_url)
         <div style="margin-bottom: 1rem;">
-            <img src="{{ $badge->img_url }}" alt="Current badge image" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(0, 201, 255, 0.3);">
+            <img src="{{ $badge->image_url }}" alt="Current badge image" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(0, 201, 255, 0.3);">
             <p style="font-size: 0.85rem; color: var(--cool-gray); margin-top: 0.5rem;">Current image (upload a new one to replace)</p>
         </div>
     @endif

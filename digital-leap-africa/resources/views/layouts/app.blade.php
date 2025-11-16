@@ -1731,7 +1731,7 @@
             <a href="{{ url('/') }}" class="brand">
             @if(!empty($siteSettings['logo_url']))
             <img
-                src="{{ $siteSettings['logo_url'] }}"
+                src="{{ url($siteSettings['logo_url']) }}"
                 alt="{{ $siteSettings['site_name'] ?? 'Site Logo' }}"
                 class="site-logo"
                 style="height:44px;width:44px;object-fit:cover;border-radius:50%;box-shadow:0 2px 10px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,0.2);"

@@ -161,8 +161,8 @@
             @forelse($badges as $badge)
             <tr>
                 <td>
-                    @if($badge->img_url)
-                        <img src="{{ $badge->img_url }}" alt="{{ $badge->badge_name }}" class="badge-image">
+                    @if($badge->image_url)
+                        <img src="{{ $badge->image_url }}" alt="{{ $badge->badge_name }}" class="badge-image">
                     @else
                         <div class="badge-placeholder">
                             <i class="fas fa-medal"></i>

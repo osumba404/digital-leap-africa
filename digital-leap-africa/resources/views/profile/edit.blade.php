@@ -799,8 +799,8 @@
             @forelse($user->badges as $badge)
                 <div class="mobile-badge-card" style="display:grid; grid-template-columns: auto 1fr; gap:1rem; padding:1rem; background: rgba(0, 201, 255, 0.05); border: 1px solid rgba(0, 201, 255, 0.2); border-radius: 12px; margin-bottom: 1rem;">
                     <div>
-                        @if($badge->img_url)
-                            <img src="{{ $badge->img_url }}" alt="{{ $badge->badge_name }}" class="badge-image" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(0, 201, 255, 0.4);">
+                        @if($badge->image_url)
+                            <img src="{{ $badge->image_url }}" alt="{{ $badge->badge_name }}" class="badge-image" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(0, 201, 255, 0.4);">
                         @else
                             <div class="badge-placeholder" style="width: 60px; height: 60px; border-radius: 8px; background: linear-gradient(135deg, rgba(0, 201, 255, 0.3), rgba(138, 43, 226, 0.3)); display: flex; align-items: center; justify-content: center; border: 2px solid rgba(0, 201, 255, 0.4);">
                                 <i class="fas fa-medal" style="font-size: 1.5rem; color: var(--cyan-accent);"></i>
