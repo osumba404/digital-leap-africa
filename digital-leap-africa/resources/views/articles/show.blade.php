@@ -44,6 +44,17 @@
 <meta name="geo.placename" content="Nairobi">
 <meta name="language" content="English">
 <meta name="theme-color" content="#0a192f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<meta name="referrer" content="origin-when-cross-origin">
+<meta name="article:reading_time" content="{{ max(1, ceil(str_word_count(strip_tags($article->content ?? ''))/200)) }}">
+<meta name="article:word_count" content="{{ str_word_count(strip_tags($article->content ?? '')) }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
 
 <!-- Structured Data -->
 <script type="application/ld+json">
@@ -158,6 +169,63 @@
 }
 </script>
 @endif
+
+<!-- WebPage Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "{{ $article->title }}",
+  "description": "{{ Str::limit(strip_tags($article->content ?? ''), 160) }}",
+  "url": "{{ route('blog.show', $article) }}",
+  "mainEntity": {
+    "@id": "{{ route('blog.show', $article) }}#article"
+  },
+  "breadcrumb": {
+    "@id": "{{ route('blog.show', $article) }}#breadcrumb"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Digital Leap Africa",
+    "url": "{{ url('/') }}"
+  },
+  "potentialAction": [
+    {
+      "@type": "ReadAction",
+      "target": "{{ route('blog.show', $article) }}"
+    },
+    {
+      "@type": "ShareAction",
+      "target": "{{ route('blog.show', $article) }}"
+    }
+  ]
+}
+</script>
+
+<!-- Person/Author Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ $article->author->name ?? 'Digital Leap Africa' }}",
+  "url": "{{ url('/') }}",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Digital Leap Africa",
+    "url": "{{ url('/') }}"
+  },
+  "jobTitle": "Content Creator",
+  "knowsAbout": [
+    "Web Development",
+    "Technology",
+    "Digital Transformation",
+    "Programming",
+    "Laravel",
+    "JavaScript",
+    "PHP"
+  ]
+}
+</script>
 @endpush
 
 <style>
@@ -596,6 +664,49 @@
       text-align: center;
     }
   }
+
+  /* Lazy Loading Styles */
+  .lazy-load {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .lazy-load.loaded {
+    opacity: 1;
+  }
+  
+  .article-featured-image.lazy-load {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+  
+  @keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  
+  [data-theme="light"] .article-featured-image.lazy-load {
+    background: linear-gradient(90deg, #f8f9fa 25%, #e9ecef 50%, #f8f9fa 75%);
+    background-size: 200% 100%;
+  }
+  
+  /* Performance optimizations */
+  .article-featured-image {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    content-visibility: auto;
+    contain-intrinsic-size: 1200px 600px;
+    aspect-ratio: 2/1;
+  }
+  
+  /* Reduce layout shifts */
+  .article-content img {
+    height: auto;
+    max-width: 100%;
+    aspect-ratio: attr(width) / attr(height);
+  }
 </style>
 
 @section('content')
@@ -641,8 +752,14 @@
     <div class="container">
       <div class="row g-4">
         <div class="col-lg-8 order-lg-1 order-2">
-          @if($article->featured_image_url)
-            <img class="article-featured-image" src="{{ $article->featured_image_url }}" alt="{{ $article->title }}">
+          @if($article->optimized_image ?? $article->featured_image_url)
+            <img 
+              class="article-featured-image lazy-load" 
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 600'%3E%3Crect width='1200' height='600' fill='%23f3f4f6'/%3E%3C/svg%3E"
+              data-src="{{ $article->optimized_image ?? $article->featured_image_url }}" 
+              alt="{{ $article->title }}"
+              loading="lazy"
+            >
           @endif
 
           <div class="article-content">
@@ -1091,6 +1208,54 @@
     // Close modal when clicking outside
     document.getElementById('shareModal')?.addEventListener('click', function(e) {
       if (e.target === this) closeShareModal();
+    });
+
+    // Intersection Observer for lazy loading
+    if ('IntersectionObserver' in window) {
+      const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            const src = img.getAttribute('data-src');
+            if (src) {
+              img.src = src;
+              img.classList.remove('lazy-load');
+              img.classList.add('loaded');
+              observer.unobserve(img);
+            }
+          }
+        });
+      }, {
+        rootMargin: '50px 0px',
+        threshold: 0.01
+      });
+
+      // Observe all lazy load images
+      document.querySelectorAll('.lazy-load').forEach(img => {
+        imageObserver.observe(img);
+      });
+    } else {
+      // Fallback for browsers without Intersection Observer
+      document.querySelectorAll('.lazy-load').forEach(img => {
+        const src = img.getAttribute('data-src');
+        if (src) {
+          img.src = src;
+        }
+      });
+    }
+
+    // Preload critical images immediately
+    const criticalImages = document.querySelectorAll('.article-featured-image[data-src]');
+    criticalImages.forEach(img => {
+      const src = img.getAttribute('data-src');
+      if (src) {
+        const preloadImg = new Image();
+        preloadImg.onload = () => {
+          img.src = src;
+          img.classList.add('loaded');
+        };
+        preloadImg.src = src;
+      }
     });
   </script>
 @endsection

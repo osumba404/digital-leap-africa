@@ -7,6 +7,9 @@ use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+use App\Services\ImageOptimizationService;
 
 class ArticlesController extends Controller
 {
@@ -15,45 +18,72 @@ class ArticlesController extends Controller
         $tag = $request->query('tag');
         $search = $request->query('search');
 
-        $articles = Article::query()
-            ->whereNotNull('published_at')
-            ->when($tag, fn($q) => $q->withTag($tag))
-            ->when($search, function($q) use ($search) {
-                $q->where(function($query) use ($search) {
-                    $query->where('title', 'LIKE', "%{$search}%")
-                          ->orWhere('content', 'LIKE', "%{$search}%")
-                          ->orWhere('excerpt', 'LIKE', "%{$search}%");
-                });
-            })
-            ->orderByDesc('published_at')
-            ->paginate(9)
-            ->appends(['tag' => $tag, 'search' => $search]);
+        // Cache key for articles list
+        $cacheKey = 'articles_' . md5($tag . $search . $request->get('page', 1));
+        
+        $articles = Cache::remember($cacheKey, 300, function() use ($tag, $search) {
+            return Article::query()
+                ->whereNotNull('published_at')
+                ->when($tag, fn($q) => $q->withTag($tag))
+                ->when($search, function($q) use ($search) {
+                    $q->where(function($query) use ($search) {
+                        $query->where('title', 'LIKE', "%{$search}%")
+                              ->orWhere('content', 'LIKE', "%{$search}%")
+                              ->orWhere('excerpt', 'LIKE', "%{$search}%");
+                    });
+                })
+                ->orderByDesc('published_at')
+                ->paginate(9)
+                ->appends(['tag' => $tag, 'search' => $search]);
+        });
+
+        // Optimize images for each article
+        foreach ($articles as $article) {
+            $article->optimized_image = $this->getOptimizedImage($article);
+        }
 
         return view('articles.index', compact('articles', 'tag', 'search'));
     }
 
     public function show(Article $article): View
     {
-        $article->load(['author', 'comments.user']);
+        // Cache article data
+        $cacheKey = 'article_' . $article->id . '_' . $article->updated_at->timestamp;
+        
+        $articleData = Cache::remember($cacheKey, 3600, function() use ($article) {
+            $article->load(['author', 'comments.user']);
+            return $article;
+        });
 
         $tags = is_array($article->tags ?? null) ? $article->tags : [];
 
-        $relatedQuery = Article::query()
-            ->where('id', '!=', $article->id)
-            ->whereNotNull('published_at');
+        // Cache related articles
+        $relatedCacheKey = 'related_articles_' . $article->id . '_' . md5(implode(',', $tags));
+        
+        $related = Cache::remember($relatedCacheKey, 1800, function() use ($article, $tags) {
+            $relatedQuery = Article::query()
+                ->where('id', '!=', $article->id)
+                ->whereNotNull('published_at');
 
-        if (!empty($tags)) {
-            $relatedQuery->where(function ($q) use ($tags) {
-                foreach ($tags as $t) {
-                    $q->orWhereJsonContains('tags', $t);
-                }
-            });
+            if (!empty($tags)) {
+                $relatedQuery->where(function ($q) use ($tags) {
+                    foreach ($tags as $t) {
+                        $q->orWhereJsonContains('tags', $t);
+                    }
+                });
+            }
+
+            return $relatedQuery
+                ->latest('published_at')
+                ->take(5)
+                ->get();
+        });
+
+        // Optimize images
+        $article->optimized_image = $this->getOptimizedImage($article);
+        foreach ($related as $relatedArticle) {
+            $relatedArticle->optimized_image = $this->getOptimizedImage($relatedArticle);
         }
-
-        $related = $relatedQuery
-            ->latest('published_at')
-            ->take(5)
-            ->get();
 
         return view('articles.show', compact('article', 'related'));
     }
@@ -204,5 +234,23 @@ class ArticlesController extends Controller
         }
         
         return back();
+    }
+
+    /**
+     * Get optimized image URL for an article
+     */
+    private function getOptimizedImage($article)
+    {
+        $imageUrl = $article->featured_image_url 
+            ?? $article->image_url 
+            ?? $article->cover_image 
+            ?? $article->thumbnail 
+            ?? $article->featured_image;
+
+        if (!$imageUrl) {
+            return null;
+        }
+
+        return ImageOptimizationService::getOptimizedImageUrl($imageUrl, 800, 400);
     }
 }

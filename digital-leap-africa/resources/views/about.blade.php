@@ -62,7 +62,29 @@
 }
 </script>
 
-<!-- Organization Schema -->
+<!-- Preload critical images -->
+@php
+  $about = \App\Models\AboutSection::where('section_type', 'about')->active()->first();
+  $mission = \App\Models\AboutSection::where('section_type','mission')->active()->first();
+  $vision = \App\Models\AboutSection::where('section_type','vision')->active()->first();
+  $teamMembers = \App\Models\TeamMember::active()->ordered()->take(2)->get();
+@endphp
+@if($about && $about->image_url)
+<link rel="preload" as="image" href="{{ $about->image_url }}" fetchpriority="high">
+@endif
+@if($mission && $mission->image_url)
+<link rel="preload" as="image" href="{{ $mission->image_url }}" fetchpriority="low">
+@endif
+@if($vision && $vision->image_url)
+<link rel="preload" as="image" href="{{ $vision->image_url }}" fetchpriority="low">
+@endif
+@foreach($teamMembers as $member)
+  @if($member->image_url)
+<link rel="preload" as="image" href="{{ $member->image_url }}" fetchpriority="low">
+  @endif
+@endforeach
+
+<!-- Organization Schema with Mission & Vision -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -73,6 +95,12 @@
   "url": "{{ url('/') }}",
   "logo": "{{ asset('images/logo.png') }}",
   "foundingDate": "2024",
+  @if($mission)
+  "mission": "{{ strip_tags($mission->content) }}",
+  @endif
+  @if($vision)
+  "vision": "{{ strip_tags($vision->content) }}",
+  @endif
   "address": {
     "@type": "PostalAddress",
     "addressCountry": "Kenya",
@@ -123,6 +151,75 @@
   }
 }
 </script>
+
+<!-- Team Members Schema -->
+@php $allTeamMembers = \App\Models\TeamMember::active()->ordered()->get(); @endphp
+@if($allTeamMembers->count())
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Digital Leap Africa Team Members",
+  "description": "Meet our dedicated team driving digital transformation across Africa",
+  "numberOfItems": {{ $allTeamMembers->count() }},
+  "itemListElement": [
+    @foreach($allTeamMembers as $index => $member)
+    {
+      "@type": "Person",
+      "position": {{ $index + 1 }},
+      "name": "{{ $member->name }}",
+      "jobTitle": "{{ $member->role }}",
+      "description": "{{ strip_tags($member->bio) }}",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Digital Leap Africa"
+      }
+      @if($member->email)
+      ,"email": "{{ $member->email }}"
+      @endif
+      @if($member->image_url)
+      ,"image": "{{ $member->image_url }}"
+      @endif
+      @if($member->linkedin_url || $member->twitter_url || $member->facebook_url)
+      ,"sameAs": [
+        @if($member->linkedin_url)"{{ $member->linkedin_url }}"@endif
+        @if($member->twitter_url)@if($member->linkedin_url),@endif"{{ $member->twitter_url }}"@endif
+        @if($member->facebook_url)@if($member->linkedin_url || $member->twitter_url),@endif"{{ $member->facebook_url }}"@endif
+      ]
+      @endif
+    }@if(!$loop->last),@endif
+    @endforeach
+  ]
+}
+</script>
+@endif
+
+<!-- Values Schema -->
+@php $values = \App\Models\AboutSection::where('section_type','values')->active()->ordered()->get(); @endphp
+@if($values->count())
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Digital Leap Africa Core Values",
+  "description": "Principles that shape our culture and impact",
+  "numberOfItems": {{ $values->count() }},
+  "itemListElement": [
+    @foreach($values as $index => $value)
+    {
+      "@type": "Thing",
+      "position": {{ $index + 1 }},
+      "name": "{{ $value->title }}",
+      "description": "{{ strip_tags($value->content) }}"
+      @if($value->image_url)
+      ,"image": "{{ $value->image_url }}"
+      @endif
+    }@if(!$loop->last),@endif
+    @endforeach
+  ]
+}
+</script>
+@endif
 @endpush
 
 @push('styles')
@@ -691,9 +788,9 @@
           <div class="about-card-image-section">
               <div class="about-card-image">
                   @if($about->image_path)
-                      <img src="{{ $about->image_url }}" alt="{{ $about->title }}">
+                      <img src="{{ $about->image_url }}" alt="{{ $about->title }}" loading="lazy" fetchpriority="high">
                   @else
-                      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="{{ $about->title }}">
+                      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="{{ $about->title }}" loading="lazy" fetchpriority="high">
                   @endif
                   <div class="about-image-overlay">
                       <div class="about-icon-circle">
@@ -883,9 +980,9 @@
           <div class="vision-header">
             <div class="vision-image">
               @if(!empty($mission->image_path))
-                <img src="{{ $mission->image_url }}" alt="{{ $mission->title }}">
+                <img src="{{ $mission->image_url }}" alt="{{ $mission->title }}" loading="lazy" fetchpriority="low">
               @else
-                <img src="https://via.placeholder.com/1000x600.png?text=Mission" alt="{{ $mission->title }}">
+                <img src="https://via.placeholder.com/1000x600.png?text=Mission" alt="{{ $mission->title }}" loading="lazy" fetchpriority="low">
               @endif
             </div>
             <div class="vision-overlay">
@@ -934,9 +1031,9 @@
           </div>
           <div class="geometric-image">
             @if(!empty($vision->image_path))
-              <img src="{{ $vision->image_url }}" alt="{{ $vision->title }}">
+              <img src="{{ $vision->image_url }}" alt="{{ $vision->title }}" loading="lazy" fetchpriority="low">
             @else
-              <img src="https://via.placeholder.com/1000x600.png?text=Vision" alt="{{ $vision->title }}">
+              <img src="https://via.placeholder.com/1000x600.png?text=Vision" alt="{{ $vision->title }}" loading="lazy" fetchpriority="low">
             @endif
           </div>
         </div>
@@ -961,9 +1058,9 @@
           <div class="vision-header">
             <div class="vision-image">
               @if(!empty($value->image_path))
-                <img src="{{ $value->image_url }}" alt="{{ $value->title }}">
+                <img src="{{ $value->image_url }}" alt="{{ $value->title }}" loading="lazy" fetchpriority="low">
               @else
-                <img src="https://via.placeholder.com/1000x600.png?text=Value" alt="{{ $value->title }}">
+                <img src="https://via.placeholder.com/1000x600.png?text=Value" alt="{{ $value->title }}" loading="lazy" fetchpriority="low">
               @endif
             </div>
             <div class="vision-overlay">
@@ -1008,9 +1105,9 @@
         <div class="tm-card fade-in-up">
           <div class="tm-image-container">
             @if($member->image_path)
-              <img src="{{ $member->image_url }}" alt="{{ $member->name }}">
+              <img src="{{ $member->image_url }}" alt="{{ $member->name }}" loading="lazy" fetchpriority="low">
             @else
-              <img src="https://via.placeholder.com/600x600.png?text=Profile" alt="{{ $member->name }}">
+              <img src="https://via.placeholder.com/600x600.png?text=Profile" alt="{{ $member->name }}" loading="lazy" fetchpriority="low">
             @endif
             <div class="tm-image-overlay"></div>
           </div>
@@ -1067,7 +1164,7 @@
         @foreach($partners as $partner)
           <a href="{{ $partner->website_url }}" target="_blank" class="partner-card fade-in-up">
             @if($partner->logo_path)
-              <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" style="max-height: 42px; width:auto; object-fit:contain;">
+              <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" style="max-height: 42px; width:auto; object-fit:contain;" loading="lazy" fetchpriority="low">
             @else
               <span class="muted">{{ $partner->name }}</span>
             @endif

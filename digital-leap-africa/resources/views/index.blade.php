@@ -109,6 +109,23 @@
 <link rel="dns-prefetch" href="//fonts.gstatic.com">
 <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
 
+<!-- Preload critical images -->
+@php
+  $heroSlides = $siteSettings['hero_slides'] ?? [];
+  $firstSlideImage = !empty($heroSlides) && !empty($heroSlides[0]['image']) ? $heroSlides[0]['image'] : null;
+@endphp
+@if($firstSlideImage)
+<link rel="preload" as="image" href="{{ $firstSlideImage }}" fetchpriority="high">
+@endif
+
+@if(!empty($heroSlides) && count($heroSlides) > 1)
+  @foreach(array_slice($heroSlides, 1, 2) as $slide)
+    @if(!empty($slide['image']))
+<link rel="preload" as="image" href="{{ $slide['image'] }}" fetchpriority="low">
+    @endif
+  @endforeach
+@endif
+
 <!-- Additional SEO Meta Tags -->
 <meta name="theme-color" content="#2E78C5">
 <meta name="msapplication-TileColor" content="#2E78C5">
@@ -338,7 +355,7 @@
         @if(($slide['enabled'] ?? true))
         <div class="fade-slide {{ $i === 0 ? 'is-active' : '' }}">
           @if(!empty($slide['image']))
-            <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] ?? 'Hero Slide' }}" class="hero-img">
+            <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] ?? 'Hero Slide' }}" class="hero-img" @if($i > 0) loading="lazy" @endif fetchpriority="{{ $i === 0 ? 'high' : 'low' }}">
           @endif
           <div class="hero-overlay"></div>
           <div class="hero-stars"></div>
@@ -1873,9 +1890,9 @@ animation: twinkle 2s infinite ease-in-out;
           <div class="about-card-image-section">
               <div class="about-card-image">
                   @if($about->image_url)
-                      <img src="{{ $about->image_url }}" alt="{{ $about->title }}">
+                      <img src="{{ $about->image_url }}" alt="{{ $about->title }}" loading="lazy" fetchpriority="low">
                   @else
-                      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="{{ $about->title }}">
+                      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="{{ $about->title }}" loading="lazy" fetchpriority="low">
                   @endif
                   <div class="about-image-overlay">
                       <div class="about-icon-circle">
@@ -1968,7 +1985,7 @@ animation: twinkle 2s infinite ease-in-out;
                     <article class="article-card" itemscope itemtype="https://schema.org/Article" itemprop="itemListElement">
                         <div class="article-image">
                             @if($image)
-                                <img src="{{ $image }}" alt="{{ $title }} - Digital Leap Africa Article" itemprop="image">
+                                <img src="{{ $image }}" alt="{{ $title }} - Digital Leap Africa Article" itemprop="image" loading="lazy" fetchpriority="low">
                             @else
                                 <div class="article-placeholder">
                                     <i class="fas fa-newspaper"></i>
@@ -2065,7 +2082,7 @@ animation: twinkle 2s infinite ease-in-out;
                     <div class="course-horizontal-card" itemscope itemtype="https://schema.org/Course" itemprop="itemListElement">
                         <div class="course-image-wrapper">
                             @if($courseImage)
-                                <img src="{{ $courseImage }}" alt="{{ $courseTitle }} - Online Course at Digital Leap Africa" class="course-img" itemprop="image">
+                                <img src="{{ $courseImage }}" alt="{{ $courseTitle }} - Online Course at Digital Leap Africa" class="course-img" itemprop="image" loading="lazy" fetchpriority="low">
                             @else
                                 <div class="course-img-placeholder">
                                     <i class="fas fa-graduation-cap"></i>
@@ -2663,7 +2680,7 @@ window.addEventListener('beforeunload', () => {
         @foreach($partners as $p)
           <a class="partner-item" href="{{ $p->website_url ?: '#' }}" @if(!empty($p->website_url)) target="_blank" rel="noopener" @endif title="{{ $p->name }}" itemscope itemtype="https://schema.org/Organization" itemprop="itemListElement">
             @if(!empty($p->logo_url))
-              <img src="{{ $p->logo_url }}" alt="{{ $p->name }} - Digital Leap Africa Partner" itemprop="logo">
+              <img src="{{ $p->logo_url }}" alt="{{ $p->name }} - Digital Leap Africa Partner" itemprop="logo" loading="lazy" fetchpriority="low">
             @else
               <div class="partner-fallback" itemprop="name">{{ \Illuminate\Support\Str::limit($p->name, 20) }}</div>
             @endif
@@ -2836,9 +2853,9 @@ window.addEventListener('beforeunload', () => {
 
           <article class="card card-style-2" itemscope itemtype="https://schema.org/Event" itemprop="itemListElement">
             @if($image)
-              <img src="{{ $image }}" alt="{{ $title }}" class="card-image">
+              <img src="{{ $image }}" alt="{{ $title }}" class="card-image" loading="lazy" fetchpriority="low">
             @else
-              <img src="https://via.placeholder.com/1200x700.png?text=Event" alt="{{ $title }}" class="card-image">
+              <img src="https://via.placeholder.com/1200x700.png?text=Event" alt="{{ $title }}" class="card-image" loading="lazy" fetchpriority="low">
             @endif
             @if($category)
               <span class="event-category">{{ $category }}</span>

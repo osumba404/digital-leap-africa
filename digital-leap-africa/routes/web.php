@@ -77,6 +77,45 @@ Route::get('/mpesa/callback', function() {
     ]);
 });
 
+// Image optimization route (for future use)
+// Image optimization route (for future use)
+Route::get('/optimize-image', function(\Illuminate\Http\Request $request) {
+    $url = $request->query('url');
+    $width = $request->query('w', 800);
+    $height = $request->query('h', 400);
+    $quality = $request->query('q', 85);
+    
+    if (!$url) {
+        abort(400, 'URL parameter is required');
+    }
+    
+    $optimizedUrl = \App\Services\ImageOptimizationService::getOptimizedImageUrl($url, $width, $height, $quality);
+    
+    return redirect($optimizedUrl);
+})->name('image.optimize');
+
+// Sitemap routes
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap.index');
+Route::get('/sitemap-main.xml', [\App\Http\Controllers\SitemapController::class, 'main'])->name('sitemap.main');
+Route::get('/sitemap-blog.xml', [\App\Http\Controllers\SitemapController::class, 'blog'])->name('sitemap.blog');
+
+// Robots.txt route
+Route::get('/robots.txt', function() {
+    $robots = "User-agent: *\n";
+    $robots .= "Allow: /\n";
+    $robots .= "Disallow: /admin/\n";
+    $robots .= "Disallow: /dashboard\n";
+    $robots .= "Disallow: /profile\n";
+    $robots .= "Disallow: /login\n";
+    $robots .= "Disallow: /register\n";
+    $robots .= "Disallow: /password\n";
+    $robots .= "Disallow: /test-*\n";
+    $robots .= "\n";
+    $robots .= "Sitemap: " . url('/sitemap.xml') . "\n";
+    
+    return response($robots, 200, ['Content-Type' => 'text/plain']);
+})->name('robots');
+
 // Test M-Pesa callback route (remove in production)
 Route::get('/test-mpesa-callback', function() {
     // Simulate a successful M-Pesa callback

@@ -35,6 +35,15 @@
 <meta name="geo.placename" content="Nairobi">
 <meta name="language" content="English">
 <meta name="theme-color" content="#0a192f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<meta name="referrer" content="origin-when-cross-origin">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
 
 <!-- Structured Data -->
 <script type="application/ld+json">
@@ -104,6 +113,56 @@
       "name": "Blog",
       "item": "{{ route('blog.index') }}"
     }
+  ]
+}
+</script>
+
+<!-- Website Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Digital Leap Africa",
+  "url": "{{ url('/') }}",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "{{ route('blog.index') }}?search={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  },
+  "sameAs": [
+    "https://twitter.com/DigitalLeapAfrica",
+    "https://linkedin.com/company/digital-leap-africa",
+    "https://github.com/digital-leap-africa"
+  ]
+}
+</script>
+
+<!-- Organization Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Digital Leap Africa",
+  "url": "{{ url('/') }}",
+  "logo": "{{ asset('images/logo.png') }}",
+  "description": "Empowering Africa through digital transformation, web development education, and technology innovation.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "Kenya",
+    "addressRegion": "Nairobi"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "url": "{{ route('contact') }}"
+  },
+  "sameAs": [
+    "https://twitter.com/DigitalLeapAfrica",
+    "https://linkedin.com/company/digital-leap-africa",
+    "https://github.com/digital-leap-africa"
   ]
 }
 </script>
@@ -183,8 +242,15 @@
         <div class="featured-article" style="margin-bottom: 3rem;">
           <div class="featured-card" style="background: var(--charcoal); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(2,12,27,0.8); border: 1px solid rgba(100, 181, 246, 0.1); display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 400px;">
             <div class="featured-image" style="position: relative; overflow: hidden;">
-              @if($pickImage($featured))
-                <img src="{{ $pickImage($featured) }}" alt="{{ $featured->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+              @if($featured->optimized_image ?? $pickImage($featured))
+                <img 
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3Crect width='800' height='400' fill='%23f3f4f6'/%3E%3C/svg%3E" 
+                  data-src="{{ $featured->optimized_image ?? $pickImage($featured) }}" 
+                  alt="{{ $featured->title }}" 
+                  class="lazy-load" 
+                  style="width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease;"
+                  loading="lazy"
+                >
               @else
                 <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #64b5f6, #00d4ff); display: flex; align-items: center; justify-content: center;">
                   <i class="fas fa-newspaper" style="font-size: 4rem; color: rgba(255,255,255,0.3);"></i>
@@ -240,10 +306,20 @@
 
           <div class="card">
             <div class="card-image-container">
-              @if($image)
-                <img src="{{ $image }}" alt="{{ $title }}" class="card-image">
+              @if($post->optimized_image ?? $image)
+                <img 
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 240'%3E%3Crect width='400' height='240' fill='%23f3f4f6'/%3E%3C/svg%3E" 
+                  data-src="{{ $post->optimized_image ?? $image }}" 
+                  alt="{{ $title }}" 
+                  class="card-image lazy-load"
+                  loading="lazy"
+                >
               @else
-                <img src="https://via.placeholder.com/1000x600.png?text=Article" alt="{{ $title }}" class="card-image">
+                <img 
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 240'%3E%3Crect width='400' height='240' fill='%23e5e7eb'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%236b7280'%3EArticle%3C/text%3E%3C/svg%3E" 
+                  alt="{{ $title }}" 
+                  class="card-image"
+                >
               @endif
               @if($category)
                 <div class="card-category">{{ $category }}</div>
@@ -451,6 +527,63 @@
   @media (max-width: 480px) {
     .newsletter-form { flex-direction: column; }
     .newsletter-cta { padding: 1.5rem; margin: 2rem 0; }
+  }
+
+  /* Lazy Loading Styles */
+  .lazy-load {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .lazy-load.loaded {
+    opacity: 1;
+  }
+  
+  .card-image.lazy-load {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+  
+  @keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  
+  [data-theme="light"] .card-image.lazy-load {
+    background: linear-gradient(90deg, #f8f9fa 25%, #e9ecef 50%, #f8f9fa 75%);
+    background-size: 200% 100%;
+  }
+  
+  /* Performance optimizations */
+  .card-image, .featured-image img {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+  
+  .card:hover .card-image {
+    transform: scale(1.05) translateZ(0);
+  }
+  
+  /* Critical resource hints */
+  .featured-image img {
+    content-visibility: auto;
+    contain-intrinsic-size: 800px 400px;
+  }
+  
+  .card-image {
+    content-visibility: auto;
+    contain-intrinsic-size: 400px 240px;
+  }
+  
+  /* Reduce layout shifts */
+  .card-image-container {
+    aspect-ratio: 5/3;
+  }
+  
+  .featured-image {
+    aspect-ratio: 2/1;
   }
 
   /* Enhanced Mobile Responsiveness */
@@ -820,5 +953,58 @@ if (blogNewsletterForm) {
     });
   });
 }
+
+// Intersection Observer for lazy loading
+if ('IntersectionObserver' in window) {
+  const imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        const src = img.getAttribute('data-src');
+        if (src) {
+          img.src = src;
+          img.classList.remove('lazy-load');
+          img.classList.add('loaded');
+          observer.unobserve(img);
+        }
+      }
+    });
+  }, {
+    rootMargin: '50px 0px',
+    threshold: 0.01
+  });
+
+  // Observe all lazy load images
+  document.querySelectorAll('.lazy-load').forEach(img => {
+    imageObserver.observe(img);
+  });
+} else {
+  // Fallback for browsers without Intersection Observer
+  document.querySelectorAll('.lazy-load').forEach(img => {
+    const src = img.getAttribute('data-src');
+    if (src) {
+      img.src = src;
+    }
+  });
+}
+
+// Preload critical images
+function preloadCriticalImages() {
+  const criticalImages = document.querySelectorAll('.featured-image img[data-src]');
+  criticalImages.forEach(img => {
+    const src = img.getAttribute('data-src');
+    if (src) {
+      const preloadImg = new Image();
+      preloadImg.onload = () => {
+        img.src = src;
+        img.classList.add('loaded');
+      };
+      preloadImg.src = src;
+    }
+  });
+}
+
+// Preload critical images immediately
+preloadCriticalImages();
 </script>
 
