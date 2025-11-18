@@ -375,7 +375,7 @@
             <div class="event-actions">
                 <a class="btn-register" href="{{ $event->registration_url }}" target="_blank" rel="noopener">
                     <i class="fas fa-external-link-alt"></i>
-                    {{ $isUpcoming ? 'Register Now' : ($isOngoing ? 'Join Event' : 'View Details') }}
+                    Join Event
                 </a>
                 <a class="btn-back" href="{{ route('events.index') }}" style="margin: 0;">
                     <i class="fas fa-calendar-days"></i> View All Events

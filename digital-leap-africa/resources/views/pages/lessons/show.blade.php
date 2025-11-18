@@ -74,7 +74,7 @@
 /* Content styling for Quill editor output */
 .lesson-content-body {
     color: var(--diamond-white);
-    line-height: 1.7;
+    line-height: 1.6;
     font-size: 1rem;
 }
 
@@ -82,9 +82,16 @@
 .lesson-content-body h2,
 .lesson-content-body h3 {
     color: var(--diamond-white);
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
     font-weight: 600;
+    line-height: 1.3;
+}
+
+.lesson-content-body h1:first-child,
+.lesson-content-body h2:first-child,
+.lesson-content-body h3:first-child {
+    margin-top: 0;
 }
 
 .lesson-content-body h1 { font-size: 1.875rem; }
@@ -94,6 +101,11 @@
 .lesson-content-body p {
     margin-bottom: 1rem;
     color: var(--cool-gray);
+    line-height: 1.6;
+}
+
+.lesson-content-body p:empty {
+    margin-bottom: 0.5rem;
 }
 
 .lesson-content-body ul,
@@ -101,10 +113,57 @@
     margin-bottom: 1rem;
     padding-left: 1.5rem;
     color: var(--cool-gray);
+    line-height: 1.6;
+}
+
+.lesson-content-body ol {
+    list-style-type: decimal;
+}
+
+.lesson-content-body ul {
+    list-style-type: disc;
+}
+
+.lesson-content-body ol ol {
+    list-style-type: lower-alpha;
+}
+
+.lesson-content-body ol ol ol {
+    list-style-type: lower-roman;
+}
+
+.lesson-content-body ul ul {
+    list-style-type: circle;
+}
+
+.lesson-content-body ul ul ul {
+    list-style-type: square;
 }
 
 .lesson-content-body li {
+    margin-bottom: 0.25rem;
+    line-height: 1.6;
+}
+
+.lesson-content-body li p {
     margin-bottom: 0.5rem;
+}
+
+.lesson-content-body li:last-child {
+    margin-bottom: 0;
+}
+
+/* Handle excessive line breaks */
+.lesson-content-body br {
+    line-height: 0.5;
+}
+
+.lesson-content-body br + br {
+    display: none;
+}
+
+.lesson-content-body p br:last-child {
+    display: none;
 }
 
 .lesson-content-body blockquote {
@@ -163,6 +222,11 @@ code {
 [data-theme="light"] .lesson-content-body p,
 [data-theme="light"] .lesson-content-body li,
 [data-theme="light"] .lesson-content-body blockquote {
+    color: #475569;
+}
+
+[data-theme="light"] .lesson-content-body ul,
+[data-theme="light"] .lesson-content-body ol {
     color: #475569;
 }
 

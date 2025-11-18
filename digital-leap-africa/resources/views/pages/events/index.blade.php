@@ -298,8 +298,8 @@
             $month = $start ? strtoupper($start->format('M')) : '';
             $category = $event->topic ?? null;
             $excerpt = \Illuminate\Support\Str::limit(strip_tags($event->description ?? ''), 140);
-            $ctaUrl = !empty($event->registration_url) ? $event->registration_url : $showUrl;
-            $ctaText = !empty($event->registration_url) ? 'Join Event' : 'View Event';
+            $ctaUrl = $showUrl;
+            $ctaText = 'View Event';
           @endphp
 
           <div class="card card-style-2">
@@ -359,8 +359,8 @@
             $month = $start ? strtoupper($start->format('M')) : '';
             $category = $event->topic ?? null;
             $excerpt = \Illuminate\Support\Str::limit(strip_tags($event->description ?? ''), 140);
-            $ctaUrl = !empty($event->registration_url) ? $event->registration_url : $showUrl;
-            $ctaText = !empty($event->registration_url) ? 'Join Event' : 'View Event';
+            $ctaUrl = $showUrl;
+            $ctaText = 'View Event';
           @endphp
 
           <div class="card card-style-2">
@@ -420,8 +420,8 @@
             $month = $start ? strtoupper($start->format('M')) : '';
             $category = $event->topic ?? null;
             $excerpt = \Illuminate\Support\Str::limit(strip_tags($event->description ?? ''), 140);
-            $ctaUrl = !empty($event->registration_url) ? $event->registration_url : $showUrl;
-            $ctaText = !empty($event->registration_url) ? 'Join Event' : 'View Event';
+            $ctaUrl = $showUrl;
+            $ctaText = 'View Event';
           @endphp
 
           <div class="card card-style-2">
