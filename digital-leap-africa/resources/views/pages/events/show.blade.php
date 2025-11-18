@@ -1,6 +1,206 @@
 @extends('layouts.app')
 
-@section('title', $event->title ?? 'Event')
+@section('title', ($event->title ?? 'Event') . ' | Digital Leap Africa Events')
+@section('meta_description', Str::limit(strip_tags($event->description ?? ''), 160))
+@section('meta_keywords', implode(', ', array_merge([$event->topic ?? 'technology'], ['tech events', 'workshops', 'developer meetups', 'programming', 'digital transformation', 'Africa'])))
+@section('canonical', route('events.show', $event))
+
+@push('meta')
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="event">
+<meta property="og:url" content="{{ route('events.show', $event) }}">
+<meta property="og:title" content="{{ $event->title ?? 'Event' }}">
+<meta property="og:description" content="{{ Str::limit(strip_tags($event->description ?? ''), 160) }}">
+<meta property="og:image" content="{{ $event->image_url ?? asset('images/event-default.jpg') }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Digital Leap Africa">
+<meta property="og:locale" content="en_US">
+@if($event->date)
+<meta property="event:start_time" content="{{ $event->date->toISOString() }}">
+@endif
+@if($event->ends_at)
+<meta property="event:end_time" content="{{ $event->ends_at->toISOString() }}">
+@endif
+@if($event->location)
+<meta property="event:location" content="{{ $event->location }}">
+@endif
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="{{ route('events.show', $event) }}">
+<meta property="twitter:title" content="{{ $event->title ?? 'Event' }}">
+<meta property="twitter:description" content="{{ Str::limit(strip_tags($event->description ?? ''), 160) }}">
+<meta property="twitter:image" content="{{ $event->image_url ?? asset('images/event-default.jpg') }}">
+<meta property="twitter:creator" content="@DigitalLeapAfrica">
+<meta property="twitter:site" content="@DigitalLeapAfrica">
+
+<!-- Additional SEO -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="Digital Leap Africa">
+<meta name="publisher" content="Digital Leap Africa">
+<meta name="geo.region" content="KE">
+<meta name="geo.country" content="Kenya">
+<meta name="geo.placename" content="{{ $event->location ?? 'Nairobi' }}">
+<meta name="language" content="English">
+<meta name="theme-color" content="#0a192f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<meta name="referrer" content="origin-when-cross-origin">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+
+<!-- Event Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "{{ addslashes($event->title ?? 'Event') }}",
+  "description": "{{ addslashes(Str::limit(strip_tags($event->description ?? ''), 200)) }}",
+  "url": "{{ route('events.show', $event) }}",
+  @if($event->date)
+  "startDate": "{{ $event->date->toISOString() }}",
+  @endif
+  @if($event->ends_at)
+  "endDate": "{{ $event->ends_at->toISOString() }}",
+  @endif
+  "eventStatus": "{{ $event->date && $event->date->isFuture() ? 'https://schema.org/EventScheduled' : ($event->date && $event->date->isPast() ? 'https://schema.org/EventPostponed' : 'https://schema.org/EventScheduled') }}",
+  "eventAttendanceMode": "{{ $event->location ? 'https://schema.org/OfflineEventAttendanceMode' : 'https://schema.org/OnlineEventAttendanceMode' }}",
+  @if($event->image_url)
+  "image": {
+    "@type": "ImageObject",
+    "url": "{{ $event->image_url }}",
+    "width": 1200,
+    "height": 630
+  },
+  @endif
+  @if($event->location)
+  "location": {
+    "@type": "Place",
+    "name": "{{ addslashes($event->location) }}",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "{{ addslashes($event->location) }}",
+      "addressCountry": "Kenya"
+    }
+  },
+  @else
+  "location": {
+    "@type": "VirtualLocation",
+    "url": "{{ route('events.show', $event) }}"
+  },
+  @endif
+  "organizer": {
+    "@type": "Organization",
+    "name": "Digital Leap Africa",
+    "url": "{{ url('/') }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ asset('images/logo.png') }}"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "url": "{{ route('contact') }}"
+    }
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock",
+    "url": "{{ $event->registration_url ?? route('events.show', $event) }}",
+    "validFrom": "{{ $event->created_at->toISOString() }}"
+  },
+  @if($event->topic)
+  "about": {
+    "@type": "Thing",
+    "name": "{{ $event->topic }}"
+  },
+  @endif
+  "performer": {
+    "@type": "Organization",
+    "name": "Digital Leap Africa"
+  },
+  "audience": {
+    "@type": "Audience",
+    "audienceType": "Developers, Tech Enthusiasts, Students"
+  },
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true
+}
+</script>
+
+<!-- Breadcrumb Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ url('/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Events",
+      "item": "{{ route('events.index') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ $event->title ?? 'Event' }}",
+      "item": "{{ route('events.show', $event) }}"
+    }
+  ]
+}
+</script>
+
+<!-- WebPage Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "{{ $event->title ?? 'Event' }}",
+  "description": "{{ Str::limit(strip_tags($event->description ?? ''), 160) }}",
+  "url": "{{ route('events.show', $event) }}",
+  "mainEntity": {
+    "@id": "{{ route('events.show', $event) }}#event"
+  },
+  "breadcrumb": {
+    "@id": "{{ route('events.show', $event) }}#breadcrumb"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Digital Leap Africa",
+    "url": "{{ url('/') }}"
+  },
+  "potentialAction": [
+    {
+      "@type": "ViewAction",
+      "target": "{{ route('events.show', $event) }}"
+    },
+    {
+      "@type": "ShareAction",
+      "target": "{{ route('events.show', $event) }}"
+    }
+    @if($event->registration_url)
+    ,{
+      "@type": "RegisterAction",
+      "target": "{{ $event->registration_url }}"
+    }
+    @endif
+  ]
+}
+</script>
+@endpush
 
 @section('content')
 @php
@@ -164,6 +364,35 @@
         max-height: 500px;
         object-fit: cover;
         display: block;
+        will-change: transform;
+        backface-visibility: hidden;
+        transform: translateZ(0);
+        aspect-ratio: 2/1;
+    }
+    
+    .lazy-load {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .lazy-load.loaded {
+        opacity: 1;
+    }
+    
+    .event-image.lazy-load {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+    }
+    
+    @keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+    
+    [data-theme="light"] .event-image.lazy-load {
+        background: linear-gradient(90deg, #f8f9fa 25%, #e9ecef 50%, #f8f9fa 75%);
+        background-size: 200% 100%;
     }
     
     .event-content-card {

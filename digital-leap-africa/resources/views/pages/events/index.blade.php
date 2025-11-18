@@ -35,6 +35,15 @@
 <meta name="geo.placename" content="Nairobi">
 <meta name="language" content="English">
 <meta name="theme-color" content="#0a192f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<meta name="referrer" content="origin-when-cross-origin">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
 
 <!-- Structured Data -->
 <script type="application/ld+json">
@@ -155,6 +164,57 @@
   ]
 }
 </script>
+
+<!-- WebSite Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Digital Leap Africa",
+  "url": "{{ url('/') }}",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "{{ route('events.index') }}?search={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  },
+  "sameAs": [
+    "https://twitter.com/DigitalLeapAfrica",
+    "https://linkedin.com/company/digital-leap-africa",
+    "https://github.com/digital-leap-africa"
+  ]
+}
+</script>
+
+<!-- EventSeries Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "EventSeries",
+  "name": "Digital Leap Africa Tech Events",
+  "description": "Regular technology events, workshops, and community meetups for developers and tech enthusiasts across Africa",
+  "url": "{{ route('events.index') }}",
+  "organizer": {
+    "@type": "Organization",
+    "name": "Digital Leap Africa",
+    "url": "{{ url('/') }}",
+    "logo": "{{ asset('images/logo.png') }}"
+  },
+  "location": {
+    "@type": "Place",
+    "name": "Various Locations",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "Kenya",
+      "addressRegion": "Nairobi"
+    }
+  },
+  "eventAttendanceMode": "https://schema.org/MixedEventAttendanceMode",
+  "eventStatus": "https://schema.org/EventScheduled"
+}
+</script>
 @endpush
 
 @section('content')
@@ -224,6 +284,32 @@
   }
   [data-theme="light"] #events-section .event-category {
       background: rgba(46, 120, 197, 0.85);
+  }
+
+  /* Lazy Loading Styles */
+  .lazy-load {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .lazy-load.loaded {
+    opacity: 1;
+  }
+  
+  .card-image.lazy-load {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+  
+  @keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  
+  [data-theme="light"] .card-image.lazy-load {
+    background: linear-gradient(90deg, #f8f9fa 25%, #e9ecef 50%, #f8f9fa 75%);
+    background-size: 200% 100%;
   }
 </style>
 
@@ -471,3 +557,35 @@
 
   </div>
 </section>
+
+<script>
+// Intersection Observer for lazy loading
+if ('IntersectionObserver' in window) {
+  const imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        const src = img.getAttribute('data-src');
+        if (src) {
+          img.src = src;
+          img.classList.remove('lazy-load');
+          img.classList.add('loaded');
+          observer.unobserve(img);
+        }
+      }
+    });
+  }, {
+    rootMargin: '50px 0px',
+    threshold: 0.01
+  });
+
+  document.querySelectorAll('.lazy-load').forEach(img => {
+    imageObserver.observe(img);
+  });
+} else {
+  document.querySelectorAll('.lazy-load').forEach(img => {
+    const src = img.getAttribute('data-src');
+    if (src) img.src = src;
+  });
+}
+</script>
