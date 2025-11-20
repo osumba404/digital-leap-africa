@@ -57,7 +57,7 @@ class ArticleController extends Controller
         'excerpt' => $data['excerpt'] ?? null,
         'content' => $data['content'],
         'slug' => $this->generateUniqueSlug($data['title']),
-        'user_id' => $request->user()->id,
+        'author_id' => $request->user()->id,
         'tags' => $tags,
     ];
 

@@ -20,7 +20,7 @@ class Article extends Model
         'featured_image',
         'published_at',
         'status',
-        'user_id',
+        'author_id',
         'tags',
         'likes_count',
         'bookmarks_count',
@@ -58,7 +58,7 @@ class Article extends Model
     // Relationships
     public function author()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'author_id');
     }
 
     public function comments()

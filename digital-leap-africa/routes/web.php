@@ -436,16 +436,7 @@ Route::prefix('admin')
             Route::get('/', [AdminDashboardController::class, 'content'])->name('content.index');
         });
 
-        // Articles
-            Route::resource('articles', AdminArticleController::class)->names([
-                'index' => 'articles.index',
-                'create' => 'articles.create',
-                'store' => 'articles.store',
-                'show' => 'articles.show',
-                'edit' => 'articles.edit',
-                'update' => 'articles.update',
-                'destroy' => 'articles.destroy'
-            ]);
+
 
         // About Page Management
         Route::prefix('about')->name('about.')->group(function () {
@@ -495,7 +486,7 @@ Route::prefix('admin')
         Route::resource('events', AdminEventController::class)->except(['show']);
         Route::resource('forum', AdminForumController::class)->only(['index', 'show', 'destroy']);
         Route::delete('forum/replies/{reply}', [AdminForumController::class, 'destroyReply'])->name('forum.replies.destroy');
-        //Route::resource('articles', AdminArticleController::class)->except(['show']);
+        Route::resource('articles', AdminArticleController::class)->except(['show']);
 
          // Courses
         Route::resource('courses', AdminCourseController::class)->except(['show']);
