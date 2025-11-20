@@ -71,7 +71,7 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--cyan-accent), var(--purple-accent));
+    background: var(--cyan-accent);
 }
 
 .auth-title {
@@ -79,10 +79,7 @@
     font-weight: 700;
     text-align: center;
     margin-bottom: 2rem;
-    background: linear-gradient(90deg, var(--cyan-accent), var(--purple-accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--cyan-accent);
     animation: fadeIn 1s ease-out 0.3s both;
     position: relative;
 }
@@ -173,7 +170,7 @@
 }
 
 .auth-button {
-    background: linear-gradient(90deg, var(--cyan-accent), var(--purple-accent));
+    background: var(--cyan-accent);
     border: none;
     border-radius: 8px;
     padding: 0.75rem 2rem;
@@ -347,6 +344,32 @@
 [data-theme="light"] .divider {
     color: #4A5568;
 }
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--cool-gray);
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: color 0.2s;
+    font-size: 1.1rem;
+}
+
+.password-toggle:hover {
+    color: var(--cyan-accent);
+}
+
+.password-wrapper .form-control {
+    padding-right: 3rem;
+}
 </style>
 @endpush
 
@@ -390,8 +413,13 @@
 
             <div class="form-group">
                 <label for="password" class="form-label">Password</label>
-                <input id="password" type="password" name="password" class="form-control" 
-                       required autocomplete="current-password" placeholder="Enter your password">
+                <div class="password-wrapper">
+                    <input id="password" type="password" name="password" class="form-control" 
+                           required autocomplete="current-password" placeholder="Enter your password">
+                    <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                        <i class="fas fa-eye" id="password-icon"></i>
+                    </button>
+                </div>
                 @error('password')
                     <div class="error-message">{{ $message }}</div>
                 @enderror
@@ -421,4 +449,21 @@
         </div>
     </div>
 </div>
+
+<script>
+function togglePassword(fieldId) {
+    const passwordField = document.getElementById(fieldId);
+    const icon = document.getElementById(fieldId + '-icon');
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordField.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
 @endsection
