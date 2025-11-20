@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
-use App\Services\ImageOptimizationService;
+// use App\Services\ImageOptimizationService;
 
 class ArticlesController extends Controller
 {
@@ -38,9 +38,9 @@ class ArticlesController extends Controller
         });
 
         // Optimize images for each article
-        foreach ($articles as $article) {
-            $article->optimized_image = $this->getOptimizedImage($article);
-        }
+        // foreach ($articles as $article) {
+        //     $article->optimized_image = $this->getOptimizedImage($article);
+        // }
 
         return view('articles.index', compact('articles', 'tag', 'search'));
     }
@@ -80,10 +80,10 @@ class ArticlesController extends Controller
         });
 
         // Optimize images
-        $article->optimized_image = $this->getOptimizedImage($article);
-        foreach ($related as $relatedArticle) {
-            $relatedArticle->optimized_image = $this->getOptimizedImage($relatedArticle);
-        }
+        // $article->optimized_image = $this->getOptimizedImage($article);
+        // foreach ($related as $relatedArticle) {
+        //     $relatedArticle->optimized_image = $this->getOptimizedImage($relatedArticle);
+        // }
 
         return view('articles.show', compact('article', 'related'));
     }
@@ -239,18 +239,17 @@ class ArticlesController extends Controller
     /**
      * Get optimized image URL for an article
      */
-    private function getOptimizedImage($article)
-    {
-        $imageUrl = $article->featured_image_url 
-            ?? $article->image_url 
-            ?? $article->cover_image 
-            ?? $article->thumbnail 
-            ?? $article->featured_image;
+    // private function getOptimizedImage($article)
+    // {
+    //     $imageUrl = $article->featured_image_url 
+    //         ?? $article->image_url 
+    //         ?? $article->thumbnail 
+    //         ?? $article->featured_image;
 
-        if (!$imageUrl) {
-            return null;
-        }
+    //     if (!$imageUrl) {
+    //         return null;
+    //     }
 
-        return ImageOptimizationService::getOptimizedImageUrl($imageUrl, 800, 400);
-    }
+    //     return ImageOptimizationService::getOptimizedImageUrl($imageUrl, 800, 400);
+    // }
 }
