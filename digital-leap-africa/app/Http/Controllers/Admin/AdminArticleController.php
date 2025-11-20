@@ -27,7 +27,7 @@ class AdminArticleController extends Controller
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'excerpt' => ['nullable', 'string', 'max:500'],
+            'excerpt' => ['nullable', 'string', 'max:5000'],
             'content' => ['required', 'string'],
             'status' => ['required', Rule::in(['draft', 'published', 'archived'])],
             'published_at' => ['nullable', 'date'],
@@ -61,7 +61,7 @@ class AdminArticleController extends Controller
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'excerpt' => ['nullable', 'string', 'max:500'],
+            'excerpt' => ['nullable', 'string', 'max:5000'],
             'content' => ['required', 'string'],
             'status' => ['required', Rule::in(['draft', 'published', 'archived'])],
             'published_at' => ['nullable', 'date'],

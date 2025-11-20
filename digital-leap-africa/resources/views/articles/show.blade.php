@@ -2,230 +2,350 @@
 
 @section('title', $article->title . ' | Digital Leap Africa Blog')
 @section('meta_description', Str::limit(strip_tags($article->content ?? ''), 160))
-@section('meta_keywords', implode(', ', array_merge(is_array($article->tags ?? null) ? $article->tags : [], ['web development', 'technology', 'programming', 'digital transformation', 'Africa'])))
-@section('canonical', route('blog.show', $article))
 
-@push('meta')
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="article">
-<meta property="og:url" content="{{ route('blog.show', $article) }}">
-<meta property="og:title" content="{{ $article->title }}">
-<meta property="og:description" content="{{ Str::limit(strip_tags($article->content ?? ''), 160) }}">
-<meta property="og:image" content="{{ $article->featured_image_url ?? asset('images/blog-default.jpg') }}">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:site_name" content="Digital Leap Africa">
-<meta property="og:locale" content="en_US">
-<meta property="article:author" content="{{ $article->author->name ?? 'Digital Leap Africa' }}">
-<meta property="article:published_time" content="{{ $article->created_at->toISOString() }}">
-<meta property="article:modified_time" content="{{ $article->updated_at->toISOString() }}">
-<meta property="article:section" content="Technology">
-@if(is_array($article->tags ?? null))
-  @foreach($article->tags as $tag)
-    <meta property="article:tag" content="{{ $tag }}">
-  @endforeach
-@endif
+@push('styles')
+<style>
+  /* Dark Mode (Default) */
+  .blog-article {
+    background: var(--navy-bg);
+    color: var(--diamond-white);
+    min-height: 100vh;
+  }
+  
+  .article-header {
+    background: linear-gradient(135deg, var(--navy-bg), var(--primary-blue));
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+  }
+  
+  .article-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--diamond-white);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+  
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .author-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .author-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan-accent), var(--primary-blue));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .article-stats {
+    display: flex;
+    gap: 1.5rem;
+    color: var(--cool-gray);
+    font-size: 0.9rem;
+  }
+  
+  .article-content {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--diamond-white);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    margin-bottom: 2rem;
+    line-height: 1.7;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .article-content h1, .article-content h2, .article-content h3 {
+    color: var(--cyan-accent);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .article-content p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    color: var(--cool-gray);
+  }
+  
+  .article-featured-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+  
+  .sidebar-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .sidebar-title {
+    color: var(--cyan-accent);
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  
+  .related-article {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .related-article:last-child {
+    border-bottom: none;
+  }
+  
+  .related-article a {
+    color: var(--diamond-white);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+  
+  .related-article a:hover {
+    color: var(--cyan-accent);
+  }
+  
+  .comments-section {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    margin-top: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .comment {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .comment:last-child {
+    border-bottom: none;
+  }
+  
+  .comment-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  
+  .comment-author {
+    font-weight: bold;
+    color: var(--cyan-accent);
+  }
+  
+  .comment-date {
+    color: var(--cool-gray);
+    font-size: 0.9rem;
+  }
+  
+  .comment-text {
+    color: var(--diamond-white);
+    margin-top: 0.5rem;
+  }
+  
+  .form-control {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    transition: border-color 0.3s;
+    color: var(--diamond-white);
+  }
+  
+  .form-control:focus {
+    border-color: var(--cyan-accent);
+    box-shadow: 0 0 0 0.2rem rgba(100, 255, 218, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent));
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: transform 0.2s;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+  }
+  
+  .tag {
+    display: inline-block;
+    background: rgba(100, 255, 218, 0.1);
+    color: var(--cyan-accent);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    border: 1px solid rgba(100, 255, 218, 0.2);
+  }
+  
+  .tag:hover {
+    background: rgba(100, 255, 218, 0.2);
+    color: var(--cyan-accent);
+  }
 
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="{{ route('blog.show', $article) }}">
-<meta property="twitter:title" content="{{ $article->title }}">
-<meta property="twitter:description" content="{{ Str::limit(strip_tags($article->content ?? ''), 160) }}">
-<meta property="twitter:image" content="{{ $article->featured_image_url ?? asset('images/blog-default.jpg') }}">
-<meta property="twitter:creator" content="@DigitalLeapAfrica">
-<meta property="twitter:site" content="@DigitalLeapAfrica">
-
-<!-- Additional SEO -->
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-<meta name="author" content="{{ $article->author->name ?? 'Digital Leap Africa' }}">
-<meta name="publisher" content="Digital Leap Africa">
-<meta name="geo.region" content="KE">
-<meta name="geo.country" content="Kenya">
-<meta name="geo.placename" content="Nairobi">
-<meta name="language" content="English">
-<meta name="theme-color" content="#0a192f">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="format-detection" content="telephone=no">
-<meta name="referrer" content="origin-when-cross-origin">
-<meta name="article:reading_time" content="{{ max(1, ceil(str_word_count(strip_tags($article->content ?? ''))/200)) }}">
-<meta name="article:word_count" content="{{ str_word_count(strip_tags($article->content ?? '')) }}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
-<link rel="dns-prefetch" href="//fonts.googleapis.com">
-<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
-
-<!-- Structured Data -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "{{ addslashes($article->title) }}",
-  "description": "{{ addslashes(Str::limit(strip_tags($article->content ?? ''), 160)) }}",
-  "image": {
-    "@type": "ImageObject",
-    "url": "{{ $article->featured_image_url ?? asset('images/blog-default.jpg') }}",
-    "width": 1200,
-    "height": 630
-  },
-  "url": "{{ route('blog.show', $article) }}",
-  "datePublished": "{{ $article->created_at->toISOString() }}",
-  "dateModified": "{{ $article->updated_at->toISOString() }}",
-  "author": {
-    "@type": "Person",
-    "name": "{{ $article->author->name ?? 'Digital Leap Africa' }}",
-    "url": "{{ url('/') }}"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Digital Leap Africa",
-    "url": "{{ url('/') }}",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "{{ asset('images/logo.png') }}",
-      "width": 200,
-      "height": 60
+  /* Light Mode */
+  [data-theme="light"] .blog-article {
+    background: #f8fafc;
+    color: var(--navy-bg);
+  }
+  
+  [data-theme="light"] .article-header {
+    background: linear-gradient(135deg, #ffffff, var(--primary-blue));
+  }
+  
+  [data-theme="light"] .article-title {
+    color: var(--navy-bg);
+  }
+  
+  [data-theme="light"] .article-stats {
+    color: #64748b;
+  }
+  
+  [data-theme="light"] .article-content {
+    background: white;
+    color: var(--navy-bg);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+  }
+  
+  [data-theme="light"] .article-content h1,
+  [data-theme="light"] .article-content h2,
+  [data-theme="light"] .article-content h3 {
+    color: var(--primary-blue);
+  }
+  
+  [data-theme="light"] .article-content p {
+    color: #374151;
+  }
+  
+  [data-theme="light"] .sidebar-card {
+    background: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+  }
+  
+  [data-theme="light"] .sidebar-title {
+    color: var(--primary-blue);
+  }
+  
+  [data-theme="light"] .related-article {
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  [data-theme="light"] .related-article a {
+    color: var(--navy-bg);
+  }
+  
+  [data-theme="light"] .related-article a:hover {
+    color: var(--primary-blue);
+  }
+  
+  [data-theme="light"] .comments-section {
+    background: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+  }
+  
+  [data-theme="light"] .comment {
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  [data-theme="light"] .comment-author {
+    color: var(--primary-blue);
+  }
+  
+  [data-theme="light"] .comment-date {
+    color: #64748b;
+  }
+  
+  [data-theme="light"] .comment-text {
+    color: #374151;
+  }
+  
+  [data-theme="light"] .form-control {
+    background: white;
+    border: 2px solid #e2e8f0;
+    color: var(--navy-bg);
+  }
+  
+  [data-theme="light"] .form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(46, 120, 197, 0.25);
+    background: white;
+  }
+  
+  [data-theme="light"] .tag {
+    background: rgba(46, 120, 197, 0.1);
+    color: var(--primary-blue);
+    border: 1px solid rgba(46, 120, 197, 0.2);
+  }
+  
+  [data-theme="light"] .tag:hover {
+    background: rgba(46, 120, 197, 0.2);
+    color: var(--primary-blue);
+  }
+  
+  @media (max-width: 768px) {
+    .article-title {
+      font-size: 2rem;
     }
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "{{ route('blog.show', $article) }}"
-  },
-  "wordCount": {{ str_word_count(strip_tags($article->content ?? '')) }},
-  "timeRequired": "PT{{ max(1, ceil(str_word_count(strip_tags($article->content ?? ''))/200)) }}M",
-  "articleSection": "Technology",
-  "keywords": "{{ implode(', ', array_merge(is_array($article->tags ?? null) ? $article->tags : [], ['web development', 'technology', 'programming'])) }}",
-  "inLanguage": "en-US",
-  "isAccessibleForFree": true,
-  "interactionStatistic": [
-    {
-      "@type": "InteractionCounter",
-      "interactionType": "https://schema.org/LikeAction",
-      "userInteractionCount": {{ $article->likes_count ?? 0 }}
-    },
-    {
-      "@type": "InteractionCounter",
-      "interactionType": "https://schema.org/CommentAction",
-      "userInteractionCount": {{ $article->comments->count() }}
-    },
-    {
-      "@type": "InteractionCounter",
-      "interactionType": "https://schema.org/ShareAction",
-      "userInteractionCount": {{ $article->shares_count ?? 0 }}
+    
+    .article-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
     }
-  ]
-}
-</script>
-
-<!-- Breadcrumb Structured Data -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "{{ url('/') }}"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Blog",
-      "item": "{{ route('blog.index') }}"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "{{ $article->title }}",
-      "item": "{{ route('blog.show', $article) }}"
+    
+    .article-content {
+      padding: 1.5rem;
     }
-  ]
-}
-</script>
-
-<!-- FAQ Structured Data (if comments exist) -->
-@if($article->comments->count() > 0)
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "QAPage",
-  "mainEntity": {
-    "@type": "Question",
-    "name": "{{ addslashes($article->title) }}",
-    "text": "{{ addslashes(Str::limit(strip_tags($article->content ?? ''), 200)) }}",
-    "answerCount": {{ $article->comments->count() }},
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "{{ addslashes(strip_tags($article->content ?? '')) }}",
-      "author": {
-        "@type": "Person",
-        "name": "{{ $article->author->name ?? 'Digital Leap Africa' }}"
-      }
+    
+    .comment {
+      flex-direction: column;
+      gap: 0.75rem;
     }
   }
-}
-</script>
-@endif
-
-<!-- WebPage Structured Data -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "name": "{{ $article->title }}",
-  "description": "{{ Str::limit(strip_tags($article->content ?? ''), 160) }}",
-  "url": "{{ route('blog.show', $article) }}",
-  "mainEntity": {
-    "@id": "{{ route('blog.show', $article) }}#article"
-  },
-  "breadcrumb": {
-    "@id": "{{ route('blog.show', $article) }}#breadcrumb"
-  },
-  "isPartOf": {
-    "@type": "WebSite",
-    "name": "Digital Leap Africa",
-    "url": "{{ url('/') }}"
-  },
-  "potentialAction": [
-    {
-      "@type": "ReadAction",
-      "target": "{{ route('blog.show', $article) }}"
-    },
-    {
-      "@type": "ShareAction",
-      "target": "{{ route('blog.show', $article) }}"
-    }
-  ]
-}
-</script>
-
-<!-- Person/Author Structured Data -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "{{ $article->author->name ?? 'Digital Leap Africa' }}",
-  "url": "{{ url('/') }}",
-  "worksFor": {
-    "@type": "Organization",
-    "name": "Digital Leap Africa",
-    "url": "{{ url('/') }}"
-  },
-  "jobTitle": "Content Creator",
-  "knowsAbout": [
-    "Web Development",
-    "Technology",
-    "Digital Transformation",
-    "Programming",
-    "Laravel",
-    "JavaScript",
-    "PHP"
-  ]
-}
-</script>
+</style>
 @endpush
 
 <style>
@@ -710,150 +830,57 @@
 </style>
 
 @section('content')
-  @php
-    $authorName = $article->author->name ?? 'Unknown';
-    $initials = collect(explode(' ', $authorName))->map(fn($p) => strtoupper(substr($p,0,1)))->take(2)->implode('');
-    $readMinutes = max(1, ceil(str_word_count(strip_tags($article->content ?? ''))/200));
-    $tags = is_array($article->tags ?? null) ? $article->tags : [];
-    $shareUrl = route('blog.show', $article);
-  @endphp
+@php
+  $authorName = $article->author->name ?? 'Digital Leap Africa';
+  $initials = collect(explode(' ', $authorName))->map(fn($p) => strtoupper(substr($p,0,1)))->take(2)->implode('');
+  $readMinutes = max(1, ceil(str_word_count(strip_tags($article->content ?? ''))/200));
+  $tags = is_array($article->tags ?? null) ? $article->tags : [];
+@endphp
 
-  <div class="article-container py-4">
-    <div class="article-header">
-      <div class="container">
-        <h1 class="article-title">{{ $article->title }}</h1>
-        <div class="article-meta">
-          <div class="author-info">
-            <div class="author-avatar">{{ $initials ?: 'AU' }}</div>
-            <div>
-              <div class="author-name" style="color: var(--accent-blue);">{{ $authorName }}</div>
-              <div class="publish-date" style="color: var(--text-secondary);">
-                {{ $article->published_at ? $article->published_at->toFormattedDateString() : '' }}
-              </div>
+<div class="blog-article">
+  <div class="article-header">
+    <div class="container">
+      <h1 class="article-title">{{ $article->title }}</h1>
+      <div class="article-meta">
+        <div class="author-info">
+          <div class="author-avatar">{{ $initials ?: 'DL' }}</div>
+          <div>
+            <div class="fw-bold text-white">{{ $authorName }}</div>
+            <div class="text-light opacity-75">
+              {{ $article->published_at ? $article->published_at->format('M d, Y') : $article->created_at->format('M d, Y') }}
             </div>
-          </div>
-          <div class="article-stats">
-            <div><i class="fa-regular fa-clock me-1"></i> {{ $readMinutes }} min read</div>
-            <div><i class="fa-regular fa-comment me-1"></i> {{ $article->comments->count() }} comments</div>
-            <div><i class="fa-regular fa-thumbs-up me-1"></i> {{ $article->likes_count ?? 0 }} likes</div>
           </div>
         </div>
-
-        @if(!empty($tags))
-          <div class="tags">
-            @foreach($tags as $t)
-              <a class="tag" href="{{ route('blog.index', ['tag' => $t]) }}">{{ $t }}</a>
-            @endforeach
-          </div>
-        @endif
+        <div class="article-stats">
+          <div><i class="fas fa-clock me-1"></i> {{ $readMinutes }} min read</div>
+          <div><i class="fas fa-comments me-1"></i> {{ $article->comments->count() }} comments</div>
+          <div><i class="fas fa-heart me-1"></i> {{ $article->likes_count ?? 0 }} likes</div>
+        </div>
       </div>
+
+      @if(!empty($tags))
+        <div class="mt-3">
+          @foreach($tags as $tag)
+            <a class="tag" href="{{ route('blog.index', ['tag' => $tag]) }}">{{ $tag }}</a>
+          @endforeach
+        </div>
+      @endif
     </div>
+  </div>
 
-    <div class="container">
-      <div class="row g-4">
-        <div class="col-lg-8 order-lg-1 order-2">
-          @if($article->optimized_image ?? $article->featured_image_url)
-            <img 
-              class="article-featured-image lazy-load" 
-              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 600'%3E%3Crect width='1200' height='600' fill='%23f3f4f6'/%3E%3C/svg%3E"
-              data-src="{{ $article->optimized_image ?? $article->featured_image_url }}" 
-              alt="{{ $article->title }}"
-              loading="lazy"
-            >
-          @endif
+  <div class="container py-4">
+    <div class="row g-4">
+      <div class="col-lg-8">
+        @if($article->featured_image_url)
+          <img class="article-featured-image" src="{{ $article->featured_image_url }}" alt="{{ $article->title }}">
+        @endif
 
-          <div class="article-content">
-            {!! $article->content !!}
-          </div>
-          
+        <div class="article-content">
+          {!! $article->content !!}
+        </div>
 
-          <div class="article-actions">
-            @auth
-              @php
-                $userInteraction = \DB::table('article_user_interactions')
-                    ->where('user_id', auth()->id())
-                    ->where('article_id', $article->id)
-                    ->first();
-                $isLiked = $userInteraction ? $userInteraction->liked : false;
-                $isBookmarked = $userInteraction ? $userInteraction->bookmarked : false;
-              @endphp
-              <button class="action-btn like-btn" data-article-id="{{ $article->id }}" title="Like">
-                <i class="{{ $isLiked ? 'fa-solid' : 'fa-regular' }} fa-heart" style="{{ $isLiked ? 'color: #ef4444;' : '' }}"></i>
-                <span class="action-count">{{ $article->likes_count ?? 0 }}</span>
-              </button>
-              <button class="action-btn bookmark-btn" data-article-id="{{ $article->id }}" title="Bookmark">
-                <i class="{{ $isBookmarked ? 'fa-solid' : 'fa-regular' }} fa-bookmark" style="{{ $isBookmarked ? 'color: #3b82f6;' : '' }}"></i>
-                <span class="action-count">{{ $article->bookmarks_count ?? 0 }}</span>
-              </button>
-              <button type="button" class="action-btn share-btn" data-article-id="{{ $article->id }}" onclick="openShareModal('{{ $shareUrl }}', '{{ addslashes($article->title) }}', {{ $article->id }})" title="Share">
-                <i class="fa-solid fa-share-nodes"></i>
-                <span class="action-count">{{ $article->shares_count ?? 0 }}</span>
-              </button>
-            @else
-              <a href="{{ route('login') }}" class="action-btn" title="Like">
-                <i class="fa-regular fa-heart"></i>
-                <span class="action-count">{{ $article->likes_count ?? 0 }}</span>
-              </a>
-              <a href="{{ route('login') }}" class="action-btn" title="Bookmark">
-                <i class="fa-regular fa-bookmark"></i>
-                <span class="action-count">{{ $article->bookmarks_count ?? 0 }}</span>
-              </a>
-              <a href="{{ route('login') }}" class="action-btn" title="Share">
-                <i class="fa-solid fa-share-nodes"></i>
-                <span class="action-count">{{ $article->shares_count ?? 0 }}</span>
-              </a>
-            @endauth
-          </div>
 
-          <!-- Share Modal -->
-          <div id="shareModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;">
-            <div style="background:var(--secondary-dark);padding:2rem;border-radius:12px;max-width:500px;width:90%;position:relative;border:1px solid var(--border-color);">
-              <button onclick="closeShareModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text-secondary);font-size:1.5rem;cursor:pointer;transition:color .2s;">
-                <i class="fas fa-times"></i>
-              </button>
-              
-              <h3 style="margin:0 0 1.5rem 0;color:var(--text-primary);font-size:1.5rem;">
-                <i class="fas fa-share-nodes" style="color:#3b82f6;margin-right:.5rem;"></i>
-                Share Article
-              </h3>
-              
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:1rem;margin-bottom:1.5rem;">
-                <a id="shareWhatsapp" target="_blank" class="share-btn" style="background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);color:#25d366;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;border-radius:8px;text-decoration:none;transition:all .2s;cursor:pointer;">
-                  <i class="fab fa-whatsapp" style="font-size:1.5rem;"></i>
-                  <span style="font-size:.8rem;margin-top:.25rem;">WhatsApp</span>
-                </a>
-                <a id="shareTwitter" target="_blank" class="share-btn" style="background:rgba(29,161,242,0.1);border:1px solid rgba(29,161,242,0.3);color:#1da1f2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;border-radius:8px;text-decoration:none;transition:all .2s;cursor:pointer;">
-                  <i class="fab fa-twitter" style="font-size:1.5rem;"></i>
-                  <span style="font-size:.8rem;margin-top:.25rem;">Twitter</span>
-                </a>
-                <a id="shareFacebook" target="_blank" class="share-btn" style="background:rgba(24,119,242,0.1);border:1px solid rgba(24,119,242,0.3);color:#1877f2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;border-radius:8px;text-decoration:none;transition:all .2s;cursor:pointer;">
-                  <i class="fab fa-facebook" style="font-size:1.5rem;"></i>
-                  <span style="font-size:.8rem;margin-top:.25rem;">Facebook</span>
-                </a>
-                <a id="shareLinkedin" target="_blank" class="share-btn" style="background:rgba(0,119,181,0.1);border:1px solid rgba(0,119,181,0.3);color:#0077b5;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;border-radius:8px;text-decoration:none;transition:all .2s;cursor:pointer;">
-                  <i class="fab fa-linkedin" style="font-size:1.5rem;"></i>
-                  <span style="font-size:.8rem;margin-top:.25rem;">LinkedIn</span>
-                </a>
-                <a id="shareEmail" target="_blank" class="share-btn" style="background:rgba(234,67,53,0.1);border:1px solid rgba(234,67,53,0.3);color:#ea4335;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;border-radius:8px;text-decoration:none;transition:all .2s;cursor:pointer;">
-                  <i class="fas fa-envelope" style="font-size:1.5rem;"></i>
-                  <span style="font-size:.8rem;margin-top:.25rem;">Email</span>
-                </a>
-              </div>
-              
-              <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:1rem;">
-                <label style="display:block;color:var(--text-secondary);font-size:.85rem;margin-bottom:.5rem;">Article Link:</label>
-                <div style="display:flex;gap:.5rem;">
-                  <input id="shareLink" type="text" readonly style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:.5rem .75rem;color:var(--text-primary);font-size:.9rem;">
-                  <button onclick="copyShareLink()" class="copy-link-btn" style="background:#3b82f6;border:none;color:white;padding:.5rem 1rem;border-radius:6px;cursor:pointer;font-weight:600;transition:all .2s;white-space:nowrap;">
-                    <i class="fas fa-copy"></i> Copy
-                  </button>
-                </div>
-                <div id="copyFeedback" style="display:none;color:#22c55e;font-size:.85rem;margin-top:.5rem;">
-                  <i class="fas fa-check-circle"></i> Link copied to clipboard!
-                </div>
-              </div>
-            </div>
-          </div>
+
 
           <section class="comments-section mt-4">
             <h2 class="h4 mb-4" style="color: var(--accent-blue);">Comments ({{ $article->comments->count() }})</h2>
@@ -963,299 +990,5 @@
     </div>
   </div>
 
-  <script>
-    let currentArticleId = null;
 
-    // AJAX interaction handlers
-    document.addEventListener('DOMContentLoaded', function() {
-      // Like button handlers
-      document.querySelectorAll('.like-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const articleId = this.dataset.articleId;
-          const icon = this.querySelector('i');
-          const count = this.querySelector('.action-count');
-          
-          fetch(`/blog/${articleId}/like`, {
-            method: 'POST',
-            headers: {
-              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.liked) {
-              icon.className = 'fa-solid fa-heart';
-              icon.style.color = '#ef4444';
-            } else {
-              icon.className = 'fa-regular fa-heart';
-              icon.style.color = '';
-            }
-            count.textContent = data.likes_count;
-          })
-          .catch(error => console.error('Error:', error));
-        });
-      });
-      
-      // Bookmark button handlers
-      document.querySelectorAll('.bookmark-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const articleId = this.dataset.articleId;
-          const icon = this.querySelector('i');
-          const count = this.querySelector('.action-count');
-          
-          fetch(`/blog/${articleId}/bookmark`, {
-            method: 'POST',
-            headers: {
-              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.bookmarked) {
-              icon.className = 'fa-solid fa-bookmark';
-              icon.style.color = '#3b82f6';
-            } else {
-              icon.className = 'fa-regular fa-bookmark';
-              icon.style.color = '';
-            }
-            count.textContent = data.bookmarks_count;
-          })
-          .catch(error => console.error('Error:', error));
-        });
-      });
-      
-      // Comment form handler
-      const commentForm = document.getElementById('comment-form');
-      if (commentForm) {
-        commentForm.addEventListener('submit', function(e) {
-          e.preventDefault();
-          
-          const formData = new FormData(this);
-          const submitBtn = document.getElementById('comment-submit');
-          const textarea = document.getElementById('comment');
-          const errorDiv = document.getElementById('comment-error');
-          const successDiv = document.getElementById('comment-success');
-          
-          submitBtn.disabled = true;
-          submitBtn.textContent = 'Posting...';
-          errorDiv.style.display = 'none';
-          successDiv.style.display = 'none';
-          
-          fetch(this.action, {
-            method: 'POST',
-            headers: {
-              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-              'Accept': 'application/json'
-            },
-            body: formData
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              // Add new comment to the list
-              const commentsSection = document.querySelector('.comments-section');
-              const commentsList = commentsSection.querySelector('h2').nextElementSibling;
-              
-              const newComment = document.createElement('div');
-              newComment.className = 'comment';
-              newComment.innerHTML = `
-                <div class="comment-avatar">${data.comment.user_initials}</div>
-                <div class="comment-content">
-                  <div class="comment-header">
-                    <div class="comment-author">${data.comment.user_name}</div>
-                    <div class="comment-date">${data.comment.created_at}</div>
-                  </div>
-                  <p class="comment-text">${data.comment.content}</p>
-                </div>
-              `;
-              
-              if (commentsList.classList.contains('text-muted')) {
-                commentsList.replaceWith(newComment);
-              } else {
-                commentsList.parentNode.insertBefore(newComment, commentsList);
-              }
-              
-              // Update comments count
-              const commentsTitle = commentsSection.querySelector('h2');
-              commentsTitle.textContent = `Comments (${data.comments_count})`;
-              
-              // Reset form
-              textarea.value = '';
-              successDiv.style.display = 'block';
-              setTimeout(() => successDiv.style.display = 'none', 3000);
-            }
-          })
-          .catch(error => {
-            errorDiv.textContent = 'Error posting comment. Please try again.';
-            errorDiv.style.display = 'block';
-          })
-          .finally(() => {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Post Comment';
-          });
-        });
-      }
-      
-      // Newsletter form handler
-      const newsletterForm = document.getElementById('newsletter-form');
-      if (newsletterForm) {
-        newsletterForm.addEventListener('submit', function(e) {
-          e.preventDefault();
-          
-          const formData = new FormData(this);
-          const submitBtn = document.getElementById('newsletter-submit');
-          const emailInput = this.querySelector('input[name="email"]');
-          const errorDiv = document.getElementById('newsletter-error');
-          const successDiv = document.getElementById('newsletter-success');
-          
-          submitBtn.disabled = true;
-          submitBtn.textContent = 'Subscribing...';
-          errorDiv.style.display = 'none';
-          successDiv.style.display = 'none';
-          
-          fetch('/newsletter/subscribe', {
-            method: 'POST',
-            headers: {
-              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-              'Accept': 'application/json'
-            },
-            body: formData
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              emailInput.value = '';
-              successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${data.message}`;
-              successDiv.style.display = 'block';
-              setTimeout(() => successDiv.style.display = 'none', 5000);
-            } else {
-              errorDiv.textContent = data.message || 'Error subscribing. Please try again.';
-              errorDiv.style.display = 'block';
-            }
-          })
-          .catch(error => {
-            errorDiv.textContent = 'Error subscribing. Please try again.';
-            errorDiv.style.display = 'block';
-          })
-          .finally(() => {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Subscribe';
-          });
-        });
-      }
-    });
-
-    function openShareModal(url, title, articleId) {
-      currentArticleId = articleId;
-      const modal = document.getElementById('shareModal');
-      const linkInput = document.getElementById('shareLink');
-      
-      linkInput.value = url;
-      
-      // Update social share links
-      document.getElementById('shareWhatsapp').href = `https://wa.me/?text=${encodeURIComponent(title + ' - ' + url)}`;
-      document.getElementById('shareTwitter').href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
-      document.getElementById('shareFacebook').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-      document.getElementById('shareLinkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
-      document.getElementById('shareEmail').href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent('Check out this article: ' + url)}`;
-      
-      modal.style.display = 'flex';
-      
-      // Track share action
-      if (currentArticleId) {
-        fetch(`/blog/${currentArticleId}/share`, {
-          method: 'POST',
-          headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          // Update share count in UI
-          const shareBtn = document.querySelector(`[data-article-id="${articleId}"].share-btn .action-count`);
-          if (shareBtn) {
-            shareBtn.textContent = data.shares_count;
-          }
-        })
-        .catch(error => console.error('Error:', error));
-      }
-    }
-
-    function closeShareModal() {
-      document.getElementById('shareModal').style.display = 'none';
-      document.getElementById('copyFeedback').style.display = 'none';
-    }
-
-    function copyShareLink() {
-      const input = document.getElementById('shareLink');
-      input.select();
-      document.execCommand('copy');
-      
-      const feedback = document.getElementById('copyFeedback');
-      feedback.style.display = 'block';
-      
-      setTimeout(() => {
-        feedback.style.display = 'none';
-      }, 3000);
-    }
-
-    // Close modal when clicking outside
-    document.getElementById('shareModal')?.addEventListener('click', function(e) {
-      if (e.target === this) closeShareModal();
-    });
-
-    // Intersection Observer for lazy loading
-    if ('IntersectionObserver' in window) {
-      const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const img = entry.target;
-            const src = img.getAttribute('data-src');
-            if (src) {
-              img.src = src;
-              img.classList.remove('lazy-load');
-              img.classList.add('loaded');
-              observer.unobserve(img);
-            }
-          }
-        });
-      }, {
-        rootMargin: '50px 0px',
-        threshold: 0.01
-      });
-
-      // Observe all lazy load images
-      document.querySelectorAll('.lazy-load').forEach(img => {
-        imageObserver.observe(img);
-      });
-    } else {
-      // Fallback for browsers without Intersection Observer
-      document.querySelectorAll('.lazy-load').forEach(img => {
-        const src = img.getAttribute('data-src');
-        if (src) {
-          img.src = src;
-        }
-      });
-    }
-
-    // Preload critical images immediately
-    const criticalImages = document.querySelectorAll('.article-featured-image[data-src]');
-    criticalImages.forEach(img => {
-      const src = img.getAttribute('data-src');
-      if (src) {
-        const preloadImg = new Image();
-        preloadImg.onload = () => {
-          img.src = src;
-          img.classList.add('loaded');
-        };
-        preloadImg.src = src;
-      }
-    });
-  </script>
 @endsection
