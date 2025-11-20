@@ -16,9 +16,7 @@
     font-size: 1.75rem;
     font-weight: 700;
     margin-bottom: 0.25rem;
-    background: linear-gradient(90deg, var(--cyan-accent), var(--purple-accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--cyan-accent);
 }
 
 .dashboard-header p {
@@ -284,9 +282,10 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
 }
 
 .btn-primary:hover {
-    background: var(--purple-accent);
+    background: var(--cyan-accent);
     color: white;
     transform: translateY(-1px);
+    opacity: 0.9;
 }
 
 .btn-outline {
@@ -571,12 +570,12 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
                 @foreach(Auth::user()->badges as $badge)
-                    <div style="background: rgba(122, 95, 255, 0.1); border: 1px solid rgba(122, 95, 255, 0.3); border-radius: 8px; padding: 1.25rem; position: relative;">
+                    <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 1.25rem; position: relative;">
                         <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
                             @if($badge->img_url)
-                                <img src="{{ $badge->img_url }}" alt="{{ $badge->badge_name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(122, 95, 255, 0.4);">
+                                <img src="{{ $badge->img_url }}" alt="{{ $badge->badge_name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(59, 130, 246, 0.4);">
                             @else
-                                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #7a5fff, #a855f7); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; border: 2px solid rgba(122, 95, 255, 0.4);">
+                                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #3b82f6, #60a5fa); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; border: 2px solid rgba(59, 130, 246, 0.4);">
                                     <i class="fas fa-medal"></i>
                                 </div>
                             @endif
@@ -608,9 +607,9 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
                 @foreach(Auth::user()->certificates as $certificate)
-                    <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 8px; padding: 1.25rem; position: relative;">
+                    <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 1.25rem; position: relative;">
                         <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
-                            <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #f59e0b, #fbbf24); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                            <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #3b82f6, #60a5fa); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
                                 <i class="fas fa-certificate"></i>
                             </div>
                             <div>

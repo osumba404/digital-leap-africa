@@ -432,7 +432,7 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.35rem 0.75rem;
-            border-radius: 999px;
+            border-radius: 8px;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: #ffffff;
@@ -513,10 +513,10 @@
         }
 
         .btn-primary {
-            background: linear-gradient(90deg, var(--cyan-accent), var(--purple-accent));
+            background: var(--cyan-accent);
             color: #07101a;
             padding: 0.5rem 1rem;
-            border-radius: 25px;
+            border-radius: 8px;
             font-weight: 600;
             border: none;
             cursor: pointer;
@@ -540,7 +540,7 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
             color: #ffffff;
             padding: 0.5rem 1rem;
-            border-radius: 20px;
+            border-radius: 8px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;

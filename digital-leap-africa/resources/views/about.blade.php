@@ -888,14 +888,14 @@
       .vision-image img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); filter: brightness(0.7); }
       .vision-card:hover .vision-image img { transform: scale(1.06); filter: brightness(0.9); }
       .vision-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent, rgba(19, 26, 42, 0.9)); display: flex; align-items: flex-end; padding: 20px; }
-      .vision-title { font-size: 1.8rem; color: var(--text-primary); font-weight: 700; background: linear-gradient(90deg, #8b5cf6, var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .vision-title { font-size: 1.8rem; color: var(--text-primary); font-weight: 700; background: linear-gradient(90deg, var(--accent-blue), var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
       .vision-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; position: relative; }
       .vision-subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 15px; font-weight: 500; }
       .vision-body { color: var(--text-secondary); line-height: 1.6; font-size: 0.9rem; margin-bottom: 20px; }
-      .vision-goals { display: block; grid-template-columns: 1fr 1fr; gap: 12px; }
-      .vision-goal { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.8rem; }
-      .vision-goal i { color: #8b5cf6; font-size: 0.8rem; }
-      .vision-icon { position: absolute; bottom: 20px; right: 20px; width: 40px; height: 40px; background: linear-gradient(45deg, #8b5cf6, var(--neon-blue)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem; box-shadow: 0 3px 10px rgba(139, 92, 246, 0.3); }
+      .vision-goals { display: block; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .vision-goal { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.8rem; line-height: 1.3; margin-bottom: 6px; }
+      .vision-goal i { color: var(--accent-blue); font-size: 0.8rem; }
+      .vision-icon { position: absolute; bottom: 20px; right: 20px; width: 40px; height: 40px; background: linear-gradient(45deg, var(--accent-blue), var(--neon-blue)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem; box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3); }
       /* Geometric Split Card */
       .geometric-card { background: var(--card-bg); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); height: 420px; display: flex; position: relative; border: 1px solid rgba(59, 130, 246, 0.1); }
       .geometric-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(45deg, transparent 40%, rgba(59, 130, 246, 0.1) 100%); clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%); z-index: 1; }
@@ -906,8 +906,8 @@
       .geometric-image { flex: 0 0 42%; position: relative; overflow: hidden; }
       .geometric-image img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); clip-path: polygon(0 0, 100% 0, 100% 100%, 25% 100%); }
       .geometric-card:hover .geometric-image img { transform: scale(1.05); }
-      .timeline-features { display: flex; flex-direction: column; gap: 10px; }
-      .timeline-feature { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.8rem; }
+      .timeline-features { display: flex; flex-direction: column; gap: 6px; }
+      .timeline-feature { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 0.8rem; line-height: 1.3; margin-bottom: 4px; }
       .timeline-feature i { color: var(--accent-blue); font-size: 0.8rem; }
       /* Responsive adjustments */
       @media (max-width: 900px) {
@@ -933,7 +933,7 @@
       }
       [data-theme="light"] .vision-title {
           color: var(--primary-blue);
-          background: linear-gradient(90deg, #8b5cf6, var(--primary-blue));
+          background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
       }
@@ -943,7 +943,7 @@
           color: var(--cool-gray);
       }
       [data-theme="light"] .vision-goal i {
-          color: #8b5cf6;
+          color: var(--primary-blue);
       }
       [data-theme="light"] .vision-overlay {
           background: linear-gradient(to bottom, transparent, rgba(230, 242, 255, 0.95));
