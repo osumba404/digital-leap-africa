@@ -26,6 +26,24 @@ class LessonController extends Controller
             return redirect()->route('courses.show', $course)->with('error', 'You must be enrolled to view this lesson.');
         }
 
+        // Check sequential access - user must complete previous lessons first
+        $topic = $lesson->topic;
+        $topicLessons = $topic->lessons()->orderBy('created_at')->get();
+        $currentLessonIndex = $topicLessons->search(function($item) use ($lesson) {
+            return $item->id === $lesson->id;
+        });
+
+        // If this is not the first lesson, check if previous lesson is completed
+        if ($currentLessonIndex > 0) {
+            $previousLesson = $topicLessons[$currentLessonIndex - 1];
+            $isPreviousCompleted = Auth::user()->lessons()->where('lesson_id', $previousLesson->id)->exists();
+            
+            if (!$isPreviousCompleted) {
+                return redirect()->route('courses.show', $course)
+                    ->with('error', "Please complete '{$previousLesson->title}' before accessing this lesson.");
+            }
+        }
+
         return view('pages.lessons.show', compact('lesson', 'course'));
     }
 

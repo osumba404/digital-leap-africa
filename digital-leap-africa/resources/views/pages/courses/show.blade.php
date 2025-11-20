@@ -242,6 +242,34 @@
     color: var(--cyan-accent);
 }
 
+.lesson-locked {
+    position: relative;
+}
+
+.lesson-locked-text:hover {
+    background: rgba(239, 68, 68, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.tooltip {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.tooltip.show {
+    opacity: 1;
+}
+
 .completed-icon {
     color: #10b981;
     margin-left: 1rem;
@@ -291,6 +319,15 @@
 
 [data-theme="light"] .progress-container {
     background: rgba(46, 120, 197, 0.1);
+}
+
+[data-theme="light"] .lesson-locked-text:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+[data-theme="light"] .tooltip {
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(239, 68, 68, 0.3);
 }
 </style>
 
@@ -562,20 +599,34 @@
                         {{ $topic->title }}
                     </h3>
                     
-                    @forelse ($topic->lessons as $lesson)
-                        <div class="lesson-item">
-                            <i class="fas fa-play-circle" style="color: var(--cool-gray); margin-right: 1rem;"></i>
-                            @if($canAccessContent)
+                    @forelse ($topic->lessons as $index => $lesson)
+                        @php
+                            $isCompleted = Auth::user()->lessons()->where('lesson_id', $lesson->id)->exists();
+                            $previousLesson = $index > 0 ? $topic->lessons[$index - 1] : null;
+                            $isPreviousCompleted = $previousLesson ? Auth::user()->lessons()->where('lesson_id', $previousLesson->id)->exists() : true;
+                            $canAccessLesson = $canAccessContent && ($index === 0 || $isPreviousCompleted);
+                        @endphp
+                        <div class="lesson-item {{ !$canAccessLesson ? 'lesson-locked' : '' }}" 
+                             @if(!$canAccessLesson && $previousLesson) 
+                                 data-tooltip="Complete '{{ $previousLesson->title }}' first" 
+                             @endif>
+                            <i class="fas {{ $isCompleted ? 'fa-check-circle' : ($canAccessLesson ? 'fa-play-circle' : 'fa-lock') }}" 
+                               style="color: {{ $isCompleted ? '#10b981' : ($canAccessLesson ? 'var(--cool-gray)' : '#ef4444') }}; margin-right: 1rem;"></i>
+                            @if($canAccessLesson)
                                 <a href="{{ route('lessons.show', $lesson) }}" class="lesson-link">
                                     {{ $lesson->title }}
                                 </a>
                             @else
-                                <span class="lesson-link" style="color: var(--cool-gray); opacity: 0.5; cursor: not-allowed;">
+                                <span class="lesson-link lesson-locked-text" 
+                                      style="color: var(--cool-gray); opacity: 0.5; cursor: not-allowed;"
+                                      onclick="showLessonLockedMessage('{{ $previousLesson ? $previousLesson->title : '' }}')">
                                     {{ $lesson->title }}
-                                    <i class="fas fa-lock" style="margin-left: 0.5rem; font-size: 0.8rem;"></i>
+                                    @if(!$canAccessContent)
+                                        <i class="fas fa-lock" style="margin-left: 0.5rem; font-size: 0.8rem;"></i>
+                                    @endif
                                 </span>
                             @endif
-                            @if(Auth::user()->lessons()->where('lesson_id', $lesson->id)->exists())
+                            @if($isCompleted)
                                 <i class="fas fa-check-circle completed-icon"></i>
                             @endif
                         </div>
@@ -614,4 +665,106 @@
         </div>
     @endif
 </div>
+
+<script>
+function showLessonLockedMessage(previousLessonTitle) {
+    if (previousLessonTitle) {
+        // Create or update notification
+        showNotification(
+            'Complete Previous Lesson', 
+            `Please complete "${previousLessonTitle}" before accessing this lesson.`,
+            'warning'
+        );
+    } else {
+        showNotification(
+            'Lesson Locked', 
+            'This lesson is currently locked. Complete previous lessons to unlock it.',
+            'warning'
+        );
+    }
+}
+
+function showNotification(title, message, type = 'info') {
+    // Remove existing notification
+    const existing = document.querySelector('.lesson-notification');
+    if (existing) {
+        existing.remove();
+    }
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'lesson-notification';
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'warning' ? 'rgba(239, 68, 68, 0.95)' : 'rgba(59, 130, 246, 0.95)'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        z-index: 9999;
+        max-width: 350px;
+        border: 1px solid ${type === 'warning' ? 'rgba(239, 68, 68, 0.3)' : 'rgba(59, 130, 246, 0.3)'};
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+    `;
+    
+    notification.innerHTML = `
+        <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+            <i class="fas ${type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}" style="margin-top: 0.1rem;"></i>
+            <div style="flex-grow: 1;">
+                <div style="font-weight: 600; margin-bottom: 0.25rem;">${title}</div>
+                <div style="font-size: 0.9rem; opacity: 0.9;">${message}</div>
+            </div>
+            <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer; padding: 0; margin-left: 0.5rem;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 10);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 300);
+        }
+    }, 5000);
+}
+
+// Add hover tooltips for locked lessons
+document.addEventListener('DOMContentLoaded', function() {
+    const lockedLessons = document.querySelectorAll('.lesson-locked[data-tooltip]');
+    
+    lockedLessons.forEach(lesson => {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.textContent = lesson.getAttribute('data-tooltip');
+        document.body.appendChild(tooltip);
+        
+        lesson.addEventListener('mouseenter', function(e) {
+            const rect = e.target.getBoundingClientRect();
+            tooltip.style.left = rect.left + 'px';
+            tooltip.style.top = (rect.top - 40) + 'px';
+            tooltip.classList.add('show');
+        });
+        
+        lesson.addEventListener('mouseleave', function() {
+            tooltip.classList.remove('show');
+        });
+    });
+});
+</script>
+
 @endsection
