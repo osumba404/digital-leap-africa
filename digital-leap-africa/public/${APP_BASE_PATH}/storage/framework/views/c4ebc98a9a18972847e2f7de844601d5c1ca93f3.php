@@ -1,8 +1,8 @@
-@extends('layouts.app')
 
-@section('title', 'Online Courses - Digital Leap Africa | Programming, Web Development & Digital Skills Training')
 
-@push('meta')
+<?php $__env->startSection('title', 'Online Courses - Digital Leap Africa | Programming, Web Development & Digital Skills Training'); ?>
+
+<?php $__env->startPush('meta'); ?>
 <meta name="description" content="Explore comprehensive online courses at Digital Leap Africa. Learn programming, web development, digital marketing, and essential tech skills. Free and premium courses available for African learners.">
 <meta name="keywords" content="online courses Africa, programming courses Kenya, web development training, digital skills courses, e-learning platform Africa, tech education, coding bootcamp, software development courses, digital marketing training, free programming courses">
 <meta name="author" content="Digital Leap Africa">
@@ -11,19 +11,19 @@
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="{{ route('courses.index') }}">
+<meta property="og:url" content="<?php echo e(route('courses.index')); ?>">
 <meta property="og:title" content="Online Courses - Digital Leap Africa | Programming & Digital Skills Training">
 <meta property="og:description" content="Master programming, web development, and digital skills with our comprehensive online courses. Join thousands of African learners advancing their tech careers.">
-<meta property="og:image" content="{{ asset('images/courses-og-image.jpg') }}">
+<meta property="og:image" content="<?php echo e(asset('images/courses-og-image.jpg')); ?>">
 <meta property="og:site_name" content="Digital Leap Africa">
 <meta property="og:locale" content="en_US">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="{{ route('courses.index') }}">
+<meta name="twitter:url" content="<?php echo e(route('courses.index')); ?>">
 <meta name="twitter:title" content="Online Courses - Digital Leap Africa">
 <meta name="twitter:description" content="Master programming, web development, and digital skills with our comprehensive online courses designed for African learners.">
-<meta name="twitter:image" content="{{ asset('images/courses-og-image.jpg') }}">
+<meta name="twitter:image" content="<?php echo e(asset('images/courses-og-image.jpg')); ?>">
 <meta name="twitter:image:alt" content="Digital Leap Africa Online Courses - Programming and Digital Skills Training">
 
 <!-- Additional SEO Meta Tags -->
@@ -37,7 +37,7 @@
 <meta name="target" content="all">
 
 <!-- Canonical URL -->
-<link rel="canonical" href="{{ route('courses.index') }}">
+<link rel="canonical" href="<?php echo e(route('courses.index')); ?>">
 
 <!-- Structured Data -->
 <script type="application/ld+json">
@@ -46,50 +46,50 @@
   "@type": "CollectionPage",
   "name": "Online Courses - Digital Leap Africa",
   "description": "Comprehensive online courses in programming, web development, and digital skills for African learners",
-  "url": "{{ route('courses.index') }}",
+  "url": "<?php echo e(route('courses.index')); ?>",
   "provider": {
     "@type": "EducationalOrganization",
     "name": "Digital Leap Africa",
-    "url": "{{ url('/') }}"
+    "url": "<?php echo e(url('/')); ?>"
   },
   "mainEntity": {
     "@type": "ItemList",
-    "numberOfItems": "{{ $courses->total() ?? $courses->count() }}",
+    "numberOfItems": "<?php echo e($courses->total() ?? $courses->count()); ?>",
     "itemListElement": [
-      @if(isset($courses) && $courses->count() > 0)
-        @foreach($courses->take(10) as $index => $course)
+      <?php if(isset($courses) && $courses->count() > 0): ?>
+        <?php $__currentLoopData = $courses->take(10); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
         {
           "@type": "Course",
-          "position": {{ $index + 1 }},
-          "name": "{{ $course->title }}",
-          "description": "{{ strip_tags($course->short_description ?? $course->description ?? '') }}",
-          "url": "{{ route('courses.show', $course) }}",
+          "position": <?php echo e($index + 1); ?>,
+          "name": "<?php echo e($course->title); ?>",
+          "description": "<?php echo e(strip_tags($course->short_description ?? $course->description ?? '')); ?>",
+          "url": "<?php echo e(route('courses.show', $course)); ?>",
           "provider": {
             "@type": "Organization",
             "name": "Digital Leap Africa"
           },
           "courseMode": "online",
-          "educationalLevel": "{{ $course->level ?? 'beginner' }}",
+          "educationalLevel": "<?php echo e($course->level ?? 'beginner'); ?>",
           "inLanguage": "en",
-          @if(!$course->is_free && $course->price)
+          <?php if(!$course->is_free && $course->price): ?>
           "offers": {
             "@type": "Offer",
-            "price": "{{ $course->price }}",
+            "price": "<?php echo e($course->price); ?>",
             "priceCurrency": "KES",
             "availability": "https://schema.org/InStock"
           },
-          @endif
+          <?php endif; ?>
           "hasCourseInstance": {
             "@type": "CourseInstance",
             "courseMode": "online",
             "instructor": {
               "@type": "Person",
-              "name": "{{ $course->instructor ?? 'Digital Leap Africa Instructor' }}"
+              "name": "<?php echo e($course->instructor ?? 'Digital Leap Africa Instructor'); ?>"
             }
           }
-        }@if(!$loop->last),@endif
-        @endforeach
-      @endif
+        }<?php if(!$loop->last): ?>,<?php endif; ?>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+      <?php endif; ?>
     ]
   }
 }
@@ -104,20 +104,20 @@
       "@type": "ListItem",
       "position": 1,
       "name": "Home",
-      "item": "{{ url('/') }}"
+      "item": "<?php echo e(url('/')); ?>"
     },
     {
       "@type": "ListItem",
       "position": 2,
       "name": "Courses",
-      "item": "{{ route('courses.index') }}"
+      "item": "<?php echo e(route('courses.index')); ?>"
     }
   ]
 }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 
 
@@ -205,7 +205,7 @@
 
 <!-- Latest Courses -->
 <section id="courses-section" style="padding:2rem 0;">
-  @php
+  <?php
     try {
       $courses = isset($courses) ? $courses : \App\Models\Course::query()->latest()->paginate(9);
     } catch (\Throwable $e) {
@@ -219,7 +219,7 @@
           ?? $course->banner_image
           ?? null;
     };
-  @endphp
+  ?>
 
   <div class="container">
     <div class="text-center mb-3" style="text-align:center !important; color: #64b5f6; font-size: 22px">
@@ -228,10 +228,10 @@
     
     <!-- Search Bar -->
     <div class="search-container" style="max-width: 500px; margin: 0 auto 2rem; position: relative;">
-      <form method="GET" action="{{ route('courses.index') }}" style="position: relative;">
+      <form method="GET" action="<?php echo e(route('courses.index')); ?>" style="position: relative;">
         <input type="text" 
                name="search" 
-               value="{{ $search ?? '' }}" 
+               value="<?php echo e($search ?? ''); ?>" 
                placeholder="Search courses..." 
                class="search-input"
                style="width: 100%; padding: 0.875rem 3rem 0.875rem 1rem; border: 1px solid rgba(100, 181, 246, 0.3); border-radius: 50px; background: rgba(255, 255, 255, 0.05); color: var(--diamond-white); font-size: 1rem; outline: none; transition: all 0.3s ease;">
@@ -241,25 +241,26 @@
           <i class="fas fa-search"></i>
         </button>
       </form>
-      @if($search ?? false)
+      <?php if($search ?? false): ?>
         <div style="text-align: center; margin-top: 0.75rem; color: var(--cool-gray); font-size: 0.9rem;">
-          Showing results for "<strong style="color: #64b5f6;">{{ $search }}</strong>" 
-          <a href="{{ route('courses.index') }}" style="color: #64b5f6; text-decoration: none; margin-left: 0.5rem;">
+          Showing results for "<strong style="color: #64b5f6;"><?php echo e($search); ?></strong>" 
+          <a href="<?php echo e(route('courses.index')); ?>" style="color: #64b5f6; text-decoration: none; margin-left: 0.5rem;">
             <i class="fas fa-times"></i> Clear
           </a>
         </div>
-      @endif
+      <?php endif; ?>
     </div>
 
-    @if($courses->count())
-      @if($search && $courses->total() > 0)
+    <?php if($courses->count()): ?>
+      <?php if($search && $courses->total() > 0): ?>
         <div style="text-align: center; margin-bottom: 1.5rem; color: var(--cool-gray);">
-          Found {{ $courses->total() }} course{{ $courses->total() !== 1 ? 's' : '' }}
+          Found <?php echo e($courses->total()); ?> course<?php echo e($courses->total() !== 1 ? 's' : ''); ?>
+
         </div>
-      @endif
+      <?php endif; ?>
       <div class="cards-grid">
-        @foreach($courses as $course)
-          @php
+        <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+          <?php
             $courseImage   = $pickCourseImage($course);
             $courseTitle   = $course->title ?? 'Untitled';
             $courseExcerpt = \Illuminate\Support\Str::limit(strip_tags($course->short_description ?? $course->description ?? $course->summary ?? ''), 140);
@@ -276,53 +277,55 @@
             if (Auth::check()) {
               $isEnrolled = Auth::user()->courses()->where('course_id', $course->id)->exists();
             }
-          @endphp
+          ?>
 
           <div class="card">
             <div class="card-image-container">
-              @if($courseImage)
-                <img src="{{ $courseImage }}" alt="{{ $courseTitle }}" class="card-image" width="400" height="200" loading="lazy" decoding="async">
-              @else
+              <?php if($courseImage): ?>
+                <img src="<?php echo e($courseImage); ?>" alt="<?php echo e($courseTitle); ?>" class="card-image" width="400" height="200" loading="lazy" decoding="async">
+              <?php else: ?>
                 <div style="width:100%;height:200px;background:linear-gradient(135deg,#10b981,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:2rem;">
                   <i class="fas fa-graduation-cap"></i>
                 </div>
-              @endif
-              @if($course->is_free)
+              <?php endif; ?>
+              <?php if($course->is_free): ?>
                 <span class="price-badge free">FREE</span>
-              @else
-                <span class="price-badge paid">KES {{ number_format($course->price, 0) }}</span>
-              @endif
-              <h3 class="card-title">{{ $courseTitle }}</h3>
+              <?php else: ?>
+                <span class="price-badge paid">KES <?php echo e(number_format($course->price, 0)); ?></span>
+              <?php endif; ?>
+              <h3 class="card-title"><?php echo e($courseTitle); ?></h3>
             </div>
             <div class="card-content">
               <div class="card-meta">
-                <span><i class="fas fa-play-circle"></i> {{ $lessonsCount }} lessons</span>
-                @if($course->course_type === 'cohort_based')
+                <span><i class="fas fa-play-circle"></i> <?php echo e($lessonsCount); ?> lessons</span>
+                <?php if($course->course_type === 'cohort_based'): ?>
                   <span><i class="fas fa-users"></i> Cohort-Based</span>
-                @else
+                <?php else: ?>
                   <span><i class="fas fa-user"></i> Self-Paced</span>
-                @endif
+                <?php endif; ?>
               </div>
-              @if($course->course_type === 'cohort_based' && ($course->duration_weeks || $course->start_date))
+              <?php if($course->course_type === 'cohort_based' && ($course->duration_weeks || $course->start_date)): ?>
                 <div style="margin-bottom: 1rem; padding: 0.5rem; background: rgba(147, 51, 234, 0.1); border-radius: 6px; border-left: 3px solid #9333ea;">
-                  @if($course->duration_weeks)
+                  <?php if($course->duration_weeks): ?>
                     <div style="color: #9333ea; font-size: 0.85rem; font-weight: 600;">
-                      <i class="fas fa-clock"></i> {{ $course->duration_weeks }} weeks duration
+                      <i class="fas fa-clock"></i> <?php echo e($course->duration_weeks); ?> weeks duration
                     </div>
-                  @endif
-                  @if($course->start_date && $course->end_date)
+                  <?php endif; ?>
+                  <?php if($course->start_date && $course->end_date): ?>
                     <div style="color: var(--cool-gray); font-size: 0.8rem; margin-top: 0.25rem;">
-                      {{ $course->start_date->format('M j') }} - {{ $course->end_date->format('M j, Y') }}
+                      <?php echo e($course->start_date->format('M j')); ?> - <?php echo e($course->end_date->format('M j, Y')); ?>
+
                     </div>
-                  @elseif($course->start_date)
+                  <?php elseif($course->start_date): ?>
                     <div style="color: var(--cool-gray); font-size: 0.8rem; margin-top: 0.25rem;">
-                      Starts {{ $course->start_date->format('M j, Y') }}
+                      Starts <?php echo e($course->start_date->format('M j, Y')); ?>
+
                     </div>
-                  @endif
+                  <?php endif; ?>
                 </div>
-              @endif
+              <?php endif; ?>
               
-              @if($course->has_certification)
+              <?php if($course->has_certification): ?>
                 <div style="margin-bottom: 1rem; padding: 0.5rem; background: rgba(251, 191, 36, 0.1); border-radius: 6px; border-left: 3px solid #f59e0b;">
                   <div style="color: #f59e0b; font-size: 0.85rem; font-weight: 600;">
                     <i class="fas fa-certificate"></i> Certificate of Completion
@@ -331,42 +334,44 @@
                     Earn a professional certificate upon course completion
                   </div>
                 </div>
-              @endif
-              <p class="card-body">{{ $courseExcerpt }}</p>
-              @if($isEnrolled)
-                <a class="card-button" href="{{ $showUrl }}">
+              <?php endif; ?>
+              <p class="card-body"><?php echo e($courseExcerpt); ?></p>
+              <?php if($isEnrolled): ?>
+                <a class="card-button" href="<?php echo e($showUrl); ?>">
                   Continue Learning <i class="fas fa-arrow-right"></i>
                 </a>
-              @else
-                <a class="card-button" href="{{ $showUrl }}">
+              <?php else: ?>
+                <a class="card-button" href="<?php echo e($showUrl); ?>">
                   View Course <i class="fas fa-arrow-right"></i>
                 </a>
-              @endif
+              <?php endif; ?>
             </div>
           </div>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
       </div>
-    @else
+    <?php else: ?>
       <div style="text-align: center; padding: 3rem 1rem; color: var(--cool-gray);">
         <i class="fas fa-search" style="font-size: 3rem; opacity: 0.3; margin-bottom: 1rem;"></i>
-        @if($search ?? false)
-          <h3 style="margin-bottom: 1rem;">No courses found for "{{ $search }}"</h3>
-          <p>Try searching with different keywords or <a href="{{ route('courses.index') }}" style="color: #64b5f6;">browse all courses</a></p>
-        @else
+        <?php if($search ?? false): ?>
+          <h3 style="margin-bottom: 1rem;">No courses found for "<?php echo e($search); ?>"</h3>
+          <p>Try searching with different keywords or <a href="<?php echo e(route('courses.index')); ?>" style="color: #64b5f6;">browse all courses</a></p>
+        <?php else: ?>
           <h3 style="margin-bottom: 1rem;">No Courses Available</h3>
           <p>Check back soon for new courses!</p>
-        @endif
+        <?php endif; ?>
       </div>
-    @endif
+    <?php endif; ?>
     
-    @if(method_exists($courses, 'links'))
+    <?php if(method_exists($courses, 'links')): ?>
       <div class="pagination-wrapper" style="display: flex; justify-content: center; margin-top: 3rem;">
         <div class="pagination-container" style="background: var(--charcoal); border-radius: 12px; padding: 1rem; border: 1px solid rgba(100, 181, 246, 0.1);">
-          {{ $courses->links() }}
+          <?php echo e($courses->links()); ?>
+
         </div>
       </div>
-    @endif
+    <?php endif; ?>
    
   </div>
 </section>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\DLA\digital-leap-africa\digital-leap-africa\resources\views/pages/courses/index.blade.php ENDPATH**/ ?>

@@ -31,7 +31,7 @@ class CourseController extends Controller
             });
         }
         
-        $courses = $query->latest()->paginate(9)->appends(['search' => $search]);
+        $courses = $query->latest()->paginate(6)->appends(['search' => $search]);
         
         return view('pages.courses.index', compact('courses', 'search'));
     }
