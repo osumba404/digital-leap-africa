@@ -410,7 +410,14 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
         </div>
         
         <div class="stat-card">
-            <span class="stat-number"><?php echo e(Auth::user()->lessons()->count()); ?></span>
+            <?php
+                try {
+                    $lessonsCount = Auth::user()->lessons()->count();
+                } catch (\Exception $e) {
+                    $lessonsCount = 0;
+                }
+            ?>
+            <span class="stat-number"><?php echo e($lessonsCount); ?></span>
             <div class="stat-label">Lessons Completed</div>
         </div>
         
@@ -420,12 +427,26 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
         </div>
         
         <div class="stat-card">
-            <span class="stat-number"><?php echo e(Auth::user()->certificates()->count()); ?></span>
+            <?php
+                try {
+                    $certificatesCount = Auth::user()->certificates()->count();
+                } catch (\Exception $e) {
+                    $certificatesCount = 0;
+                }
+            ?>
+            <span class="stat-number"><?php echo e($certificatesCount); ?></span>
             <div class="stat-label">Certificates Earned</div>
         </div>
         
         <div class="stat-card">
-            <span class="stat-number"><?php echo e(Auth::user()->badges()->count()); ?></span>
+            <?php
+                try {
+                    $badgesCount = Auth::user()->badges()->count();
+                } catch (\Exception $e) {
+                    $badgesCount = 0;
+                }
+            ?>
+            <span class="stat-number"><?php echo e($badgesCount); ?></span>
             <div class="stat-label">Badges Earned</div>
         </div>
     </div>
