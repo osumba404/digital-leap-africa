@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Services\GamificationService;
+use App\Traits\HasWebPImages;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    use HasWebPImages;
     /**
      * Display the user's profile form.
      */
@@ -42,28 +45,27 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validated = $request->validated();
 
         if ($request->hasFile('profile_photo')) {
             // Delete old profile photo if exists
-            if ($request->user()->profile_photo) {
-                $oldFile = public_path('storage/profile-photos/' . $request->user()->profile_photo);
-                if (file_exists($oldFile)) {
-                    unlink($oldFile);
-                }
+            if ($user->profile_photo) {
+                Storage::disk('public')->delete($user->profile_photo);
             }
             
-            $file = $request->file('profile_photo');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('storage/profile-photos'), $filename);
-            $request->user()->profile_photo = $filename;
+            // Convert and store as WebP
+            $imagePath = $this->storeWebPImage($request->file('profile_photo'), 'profile-photos');
+            $validated['profile_photo'] = $imagePath;
         }
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user->fill($validated);
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

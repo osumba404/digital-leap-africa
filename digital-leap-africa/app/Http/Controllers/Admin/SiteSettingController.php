@@ -7,9 +7,11 @@ use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\SettingsHelper;
+use App\Traits\HasWebPImages;
 
 class SiteSettingController extends Controller
 {
+    use HasWebPImages;
     public function index()
     {
         // Fetch all settings and turn them into a simple key => value array
@@ -89,21 +91,16 @@ class SiteSettingController extends Controller
             'webhook_url' => 'nullable|url',
         ]);
 
-        // Handle single-file settings uploads
+        // Handle single-file settings uploads (convert to WebP)
         $fileFields = ['logo_url', 'favicon', 'hero_banner', 'opengraph_image'];
         foreach ($fileFields as $field) {
             if ($request->hasFile($field)) {
                 $setting = SiteSetting::where('key', $field)->first();
                 if ($setting && $setting->value) {
-                    $oldFile = public_path($setting->value);
-                    if (file_exists($oldFile)) {
-                        unlink($oldFile);
-                    }
+                    Storage::disk('public')->delete($setting->value);
                 }
-                $file = $request->file($field);
-                $filename = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('storage/site'), $filename);
-                SiteSetting::updateOrCreate(['key' => $field], ['value' => '/storage/site/' . $filename]);
+                $path = $this->storeWebPImage($request->file($field), 'site');
+                SiteSetting::updateOrCreate(['key' => $field], ['value' => $path]);
                 unset($validated[$field]);
             }
         }
@@ -114,19 +111,13 @@ class SiteSettingController extends Controller
         foreach ($incomingSlides as $idx => $slide) {
             $enabled = isset($slide['enabled']) && (int)$slide['enabled'] === 1 ? 1 : 0;
 
-            // carry existing image if any, can be replaced by new upload
+            // carry existing image if any, can be replaced by new upload (convert to WebP)
             $imageUrl = $slide['existing_image'] ?? null;
             if ($request->hasFile("hero_slides.$idx.image")) {
                 if (!empty($imageUrl)) {
-                    $oldFile = public_path($imageUrl);
-                    if (file_exists($oldFile)) {
-                        unlink($oldFile);
-                    }
+                    Storage::disk('public')->delete($imageUrl);
                 }
-                $file = $request->file("hero_slides.$idx.image");
-                $filename = time() . '_' . $idx . '_' . $file->getClientOriginalName();
-                $file->move(public_path('storage/site'), $filename);
-                $imageUrl = '/storage/site/' . $filename;
+                $imageUrl = $this->storeWebPImage($request->file("hero_slides.$idx.image"), 'site');
             }
 
             $normalizedSlides[] = [

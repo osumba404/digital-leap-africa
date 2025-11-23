@@ -355,7 +355,7 @@
         @if(($slide['enabled'] ?? true))
         <div class="fade-slide {{ $i === 0 ? 'is-active' : '' }}">
           @if(!empty($slide['image']))
-            <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] ?? 'Hero Slide' }}" class="hero-img" @if($i > 0) loading="lazy" @endif fetchpriority="{{ $i === 0 ? 'high' : 'low' }}">
+            <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] ?? 'Hero Slide' }}" class="hero-img" width="1920" height="1080" @if($i > 0) loading="lazy" @endif fetchpriority="{{ $i === 0 ? 'high' : 'low' }}">
           @endif
           <div class="hero-overlay"></div>
           <div class="hero-stars"></div>
@@ -1985,7 +1985,7 @@ animation: twinkle 2s infinite ease-in-out;
                     <article class="article-card" itemscope itemtype="https://schema.org/Article" itemprop="itemListElement">
                         <div class="article-image">
                             @if($image)
-                                <img src="{{ $image }}" alt="{{ $title }} - Digital Leap Africa Article" itemprop="image" loading="lazy" fetchpriority="low">
+                                <img src="{{ $image }}" alt="{{ $title }} - Digital Leap Africa Article" itemprop="image" width="400" height="220" loading="lazy" fetchpriority="low">
                             @else
                                 <div class="article-placeholder">
                                     <i class="fas fa-newspaper"></i>
@@ -2058,7 +2058,7 @@ animation: twinkle 2s infinite ease-in-out;
 
         @php
             $pickCourseImage = function($course) {
-                return $course->image_url
+                return $course->image_url_full ?? $course->image_url
                     ?? $course->thumbnail
                     ?? $course->cover_image
                     ?? $course->banner_image
@@ -2082,7 +2082,7 @@ animation: twinkle 2s infinite ease-in-out;
                     <div class="course-horizontal-card" itemscope itemtype="https://schema.org/Course" itemprop="itemListElement">
                         <div class="course-image-wrapper">
                             @if($courseImage)
-                                <img src="{{ $courseImage }}" alt="{{ $courseTitle }} - Online Course at Digital Leap Africa" class="course-img" itemprop="image" loading="lazy" fetchpriority="low">
+                                <img src="{{ $courseImage }}" alt="{{ $courseTitle }} - Online Course at Digital Leap Africa" class="course-img" itemprop="image" width="200" height="160" loading="lazy" fetchpriority="low">
                             @else
                                 <div class="course-img-placeholder">
                                     <i class="fas fa-graduation-cap"></i>

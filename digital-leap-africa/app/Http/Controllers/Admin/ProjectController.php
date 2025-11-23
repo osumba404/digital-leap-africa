@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Traits\HasWebPImages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
+    use HasWebPImages;
     public function index()
     {
         $projects = Project::latest()->get();
@@ -34,10 +36,7 @@ class ProjectController extends Controller
         $validated['slug'] = Str::slug($validated['title']);
 
         if ($request->hasFile('image_url')) {
-            $file = $request->file('image_url');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('storage/projects'), $filename);
-            $validated['image_url'] = '/storage/projects/' . $filename;
+            $validated['image_url'] = $this->storeWebPImage($request->file('image_url'), 'projects');
         }
 
         Project::create($validated);
@@ -63,15 +62,9 @@ class ProjectController extends Controller
 
         if ($request->hasFile('image_url')) {
             if ($project->image_url) {
-                $oldFile = public_path($project->image_url);
-                if (file_exists($oldFile)) {
-                    unlink($oldFile);
-                }
+                Storage::disk('public')->delete($project->image_url);
             }
-            $file = $request->file('image_url');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('storage/projects'), $filename);
-            $validated['image_url'] = '/storage/projects/' . $filename;
+            $validated['image_url'] = $this->storeWebPImage($request->file('image_url'), 'projects');
         }
 
         $project->update($validated);
@@ -82,10 +75,7 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         if ($project->image_url) {
-            $oldFile = public_path($project->image_url);
-            if (file_exists($oldFile)) {
-                unlink($oldFile);
-            }
+            Storage::disk('public')->delete($project->image_url);
         }
         $project->delete();
         return redirect()->route('admin.projects.index')->with('success', 'Project deleted successfully.');

@@ -13,50 +13,109 @@
   }
   
   .article-header {
-    background: linear-gradient(135deg, var(--navy-bg), var(--primary-blue));
-    padding: 3rem 0;
-    margin-bottom: 2rem;
+    background: linear-gradient(135deg, #0a1628 0%, #1a2942 50%, #2E78C5 100%);
+    padding: 0;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .article-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.5;
+  }
+  
+  .article-header-content {
+    position: relative;
+    z-index: 1;
+    padding: 4rem 0 3rem;
   }
   
   .article-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--diamond-white);
-    margin-bottom: 1rem;
+    font-size: 3rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 2rem;
     line-height: 1.2;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    letter-spacing: -0.5px;
   }
   
   .article-meta {
     display: flex;
     align-items: center;
-    gap: 2rem;
-    margin-bottom: 1.5rem;
+    gap: 2.5rem;
+    margin-bottom: 2rem;
     flex-wrap: wrap;
   }
   
   .author-info {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.25rem;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .author-info:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
   }
   
   .author-avatar {
-    width: 50px;
-    height: 50px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--cyan-accent), var(--primary-blue));
+    background: linear-gradient(135deg, #00C9FF 0%, #7A5FFF 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
+    font-weight: 700;
+    font-size: 1.25rem;
     color: white;
+    box-shadow: 0 4px 15px rgba(0, 201, 255, 0.3);
+    border: 3px solid rgba(255, 255, 255, 0.2);
   }
   
   .article-stats {
     display: flex;
-    gap: 1.5rem;
-    color: var(--cool-gray);
-    font-size: 0.9rem;
+    gap: 2rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  
+  .article-stats > div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+  }
+  
+  .article-stats > div:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+  }
+  
+  .article-stats i {
+    color: #00C9FF;
+    font-size: 1.1rem;
   }
   
   .article-content {
@@ -230,11 +289,46 @@
   }
   
   [data-theme="light"] .article-header {
-    background: linear-gradient(135deg, #ffffff, var(--primary-blue));
+    background: linear-gradient(135deg, #E6F2FF 0%, #FFFFFF 50%, #2E78C5 100%);
+  }
+  
+  [data-theme="light"] .article-header::before {
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(46,120,197,0.08)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
   }
   
   [data-theme="light"] .article-title {
-    color: var(--navy-bg);
+    color: #0a1628;
+    text-shadow: 0 2px 20px rgba(255,255,255,0.5);
+  }
+  
+  [data-theme="light"] .author-info {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(46, 120, 197, 0.2);
+  }
+  
+  [data-theme="light"] .author-info:hover {
+    background: rgba(255, 255, 255, 0.8);
+  }
+  
+  [data-theme="light"] .author-avatar {
+    box-shadow: 0 4px 15px rgba(46, 120, 197, 0.3);
+  }
+  
+  [data-theme="light"] .article-stats {
+    color: #1a2942;
+  }
+  
+  [data-theme="light"] .article-stats > div {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(46, 120, 197, 0.15);
+  }
+  
+  [data-theme="light"] .article-stats > div:hover {
+    background: rgba(255, 255, 255, 0.7);
+  }
+  
+  [data-theme="light"] .article-stats i {
+    color: #2E78C5;
   }
   
   [data-theme="light"] .article-stats {
@@ -326,6 +420,10 @@
   }
   
   @media (max-width: 768px) {
+    .article-header-content {
+      padding: 3rem 0 2rem;
+    }
+    
     .article-title {
       font-size: 2rem;
     }
@@ -334,6 +432,22 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 1rem;
+    }
+    
+    .author-info {
+      width: 100%;
+      justify-content: flex-start;
+    }
+    
+    .article-stats {
+      width: 100%;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    
+    .article-stats > div {
+      font-size: 0.85rem;
+      padding: 0.4rem 0.8rem;
     }
     
     .article-content {
@@ -839,32 +953,34 @@
 
 <div class="blog-article">
   <div class="article-header">
-    <div class="container">
-      <h1 class="article-title">{{ $article->title }}</h1>
-      <div class="article-meta">
-        <div class="author-info">
-          <div class="author-avatar">{{ $initials ?: 'DL' }}</div>
-          <div>
-            <div class="fw-bold text-white">{{ $authorName }}</div>
-            <div class="text-light opacity-75">
-              {{ $article->published_at ? $article->published_at->format('M d, Y') : $article->created_at->format('M d, Y') }}
+    <div class="article-header-content">
+      <div class="container">
+        <h1 class="article-title">{{ $article->title }}</h1>
+        <div class="article-meta">
+          <div class="author-info">
+            <div class="author-avatar">{{ $initials ?: 'DL' }}</div>
+            <div>
+              <div class="fw-bold text-white" style="font-size: 1.05rem; margin-bottom: 0.25rem;">{{ $authorName }}</div>
+              <div class="text-light" style="opacity: 0.8; font-size: 0.9rem;">
+                {{ $article->published_at ? $article->published_at->format('M d, Y') : $article->created_at->format('M d, Y') }}
+              </div>
             </div>
           </div>
+          <div class="article-stats">
+            <div><i class="fas fa-clock"></i> {{ $readMinutes }} min read</div>
+            <div><i class="fas fa-comments"></i> {{ $article->comments->count() }} comments</div>
+            <div><i class="fas fa-heart"></i> {{ $article->likes_count ?? 0 }} likes</div>
+          </div>
         </div>
-        <div class="article-stats">
-          <div><i class="fas fa-clock me-1"></i> {{ $readMinutes }} min read</div>
-          <div><i class="fas fa-comments me-1"></i> {{ $article->comments->count() }} comments</div>
-          <div><i class="fas fa-heart me-1"></i> {{ $article->likes_count ?? 0 }} likes</div>
-        </div>
-      </div>
 
-      @if(!empty($tags))
-        <div class="mt-3">
-          @foreach($tags as $tag)
-            <a class="tag" href="{{ route('blog.index', ['tag' => $tag]) }}">{{ $tag }}</a>
-          @endforeach
-        </div>
-      @endif
+        @if(!empty($tags))
+          <div class="mt-3">
+            @foreach($tags as $tag)
+              <a class="tag" href="{{ route('blog.index', ['tag' => $tag]) }}" style="background: rgba(0, 201, 255, 0.15); border: 1px solid rgba(0, 201, 255, 0.3); color: #00C9FF; padding: 0.4rem 1rem; font-weight: 600;">{{ $tag }}</a>
+            @endforeach
+          </div>
+        @endif
+      </div>
     </div>
   </div>
 

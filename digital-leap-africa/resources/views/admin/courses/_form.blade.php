@@ -132,10 +132,10 @@
             <label for="image_url" class="form-label">Course Image</label>
             <input type="file" id="image_url" name="image_url" accept="image/*" class="form-control">
             <small style="color: var(--cool-gray); font-size: 0.85rem;">Upload an image from your computer.</small>
-            @if(!empty($course?->image_url))
+            @if(!empty($course?->image_url_full))
                 <div style="margin-top:0.5rem;">
                     <div class="text-muted small">Current image:</div>
-                    <img src="{{ $course->image_url }}" alt="Course image" style="max-height:140px;border-radius:8px;">
+                    <img src="{{ $course->image_url_full }}" alt="Course image" style="max-height:140px;border-radius:8px;">
                 </div>
             @endif
         </div>

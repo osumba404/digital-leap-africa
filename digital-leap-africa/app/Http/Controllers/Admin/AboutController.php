@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\AboutSection;
 use App\Models\TeamMember;
 use App\Models\Partner;
+use App\Traits\HasWebPImages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class AboutController extends Controller
 {
+    use HasWebPImages;
     // About Sections Management
     public function index()
     {
@@ -41,10 +43,7 @@ class AboutController extends Controller
         ]);
         
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('storage/about'), $filename);
-            $validated['image_path'] = '/storage/about/' . $filename;
+            $validated['image_path'] = $this->storeWebPImage($request->file('image'), 'about');
         }
 
         // Transform bullet_points_text (one per line) to array
@@ -81,15 +80,9 @@ class AboutController extends Controller
         
         if ($request->hasFile('image')) {
             if ($section->image_path) {
-                $oldFile = public_path($section->image_path);
-                if (file_exists($oldFile)) {
-                    unlink($oldFile);
-                }
+                Storage::disk('public')->delete($section->image_path);
             }
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('storage/about'), $filename);
-            $validated['image_path'] = '/storage/about/' . $filename;
+            $validated['image_path'] = $this->storeWebPImage($request->file('image'), 'about');
         }
         
         // Transform bullet_points_text (one per line) to array
@@ -109,10 +102,7 @@ class AboutController extends Controller
     public function destroySection(AboutSection $section)
     {
         if ($section->image_path) {
-            $oldFile = public_path($section->image_path);
-            if (file_exists($oldFile)) {
-                unlink($oldFile);
-            }
+            Storage::disk('public')->delete($section->image_path);
         }
         $section->delete();
         return back()->with('success', 'Section deleted successfully.');
@@ -141,10 +131,7 @@ class AboutController extends Controller
         ]);
         
         if ($request->hasFile('photo')) {
-            $file = $request->file('photo');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('storage/team'), $filename);
-            $validated['image_path'] = '/storage/team/' . $filename;
+            $validated['image_path'] = $this->storeWebPImage($request->file('photo'), 'team');
         }
 
         TeamMember::create($validated);
@@ -175,17 +162,10 @@ class AboutController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            // Delete old photo if exists
             if ($teamMember->photo_path) {
-                $oldFile = public_path($teamMember->photo_path);
-                if (file_exists($oldFile)) {
-                    unlink($oldFile);
-                }
+                Storage::disk('public')->delete($teamMember->photo_path);
             }
-            $file = $request->file('photo');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('storage/team'), $filename);
-            $validated['image_path'] = '/storage/team/' . $filename;
+            $validated['image_path'] = $this->storeWebPImage($request->file('photo'), 'team');
         }
 
         $teamMember->update($validated);
@@ -197,10 +177,7 @@ class AboutController extends Controller
     public function destroyTeamMember(TeamMember $teamMember)
     {
         if ($teamMember->photo_path) {
-            $oldFile = public_path($teamMember->photo_path);
-            if (file_exists($oldFile)) {
-                unlink($oldFile);
-            }
+            Storage::disk('public')->delete($teamMember->photo_path);
         }
         $teamMember->delete();
         return back()->with('success', 'Team member deleted successfully.');
@@ -222,10 +199,7 @@ class AboutController extends Controller
             'order' => 'integer',
         ]);
 
-        $file = $request->file('logo');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('storage/partners'), $filename);
-        $validated['logo_path'] = '/storage/partners/' . $filename;
+        $validated['logo_path'] = $this->storeWebPImage($request->file('logo'), 'partners');
 
         Partner::create($validated);
 
@@ -249,17 +223,10 @@ class AboutController extends Controller
         ]);
 
         if ($request->hasFile('logo')) {
-            // Delete old logo if exists
             if ($partner->logo_path) {
-                $oldFile = public_path($partner->logo_path);
-                if (file_exists($oldFile)) {
-                    unlink($oldFile);
-                }
+                Storage::disk('public')->delete($partner->logo_path);
             }
-            $file = $request->file('logo');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('storage/partners'), $filename);
-            $validated['logo_path'] = '/storage/partners/' . $filename;
+            $validated['logo_path'] = $this->storeWebPImage($request->file('logo'), 'partners');
         }
 
         $partner->update($validated);
@@ -271,10 +238,7 @@ class AboutController extends Controller
     public function destroyPartner(Partner $partner)
     {
         if ($partner->logo_path) {
-            $oldFile = public_path($partner->logo_path);
-            if (file_exists($oldFile)) {
-                unlink($oldFile);
-            }
+            Storage::disk('public')->delete($partner->logo_path);
         }
         $partner->delete();
         return back()->with('success', 'Partner deleted successfully.');

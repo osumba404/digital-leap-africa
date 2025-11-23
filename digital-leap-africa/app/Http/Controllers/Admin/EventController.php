@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\User;
 use App\Models\Notification;
+use App\Traits\HasWebPImages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class EventController extends Controller
 {
+    use HasWebPImages;
     public function index()
     {
         $events = Event::latest('date')->paginate(20);
@@ -79,12 +81,8 @@ class EventController extends Controller
 
     public function destroy(Event $event)
     {
-        // Delete attached image if exists
         if (!empty($event->image_path)) {
-            $oldFile = public_path($event->image_path);
-            if (file_exists($oldFile)) {
-                unlink($oldFile);
-            }
+            Storage::disk('public')->delete($event->image_path);
         }
         $event->delete();
 
@@ -119,28 +117,27 @@ class EventController extends Controller
         if ($request->filled('image_cropped_data')) {
             $dataUrl = $request->input('image_cropped_data');
             if (preg_match('/^data:image\\/(png|jpg|jpeg|webp);base64,/', $dataUrl, $m)) {
-                $extension = $m[1] === 'jpg' ? 'jpeg' : $m[1];
                 $data = base64_decode(substr($dataUrl, strpos($dataUrl, ',') + 1));
-
-                $filename = uniqid('event_') . '.' . $extension;
-                file_put_contents(public_path('storage/events/' . $filename), $data);
-                $savedUrl = '/storage/events/' . $filename;
+                $image = imagecreatefromstring($data);
+                
+                ob_start();
+                imagewebp($image, null, 85);
+                $webpContent = ob_get_clean();
+                imagedestroy($image);
+                
+                $filename = uniqid('event_') . '.webp';
+                Storage::disk('public')->put('events/' . $filename, $webpContent);
+                $savedUrl = 'events/' . $filename;
             }
         }
         // Priority 2: raw file upload
         elseif ($request->hasFile('image_file')) {
-            $file = $request->file('image_file');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('storage/events'), $filename);
-            $savedUrl = '/storage/events/' . $filename;
+            $savedUrl = $this->storeWebPImage($request->file('image_file'), 'events');
         }
 
         // If we saved a new image and had an old one, delete the old file
         if ($savedUrl && $existingUrl) {
-            $oldFile = public_path($existingUrl);
-            if (file_exists($oldFile)) {
-                unlink($oldFile);
-            }
+            Storage::disk('public')->delete($existingUrl);
         }
 
         return $savedUrl;

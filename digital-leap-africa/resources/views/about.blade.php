@@ -223,7 +223,6 @@
 @endpush
 
 @push('styles')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
   /* Page sections */
   .section { padding: 2.5rem 0; }
@@ -788,7 +787,7 @@
           <div class="about-card-image-section">
               <div class="about-card-image">
                   @if($about->image_path)
-                      <img src="{{ $about->image_url }}" alt="{{ $about->title }}" loading="lazy" fetchpriority="high">
+                      <img src="{{ $about->image_url }}" alt="{{ $about->title }}" width="400" height="400" loading="eager" fetchpriority="high">
                   @else
                       <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="{{ $about->title }}" loading="lazy" fetchpriority="high">
                   @endif
@@ -980,7 +979,7 @@
           <div class="vision-header">
             <div class="vision-image">
               @if(!empty($mission->image_path))
-                <img src="{{ $mission->image_url }}" alt="{{ $mission->title }}" loading="lazy" fetchpriority="low">
+                <img src="{{ $mission->image_url }}" alt="{{ $mission->title }}" width="600" height="360" loading="lazy" fetchpriority="low">
               @else
                 <img src="https://via.placeholder.com/1000x600.png?text=Mission" alt="{{ $mission->title }}" loading="lazy" fetchpriority="low">
               @endif
@@ -1031,7 +1030,7 @@
           </div>
           <div class="geometric-image">
             @if(!empty($vision->image_path))
-              <img src="{{ $vision->image_url }}" alt="{{ $vision->title }}" loading="lazy" fetchpriority="low">
+              <img src="{{ $vision->image_url }}" alt="{{ $vision->title }}" width="600" height="360" loading="lazy" fetchpriority="low">
             @else
               <img src="https://via.placeholder.com/1000x600.png?text=Vision" alt="{{ $vision->title }}" loading="lazy" fetchpriority="low">
             @endif
@@ -1105,7 +1104,7 @@
         <div class="tm-card fade-in-up">
           <div class="tm-image-container">
             @if($member->image_path)
-              <img src="{{ $member->image_url }}" alt="{{ $member->name }}" loading="lazy" fetchpriority="low">
+              <img src="{{ $member->image_url }}" alt="{{ $member->name }}" width="320" height="360" loading="lazy" fetchpriority="low">
             @else
               <img src="https://via.placeholder.com/600x600.png?text=Profile" alt="{{ $member->name }}" loading="lazy" fetchpriority="low">
             @endif

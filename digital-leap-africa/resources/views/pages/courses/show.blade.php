@@ -334,8 +334,8 @@
 <div class="container">
     {{-- Course Hero Section --}}
     <div class="course-hero">
-        @if($course->image_url)
-            <img src="{{ $course->image_url }}" alt="{{ $course->title }}" class="course-image">
+        @if($course->image_url_full)
+            <img src="{{ $course->image_url_full }}" alt="{{ $course->title }}" class="course-image">
         @else
             <div class="course-image" style="display: flex; align-items: center; justify-content: center;">
                 <i class="fas fa-graduation-cap" style="font-size: 4rem; color: var(--diamond-white); opacity: 0.3;"></i>

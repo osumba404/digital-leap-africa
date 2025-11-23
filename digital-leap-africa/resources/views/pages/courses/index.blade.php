@@ -212,7 +212,8 @@
       $courses = collect();
     }
     $pickCourseImage = function($course) {
-      return $course->image_url
+      return $course->image_url_full
+          ?? $course->image_url
           ?? $course->thumbnail
           ?? $course->cover_image
           ?? $course->banner_image
@@ -280,9 +281,9 @@
           <div class="card">
             <div class="card-image-container">
               @if($courseImage)
-                <img src="{{ $courseImage }}" alt="{{ $courseTitle }}" class="card-image">
+                <img src="{{ $courseImage }}" alt="{{ $courseTitle }}" class="card-image" width="400" height="200" loading="lazy">
               @else
-                <img src="https://via.placeholder.com/1000x600.png?text=Course" alt="{{ $courseTitle }}" class="card-image">
+                <img src="https://via.placeholder.com/1000x600.png?text=Course" alt="{{ $courseTitle }}" class="card-image" width="400" height="200" loading="lazy">
               @endif
               @if($course->is_free)
                 <span class="price-badge free">FREE</span>

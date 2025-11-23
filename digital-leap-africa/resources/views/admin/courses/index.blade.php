@@ -199,8 +199,8 @@
             <tr>
                 <td>
                     <div class="course-info">
-                        @if($course->image_url)
-                            <img src="{{ $course->image_url }}" alt="{{ $course->title }}" class="course-image">
+                        @if($course->image_url_full)
+                            <img src="{{ $course->image_url_full }}" alt="{{ $course->title }}" class="course-image">
                         @else
                             <div class="course-placeholder">
                                 <i class="fas fa-graduation-cap" style="color: var(--cyan-accent);"></i>

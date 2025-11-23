@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Course; // Make sure this model is imported
+use App\Models\Course;
 use App\Models\User;
 use App\Models\Notification;
 use App\Services\EmailNotificationService;
+use App\Traits\HasWebPImages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -15,6 +16,7 @@ use App\Services\GamificationService;
 
 class CourseController extends Controller
 {
+    use HasWebPImages;
     public function index()
     {
         $courses = Course::latest()->get();
@@ -54,10 +56,7 @@ class CourseController extends Controller
         $validated['price'] = $validated['is_free'] ? 0 : ($validated['price'] ?? 0);
 
         if ($request->hasFile('image_url')) {
-            $file = $request->file('image_url');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('storage/courses'), $filename);
-            $validated['image_url'] = '/storage/courses/' . $filename;
+            $validated['image_url'] = $this->storeWebPImage($request->file('image_url'), 'courses');
         }
 
         $course = Course::create($validated);
@@ -113,15 +112,9 @@ class CourseController extends Controller
 
         if ($request->hasFile('image_url')) {
             if ($course->image_url) {
-                $oldFile = public_path($course->image_url);
-                if (file_exists($oldFile)) {
-                    unlink($oldFile);
-                }
+                Storage::disk('public')->delete($course->image_url);
             }
-            $file = $request->file('image_url');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('storage/courses'), $filename);
-            $validated['image_url'] = '/storage/courses/' . $filename;
+            $validated['image_url'] = $this->storeWebPImage($request->file('image_url'), 'courses');
         }
 
         $course->update($validated);
@@ -197,10 +190,7 @@ class CourseController extends Controller
     public function destroy(Course $course)
     {
         if ($course->image_url) {
-            $oldFile = public_path($course->image_url);
-            if (file_exists($oldFile)) {
-                unlink($oldFile);
-            }
+            Storage::disk('public')->delete($course->image_url);
         }
         $course->delete();
         return redirect()->route('admin.courses.index')->with('success', 'Course deleted successfully.');

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Event extends Model
@@ -59,10 +60,20 @@ class Event extends Model
         return $slug;
     }
 
-    // Convenience accessor to always get a usable image URL (could return a default)
+    // Convenience accessor to always get a usable image URL
     public function getImageUrlAttribute(): ?string
     {
-        return $this->image_path ?: null;
+        if (!$this->image_path) return null;
+        
+        if (preg_match('/^https?:\/\//i', $this->image_path)) {
+            return $this->image_path;
+        }
+        
+        if (str_starts_with($this->image_path, '/storage/')) {
+            return url($this->image_path);
+        }
+        
+        return Storage::disk('public')->url($this->image_path);
     }
 
     // Example scopes (optional)

@@ -69,14 +69,16 @@ class Article extends Model
     // Accessors
     public function getFeaturedImageUrlAttribute()
     {
-        if (!$this->featured_image) {
-            return null;
+        if (!$this->featured_image) return null;
+        
+        if (preg_match('/^https?:\/\//i', $this->featured_image)) {
+            return $this->featured_image;
         }
-        // If already starts with /storage/, return as is
+        
         if (str_starts_with($this->featured_image, '/storage/')) {
             return url($this->featured_image);
         }
-        // Otherwise assume it's a direct filename in articles folder
-        return url('/storage/articles/' . $this->featured_image);
+        
+        return Storage::disk('public')->url($this->featured_image);
     }
 }

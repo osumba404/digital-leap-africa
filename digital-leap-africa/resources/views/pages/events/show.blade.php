@@ -570,9 +570,9 @@
         </div>
     </div>
 
-    @if(!empty($event->image_path))
+    @if(!empty($event->image_url))
         <div class="event-image-container">
-            <img class="event-image" src="{{ $event->image_path }}" alt="{{ $event->title }}">
+            <img class="event-image" src="{{ $event->image_url }}" alt="{{ $event->title }}">
         </div>
     @endif
 

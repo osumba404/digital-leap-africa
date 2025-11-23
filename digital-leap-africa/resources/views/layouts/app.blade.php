@@ -7,7 +7,7 @@
 
     <!-- SEO Meta Tags -->
     <title>@yield('title', $siteSettings['meta_title'] ?? 'Digital Leap Africa - Premier Tech Education Platform in Africa | Programming Courses & Career Development')</title>
-    <meta name="description" content="@yield('meta_description', $siteSettings['meta_description'] ?? 'Transform your tech career with Digital Leap Africa. Expert-led programming courses, web development training, and career opportunities across Kenya, Nigeria, Ghana, and all of Africa. Join 10,000+ successful graduates.')">
+    <meta name="description" content="@yield('meta_description', $siteSettings['meta_description'] ?? 'Empowering African youth through comprehensive e-learning courses, job opportunities, and vibrant community. Join Digital Leap Africa for tech skills, career development, and professional growth.')">
     <meta name="keywords" content="@yield('meta_keywords', $siteSettings['keywords'] ?? 'programming courses Africa, web development Kenya, tech education Nigeria, coding bootcamp Ghana, software development training, digital skills Africa, tech careers Kenya, programming jobs Nigeria, web developer course, full stack development Africa')">
     <meta name="author" content="Digital Leap Africa">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -91,9 +91,29 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     
-    <!-- Fonts and Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Critical CSS - Inline to prevent FOUC and CLS -->
+    <style>
+        /* Prevent FOUC */
+        html{visibility:visible;opacity:1}
+        body{margin:0;background:#0C121C;color:#F5F7FA;font-family:system-ui,-apple-system,sans-serif;padding-top:4rem;min-height:100vh}
+        .site-header{position:fixed;top:0;width:100%;background:#252A32;z-index:1000;height:4rem;border-bottom:1px solid rgba(0,201,255,.2)}
+        .nav{display:flex;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto;width:90%;padding:0 1rem;height:100%}
+        .brand{display:flex;align-items:center;gap:.75rem;color:#fff;text-decoration:none}
+        .brand h1{font-size:1.1rem;margin:0;font-weight:700}
+        .container{width:90%;max-width:1100px;margin:0 auto;padding:2rem 0}
+        /* Reserve space for images to prevent CLS */
+        img{max-width:100%;height:auto}
+        .hero-carousel{min-height:100vh}
+        .stat-card,.article-card,.course-horizontal-card{min-height:200px}
+        [data-theme="light"] body{background:#F8FAFC;color:#1a202c}
+        [data-theme="light"] .site-header{background:#FFF}
+    </style>
+    
+    <!-- Fonts and Icons - Async Load -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
 
     <style>
         /* ========== Color palette variables ========== */
@@ -2125,9 +2145,8 @@
 
     @stack('scripts')
     
-
-    
-    <script>
+    <!-- Defer non-critical scripts -->
+    <script defer>
         // Theme Toggle Functionality
         function toggleTheme() {
             const html = document.documentElement;

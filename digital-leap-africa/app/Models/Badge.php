@@ -2,6 +2,7 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 
 class Badge extends Model
@@ -30,13 +31,8 @@ class Badge extends Model
             return $this->img_url;
         }
         
-        // If it's already a full path starting with /storage/, return as URL
-        if (str_starts_with($this->img_url, '/storage/')) {
-            return url($this->img_url);
-        }
-        
-        // Default: assume it's just a filename in badges directory
-        return url('/storage/badges/' . $this->img_url);
+        // Convert storage path to full URL
+        return Storage::disk('public')->url($this->img_url);
     }
     
     /**

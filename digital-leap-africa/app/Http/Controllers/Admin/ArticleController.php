@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\User;
 use App\Models\Notification;
+use App\Traits\HasWebPImages;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -15,6 +16,7 @@ use Illuminate\View\View;
 
 class ArticleController extends Controller
 {
+    use HasWebPImages;
     public function index(Request $request): View
     {
         $articles = Article::query()
@@ -70,10 +72,7 @@ class ArticleController extends Controller
     }
 
     if ($request->hasFile('featured_image')) {
-        $file = $request->file('featured_image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('storage/articles'), $filename);
-        $payload['featured_image'] = '/storage/articles/' . $filename;
+        $payload['featured_image'] = $this->storeWebPImage($request->file('featured_image'), 'articles');
     }
 
     $article = Article::create($payload);
@@ -150,15 +149,9 @@ public function update(Request $request, Article $article): RedirectResponse
 
     if ($request->hasFile('featured_image')) {
         if ($article->featured_image) {
-            $oldFile = public_path($article->featured_image);
-            if (file_exists($oldFile)) {
-                unlink($oldFile);
-            }
+            Storage::disk('public')->delete($article->featured_image);
         }
-        $file = $request->file('featured_image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('storage/articles'), $filename);
-        $payload['featured_image'] = '/storage/articles/' . $filename;
+        $payload['featured_image'] = $this->storeWebPImage($request->file('featured_image'), 'articles');
     }
 
     $article->update($payload);
@@ -169,10 +162,7 @@ public function update(Request $request, Article $article): RedirectResponse
     public function destroy(Article $article): RedirectResponse
     {
         if ($article->featured_image) {
-            $oldFile = public_path($article->featured_image);
-            if (file_exists($oldFile)) {
-                unlink($oldFile);
-            }
+            Storage::disk('public')->delete($article->featured_image);
         }
         $article->delete();
         return redirect()->route('admin.articles.index')->with('status', 'Article deleted');

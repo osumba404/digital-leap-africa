@@ -13,6 +13,7 @@ use App\Models\{
     AboutSection,
     SiteSetting
 };
+use App\Helpers\SettingsHelper;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -108,27 +109,11 @@ class PageController extends Controller
             'members' => User::count(),
         ];
 
-        // Fetch site settings for carousel
+        // Fetch site settings using SettingsHelper (handles image URL conversion)
         try {
-            $siteSettings = SiteSetting::pluck('value', 'key')->toArray();
-            // Decode JSON values
-            foreach ($siteSettings as $key => $value) {
-                $decoded = json_decode($value, true);
-                if (json_last_error() === JSON_ERROR_NONE) {
-                    $siteSettings[$key] = $decoded;
-                }
-            }
+            $siteSettings = SettingsHelper::all();
         } catch (\Exception $e) {
             $siteSettings = [];
-        }
-        
-        // Debug: Check if hero_slides exists
-        if (empty($siteSettings['hero_slides'])) {
-            // Force load hero slides if empty
-            $heroSlidesJson = SiteSetting::where('key', 'hero_slides')->value('value');
-            if ($heroSlidesJson) {
-                $siteSettings['hero_slides'] = json_decode($heroSlidesJson, true);
-            }
         }
         
         return view('index', compact(

@@ -7,9 +7,11 @@ use App\Models\ELibraryResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\HasWebPImages;
 
 class ELibraryResourceController extends Controller
 {
+use HasWebPImages;
 public function index()
 {
 $resources = ELibraryResource::latest()->get();
@@ -34,10 +36,7 @@ $validated = $request->validate([
 $validated['slug'] = Str::slug($validated['title']);
 
 if ($request->hasFile('image_url')) {
-$file = $request->file('image_url');
-$filename = time() . '_' . $file->getClientOriginalName();
-$file->move(public_path('storage/elibrary'), $filename);
-$validated['image_url'] = '/storage/elibrary/' . $filename;
+$validated['image_url'] = $this->storeWebPImage($request->file('image_url'), 'elibrary');
 }
 
 ELibraryResource::create($validated);
@@ -69,15 +68,9 @@ $validated['slug'] = Str::slug($validated['title']);
 
 if ($request->hasFile('image_url')) {
 if ($elibraryResource->image_url) {
-$oldFile = public_path($elibraryResource->image_url);
-if (file_exists($oldFile)) {
-unlink($oldFile);
+Storage::disk('public')->delete($elibraryResource->image_url);
 }
-}
-$file = $request->file('image_url');
-$filename = time() . '_' . $file->getClientOriginalName();
-$file->move(public_path('storage/elibrary'), $filename);
-$validated['image_url'] = '/storage/elibrary/' . $filename;
+$validated['image_url'] = $this->storeWebPImage($request->file('image_url'), 'elibrary');
 }
 
 $elibraryResource->update($validated);
@@ -87,10 +80,7 @@ return redirect()->route('admin.elibrary-resources.index')->with('success', 'eLi
 public function destroy(ELibraryResource $elibraryResource)
 {
 if ($elibraryResource->image_url) {
-$oldFile = public_path($elibraryResource->image_url);
-if (file_exists($oldFile)) {
-unlink($oldFile);
-}
+Storage::disk('public')->delete($elibraryResource->image_url);
 }
 $elibraryResource->delete();
 return redirect()->route('admin.elibrary-resources.index')->with('success', 'eLibrary item deleted successfully.');

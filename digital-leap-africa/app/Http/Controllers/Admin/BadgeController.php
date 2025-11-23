@@ -8,9 +8,11 @@ use App\Models\User;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\HasWebPImages;
 
 class BadgeController extends Controller
 {
+    use HasWebPImages;
     /**
      * Display a listing of badges.
      */
@@ -41,10 +43,7 @@ class BadgeController extends Controller
 
         $imgUrl = null;
         if ($request->hasFile('badge_image')) {
-            $file = $request->file('badge_image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('storage/badges'), $filename);
-            $imgUrl = '/storage/badges/' . $filename;
+            $imgUrl = $this->storeWebPImage($request->file('badge_image'), 'badges');
         }
 
         Badge::create([
@@ -80,16 +79,9 @@ class BadgeController extends Controller
         if ($request->hasFile('badge_image')) {
             // Delete old image if exists
             if ($badge->img_url) {
-                $oldFile = public_path($badge->img_url);
-                if (file_exists($oldFile)) {
-                    unlink($oldFile);
-                }
+                Storage::disk('public')->delete($badge->img_url);
             }
-            
-            $file = $request->file('badge_image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('storage/badges'), $filename);
-            $imgUrl = '/storage/badges/' . $filename;
+            $imgUrl = $this->storeWebPImage($request->file('badge_image'), 'badges');
         }
 
         $badge->update([
@@ -109,10 +101,7 @@ class BadgeController extends Controller
     {
         // Delete image if exists
         if ($badge->img_url) {
-            $oldFile = public_path($badge->img_url);
-            if (file_exists($oldFile)) {
-                unlink($oldFile);
-            }
+            Storage::disk('public')->delete($badge->img_url);
         }
 
         $badge->delete();

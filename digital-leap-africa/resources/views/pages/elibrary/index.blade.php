@@ -465,7 +465,7 @@
                         @if($item->type)
                             <span class="resource-type">{{ $item->type }}</span>
                         @endif
-                        <h3 class="resource-title">{{ $item->title }}</h3>
+                        <h3 class="resource-title">{!! html_entity_decode($item->title) !!}</h3>
                     </div>
                     <div class="resource-content">
                         <div class="resource-meta">
@@ -476,7 +476,7 @@
                         </div>
                         
                         <p class="resource-description">
-                            {{ Str::limit($item->description, 140) }}
+                            {!! html_entity_decode(Str::limit($item->description, 140)) !!}
                         </p>
                         
                         @if($item->file_url)

@@ -123,23 +123,11 @@ class User extends Authenticatable
             return null;
         }
         
-        // If already an absolute URL, return as is
         if (preg_match('/^https?:\/\//i', $this->profile_photo)) {
             return $this->profile_photo;
         }
         
-        // If it's already a full path starting with /storage/, return as URL
-        if (str_starts_with($this->profile_photo, '/storage/')) {
-            return url($this->profile_photo);
-        }
-        
-        // If it contains 'profile-photos/' already, use Storage::url for old format
-        if (str_contains($this->profile_photo, 'profile-photos/')) {
-            return Storage::disk('public')->url($this->profile_photo);
-        }
-        
-        // Default: assume it's just a filename in profile-photos directory
-        return url('/storage/profile-photos/' . $this->profile_photo);
+        return Storage::disk('public')->url($this->profile_photo);
     }
 
 
