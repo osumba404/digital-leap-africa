@@ -331,12 +331,7 @@ Route::post('/lessons/{lesson}/complete', [LessonController::class, 'complete'])
 
 // --- DASHBOARD ROUTE (AUTHENTICATED) ---
 Route::get('/dashboard', function () {
-    try {
-        return view('dashboard');
-    } catch (\Exception $e) {
-        \Log::error('Dashboard error: ' . $e->getMessage());
-        return redirect()->route('home')->with('error', 'Unable to load dashboard. Please try again.');
-    }
+    return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 

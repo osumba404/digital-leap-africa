@@ -94,8 +94,8 @@
     <!-- Critical CSS - Inline to prevent FOUC and CLS -->
     <style>
         /* Prevent FOUC */
-        html{visibility:visible;opacity:1}
-        body{margin:0;background:#0C121C;color:#F5F7FA;font-family:system-ui,-apple-system,sans-serif;padding-top:4rem;min-height:100vh}
+        html{visibility:visible;opacity:1;background:#0C121C}
+        body{margin:0;background:linear-gradient(180deg,#07101a 0%,#0C121C 100%);color:#F5F7FA;font-family:system-ui,-apple-system,sans-serif;padding-top:4rem;min-height:100vh}
         .site-header{position:fixed;top:0;width:100%;background:#252A32;z-index:1000;height:4rem;border-bottom:1px solid rgba(0,201,255,.2)}
         .nav{display:flex;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto;width:90%;padding:0 1rem;height:100%}
         .brand{display:flex;align-items:center;gap:.75rem;color:#fff;text-decoration:none}
