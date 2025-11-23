@@ -419,18 +419,12 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
         </div>
         
         <div class="stat-card">
-            @php
-                $certificates = Auth::user()->certificates ?? collect();
-            @endphp
-            <span class="stat-number">{{ $certificates->count() }}</span>
+            <span class="stat-number">{{ Auth::user()->certificates()->count() }}</span>
             <div class="stat-label">Certificates Earned</div>
         </div>
         
         <div class="stat-card">
-            @php
-                $badges = Auth::user()->badges ?? collect();
-            @endphp
-            <span class="stat-number">{{ $badges->count() }}</span>
+            <span class="stat-number">{{ Auth::user()->badges()->count() }}</span>
             <div class="stat-label">Badges Earned</div>
         </div>
     </div>
@@ -539,7 +533,7 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
             
 
             
-            @if(Auth::user()->badges && Auth::user()->badges->count() > 0)
+            @if(Auth::user()->badges()->exists())
             <a href="#badges" onclick="document.getElementById('badges-section').scrollIntoView({behavior: 'smooth'})" class="action-card">
                 <div class="action-icon">
                     <i class="fas fa-medal"></i>
@@ -549,7 +543,7 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
             </a>
             @endif
             
-            @if(Auth::user()->certificates && Auth::user()->certificates->count() > 0)
+            @if(Auth::user()->certificates()->exists())
             <a href="#certificates" onclick="document.getElementById('certificates-section').scrollIntoView({behavior: 'smooth'})" class="action-card">
                 <div class="action-icon">
                     <i class="fas fa-certificate"></i>
@@ -562,7 +556,7 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
     </div>
 
     {{-- My Badges Section --}}
-    @if(Auth::user()->badges && Auth::user()->badges->count() > 0)
+    @if(Auth::user()->badges()->exists())
         <div class="section-card" id="badges-section">
             <h2 class="section-title">
                 <i class="fas fa-medal"></i>My Badges
@@ -599,7 +593,7 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
     @endif
 
     {{-- My Certificates Section --}}
-    @if(Auth::user()->certificates && Auth::user()->certificates->count() > 0)
+    @if(Auth::user()->certificates()->exists())
         <div class="section-card" id="certificates-section">
             <h2 class="section-title">
                 <i class="fas fa-certificate"></i>My Certificates
