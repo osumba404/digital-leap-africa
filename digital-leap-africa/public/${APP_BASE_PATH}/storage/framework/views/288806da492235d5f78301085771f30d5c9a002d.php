@@ -94,19 +94,24 @@
     <!-- Critical CSS - Inline to prevent FOUC and CLS -->
     <style>
         /* Prevent FOUC */
-        html{visibility:visible;opacity:1}
-        body{margin:0;background:#0C121C;color:#F5F7FA;font-family:system-ui,-apple-system,sans-serif;padding-top:4rem;min-height:100vh}
-        .site-header{position:fixed;top:0;width:100%;background:#252A32;z-index:1000;height:4rem;border-bottom:1px solid rgba(0,201,255,.2)}
+        html{visibility:visible;opacity:1;background:#0C121C;min-height:100%}
+        body{margin:0;background:linear-gradient(180deg,#07101a 0%,#0C121C 100%);color:#F5F7FA;font-family:system-ui,-apple-system,sans-serif;padding-top:4rem;min-height:100vh;display:flex;flex-direction:column}
+        main{flex:1;background:#0C121C;min-height:calc(100vh - 8rem);will-change:contents}
+        .site-header{position:fixed;top:0;left:0;right:0;width:100%;background:linear-gradient(135deg,#252A32 0%,#0C121C 100%);z-index:1000;height:4rem;border-bottom:1px solid rgba(0,201,255,.2);will-change:transform;contain:layout style paint}
+        .site-footer{margin-top:auto;background:linear-gradient(135deg,#252A32 0%,#0C121C 100%);border-top:1px solid rgba(255,255,255,.1);min-height:4rem}
         .nav{display:flex;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto;width:90%;padding:0 1rem;height:100%}
         .brand{display:flex;align-items:center;gap:.75rem;color:#fff;text-decoration:none}
         .brand h1{font-size:1.1rem;margin:0;font-weight:700}
-        .container{width:90%;max-width:1100px;margin:0 auto;padding:2rem 0}
+        .container{width:90%;max-width:1100px;margin:0 auto;padding:2rem 0;min-height:50vh}
         /* Reserve space for images to prevent CLS */
         img{max-width:100%;height:auto}
         .hero-carousel{min-height:100vh}
-        .stat-card,.article-card,.course-horizontal-card{min-height:200px}
+        .stat-card,.article-card,.course-horizontal-card{min-height:200px;content-visibility:auto}
+        [data-theme="light"] html{background:#F8FAFC}
         [data-theme="light"] body{background:#F8FAFC;color:#1a202c}
+        [data-theme="light"] main{background:#F8FAFC}
         [data-theme="light"] .site-header{background:#FFF}
+        [data-theme="light"] .site-footer{background:#FFF}
     </style>
     
     <!-- Fonts and Icons - Async Load -->
