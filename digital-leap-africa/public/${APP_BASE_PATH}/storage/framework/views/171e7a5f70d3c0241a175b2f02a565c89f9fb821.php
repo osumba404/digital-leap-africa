@@ -1,6 +1,6 @@
-@extends('layouts.app')
 
-@section('content')
+
+<?php $__env->startSection('content'); ?>
 <style>
 .lesson-container {
     max-width: 900px;
@@ -583,89 +583,92 @@ code {
 
 <div class="container">
     <div class="lesson-container">
-        {{-- Breadcrumb --}}
+        
         <div class="breadcrumb">
-            <a href="{{ route('courses.show', $lesson->topic->course) }}">{{ $lesson->topic->course->title }}</a>
+            <a href="<?php echo e(route('courses.show', $lesson->topic->course)); ?>"><?php echo e($lesson->topic->course->title); ?></a>
             <span class="mx-2">›</span>
-            <span>{{ $lesson->topic->title }}</span>
+            <span><?php echo e($lesson->topic->title); ?></span>
             <span class="mx-2">›</span>
-            <span>{{ $lesson->title }}</span>
+            <span><?php echo e($lesson->title); ?></span>
         </div>
 
-        {{-- Lesson Header --}}
+        
         <div class="lesson-header">
             <h1 style="font-size: 2rem; font-weight: 700; color: var(--diamond-white); margin-bottom: 0.5rem;">
-                {{ $lesson->title }}
+                <?php echo e($lesson->title); ?>
+
             </h1>
             <p style="color: var(--cyan-accent); font-weight: 500; margin: 0;">
-                <i class="fas fa-folder me-2"></i>{{ $lesson->topic->title }}
+                <i class="fas fa-folder me-2"></i><?php echo e($lesson->topic->title); ?>
+
             </p>
         </div>
 
-        {{-- Video Content --}}
-        @if($lesson->type === 'video' && $lesson->video_url)
+        
+        <?php if($lesson->type === 'video' && $lesson->video_url): ?>
             <div class="lesson-content">
                 <div class="video-container">
-                    @php
+                    <?php
                         // Extract YouTube video ID from various URL formats
                         $videoId = null;
                         if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $lesson->video_url, $matches)) {
                             $videoId = $matches[1];
                         }
-                    @endphp
+                    ?>
                     
-                    @if($videoId)
-                        <iframe src="https://www.youtube.com/embed/{{ $videoId }}" 
-                                title="{{ $lesson->title }}" 
+                    <?php if($videoId): ?>
+                        <iframe src="https://www.youtube.com/embed/<?php echo e($videoId); ?>" 
+                                title="<?php echo e($lesson->title); ?>" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                 allowfullscreen>
                         </iframe>
-                    @else
+                    <?php else: ?>
                         <div style="background: var(--charcoal); display: flex; align-items: center; justify-content: center; height: 100%; color: var(--cool-gray);">
                             <div style="text-align: center;">
                                 <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem;"></i>
                                 <p>Video content not available</p>
                             </div>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
-        @endif
+        <?php endif; ?>
 
-        {{-- Text Content --}}
-        @if($lesson->content)
+        
+        <?php if($lesson->content): ?>
             <div class="lesson-content">
                 <div class="lesson-content-body">
-                    {!! $lesson->content !!}                    
+                    <?php echo $lesson->content; ?>                    
                       
                 </div>
             </div>
-        @endif
+        <?php endif; ?>
 
-        {{-- Test/Assignment Questions --}}
-        @if($lesson->questions && in_array($lesson->type, ['quiz', 'assignment']))
+        
+        <?php if($lesson->questions && in_array($lesson->type, ['quiz', 'assignment'])): ?>
             <div class="lesson-content">
                 <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">
-                    @if($lesson->type === 'quiz')
+                    <?php if($lesson->type === 'quiz'): ?>
                         <i class="fas fa-question-circle me-2"></i>Quiz Questions
-                    @else
+                    <?php else: ?>
                         <i class="fas fa-tasks me-2"></i>Assignment Instructions
-                    @endif
+                    <?php endif; ?>
                 </h3>
                 <div class="lesson-content-body">
-                    {!! nl2br(e($lesson->questions)) !!}
+                    <?php echo nl2br(e($lesson->questions)); ?>
+
                 </div>
             </div>
-        @endif
+        <?php endif; ?>
 
-        {{-- Code Snippets --}}
-        @php $snippets = (array) ($lesson->code_snippet ?? []); @endphp
-        @if(!empty($snippets))
+        
+        <?php $snippets = (array) ($lesson->code_snippet ?? []); ?>
+        <?php if(!empty($snippets)): ?>
             <div class="lesson-content">
                 <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Code Snippets</h3>
                 <div class="d-flex flex-column gap-3">
-                    @foreach($snippets as $i => $snippet)
-                        @if(filled($snippet))
+                    <?php $__currentLoopData = $snippets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i => $snippet): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if(filled($snippet)): ?>
                             <div class="code-wrap">
                                 <div class="code-topbar">
                                     <div class="code-dots">
@@ -680,68 +683,68 @@ code {
                                         </button>
                                     </div>
                                 </div>
-                                <pre><code class="hljs">{{ $snippet }}</code></pre>
+                                <pre><code class="hljs"><?php echo e($snippet); ?></code></pre>
                             </div>
-                        @endif
-                    @endforeach
+                        <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
-        @endif
+        <?php endif; ?>
 
-        {{-- Resource Files --}}
-        @php $resources = (array) ($lesson->resource_url ?? []); @endphp
-        @if(!empty($resources))
+        
+        <?php $resources = (array) ($lesson->resource_url ?? []); ?>
+        <?php if(!empty($resources)): ?>
             <div class="lesson-content">
                 <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Resources</h3>
                 <div class="res-grid">
-                    @foreach($resources as $url)
-                        @php
+                    <?php $__currentLoopData = $resources; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php
                             $path = parse_url($url, PHP_URL_PATH) ?? $url;
                             $name = basename($path);
                             $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-                        @endphp
-                        @if(filled($url))
+                        ?>
+                        <?php if(filled($url)): ?>
                             <div class="res-card">
                                 <div class="res-preview">
-                                    @if($ext === 'pdf')
-                                        <iframe src="{{ $url }}#page=1&view=FitH" title="Preview {{ $name }}" loading="lazy"></iframe>
-                                    @else
+                                    <?php if($ext === 'pdf'): ?>
+                                        <iframe src="<?php echo e($url); ?>#page=1&view=FitH" title="Preview <?php echo e($name); ?>" loading="lazy"></iframe>
+                                    <?php else: ?>
                                         <div class="res-icon"><i class="fas fa-file"></i></div>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                                 <div class="res-info">
-                                    <div class="res-name" title="{{ $name }}">{{ $name }}</div>
+                                    <div class="res-name" title="<?php echo e($name); ?>"><?php echo e($name); ?></div>
                                     <div class="res-actions">
-                                        <a class="btn-outline btn-sm" href="{{ $url }}" target="_blank" rel="noopener">View</a>
-                                        <a class="btn-primary btn-sm" href="{{ $url }}" download>Download</a>
+                                        <a class="btn-outline btn-sm" href="<?php echo e($url); ?>" target="_blank" rel="noopener">View</a>
+                                        <a class="btn-primary btn-sm" href="<?php echo e($url); ?>" download>Download</a>
                                     </div>
                                 </div>
                             </div>
-                        @endif
-                    @endforeach
+                        <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
-        @endif
+        <?php endif; ?>
 
-        {{-- Attachments (Images) --}}
-        @php $attachments = (array) ($lesson->attachment_path ?? []); @endphp
-        @if(!empty($attachments))
+        
+        <?php $attachments = (array) ($lesson->attachment_path ?? []); ?>
+        <?php if(!empty($attachments)): ?>
             <div class="lesson-content">
                 <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Attachments</h3>
                 <div style="display:flex; flex-wrap: wrap; gap: .75rem;">
-                    @foreach($attachments as $img)
-                        @if(filled($img))
-                            <a href="{{ $img }}" target="_blank" rel="noopener">
-                                <img src="{{ $img }}" alt="Attachment" style="height:120px; border-radius: 8px;">
+                    <?php $__currentLoopData = $attachments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if(filled($img)): ?>
+                            <a href="<?php echo e($img); ?>" target="_blank" rel="noopener">
+                                <img src="<?php echo e($img); ?>" alt="Attachment" style="height:120px; border-radius: 8px;">
                             </a>
-                        @endif
-                    @endforeach
+                        <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
-        @endif
+        <?php endif; ?>
 
-        {{-- Completion Section --}}
-        @php
+        
+        <?php
             $topic = $lesson->topic;
             $topicLessons = $topic->lessons()->orderBy('created_at')->get();
             $currentIndex = $topicLessons->search(fn($l) => $l->id === $lesson->id);
@@ -751,69 +754,70 @@ code {
             $nextLesson = $currentIndex !== false && $currentIndex < $topicLessons->count() - 1 
                 ? $topicLessons[$currentIndex + 1] 
                 : null;
-        @endphp
+        ?>
         
         <div class="completion-section">
-            @if(Auth::check() && Auth::user()->lessons()->where('lesson_id', $lesson->id)->exists())
+            <?php if(Auth::check() && Auth::user()->lessons()->where('lesson_id', $lesson->id)->exists()): ?>
                 <div class="completed-badge">
                     <i class="fas fa-check-circle"></i>
                     <span>Lesson Completed!</span>
                 </div>
                 <p style="color: var(--cool-gray); margin-top: 1rem; margin-bottom: 0;">Great job! You've successfully completed this lesson.</p>
-            @else
+            <?php else: ?>
                 <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Ready to mark this lesson as complete?</h3>
                 <p style="color: var(--cool-gray); margin-bottom: 2rem;">Once you've finished reviewing the content, mark it as complete to track your progress.</p>
-                @auth
-                    <form method="POST" action="{{ route('lessons.complete', $lesson) }}" style="display: inline;">
-                        @csrf
+                <?php if(auth()->guard()->check()): ?>
+                    <form method="POST" action="<?php echo e(route('lessons.complete', $lesson)); ?>" style="display: inline;">
+                        <?php echo csrf_field(); ?>
                         <button type="submit" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
                             <i class="fas fa-check me-2"></i>Mark as Complete
                         </button>
                     </form>
-                @else
-                    <a href="{{ route('login') }}" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
+                <?php else: ?>
+                    <a href="<?php echo e(route('login')); ?>" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
                         <i class="fas fa-sign-in-alt me-2"></i>Log in to mark complete
                     </a>
-                @endauth
-            @endif
+                <?php endif; ?>
+            <?php endif; ?>
             
-            {{-- Navigation Buttons --}}
-            @if($previousLesson || $nextLesson)
+            
+            <?php if($previousLesson || $nextLesson): ?>
                 <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    @if($previousLesson)
-                        <a href="{{ route('lessons.show', $previousLesson) }}" class="btn-outline" style="padding: 0.75rem 1.5rem;">
+                    <?php if($previousLesson): ?>
+                        <a href="<?php echo e(route('lessons.show', $previousLesson)); ?>" class="btn-outline" style="padding: 0.75rem 1.5rem;">
                             <i class="fas fa-arrow-left me-2"></i>Previous Lesson
                         </a>
-                    @endif
-                    @if($nextLesson)
-                        <a href="{{ route('lessons.show', $nextLesson) }}" class="btn-primary" style="padding: 0.75rem 1.5rem;">
+                    <?php endif; ?>
+                    <?php if($nextLesson): ?>
+                        <a href="<?php echo e(route('lessons.show', $nextLesson)); ?>" class="btn-primary" style="padding: 0.75rem 1.5rem;">
                             Next Lesson<i class="fas fa-arrow-right ms-2"></i>
                         </a>
-                    @endif
+                    <?php endif; ?>
                 </div>
-            @endif
+            <?php endif; ?>
             
             <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                <a href="{{ route('courses.show', $lesson->topic->course) }}" class="btn-outline" style="padding: 0.75rem 1.5rem;">
+                <a href="<?php echo e(route('courses.show', $lesson->topic->course)); ?>" class="btn-outline" style="padding: 0.75rem 1.5rem;">
                     <i class="fas fa-arrow-left me-2"></i>Back to Course
                 </a>
             </div>
         </div>
     </div>
 
-    {{-- Success Message --}}
-    @if(session('success'))
+    
+    <?php if(session('success')): ?>
         <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; padding: 1rem; border-radius: var(--radius); margin: 1rem 0; text-align: center;">
-            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+            <i class="fas fa-check-circle me-2"></i><?php echo e(session('success')); ?>
+
         </div>
-    @endif
+    <?php endif; ?>
 </div>
 
-{{-- Highlight.js CDN and copy handlers --}}
-@push('styles')
+
+<?php $__env->startPush('styles'); ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha512-1N6zQ+VtP6b/nf3g5Gf3Oa1zO1mQP0R1d4nqQFtg0y3PqP6RrY+7s9Hf8WJYfMR1X6Q2yC5WQDXvByozKa1q9w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-@endpush
-@push('scripts')
+<?php $__env->stopPush(); ?>
+<?php $__env->startPush('scripts'); ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-0o9k3J3A6YzT0m0yJtXQk3RkH2F8Xh3gGup6c2yQ2gP1y2XoNf2CkqXv0l2pZ7XbXKXzv7N5wfmqJbYxq4mKbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function(){
@@ -977,5 +981,6 @@ code {
     });
   });
 </script>
-@endpush
-@endsection
+<?php $__env->stopPush(); ?>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\DLA\digital-leap-africa\digital-leap-africa\resources\views/pages/lessons/show.blade.php ENDPATH**/ ?>
