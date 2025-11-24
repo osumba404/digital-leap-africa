@@ -10,16 +10,18 @@
 .lesson-header {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius);
+    /* border-radius: var(--radius); */
+    border-radius: 3px;
     padding: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .lesson-content {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius);
-    padding: 2rem;
+    /* border-radius: var(--radius); */
+    border-radius: 3px;
+    padding: 1.4rem;
     margin-bottom: 2rem;
 }
 
@@ -82,10 +84,10 @@
 .lesson-content-body h2,
 .lesson-content-body h3 {
     color: var(--diamond-white);
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
+    margin-top: 1.4rem;
+    margin-bottom: 0.5rem;
     font-weight: 600;
-    line-height: 1.3;
+    line-height: 1;
 }
 
 .lesson-content-body h1:first-child,
@@ -99,9 +101,10 @@
 .lesson-content-body h3 { font-size: 1.25rem; }
 
 .lesson-content-body p {
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
     color: var(--cool-gray);
-    line-height: 1.6;
+    line-height: 1.4;
+    font-size: 0.8rem;
 }
 
 .lesson-content-body p:empty {
@@ -113,7 +116,8 @@
     margin-bottom: 1rem;
     padding-left: 1.5rem;
     color: var(--cool-gray);
-    line-height: 1.6;
+    line-height: 1;
+    font-size: 0.8rem;
 }
 
 .lesson-content-body ol {
@@ -143,6 +147,7 @@
 .lesson-content-body li {
     margin-bottom: 0.25rem;
     line-height: 1.6;
+    font-size: 0.8rem;
 }
 
 .lesson-content-body li p {
@@ -172,6 +177,7 @@
     margin: 1rem 0;
     color: var(--cool-gray);
     font-style: italic;
+    font-size: 0.8rem;
 }
 
 .lesson-content-body a {
@@ -187,7 +193,7 @@
 .lesson-content-body img {
     max-width: 100%;
     height: auto;
-    border-radius: 8px;
+    border-radius: 4px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     margin: 1rem 0;
     display: block;
@@ -197,9 +203,9 @@
 code {
     background: rgba(0, 0, 0, 0.35);
     padding: 0.2rem 0.4rem;
-    border-radius: 0.25rem;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9em;
+    border-radius: 0.2rem;
+    font-family: 'Courier New', monospace;   
+    font-size: 0.8rem !important;
 }
 
 /* Code blocks inside code-wrap don't get inline styling */
@@ -286,6 +292,7 @@ code {
     border-radius: var(--radius);
     padding: 2rem;
     text-align: center;
+    font-size: 0.8rem;
 }
 
 .completed-badge {
