@@ -554,6 +554,10 @@
             box-shadow: 0 8px 25px rgba(0, 201, 255, 0.4);
             color: #07101a;
         }
+        
+        .btn-primary i {
+            color: #ffffff;
+        }
 
         .btn-outline {
             background: transparent;
@@ -812,8 +816,8 @@
             position: fixed;
             top: 0;
             right: 0;
-            width: 320px;
-            max-width: 85vw;
+            width: 215px;
+            max-width: 75vw;
             max-height: 75vh;
             background: linear-gradient(180deg, var(--charcoal) 0%, var(--navy-bg) 100%);
             box-shadow: -4px 0 20px rgba(0, 0, 0, 0.7);
@@ -911,8 +915,9 @@
         .off-canvas-sidebar .nav-links a {
             display: flex;
             align-items: center;
+            gap: 0.75rem;
             padding: 0.75rem 1rem;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 500;
             transition: all 0.3s ease;
             border-radius: 0;
@@ -921,6 +926,14 @@
             width: 100%;
             position: relative;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .off-canvas-sidebar .nav-links a i {
+            width: 18px;
+            font-size: 0.9rem;
+            color: var(--cyan-accent);
+            opacity: 0.8;
+            flex-shrink: 0;
         }
         
         .off-canvas-sidebar .nav-links a::before {
@@ -954,6 +967,43 @@
         
         .off-canvas-sidebar .nav-actions-group > * {
             width: 100%;
+        }
+        
+        .off-canvas-sidebar .btn-outline,
+        .off-canvas-sidebar .btn-primary {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 8px !important;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            justify-content: flex-start;
+        }
+        
+        .off-canvas-sidebar .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+        
+        .off-canvas-sidebar .btn-primary {
+            background: rgba(0, 201, 255, 0.1);
+            border: 1px solid rgba(0, 201, 255, 0.3);
+            color: var(--cyan-accent);
+        }
+        
+        .off-canvas-sidebar .btn-outline i,
+        .off-canvas-sidebar .btn-primary i {
+            width: 18px;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        
+        .off-canvas-sidebar .btn-primary i {
+            color: #ffffff;
         }
         
         /* Light Mode Mobile Menu Styles */
@@ -995,6 +1045,10 @@
             color: var(--primary-blue);
             background: rgba(46, 120, 197, 0.05);
             border: 1px solid rgba(46, 120, 197, 0.1);
+        }
+        
+        [data-theme="light"] .off-canvas-sidebar .nav-links a i {
+            color: var(--primary-blue);
         }
         
         [data-theme="light"] .off-canvas-sidebar .nav-links a:hover {
@@ -1295,7 +1349,48 @@
                 gap: 1rem !important;
             }
             
-            /* Stats grid uses 2 columns on mobile - defined in index.blade.php */
+            /* Stats grid uses 2 columns on mobile */
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.75rem !important;
+            }
+            
+            .stat-card {
+                padding: 0.75rem !important;
+                min-height: auto !important;
+            }
+            
+            .stat-number {
+                font-size: 1.25rem !important;
+                margin-bottom: 0.15rem !important;
+            }
+            
+            .stat-label {
+                font-size: 0.65rem !important;
+                line-height: 1.2 !important;
+            }
+            
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.5rem !important;
+            }
+            
+            .action-card {
+                padding: 0.75rem 0.5rem !important;
+            }
+            
+            .action-icon {
+                font-size: 1.25rem !important;
+                margin-bottom: 0.4rem !important;
+            }
+            
+            .action-card h3 {
+                font-size: 0.75rem !important;
+            }
+            
+            .action-card p {
+                font-size: 0.7rem !important;
+            }
             
             .job-header,
             .course-header {
@@ -1970,22 +2065,22 @@
         <div class="sidebar-content" style="padding-top: 1rem;">
             <ul class="nav-links">
                
-                <li><a href="{{ route('home') }}">Home</a></li>
-                <li><a href="{{ route('about') }}">About</a></li>
-                <li><a href="{{ route('courses.index') }}">Courses</a></li>
-                <li><a href="{{ route('elibrary.index') }}">eLibrary</a></li>
-                <li><a href="{{ route('events.index') }}">Events</a></li>
-                <li><a href="{{ route('blog.index') }}">Blog</a></li>
+                <li><a href="{{ route('home') }}"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="{{ route('about') }}"><i class="fas fa-info-circle"></i>About</a></li>
+                <li><a href="{{ route('courses.index') }}"><i class="fas fa-graduation-cap"></i>Courses</a></li>
+                <li><a href="{{ route('elibrary.index') }}"><i class="fas fa-book"></i>eLibrary</a></li>
+                <li><a href="{{ route('events.index') }}"><i class="fas fa-calendar-days"></i>Events</a></li>
+                <li><a href="{{ route('blog.index') }}"><i class="fas fa-newspaper"></i>Blog</a></li>
 
 
                 @auth
-                    <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ route('dashboard') }}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
                 @endauth
                 
                 @auth
                     @if(auth()->user()->role === 'admin')
                         <a href="{{ route('admin.dashboard') }}" class="btn-outline is-admin">
-                            <i class="fas fa-screwdriver-wrench me-1"></i> Admin
+                            <i class="fas fa-screwdriver-wrench"></i> Admin
                         </a>
                     @endif
                     
@@ -2009,8 +2104,14 @@
                         </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="btn-outline">Log in</a>
-                    <a href="{{ route('register') }}" class="btn-primary">Sign up</a>
+                    <a href="{{ route('login') }}" class="btn btn-outline">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Log in</span>
+                    </a>
+                    <a href="{{ route('register') }}" class="btn btn-outline">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Sign up</span>
+                    </a>
                 @endauth
                 
                 <!-- Theme Toggle Mobile -->
