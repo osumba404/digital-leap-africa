@@ -439,6 +439,7 @@
 
 <style>
   /* Articles overlay card styles (scoped) */
+  main{background:var(--navy-bg)!important}
   #articles-section .cards-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:1.5rem;max-width:1200px;margin:0 auto}
   #articles-section .card{background-color:#112240;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(2,12,27,0.7);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);height:100%;display:flex;flex-direction:column;padding:0;max-width:380px}
   #articles-section .card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(2,12,27,0.9)}
