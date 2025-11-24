@@ -344,6 +344,9 @@ Route::get('/dashboard', function () {
 // Testimonials (public view)
 Route::get('/testimonials', [TestimonialPublicController::class, 'index'])->name('testimonials.index');
 
+// Public user profile
+Route::get('/user/{user}', [ProfileController::class, 'show'])->name('profile.show');
+
 // --- AUTHENTICATED USER ROUTES ---
 Route::middleware(['auth', 'verified'])->group(function () {
     // Profile

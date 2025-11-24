@@ -16,6 +16,16 @@ class ProfileController extends Controller
 {
     use HasWebPImages;
     /**
+     * Display a user's profile.
+     */
+    public function show(\App\Models\User $user): View
+    {
+        return view('profile.public', [
+            'user' => $user,
+        ]);
+    }
+
+    /**
      * Display the user's profile form.
      */
     public function edit(Request $request): View
@@ -37,6 +47,7 @@ class ProfileController extends Controller
             'user' => $user,
             'totalPoints' => $gamification->getUserPoints($user),
             'userLevel' => $gamification->getUserLevel($user),
+            'isOwner' => true,
         ]);
     }
 

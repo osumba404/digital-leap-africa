@@ -13,7 +13,7 @@
   }
   
   .article-header {
-    background: linear-gradient(135deg, #0a1628 0%, #1a2942 50%, #2E78C5 100%);
+    background: #32669e;
     padding: 0;
     margin-bottom: 3rem;
     position: relative;
@@ -38,8 +38,8 @@
   }
   
   .article-title {
-    font-size: 3rem;
-    font-weight: 800;
+    font-size: 2rem !important;
+    font-weight: 800 !important;
     color: #ffffff;
     margin-bottom: 2rem;
     line-height: 1.2;
@@ -59,50 +59,38 @@
     display: flex;
     align-items: center;
     gap: 1.25rem;
-    background: rgba(255, 255, 255, 0.08);
-    padding: 0.75rem 1.5rem;
-    border-radius: 50px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
-  }
-  
-  .author-info:hover {
-    background: rgba(255, 255, 255, 0.12);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
   }
   
   .author-avatar {
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #00C9FF 0%, #7A5FFF 100%);
+    background: #2E78C5;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     font-size: 1.25rem;
     color: white;
-    box-shadow: 0 4px 15px rgba(0, 201, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(46, 120, 197, 0.3);
     border: 3px solid rgba(255, 255, 255, 0.2);
   }
   
   .article-stats {
     display: flex;
-    gap: 2rem;
+    gap: 1rem;
     color: rgba(255, 255, 255, 0.85);
-    font-size: 0.95rem;
+    font-size: 0.75rem;
     font-weight: 500;
   }
   
   .article-stats > div {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    gap: 0.2rem;
+    padding: 0.25rem 0.5rem;
     background: rgba(255, 255, 255, 0.06);
-    border-radius: 20px;
+    border-radius: 10px;
     backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     transition: all 0.3s ease;
@@ -115,38 +103,39 @@
   
   .article-stats i {
     color: #00C9FF;
-    font-size: 1.1rem;
+    font-size: 0.7rem;
   }
   
   .article-content {
     background: rgba(255, 255, 255, 0.05);
     color: var(--diamond-white);
-    padding: 2.5rem;
-    border-radius: 12px;
+    padding: 1.8rem;
+    border-radius: 6px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     margin-bottom: 2rem;
-    line-height: 1.7;
+    line-height: 1;
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
   
   .article-content h1, .article-content h2, .article-content h3 {
     color: var(--cyan-accent);
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    margin-top: -0.3rem;
+    margin-bottom: -0.3rem;
   }
   
   .article-content p {
-    margin-bottom: 1.5rem;
-    font-size: 1.1rem;
+    margin-bottom: 0rem !important;
+    font-size: 0.85rem;
     color: var(--cool-gray);
+    line-height: 1.25;
   }
   
   .article-featured-image {
     width: 100%;
-    max-height: 400px;
+    max-height: auto;
     object-fit: cover;
-    border-radius: 12px;
-    margin-bottom: 2rem;
+    border-radius: 6px;
+    margin-bottom: 0.4rem;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
   }
   
@@ -210,7 +199,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent));
+    background: #2E78C5;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -250,7 +239,7 @@
   }
   
   .btn-primary {
-    background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent));
+    background: #2E78C5;
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
@@ -267,11 +256,11 @@
     display: inline-block;
     background: rgba(100, 255, 218, 0.1);
     color: var(--cyan-accent);
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    margin-right: 0.3rem;
+    margin-bottom: 0.3rem;
     text-decoration: none;
     transition: background-color 0.3s;
     border: 1px solid rgba(100, 255, 218, 0.2);
@@ -289,7 +278,7 @@
   }
   
   [data-theme="light"] .article-header {
-    background: linear-gradient(135deg, #E6F2FF 0%, #FFFFFF 50%, #2E78C5 100%);
+    background: #2E78C5;
   }
   
   [data-theme="light"] .article-header::before {
@@ -297,47 +286,37 @@
   }
   
   [data-theme="light"] .article-title {
-    color: #0a1628;
-    text-shadow: 0 2px 20px rgba(255,255,255,0.5);
+    color: #ffffff;
+    text-shadow: none;
   }
   
-  [data-theme="light"] .author-info {
-    background: rgba(255, 255, 255, 0.6);
-    border: 1px solid rgba(46, 120, 197, 0.2);
-  }
-  
-  [data-theme="light"] .author-info:hover {
-    background: rgba(255, 255, 255, 0.8);
-  }
+
   
   [data-theme="light"] .author-avatar {
+    background: #2E78C5;
     box-shadow: 0 4px 15px rgba(46, 120, 197, 0.3);
   }
   
   [data-theme="light"] .article-stats {
-    color: #1a2942;
+    color: rgba(255, 255, 255, 0.9);
   }
   
   [data-theme="light"] .article-stats > div {
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(46, 120, 197, 0.15);
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
   }
   
   [data-theme="light"] .article-stats > div:hover {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.3);
   }
   
   [data-theme="light"] .article-stats i {
-    color: #2E78C5;
-  }
-  
-  [data-theme="light"] .article-stats {
-    color: #64748b;
+    color: #ffffff;
   }
   
   [data-theme="light"] .article-content {
     background: white;
-    color: var(--navy-bg);
+    color: #374151;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     border: 1px solid #e2e8f0;
   }
@@ -345,7 +324,7 @@
   [data-theme="light"] .article-content h1,
   [data-theme="light"] .article-content h2,
   [data-theme="light"] .article-content h3 {
-    color: var(--primary-blue);
+    color: #2E78C5;
   }
   
   [data-theme="light"] .article-content p {
@@ -359,7 +338,7 @@
   }
   
   [data-theme="light"] .sidebar-title {
-    color: var(--primary-blue);
+    color: #2E78C5;
   }
   
   [data-theme="light"] .related-article {
@@ -367,11 +346,11 @@
   }
   
   [data-theme="light"] .related-article a {
-    color: var(--navy-bg);
+    color: #374151;
   }
   
   [data-theme="light"] .related-article a:hover {
-    color: var(--primary-blue);
+    color: #2E78C5;
   }
   
   [data-theme="light"] .comments-section {
@@ -385,7 +364,7 @@
   }
   
   [data-theme="light"] .comment-author {
-    color: var(--primary-blue);
+    color: #2E78C5;
   }
   
   [data-theme="light"] .comment-date {
@@ -399,24 +378,24 @@
   [data-theme="light"] .form-control {
     background: white;
     border: 2px solid #e2e8f0;
-    color: var(--navy-bg);
+    color: #374151;
   }
   
   [data-theme="light"] .form-control:focus {
-    border-color: var(--primary-blue);
+    border-color: #2E78C5;
     box-shadow: 0 0 0 0.2rem rgba(46, 120, 197, 0.25);
     background: white;
   }
   
   [data-theme="light"] .tag {
     background: rgba(46, 120, 197, 0.1);
-    color: var(--primary-blue);
+    color: #2E78C5;
     border: 1px solid rgba(46, 120, 197, 0.2);
   }
   
   [data-theme="light"] .tag:hover {
     background: rgba(46, 120, 197, 0.2);
-    color: var(--primary-blue);
+    color: #2E78C5;
   }
   
   @media (max-width: 768px) {
@@ -441,13 +420,16 @@
     
     .article-stats {
       width: 100%;
-      flex-wrap: wrap;
-      gap: 0.75rem;
+      flex-wrap: nowrap;
+      gap: 0.5rem;
+      overflow-x: auto;
     }
     
     .article-stats > div {
-      font-size: 0.85rem;
-      padding: 0.4rem 0.8rem;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.4rem;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     
     .article-content {
@@ -624,7 +606,7 @@
     .article-container { padding: 0 0.75rem; }
     .article-header { padding: 1.5rem 0; }
     .article-title { font-size: 1.5rem; }
-    .author-info { flex-direction: column; align-items: center; text-align: center; gap: 0.5rem; }
+    .author-info { flex-direction: row; align-items: flex-start; text-align: left; gap: 0.75rem; }
     .article-stats { justify-content: center; }
     .article-content { padding: 1rem; }
     .article-content p { font-size: 1rem; }
@@ -958,10 +940,24 @@
         <h1 class="article-title">{{ $article->title }}</h1>
         <div class="article-meta">
           <div class="author-info">
-            <div class="author-avatar">{{ $initials ?: 'DL' }}</div>
-            <div>
-              <div class="fw-bold text-white" style="font-size: 1.05rem; margin-bottom: 0.25rem;">{{ $authorName }}</div>
-              <div class="text-light" style="opacity: 0.8; font-size: 0.9rem;">
+            @if($article->author)
+              <a href="{{ route('profile.show', $article->author) }}" class="author-avatar">
+                @if($article->author->profile_photo)
+                  <img src="{{ route('me.photo', ['user_id' => $article->author->id]) }}" alt="{{ $article->author->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                @else
+                  {{ $initials ?: 'DL' }}
+                @endif
+              </a>
+            @else
+              <div class="author-avatar">{{ $initials ?: 'DL' }}</div>
+            @endif
+            <div class="author-details">
+              @if($article->author)
+                <a href="{{ route('profile.show', $article->author) }}" class="author-name" style="text-decoration: none; color: inherit;">{{ $authorName }}</a>
+              @else
+                <div class="author-name">{{ $authorName }}</div>
+              @endif
+              <div class="publish-date">
                 {{ $article->published_at ? $article->published_at->format('M d, Y') : $article->created_at->format('M d, Y') }}
               </div>
             </div>
@@ -1007,10 +1003,24 @@
                 $ci = collect(explode(' ', $cname))->map(fn($p) => strtoupper(substr($p,0,1)))->take(2)->implode('');
               @endphp
               <div class="comment">
-                <div class="comment-avatar">{{ $ci ?: 'U' }}</div>
+                @if($comment->user)
+                  <a href="{{ route('profile.show', $comment->user) }}" class="comment-avatar">
+                    @if($comment->user->profile_photo)
+                      <img src="{{ route('me.photo', ['user_id' => $comment->user->id]) }}" alt="{{ $comment->user->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    @else
+                      {{ $ci ?: 'U' }}
+                    @endif
+                  </a>
+                @else
+                  <div class="comment-avatar">{{ $ci ?: 'U' }}</div>
+                @endif
                 <div class="comment-content">
                   <div class="comment-header">
-                    <div class="comment-author">{{ $cname }}</div>
+                    @if($comment->user)
+                      <a href="{{ route('profile.show', $comment->user) }}" class="comment-author" style="text-decoration: none; color: inherit;">{{ $cname }}</a>
+                    @else
+                      <div class="comment-author">{{ $cname }}</div>
+                    @endif
                     <div class="comment-date">{{ $comment->created_at->diffForHumans() }}</div>
                   </div>
                   <p class="comment-text">{{ $comment->content }}</p>
@@ -1093,9 +1103,23 @@
             <div class="sidebar-card">
               <h3 class="sidebar-title">Author</h3>
               <div class="author-info">
-                <div class="author-avatar">{{ $initials ?: 'AU' }}</div>
+                @if($article->author)
+                  <a href="{{ route('profile.show', $article->author) }}" class="author-avatar">
+                    @if($article->author->profile_photo)
+                      <img src="{{ route('me.photo', ['user_id' => $article->author->id]) }}" alt="{{ $article->author->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    @else
+                      {{ $initials ?: 'AU' }}
+                    @endif
+                  </a>
+                @else
+                  <div class="author-avatar">{{ $initials ?: 'AU' }}</div>
+                @endif
                 <div>
-                  <div style="color: var(--accent-blue); font-weight: bold;">{{ $authorName }}</div>
+                  @if($article->author)
+                    <a href="{{ route('profile.show', $article->author) }}" style="color: var(--accent-blue); font-weight: bold; text-decoration: none;">{{ $authorName }}</a>
+                  @else
+                    <div style="color: var(--accent-blue); font-weight: bold;">{{ $authorName }}</div>
+                  @endif
                   <div style="color: var(--text-secondary); font-size: 0.9rem;">Contributor</div>
                 </div>
               </div>
