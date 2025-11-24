@@ -451,13 +451,27 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
     </div>
 
     {{-- My Courses Section --}}
-    @if(Auth::user()->courses()->count() > 0)
+    @php
+        try {
+            $userCoursesCount = Auth::user()->courses()->count();
+        } catch (\Exception $e) {
+            $userCoursesCount = 0;
+        }
+    @endphp
+    @if($userCoursesCount > 0)
         <div class="section-card">
             <h2 class="section-title">
                 <i class="fas fa-graduation-cap"></i>My Courses
             </h2>
             
-            @foreach(Auth::user()->courses()->take(3)->get() as $course)
+            @php
+                try {
+                    $userCourses = Auth::user()->courses()->take(3)->get();
+                } catch (\Exception $e) {
+                    $userCourses = collect();
+                }
+            @endphp
+            @foreach($userCourses as $course)
                 @php
                     $totalLessons = $course->topics->sum(function($topic) { return $topic->lessons->count(); });
                     $completedLessons = Auth::user()->lessons()->whereIn('lesson_id', 
@@ -503,7 +517,7 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
                 </div>
             @endforeach
             
-            @if(Auth::user()->courses()->count() > 3)
+            @if($userCoursesCount > 3)
                 <div style="text-align: center; margin-top: 1rem;">
                     <a href="{{ route('courses.index') }}" class="btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                         View All My Courses
@@ -653,7 +667,7 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
     @endif
 
     {{-- Recent Activity or Recommendations --}}
-    @if(Auth::user()->courses()->count() == 0)
+    @if($userCoursesCount == 0)
         <div class="section-card">
             <div style="text-align: center; padding: 1.5rem 0;">
                 <i class="fas fa-rocket" style="font-size: 3rem; color: var(--cyan-accent); margin-bottom: 1rem;"></i>
