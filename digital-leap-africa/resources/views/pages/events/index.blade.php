@@ -222,6 +222,7 @@
 
 <style>
   /* Events card styles (scoped) */
+  main{background:var(--navy-bg)!important}
   #events-section{background:var(--navy-bg)}
   #events-section .cards-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(320px,1fr));gap:2rem}
   #events-section .card{background-color:#112240;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(2,12,27,0.7);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);position:relative;border:0;padding:0}
