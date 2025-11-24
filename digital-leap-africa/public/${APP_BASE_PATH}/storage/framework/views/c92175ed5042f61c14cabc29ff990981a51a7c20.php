@@ -452,13 +452,27 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
     </div>
 
     
-    <?php if(Auth::user()->courses()->count() > 0): ?>
+    <?php
+        try {
+            $userCoursesCount = Auth::user()->courses()->count();
+        } catch (\Exception $e) {
+            $userCoursesCount = 0;
+        }
+    ?>
+    <?php if($userCoursesCount > 0): ?>
         <div class="section-card">
             <h2 class="section-title">
                 <i class="fas fa-graduation-cap"></i>My Courses
             </h2>
             
-            <?php $__currentLoopData = Auth::user()->courses()->take(3)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php
+                try {
+                    $userCourses = Auth::user()->courses()->take(3)->get();
+                } catch (\Exception $e) {
+                    $userCourses = collect();
+                }
+            ?>
+            <?php $__currentLoopData = $userCourses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <?php
                     $totalLessons = $course->topics->sum(function($topic) { return $topic->lessons->count(); });
                     $completedLessons = Auth::user()->lessons()->whereIn('lesson_id', 
@@ -506,7 +520,7 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
                 </div>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             
-            <?php if(Auth::user()->courses()->count() > 3): ?>
+            <?php if($userCoursesCount > 3): ?>
                 <div style="text-align: center; margin-top: 1rem;">
                     <a href="<?php echo e(route('courses.index')); ?>" class="btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                         View All My Courses
@@ -657,7 +671,7 @@ a:hover, button:hover, .btn-primary:hover, .btn-outline:hover {
     <?php endif; ?>
 
     
-    <?php if(Auth::user()->courses()->count() == 0): ?>
+    <?php if($userCoursesCount == 0): ?>
         <div class="section-card">
             <div style="text-align: center; padding: 1.5rem 0;">
                 <i class="fas fa-rocket" style="font-size: 3rem; color: var(--cyan-accent); margin-bottom: 1rem;"></i>
