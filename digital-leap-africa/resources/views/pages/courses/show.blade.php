@@ -604,11 +604,47 @@
                             $isCompleted = Auth::user()->lessons()->where('lesson_id', $lesson->id)->exists();
                             $previousLesson = $index > 0 ? $topic->lessons[$index - 1] : null;
                             $isPreviousCompleted = $previousLesson ? Auth::user()->lessons()->where('lesson_id', $previousLesson->id)->exists() : true;
-                            $canAccessLesson = $canAccessContent && ($index === 0 || $isPreviousCompleted);
+                            
+                            // Check if all lessons in previous topics are completed
+                            $currentTopicIndex = $course->topics->search(function($t) use ($topic) {
+                                return $t->id === $topic->id;
+                            });
+                            
+                            $allPreviousTopicsCompleted = true;
+                            if ($currentTopicIndex > 0) {
+                                $previousTopics = $course->topics->slice(0, $currentTopicIndex);
+                                foreach ($previousTopics as $prevTopic) {
+                                    $topicLessonsCount = $prevTopic->lessons->count();
+                                    $completedLessonsCount = Auth::user()->lessons()
+                                        ->whereIn('lesson_id', $prevTopic->lessons->pluck('id'))
+                                        ->count();
+                                    if ($topicLessonsCount === 0 || $completedLessonsCount < $topicLessonsCount) {
+                                        $allPreviousTopicsCompleted = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            // For first lesson of topic, check if previous topics are completed
+                            // For other lessons, check if previous lesson is completed
+                            $canAccessLesson = $canAccessContent && 
+                                ($index === 0 ? $allPreviousTopicsCompleted : ($isPreviousCompleted && $allPreviousTopicsCompleted));
+                        @endphp
+                        @php
+                            $tooltipMessage = '';
+                            if (!$canAccessLesson) {
+                                if (!$allPreviousTopicsCompleted) {
+                                    $tooltipMessage = 'Complete all lessons in previous topics first';
+                                } elseif ($previousLesson && !$isPreviousCompleted) {
+                                    $tooltipMessage = "Complete '{$previousLesson->title}' first";
+                                } else {
+                                    $tooltipMessage = 'This lesson is currently locked';
+                                }
+                            }
                         @endphp
                         <div class="lesson-item {{ !$canAccessLesson ? 'lesson-locked' : '' }}" 
-                             @if(!$canAccessLesson && $previousLesson) 
-                                 data-tooltip="Complete '{{ $previousLesson->title }}' first" 
+                             @if(!$canAccessLesson) 
+                                 data-tooltip="{{ $tooltipMessage }}" 
                              @endif>
                             <i class="fas {{ $isCompleted ? 'fa-check-circle' : ($canAccessLesson ? 'fa-play-circle' : 'fa-lock') }}" 
                                style="color: {{ $isCompleted ? '#10b981' : ($canAccessLesson ? 'var(--cool-gray)' : '#ef4444') }}; margin-right: 1rem;"></i>
@@ -619,7 +655,7 @@
                             @else
                                 <span class="lesson-link lesson-locked-text" 
                                       style="color: var(--cool-gray); opacity: 0.5; cursor: not-allowed;"
-                                      onclick="showLessonLockedMessage('{{ $previousLesson ? $previousLesson->title : '' }}')">
+                                      onclick="showLessonLockedMessage('{{ $tooltipMessage }}')">
                                     {{ $lesson->title }}
                                     @if(!$canAccessContent)
                                         <i class="fas fa-lock" style="margin-left: 0.5rem; font-size: 0.8rem;"></i>
@@ -667,12 +703,12 @@
 </div>
 
 <script>
-function showLessonLockedMessage(previousLessonTitle) {
-    if (previousLessonTitle) {
+function showLessonLockedMessage(message) {
+    if (message) {
         // Create or update notification
         showNotification(
-            'Complete Previous Lesson', 
-            `Please complete "${previousLessonTitle}" before accessing this lesson.`,
+            'Lesson Locked', 
+            message,
             'warning'
         );
     } else {
