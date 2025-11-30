@@ -2685,11 +2685,6 @@ window.addEventListener('beforeunload', () => {
 <!-- Partners Logos -->
 <section id="partners-section" role="region" aria-labelledby="partners-heading" itemscope itemtype="https://schema.org/ItemList" style="padding:2rem 0;">
   @php
-    try {
-      $partners = \App\Models\Partner::query()->where('status', 'active')->orderBy('order', 'asc')->get();
-    } catch (\Throwable $e) {
-      $partners = collect();
-    }
     $applyUrl = \Illuminate\Support\Facades\Route::has('partners.apply')
       ? route('partners.apply')
       : url('/partners/apply');

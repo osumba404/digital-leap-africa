@@ -200,6 +200,7 @@ class AboutController extends Controller
         ]);
 
         $validated['logo_path'] = $this->storeWebPImage($request->file('logo'), 'partners');
+        $validated['is_active'] = $request->has('is_active');
 
         Partner::create($validated);
 
@@ -229,6 +230,7 @@ class AboutController extends Controller
             $validated['logo_path'] = $this->storeWebPImage($request->file('logo'), 'partners');
         }
 
+        $validated['is_active'] = $request->has('is_active');
         $partner->update($validated);
 
         return redirect()->route('admin.about.index')
