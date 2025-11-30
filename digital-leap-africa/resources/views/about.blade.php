@@ -337,7 +337,7 @@
   .tm-card:hover .tm-image-container img{transform:scale(1.03)}
   .tm-image-overlay{position:absolute;bottom:0;left:0;width:100%;height:40%;background:linear-gradient(to top, rgba(30,41,59,0.9), transparent);pointer-events:none}
   .tm-content{padding:20px;flex-grow:1;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
-  .tm-name{font-size:1.3rem;color:#f1f5f9;margin-bottom:0 !important; margin-top: -0.25rem; font-weight:700;background:linear-gradient(90deg,#3b82f6,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2}
+  .tm-name{font-size:1.3rem;color:#3b82f6;margin-bottom:0 !important; margin-top: -0.25rem; font-weight:700;line-height:1.2}
   .tm-position{color:#fff;background:#3b82f6;padding:5px 12px;border-radius:8px;font-size:.75rem;font-weight:500;display:inline-block;margin-bottom:15px;position:relative}
   .tm-position::after{content:'';position:absolute;bottom:-8px;left:0;width:45px;height:3px;background:#3b82f6;border-radius:2px}
   .tm-bio{color:#94a3b8;line-height:1.3;margin-bottom:15px;font-size:.9rem;max-width:100%;overflow:hidden}
@@ -386,12 +386,13 @@
 
   /* ========== Light Mode Styles ========== */
   [data-theme="light"] .card {
-      background: #FFFFFF;
-      border: 1px solid rgba(46, 120, 197, 0.2);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      background: #F8FBFF;
+      border: 2px solid #1E4C7C;
+      box-shadow: 0 4px 16px rgba(46, 120, 197, 0.15);
   }
   [data-theme="light"] .card:hover {
-      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.12);
+      border-color: #1E4C7C;
+      box-shadow: 0 12px 32px rgba(30, 76, 124, 0.25);
   }
   [data-theme="light"] .card-title {
       color: var(--primary-blue);
@@ -402,9 +403,13 @@
 
   /* Light Mode Stats */
   [data-theme="light"] .stat-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(46, 120, 197, 0.2);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      background: #F8FBFF;
+      border: 2px solid #1E4C7C;
+      box-shadow: 0 4px 16px rgba(46, 120, 197, 0.15);
+  }
+  [data-theme="light"] .stat-card:hover {
+      border-color: #1E4C7C;
+      box-shadow: 0 8px 24px rgba(30, 76, 124, 0.2);
   }
   [data-theme="light"] .stat-value {
       color: var(--primary-blue);
@@ -415,20 +420,21 @@
 
   /* Light Mode Partners */
   [data-theme="light"] .partner-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(46, 120, 197, 0.2);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      background: #F8FBFF;
+      border: 2px solid #1E4C7C;
+      box-shadow: 0 4px 16px rgba(46, 120, 197, 0.15);
       filter: grayscale(50%);
   }
   [data-theme="light"] .partner-card:hover {
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border-color: #1E4C7C;
+      box-shadow: 0 8px 24px rgba(30, 76, 124, 0.2);
       filter: grayscale(0%);
   }
 
   /* Light Mode About Card */
   [data-theme="light"] .about-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(46, 120, 197, 0.2);
+      background: #F8FBFF;
+      border: 2px solid #1E4C7C;
   }
   [data-theme="light"] .about-visual {
       border-color: var(--primary-blue);
@@ -437,18 +443,19 @@
 
   /* Light Mode Team Cards */
   [data-theme="light"] .tm-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(46, 120, 197, 0.2);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      background: #F8FBFF;
+      border: 2px solid #1E4C7C;
+      box-shadow: 0 6px 24px rgba(46, 120, 197, 0.15);
   }
   [data-theme="light"] .tm-card:hover {
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+      border-color: #1E4C7C;
+      box-shadow: 0 12px 32px rgba(30, 76, 124, 0.25);
   }
   [data-theme="light"] .tm-name {
       color: var(--primary-blue);
-      background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      background: none;
+      -webkit-background-clip: unset;
+      -webkit-text-fill-color: unset;
   }
   [data-theme="light"] .tm-position {
       background: var(--primary-blue);
@@ -744,12 +751,13 @@
 
       /* Light Mode */
       [data-theme="light"] .about-card {
-          background: linear-gradient(145deg, #FFFFFF, #F8FAFC);
-          border-color: var(--primary-blue);
-          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+          background: #F8FBFF;
+          border: 2px solid #1E4C7C;
+          box-shadow: 0 6px 24px rgba(46, 120, 197, 0.15);
       }
       [data-theme="light"] .about-card:hover {
-          box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+          border-color: #1E4C7C;
+          box-shadow: 0 12px 32px rgba(30, 76, 124, 0.25);
       }
       [data-theme="light"] .about-card::before {
           background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
@@ -887,7 +895,7 @@
       .vision-image img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); filter: brightness(0.7); }
       .vision-card:hover .vision-image img { transform: scale(1.06); filter: brightness(0.9); }
       .vision-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent, rgba(19, 26, 42, 0.9)); display: flex; align-items: flex-end; padding: 20px; }
-      .vision-title { font-size: 1.8rem; color: var(--text-primary); font-weight: 700; background: linear-gradient(90deg, var(--accent-blue), var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .vision-title { font-size: 1.8rem; color: var(--accent-blue); font-weight: 700; }
       .vision-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; position: relative; }
       .vision-subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 15px; font-weight: 500; }
       .vision-body { color: var(--text-secondary); line-height: 1.6; font-size: 0.9rem; margin-bottom: 20px; }
@@ -899,7 +907,7 @@
       .geometric-card { background: var(--card-bg); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); height: 420px; display: flex; position: relative; border: 1px solid rgba(59, 130, 246, 0.1); }
       .geometric-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(45deg, transparent 40%, rgba(59, 130, 246, 0.1) 100%); clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%); z-index: 1; }
       .geometric-content { padding: 25px; flex: 1; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 2; }
-      .geometric-title { font-size: 1.8rem; color: var(--text-primary); margin-bottom: 12px; font-weight: 700; background: linear-gradient(90deg, var(--accent-blue), var(--neon-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .geometric-title { font-size: 1.8rem; color: var(--accent-blue); margin-bottom: 12px; font-weight: 700; }
       .geometric-subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 20px; font-weight: 500; }
       .geometric-body { color: var(--text-secondary); line-height: 1.6; font-size: 0.9rem; margin-bottom: 25px; }
       .geometric-image { flex: 0 0 42%; position: relative; overflow: hidden; }
@@ -926,15 +934,19 @@
 
       /* Light Mode Mission/Vision Cards */
       [data-theme="light"] .vision-card {
-          background: #FFFFFF;
-          border: 1px solid rgba(46, 120, 197, 0.2);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+          background: #F8FBFF;
+          border: 2px solid #1E4C7C;
+          box-shadow: 0 6px 24px rgba(46, 120, 197, 0.15);
+      }
+      [data-theme="light"] .vision-card:hover {
+          border-color: #1E4C7C;
+          box-shadow: 0 12px 32px rgba(30, 76, 124, 0.25);
       }
       [data-theme="light"] .vision-title {
           color: var(--primary-blue);
-          background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+          background: none;
+          -webkit-background-clip: unset;
+          -webkit-text-fill-color: unset;
       }
       [data-theme="light"] .vision-subtitle,
       [data-theme="light"] .vision-body,
@@ -949,18 +961,22 @@
       }
 
       [data-theme="light"] .geometric-card {
-          background: #FFFFFF;
-          border: 1px solid rgba(46, 120, 197, 0.2);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+          background: #F8FBFF;
+          border: 2px solid #1E4C7C;
+          box-shadow: 0 6px 24px rgba(46, 120, 197, 0.15);
+      }
+      [data-theme="light"] .geometric-card:hover {
+          border-color: #1E4C7C;
+          box-shadow: 0 12px 32px rgba(30, 76, 124, 0.25);
       }
       [data-theme="light"] .geometric-card::before {
           background: linear-gradient(45deg, transparent 40%, rgba(46, 120, 197, 0.05) 100%);
       }
       [data-theme="light"] .geometric-title {
           color: var(--primary-blue);
-          background: linear-gradient(90deg, var(--primary-blue), var(--cyan-accent));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+          background: none;
+          -webkit-background-clip: unset;
+          -webkit-text-fill-color: unset;
       }
       [data-theme="light"] .geometric-subtitle,
       [data-theme="light"] .geometric-body,
