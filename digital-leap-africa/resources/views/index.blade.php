@@ -1012,7 +1012,7 @@
 }
 
 .course-image-wrapper {
-    flex: 0 0 200px;
+    flex: 0 0 35%;
     position: relative;
     overflow: hidden;
 }
@@ -1110,8 +1110,8 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: linear-gradient(135deg, var(--cyan-accent), var(--primary-blue));
-    color: white;
+    background: var(--cyan-accent);
+    color: #07101a;
     padding: 0.6rem 1.2rem;
     border-radius: 8px;
     text-decoration: none;
@@ -1119,12 +1119,14 @@
     font-size: 0.9rem;
     transition: all 0.3s ease;
     align-self: flex-start;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .course-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 201, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 201, 255, 0.4);
     gap: 0.75rem;
+    color: #07101a;
 }
 
 /* Empty State */
@@ -2684,7 +2686,7 @@ window.addEventListener('beforeunload', () => {
 <section id="partners-section" role="region" aria-labelledby="partners-heading" itemscope itemtype="https://schema.org/ItemList" style="padding:2rem 0;">
   @php
     try {
-      $partners = \App\Models\Partner::query()->active()->ordered()->get();
+      $partners = \App\Models\Partner::query()->where('status', 'active')->orderBy('order', 'asc')->get();
     } catch (\Throwable $e) {
       $partners = collect();
     }
