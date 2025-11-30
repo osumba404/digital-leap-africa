@@ -385,6 +385,15 @@
                         <i class="fas fa-certificate me-1"></i>Certificate Included
                     </span>
                 @endif
+                
+                @if($course->slots)
+                    @php
+                        $remainingSlots = $course->getRemainingSlots();
+                    @endphp
+                    <span style="background: rgba({{ $remainingSlots > 5 ? '16, 185, 129' : ($remainingSlots > 0 ? '251, 191, 36' : '239, 68, 68') }}, 0.2); color: {{ $remainingSlots > 5 ? '#10b981' : ($remainingSlots > 0 ? '#f59e0b' : '#ef4444') }}; padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.9rem; font-weight: 500;">
+                        <i class="fas fa-users me-1"></i>{{ $remainingSlots }} slots remaining
+                    </span>
+                @endif
             </div>
             
             @if($course->course_type === 'cohort_based' && ($course->start_date || $course->end_date))
@@ -458,10 +467,17 @@
                 </div>
             @endif
         @else
-            <div class="enrollment-section">
-                @if($course->is_free)
-                    {{-- Free Course Enrollment --}}
-                    <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Ready to Start Learning?</h3>
+            @if($course->slots && !$course->hasAvailableSlots())
+                <div class="enrollment-section">
+                    <i class="fas fa-users-slash" style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;"></i>
+                    <h3 style="color: var(--diamond-white); margin-bottom: 0.5rem;">Course Full</h3>
+                    <p style="color: var(--cool-gray);">This course has reached its maximum capacity of {{ $course->slots }} students.</p>
+                </div>
+            @else
+                <div class="enrollment-section">
+                    @if($course->is_free)
+                        {{-- Free Course Enrollment --}}
+                        <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Ready to Start Learning?</h3>
                     <p style="color: var(--cool-gray); margin-bottom: 2rem;">
                         @if($course->course_type === 'cohort_based')
                             Join this cohort-based course and learn with fellow students!
@@ -522,7 +538,8 @@
                         </div>
                     </div>
                 @endif
-            </div>
+                </div>
+            @endif
         @endif
     @else
         <div class="enrollment-section">

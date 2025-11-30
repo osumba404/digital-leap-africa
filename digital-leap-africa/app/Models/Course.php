@@ -27,6 +27,7 @@ class Course extends Model
         'end_date',
         'has_certification',
         'certificate_title',
+        'slots',
     ];
 
     protected $casts = [
@@ -36,6 +37,7 @@ class Course extends Model
         'has_certification' => 'boolean',
         'start_date' => 'date',
         'end_date' => 'date',
+        'slots' => 'integer',
     ];
 
     public function topics()
@@ -57,6 +59,34 @@ public function payments()
 public function certificates()
 {
     return $this->hasMany(Certificate::class);
+}
+
+public function users()
+{
+    return $this->belongsToMany(User::class, 'enrollments')
+                ->withPivot('status', 'enrolled_at')
+                ->withTimestamps();
+}
+
+public function enrolledUsers()
+{
+    return $this->users()->wherePivot('status', 'active');
+}
+
+public function getRemainingSlots()
+{
+    if (!$this->slots) {
+        return null;
+    }
+    return $this->slots - $this->enrolledUsers()->count();
+}
+
+public function hasAvailableSlots()
+{
+    if (!$this->slots) {
+        return true;
+    }
+    return $this->getRemainingSlots() > 0;
 }
 
 public function getImageUrlFullAttribute(): ?string

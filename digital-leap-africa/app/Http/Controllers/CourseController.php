@@ -49,6 +49,10 @@ class CourseController extends Controller
             return redirect()->route('courses.show', $course)->with('error', 'You are already enrolled in this course.');
         }
 
+        if (!$course->hasAvailableSlots()) {
+            return redirect()->route('courses.show', $course)->with('error', 'This course is full. No more slots available.');
+        }
+
         if ($course->is_free) {
             // Free Course: Immediate access
             $user->courses()->attach($course->id, [

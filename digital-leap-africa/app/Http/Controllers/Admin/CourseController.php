@@ -48,6 +48,7 @@ class CourseController extends Controller
             'end_date' => 'nullable|date|after:start_date',
             'has_certification' => 'nullable|boolean',
             'certificate_title' => 'nullable|string|max:255',
+            'slots' => 'nullable|integer|min:1',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
@@ -103,6 +104,7 @@ class CourseController extends Controller
             'end_date' => 'nullable|date|after:start_date',
             'has_certification' => 'nullable|boolean',
             'certificate_title' => 'nullable|string|max:255',
+            'slots' => 'nullable|integer|min:1',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);

@@ -303,6 +303,16 @@
                   <span><i class="fas fa-user"></i> Self-Paced</span>
                 @endif
               </div>
+              @if($course->slots)
+                @php
+                  $remainingSlots = $course->getRemainingSlots();
+                @endphp
+                <div style="margin-bottom: 1rem; padding: 0.5rem; background: rgba({{ $remainingSlots > 5 ? '16, 185, 129' : ($remainingSlots > 0 ? '251, 191, 36' : '239, 68, 68') }}, 0.1); border-radius: 6px; border-left: 3px solid {{ $remainingSlots > 5 ? '#10b981' : ($remainingSlots > 0 ? '#f59e0b' : '#ef4444') }};">
+                  <div style="color: {{ $remainingSlots > 5 ? '#10b981' : ($remainingSlots > 0 ? '#f59e0b' : '#ef4444') }}; font-size: 0.85rem; font-weight: 600;">
+                    <i class="fas fa-users"></i> {{ $remainingSlots }} slots remaining
+                  </div>
+                </div>
+              @endif
               @if($course->course_type === 'cohort_based' && ($course->duration_weeks || $course->start_date))
                 <div style="margin-bottom: 1rem; padding: 0.5rem; background: rgba(147, 51, 234, 0.1); border-radius: 6px; border-left: 3px solid #9333ea;">
                   @if($course->duration_weeks)

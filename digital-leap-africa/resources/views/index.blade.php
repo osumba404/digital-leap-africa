@@ -2144,6 +2144,15 @@ animation: twinkle 2s infinite ease-in-out;
                                     <i class="fas fa-user"></i>
                                     {{ $course->instructor ?? 'Instructor' }}
                                 </span>
+                                @if($course->slots)
+                                    @php
+                                        $remainingSlots = $course->getRemainingSlots();
+                                    @endphp
+                                    <span class="course-slots" style="color: {{ $remainingSlots > 5 ? '#10b981' : ($remainingSlots > 0 ? '#f59e0b' : '#ef4444') }};">
+                                        <i class="fas fa-users"></i>
+                                        {{ $remainingSlots }} slots remaining
+                                    </span>
+                                @endif
                             </div>
                             
                             <p class="course-description">{{ $courseExcerpt }}</p>

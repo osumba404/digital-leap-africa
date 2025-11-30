@@ -84,6 +84,14 @@
         </div>
 
         <div class="form-group" style="margin-top: 1rem;">
+            <label for="slots" class="form-label">Maximum Students (Slots)</label>
+            <input type="number" id="slots" name="slots" class="form-control" 
+                   value="{{ old('slots', $course->slots ?? '') }}" 
+                   min="1" placeholder="e.g., 50">
+            <small style="color: var(--cool-gray); font-size: 0.85rem;">Maximum number of students allowed to enroll. Leave blank for unlimited enrollment.</small>
+        </div>
+
+        <div class="form-group" style="margin-top: 1rem;">
             <label class="form-label" for="has_certification">Certification</label>
             <div style="display:flex; align-items:center; gap:0.5rem;">
                 <input type="checkbox" id="has_certification" name="has_certification" value="1"
