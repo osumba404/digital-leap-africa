@@ -504,7 +504,7 @@
     background: rgba(100, 255, 218, 0.05); border-radius: 0 var(--radius) var(--radius) 0;
   }
 
-  .article-content ul, .article-content ol { margin-bottom: 1.25rem; padding-left: 1.5rem; color: var(--text-secondary); }
+  .article-content ul, .article-content ol { font-size: 0.78rem; margin-bottom: 0.5rem; padding-left: 1.5rem; color: var(--text-secondary); }
   .article-content li { margin-bottom: 0.5rem; }
   .article-content strong, .article-content b { font-weight: 700; color: var(--text-primary); }
   .article-content em, .article-content i { font-style: italic; }
