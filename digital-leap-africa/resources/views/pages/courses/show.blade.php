@@ -14,7 +14,9 @@
 <meta property="og:url" content="{{ route('courses.show', $course) }}">
 <meta property="og:title" content="{{ $course->title }} - Online Course | Digital Leap Africa">
 <meta property="og:description" content="{{ Str::limit(strip_tags($course->short_description ?? $course->description ?? 'Master ' . $course->title . ' with our comprehensive online course. Expert instruction, hands-on projects, and certificate of completion.'), 160) }}">
-<meta property="og:image" content="{{ $course->image_url ? url($course->image_url) : asset('images/course-default-og.jpg') }}">
+<meta property="og:image" content="{{ $course->image_url ? (Str::startsWith($course->image_url, ['http://', 'https://']) ? $course->image_url : url($course->image_url)) : asset('images/course-default-og.jpg') }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:site_name" content="Digital Leap Africa">
 <meta property="og:locale" content="en_US">
 
@@ -23,8 +25,10 @@
 <meta name="twitter:url" content="{{ route('courses.show', $course) }}">
 <meta name="twitter:title" content="{{ $course->title }} - Digital Leap Africa">
 <meta name="twitter:description" content="{{ Str::limit(strip_tags($course->short_description ?? $course->description ?? 'Learn ' . $course->title . ' with expert instruction and hands-on projects.'), 200) }}">
-<meta name="twitter:image" content="{{ $course->image_url ? url($course->image_url) : asset('images/course-default-og.jpg') }}">
+<meta name="twitter:image" content="{{ $course->image_url ? (Str::startsWith($course->image_url, ['http://', 'https://']) ? $course->image_url : url($course->image_url)) : asset('images/course-default-og.jpg') }}">
 <meta name="twitter:image:alt" content="{{ $course->title }} Course - Digital Leap Africa">
+<meta name="twitter:creator" content="@DigitalLeapKE">
+<meta name="twitter:site" content="@DigitalLeapKE">
 
 <!-- Course-specific meta tags -->
 <meta name="course:instructor" content="{{ $course->instructor ?? 'Digital Leap Africa' }}">
@@ -49,7 +53,7 @@
 
 <!-- Preload course image -->
 @if($course->image_url)
-<link rel="preload" as="image" href="{{ url($course->image_url) }}" fetchpriority="high">
+<link rel="preload" as="image" href="{{ Str::startsWith($course->image_url, ['http://', 'https://']) ? $course->image_url : url($course->image_url) }}" fetchpriority="high">
 @endif
 
 <!-- Additional SEO Meta Tags -->
@@ -73,7 +77,7 @@
   "name": "{{ $course->title }}",
   "description": "{{ strip_tags($course->description ?? $course->short_description ?? '') }}",
   "url": "{{ route('courses.show', $course) }}",
-  "image": "{{ $course->image_url ?? asset('images/course-default.jpg') }}",
+  "image": "{{ $course->image_url ? url($course->image_url) : asset('images/course-default.jpg') }}",
   "provider": {
     "@type": "EducationalOrganization",
     "name": "Digital Leap Africa",
@@ -176,7 +180,7 @@
     "name": "Digital Leap Africa",
     "url": "{{ url('/') }}"
   },
-  "image": "{{ $course->image_url ?? asset('images/course-default.jpg') }}",
+  "image": "{{ $course->image_url ? url($course->image_url) : asset('images/course-default.jpg') }}",
   @if(!$course->is_free && $course->price)
   "offers": {
     "@type": "Offer",
