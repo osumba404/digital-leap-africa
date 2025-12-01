@@ -4,7 +4,7 @@
 
 @push('meta')
 <meta name="description" content="{{ strip_tags($course->short_description ?? $course->description ?? 'Learn ' . $course->title . ' with Digital Leap Africa. Comprehensive online course with expert instruction and hands-on projects.') }}">
-<meta name="keywords" content="{{ strtolower($course->title) }}, online course, {{ $course->level ?? 'beginner' }} level, digital leap africa, programming course, web development, tech skills, e-learning, {{ $course->instructor ?? 'expert instructor' }}">
+<meta name="keywords" content="{{ strtolower($course->title) }}, {{ strtolower(str_replace([' ', '-', '_'], ', ', $course->title)) }}, online course, {{ $course->level ?? 'beginner' }} level, digital leap africa, programming course, web development, tech skills, e-learning, {{ $course->instructor ?? 'expert instructor' }}, course, training, certification, {{ $course->category ?? 'technology' }}, web development kenya, programming courses africa">
 <meta name="author" content="{{ $course->instructor ?? 'Digital Leap Africa' }}">
 <meta name="robots" content="index, follow">
 <meta name="googlebot" content="index, follow">
@@ -13,8 +13,8 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ route('courses.show', $course) }}">
 <meta property="og:title" content="{{ $course->title }} - Online Course | Digital Leap Africa">
-<meta property="og:description" content="{{ strip_tags($course->short_description ?? $course->description ?? 'Master ' . $course->title . ' with our comprehensive online course. Expert instruction, hands-on projects, and certificate of completion.') }}">
-<meta property="og:image" content="{{ $course->image_url ?? asset('images/course-default-og.jpg') }}">
+<meta property="og:description" content="{{ Str::limit(strip_tags($course->short_description ?? $course->description ?? 'Master ' . $course->title . ' with our comprehensive online course. Expert instruction, hands-on projects, and certificate of completion.'), 160) }}">
+<meta property="og:image" content="{{ $course->image_url ? url($course->image_url) : asset('images/course-default-og.jpg') }}">
 <meta property="og:site_name" content="Digital Leap Africa">
 <meta property="og:locale" content="en_US">
 
@@ -22,8 +22,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="{{ route('courses.show', $course) }}">
 <meta name="twitter:title" content="{{ $course->title }} - Digital Leap Africa">
-<meta name="twitter:description" content="{{ strip_tags($course->short_description ?? $course->description ?? 'Learn ' . $course->title . ' with expert instruction and hands-on projects.') }}">
-<meta name="twitter:image" content="{{ $course->image_url ?? asset('images/course-default-og.jpg') }}">
+<meta name="twitter:description" content="{{ Str::limit(strip_tags($course->short_description ?? $course->description ?? 'Learn ' . $course->title . ' with expert instruction and hands-on projects.'), 200) }}">
+<meta name="twitter:image" content="{{ $course->image_url ? url($course->image_url) : asset('images/course-default-og.jpg') }}">
 <meta name="twitter:image:alt" content="{{ $course->title }} Course - Digital Leap Africa">
 
 <!-- Course-specific meta tags -->
@@ -35,6 +35,21 @@
 @endif
 @if(!$course->is_free && $course->price)
 <meta name="course:price" content="KES {{ number_format($course->price, 0) }}">
+@endif
+
+<!-- Enhanced SEO Meta Tags -->
+<meta name="article:section" content="Education">
+<meta name="article:tag" content="Web Development,HTML,CSS,Programming,Online Course,Digital Skills">
+<meta property="product:price:amount" content="{{ $course->price ?? '0' }}">
+<meta property="product:price:currency" content="KES">
+<meta name="twitter:label1" content="Level">
+<meta name="twitter:data1" content="{{ ucfirst($course->level ?? 'beginner') }}">
+<meta name="twitter:label2" content="Duration">
+<meta name="twitter:data2" content="{{ $course->duration_weeks ? $course->duration_weeks . ' weeks' : 'Self-paced' }}">
+
+<!-- Preload course image -->
+@if($course->image_url)
+<link rel="preload" as="image" href="{{ url($course->image_url) }}" fetchpriority="high">
 @endif
 
 <!-- Additional SEO Meta Tags -->

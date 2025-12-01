@@ -1,7 +1,187 @@
 @extends('layouts.app')
 
 @section('title', $article->title . ' | Digital Leap Africa Blog')
-@section('meta_description', Str::limit(strip_tags($article->content ?? ''), 160))
+
+@push('meta')
+<meta name="description" content="{{ Str::limit(strip_tags($article->content ?? $article->excerpt ?? 'Read ' . $article->title . ' on Digital Leap Africa blog. Expert insights on web development, programming, and digital skills.'), 160) }}">
+<meta name="keywords" content="{{ strtolower($article->title) }}, {{ strtolower(str_replace([' ', '-', '_'], ', ', $article->title)) }}, digital leap africa, blog, article, {{ $article->category ?? 'technology' }}, web development, programming, tech insights, {{ implode(', ', array_slice($article->tags ?? ['technology', 'programming'], 0, 5)) }}, kenya tech blog, african tech">
+<meta name="author" content="{{ $article->author->name ?? 'Digital Leap Africa' }}">
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ route('blog.show', $article) }}">
+<meta property="og:title" content="{{ $article->title }} | Digital Leap Africa Blog">
+<meta property="og:description" content="{{ Str::limit(strip_tags($article->content ?? $article->excerpt ?? 'Read this insightful article about ' . $article->title . ' on Digital Leap Africa blog.'), 160) }}">
+<meta property="og:image" content="{{ $article->featured_image_url ? url($article->featured_image_url) : asset('images/blog-default-og.jpg') }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Digital Leap Africa">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="{{ $article->author->name ?? 'Digital Leap Africa' }}">
+<meta property="article:published_time" content="{{ ($article->published_at ?? $article->created_at)->toISOString() }}">
+@if($article->updated_at && $article->updated_at != $article->created_at)
+<meta property="article:modified_time" content="{{ $article->updated_at->toISOString() }}">
+@endif
+<meta property="article:section" content="{{ $article->category ?? 'Technology' }}">
+@if(!empty($article->tags))
+@foreach(array_slice($article->tags, 0, 5) as $tag)
+<meta property="article:tag" content="{{ $tag }}">
+@endforeach
+@endif
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="{{ route('blog.show', $article) }}">
+<meta name="twitter:title" content="{{ $article->title }} - Digital Leap Africa">
+<meta name="twitter:description" content="{{ Str::limit(strip_tags($article->content ?? $article->excerpt ?? 'Discover insights about ' . $article->title . ' on Digital Leap Africa blog.'), 200) }}">
+<meta name="twitter:image" content="{{ $article->featured_image_url ? url($article->featured_image_url) : asset('images/blog-default-og.jpg') }}">
+<meta name="twitter:image:alt" content="{{ $article->title }} - Digital Leap Africa Blog">
+<meta name="twitter:creator" content="@DigitalLeapKE">
+<meta name="twitter:site" content="@DigitalLeapKE">
+
+<!-- Article-specific meta tags -->
+<meta name="article:author" content="{{ $article->author->name ?? 'Digital Leap Africa' }}">
+<meta name="article:publisher" content="Digital Leap Africa">
+@if($article->category)
+<meta name="article:section" content="{{ $article->category }}">
+@endif
+<meta name="article:reading_time" content="{{ max(1, ceil(str_word_count(strip_tags($article->content ?? ''))/200)) }} minutes">
+
+<!-- Enhanced SEO Meta Tags -->
+<meta name="twitter:label1" content="Reading Time">
+<meta name="twitter:data1" content="{{ max(1, ceil(str_word_count(strip_tags($article->content ?? ''))/200)) }} min read">
+<meta name="twitter:label2" content="Author">
+<meta name="twitter:data2" content="{{ $article->author->name ?? 'Digital Leap Africa' }}">
+
+<!-- Preload featured image -->
+@if($article->featured_image_url)
+<link rel="preload" as="image" href="{{ url($article->featured_image_url) }}" fetchpriority="high">
+@endif
+
+<!-- Additional SEO Meta Tags -->
+<meta name="geo.region" content="KE">
+<meta name="geo.placename" content="Kenya">
+<meta name="language" content="English">
+<meta name="coverage" content="Africa">
+<meta name="distribution" content="global">
+<meta name="rating" content="general">
+<meta name="revisit-after" content="3 days">
+<meta name="target" content="all">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ route('blog.show', $article) }}">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ $article->title }}",
+  "description": "{{ strip_tags($article->content ?? $article->excerpt ?? '') }}",
+  "url": "{{ route('blog.show', $article) }}",
+  "image": {
+    "@type": "ImageObject",
+    "url": "{{ $article->featured_image_url ? url($article->featured_image_url) : asset('images/blog-default.jpg') }}",
+    "width": 1200,
+    "height": 630
+  },
+  "author": {
+    "@type": "Person",
+    "name": "{{ $article->author->name ?? 'Digital Leap Africa' }}",
+    "url": "{{ $article->author ? route('profile.show', $article->author) : url('/') }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Digital Leap Africa",
+    "url": "{{ url('/') }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ asset('images/logo.png') }}",
+      "width": 200,
+      "height": 60
+    }
+  },
+  "datePublished": "{{ ($article->published_at ?? $article->created_at)->toISOString() }}",
+  @if($article->updated_at && $article->updated_at != $article->created_at)
+  "dateModified": "{{ $article->updated_at->toISOString() }}",
+  @endif
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ route('blog.show', $article) }}"
+  },
+  "articleSection": "{{ $article->category ?? 'Technology' }}",
+  "inLanguage": "en",
+  "wordCount": {{ str_word_count(strip_tags($article->content ?? '')) }},
+  "timeRequired": "PT{{ max(1, ceil(str_word_count(strip_tags($article->content ?? ''))/200)) }}M",
+  @if(!empty($article->tags))
+  "keywords": [{{ collect($article->tags)->map(fn($tag) => '"' . $tag . '"')->implode(', ') }}],
+  @endif
+  "about": {
+    "@type": "Thing",
+    "name": "{{ $article->category ?? 'Web Development' }}"
+  },
+  "commentCount": {{ $article->comments->count() ?? 0 }},
+  "interactionStatistic": [
+    {
+      "@type": "InteractionCounter",
+      "interactionType": "https://schema.org/CommentAction",
+      "userInteractionCount": {{ $article->comments->count() ?? 0 }}
+    },
+    {
+      "@type": "InteractionCounter",
+      "interactionType": "https://schema.org/LikeAction",
+      "userInteractionCount": {{ $article->likes_count ?? 0 }}
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ url('/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "{{ route('blog.index') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ $article->title }}",
+      "item": "{{ route('blog.show', $article) }}"
+    }
+  ]
+}
+</script>
+
+@if($article->author)
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ $article->author->name }}",
+  "url": "{{ route('profile.show', $article->author) }}",
+  "jobTitle": "Content Creator",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Digital Leap Africa",
+    "url": "{{ url('/') }}"
+  }
+}
+</script>
+@endif
+@endpush
 
 @push('styles')
 <style>
