@@ -14,7 +14,7 @@
 <meta property="og:url" content="{{ url('/') }}">
 <meta property="og:title" content="Digital Leap Africa - E-Learning Platform for African Youth">
 <meta property="og:description" content="Empowering African youth through comprehensive e-learning courses, job opportunities, and vibrant community. Join Digital Leap Africa for tech skills and career development.">
-<meta property="og:image" content="{{ asset('images/og-image.jpg') }}">
+<meta property="og:image" content="@if(!empty($heroSlides) && !empty($heroSlides[0]['image'])){{ url($heroSlides[0]['image']) }}@else{{ asset('images/og-image.jpg') }}@endif">
 <meta property="og:site_name" content="Digital Leap Africa">
 <meta property="og:locale" content="en_US">
 
@@ -23,7 +23,7 @@
 <meta name="twitter:url" content="{{ url('/') }}">
 <meta name="twitter:title" content="Digital Leap Africa - E-Learning Platform for African Youth">
 <meta name="twitter:description" content="Empowering African youth through comprehensive e-learning courses, job opportunities, and vibrant community.">
-<meta name="twitter:image" content="{{ asset('images/og-image.jpg') }}">
+<meta name="twitter:image" content="@if(!empty($heroSlides) && !empty($heroSlides[0]['image'])){{ url($heroSlides[0]['image']) }}@else{{ asset('images/og-image.jpg') }}@endif">
 <meta name="twitter:image:alt" content="Digital Leap Africa - Empowering African Youth Through Technology Education">
 <meta name="twitter:label1" content="Courses Available">
 <meta name="twitter:data1" content="{{ $stats['courses'] ?? 0 }}+">
@@ -147,9 +147,8 @@
   "url": "{{ url('/') }}",
   "logo": "{{ asset('images/logo.png') }}",
   "sameAs": [
-    "https://facebook.com/digitalleapafrica",
-    "https://twitter.com/digitalleapafrica",
-    "https://linkedin.com/company/digitalleapafrica"
+    "https://www.instagram.com/digital_leap_africa/",
+    "https://x.com/digitalleap_afr"
   ],
   "address": {
     "@type": "PostalAddress",
@@ -373,11 +372,11 @@
               @endif
               
               @if(!empty($slide['sub']))
-                <p class="hero-text hero-sub" style="font-size: 1.3rem; margin-bottom: 2rem; max-width: 600px; color: #f1f3f5;">{{ $slide['sub'] }}</p>
+                <p class="hero-text hero-sub" style="font-size: 1.3rem; margin-bottom: 2rem; max-width: 600px; color: #f1f3f5; margin-left: auto; margin-right: auto; text-align: center;">{{ $slide['sub'] }}</p>
               @endif
               
               @if(!empty($slide['cta1_label']) || !empty($slide['cta2_label']))
-                <div class="cta-buttons" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div class="cta-buttons" style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
                   @if(!empty($slide['cta1_label']) && !empty($slide['cta1_route']))
                     <a href="{{ route($slide['cta1_route']) }}" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: linear-gradient(135deg, #00C9FF, #2E78C5); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; transition: all 0.3s ease;">
                       <i class="fas fa-graduation-cap" style="color: white;"></i>
@@ -1231,14 +1230,14 @@
   position: absolute;
   left: 5%;
   right: 5%;
-  bottom: 8%;
+  top: 50%;
+  transform: translateY(-50%);
   text-align: center;
   padding: 0;
   z-index: 5;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
 }
 
 .slide-content {
@@ -1248,10 +1247,9 @@
 
 @media (max-width: 768px) {
   .hero-caption {
-    text-align: left;
-    align-items: flex-end;
-    height: auto;
-    bottom: 8%;
+    text-align: center;
+    top: 50%;
+    transform: translateY(-50%);
   }
   .slide-content {
     max-width: 100%;
@@ -3065,12 +3063,14 @@ window.addEventListener('beforeunload', () => {
     
     .cta-buttons {
       flex-direction: column;
-      align-items: stretch;
+      align-items: center;
       gap: 0.75rem;
+      justify-content: center;
     }
     
     .btn {
-      width: 100%;
+      width: auto;
+      min-width: 200px;
       justify-content: center;
       padding: 12px 20px;
       font-size: 0.9rem;
