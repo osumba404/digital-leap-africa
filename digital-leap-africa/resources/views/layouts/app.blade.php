@@ -301,8 +301,13 @@
             gap: 1rem;
         }
         
-        .menu-toggle-btn {
+        .mobile-nav-actions {
             display: none;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .menu-toggle-btn {
             background: rgba(255, 255, 255, 0.15);
             border: 2px solid rgba(255, 255, 255, 0.4);
             color: #ffffff;
@@ -1100,7 +1105,7 @@
         }
         
         @media (max-width: 992px) {
-            .menu-toggle-btn {
+            .mobile-nav-actions {
                 display: flex !important;
             }
             .nav-main-group {
@@ -1109,7 +1114,7 @@
         }
         
         @media (min-width: 993px) {
-            .menu-toggle-btn {
+            .mobile-nav-actions {
                 display: none !important;
             }
             .nav-main-group {
@@ -1849,6 +1854,10 @@
                 min-width: 320px;
                 right: -50px;
             }
+            
+            #mobileNotificationDropdown {
+                right: -20px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1856,6 +1865,12 @@
                 min-width: 280px;
                 max-width: 90vw;
                 right: -80px;
+            }
+            
+            #mobileNotificationDropdown {
+                min-width: 280px;
+                max-width: calc(100vw - 2rem);
+                right: -60px;
             }
         }
         
@@ -1887,10 +1902,89 @@
                 </div>
             </a>
 
-            <button class="menu-toggle-btn" aria-label="Toggle navigation" type="button" 
-                    onclick="document.querySelector('.off-canvas-sidebar').classList.add('is-open'); document.querySelector('.sidebar-overlay').classList.add('is-open')">
-                <i class="fas fa-bars"></i>
-            </button>
+            <div class="mobile-nav-actions" style="display: flex; align-items: center; gap: 0.5rem;">
+                @auth
+                    {{-- Mobile Notification Bell --}}
+                    <div class="dropdown" style="position:relative;display:inline-block;">
+                        <a href="#" class="notification-bell" id="mobileNotificationBell" onclick="toggleNotifications(event)" style="width: 36px; height: 36px; font-size: 1rem;">
+                            <i class="fas fa-bell"></i>
+                            @php
+                                try {
+                                    $unreadCount = auth()->check() ? auth()->user()->notifications()->where('is_read', false)->count() : 0;
+                                } catch (\Exception $e) {
+                                    $unreadCount = 0;
+                                }
+                            @endphp
+                            @if($unreadCount > 0)
+                                <span class="notification-badge">{{ $unreadCount > 99 ? '99+' : $unreadCount }}</span>
+                            @endif
+                        </a>
+                        
+                        <div class="notification-dropdown" id="mobileNotificationDropdown">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                @if($unreadCount > 0)
+                                    <a href="#" class="mark-all-read" onclick="markAllAsRead(event)">Mark all read</a>
+                                @endif
+                            </div>
+                            
+                            <div class="notification-list">
+                                @php
+                                    try {
+                                        $notifications = auth()->check() ? auth()->user()->notifications()->latest()->take(10)->get() : collect();
+                                    } catch (\Exception $e) {
+                                        $notifications = collect();
+                                    }
+                                @endphp
+                                
+                                @forelse($notifications as $notification)
+                                    <a href="{{ $notification->url }}" 
+                                       class="notification-item {{ !$notification->is_read ? 'unread' : '' }}" 
+                                       onclick="markAsRead(event, {{ $notification->id }})" 
+                                       style="display:flex;align-items:start;">
+                                        <div class="notification-icon {{ $notification->type }}">
+                                            @if($notification->type === 'course_enrollment')
+                                                <i class="fas fa-graduation-cap"></i>
+                                            @elseif($notification->type === 'badge_earned')
+                                                <i class="fas fa-medal"></i>
+                                            @elseif($notification->type === 'testimonial_approved')
+                                                <i class="fas fa-check-circle"></i>
+                                            @elseif($notification->type === 'forum_reply')
+                                                <i class="fas fa-comment"></i>
+                                            @elseif($notification->type === 'new_course')
+                                                <i class="fas fa-book"></i>
+                                            @elseif($notification->type === 'new_article')
+                                                <i class="fas fa-newspaper"></i>
+                                            @endif
+                                        </div>
+                                        <div class="notification-content">
+                                            <div class="notification-title">{{ $notification->title }}</div>
+                                            <div class="notification-message">{{ $notification->message }}</div>
+                                            <div class="notification-time">{{ $notification->created_at->diffForHumans() }}</div>
+                                        </div>
+                                    </a>
+                                @empty
+                                    <div class="notification-empty">
+                                        <i class="fas fa-bell-slash"></i>
+                                        <p>No notifications yet</p>
+                                    </div>
+                                @endforelse
+                            </div>
+                            
+                            @if($notifications->count() > 0)
+                                <div class="notification-footer">
+                                    <a href="{{ route('notifications.index') }}" class="view-all-notifications">View all notifications</a>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endauth
+                
+                <button class="menu-toggle-btn" aria-label="Toggle navigation" type="button" 
+                        onclick="document.querySelector('.off-canvas-sidebar').classList.add('is-open'); document.querySelector('.sidebar-overlay').classList.add('is-open')">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
 
             
 
@@ -2077,9 +2171,9 @@
                     @endauth
                     
                     <!-- Theme Toggle -->
-                    <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark mode">
+                    {{-- <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark mode">
                         <i class="fas fa-moon" id="themeIcon"></i>
-                    </button>
+                    </button> --}}
                 </div>
             </div>
         </nav>
@@ -2099,6 +2193,7 @@
                 <li><a href="{{ route('courses.index') }}"><i class="fas fa-graduation-cap"></i>Courses</a></li>
                 <li><a href="{{ route('elibrary.index') }}"><i class="fas fa-book"></i>eLibrary</a></li>
                 <li><a href="{{ route('events.index') }}"><i class="fas fa-calendar-days"></i>Events</a></li>
+                <li><a href="{{ route('forum.index') }}"><i class="fas fa-comments"></i>Forum</a></li>
                 <li><a href="{{ route('blog.index') }}"><i class="fas fa-newspaper"></i>Blog</a></li>
 
 
@@ -2144,9 +2239,9 @@
                 @endauth
                 
                 <!-- Theme Toggle Mobile -->
-                <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode" style="margin-top: 1rem;">
+                {{-- <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode" style="margin-top: 1rem;">
                     <i class="fas fa-moon" id="themeIconMobile"></i>
-                </button>
+                </button> --}}
             </div>
         </div>
     </div>
@@ -2371,23 +2466,54 @@
         // Notification Functions
         function toggleNotifications(event) {
             event.preventDefault();
-            const dropdown = document.getElementById('notificationDropdown');
-            dropdown.classList.toggle('show');
             
-            // Close dropdown when clicking outside
-            if (dropdown.classList.contains('show')) {
-                setTimeout(() => {
-                    document.addEventListener('click', closeNotificationsOnClickOutside);
-                }, 0);
+            // Determine which dropdown to toggle based on the clicked element
+            const clickedBell = event.currentTarget;
+            let dropdown;
+            
+            if (clickedBell.id === 'mobileNotificationBell') {
+                dropdown = document.getElementById('mobileNotificationDropdown');
+                // Close desktop dropdown if open
+                const desktopDropdown = document.getElementById('notificationDropdown');
+                if (desktopDropdown) desktopDropdown.classList.remove('show');
+            } else {
+                dropdown = document.getElementById('notificationDropdown');
+                // Close mobile dropdown if open
+                const mobileDropdown = document.getElementById('mobileNotificationDropdown');
+                if (mobileDropdown) mobileDropdown.classList.remove('show');
+            }
+            
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+                
+                // Close dropdown when clicking outside
+                if (dropdown.classList.contains('show')) {
+                    setTimeout(() => {
+                        document.addEventListener('click', closeNotificationsOnClickOutside);
+                    }, 0);
+                }
             }
         }
         
         function closeNotificationsOnClickOutside(event) {
-            const dropdown = document.getElementById('notificationDropdown');
-            const bell = document.getElementById('notificationBell');
+            const desktopDropdown = document.getElementById('notificationDropdown');
+            const mobileDropdown = document.getElementById('mobileNotificationDropdown');
+            const desktopBell = document.getElementById('notificationBell');
+            const mobileBell = document.getElementById('mobileNotificationBell');
             
-            if (!dropdown.contains(event.target) && !bell.contains(event.target)) {
-                dropdown.classList.remove('show');
+            let shouldClose = true;
+            
+            // Check if click is inside any dropdown or bell
+            if ((desktopDropdown && desktopDropdown.contains(event.target)) ||
+                (mobileDropdown && mobileDropdown.contains(event.target)) ||
+                (desktopBell && desktopBell.contains(event.target)) ||
+                (mobileBell && mobileBell.contains(event.target))) {
+                shouldClose = false;
+            }
+            
+            if (shouldClose) {
+                if (desktopDropdown) desktopDropdown.classList.remove('show');
+                if (mobileDropdown) mobileDropdown.classList.remove('show');
                 document.removeEventListener('click', closeNotificationsOnClickOutside);
             }
         }
