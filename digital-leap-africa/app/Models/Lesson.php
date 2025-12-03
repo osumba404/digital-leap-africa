@@ -15,6 +15,7 @@ class Lesson extends Model
         'type',
         'content',
         'video_url',
+        'video_file_path',
         'code_snippet',
         'resource_url',
         'attachment_path',

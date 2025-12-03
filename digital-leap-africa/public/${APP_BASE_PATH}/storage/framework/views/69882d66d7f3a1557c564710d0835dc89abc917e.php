@@ -525,6 +525,10 @@
     z-index: 1;
 }
 
+[data-theme="light"] .hero-background {
+    background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 50%, #F1F5F9 100%) !important;
+}
+
 .hero-overlay {
     position: absolute;
     inset: 0;
@@ -627,7 +631,7 @@
 }
 
 .gradient-text {
-    background: linear-gradient(135deg, var(--cyan-accent), var(--purple-accent));
+    background: linear-gradient(135deg, var(--cyan-accent), var(--primary-blue));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -691,6 +695,11 @@
     padding: 4rem 0;
     background: rgba(255, 255, 255, 0.02);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] .stats-section {
+    background: #F8FAFC !important;
+    border-top: 1px solid rgba(46, 120, 197, 0.1) !important;
 }
 
 .stats-grid {
@@ -774,7 +783,7 @@
 }
 
 [data-theme="light"] .hero-title {
-    color: var(--charcoal);
+    color: var(--diamond-white);
 }
 
 [data-theme="light"] .hero-description {
@@ -785,6 +794,13 @@
     background: rgba(46, 120, 197, 0.1);
     border-color: rgba(46, 120, 197, 0.3);
     color: var(--primary-blue);
+}
+
+[data-theme="light"] .gradient-text {
+    background: linear-gradient(135deg, var(--primary-blue), var(--deep-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 [data-theme="light"] .stats-section {
@@ -804,7 +820,7 @@
 }
 
 [data-theme="light"] .stat-value {
-    color: var(--charcoal);
+    color: var(--diamond-white);
 }
 
 /* Section Styles */
@@ -820,6 +836,14 @@
 
 .courses-section {
     background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(0, 201, 255, 0.03) 100%);
+}
+
+[data-theme="light"] .articles-section {
+    background: #F8FAFC !important;
+}
+
+[data-theme="light"] .courses-section {
+    background: #F8FAFC !important;
 }
 
 .section-header {
@@ -990,7 +1014,7 @@
 }
 
 .course-image-wrapper {
-    flex: 0 0 200px;
+    flex: 0 0 35%;
     position: relative;
     overflow: hidden;
 }
@@ -1088,8 +1112,8 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: linear-gradient(135deg, var(--cyan-accent), var(--primary-blue));
-    color: white;
+    background: var(--cyan-accent);
+    color: #07101a;
     padding: 0.6rem 1.2rem;
     border-radius: 8px;
     text-decoration: none;
@@ -1097,12 +1121,14 @@
     font-size: 0.9rem;
     transition: all 0.3s ease;
     align-self: flex-start;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .course-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 201, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 201, 255, 0.4);
     gap: 0.75rem;
+    color: #07101a;
 }
 
 /* Empty State */
@@ -1278,7 +1304,7 @@ animation: twinkle 2s infinite ease-in-out;
 }
 
 [data-theme="light"] .section-title {
-    color: var(--charcoal);
+    color: var(--diamond-white);
 }
 
 [data-theme="light"] .section-badge {
@@ -1289,21 +1315,21 @@ animation: twinkle 2s infinite ease-in-out;
 
 [data-theme="light"] .article-card,
 [data-theme="light"] .course-horizontal-card {
-    background: #FFFFFF;
-    border-color: rgba(46, 120, 197, 0.15);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    background: #F8FBFF;
+    border: 2px solid #1E4C7C;
+    box-shadow: 0 6px 24px rgba(46, 120, 197, 0.15);
 }
 
 [data-theme="light"] .article-card:hover,
 [data-theme="light"] .course-horizontal-card:hover {
-    background: #FFFFFF;
-    border-color: rgba(46, 120, 197, 0.3);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    background: #F8FBFF;
+    border-color: #1E4C7C;
+    box-shadow: 0 12px 32px rgba(30, 76, 124, 0.25);
 }
 
 [data-theme="light"] .article-title,
 [data-theme="light"] .course-name {
-    color: var(--charcoal);
+    color: var(--diamond-white);
 }
 
 [data-theme="light"] .article-link {
@@ -1329,7 +1355,7 @@ animation: twinkle 2s infinite ease-in-out;
 }
 
 [data-theme="light"] .empty-state h3 {
-    color: var(--charcoal);
+    color: var(--diamond-white);
 }
 
 [data-theme="light"] .empty-icon {
@@ -2124,6 +2150,15 @@ animation: twinkle 2s infinite ease-in-out;
                                     <?php echo e($course->instructor ?? 'Instructor'); ?>
 
                                 </span>
+                                <?php if($course->slots): ?>
+                                    <?php
+                                        $remainingSlots = $course->getRemainingSlots();
+                                    ?>
+                                    <span class="course-slots" style="color: <?php echo e($remainingSlots > 5 ? '#10b981' : ($remainingSlots > 0 ? '#f59e0b' : '#ef4444')); ?>;">
+                                        <i class="fas fa-users"></i>
+                                        <?php echo e($remainingSlots); ?> slots remaining
+                                    </span>
+                                <?php endif; ?>
                             </div>
                             
                             <p class="course-description"><?php echo e($courseExcerpt); ?></p>
@@ -2444,14 +2479,14 @@ animation: twinkle 2s infinite ease-in-out;
 
 /* Light Mode Testimonials */
 [data-theme="light"] .testimonial-content {
-    background: #FFFFFF;
-    border: 1px solid rgba(46, 120, 197, 0.2);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    background: #F8FBFF;
+    border: 2px solid #1E4C7C;
+    box-shadow: 0 4px 16px rgba(46, 120, 197, 0.15);
 }
 [data-theme="light"] .testimonial-content:hover {
-    background: #FFFFFF;
-    border-color: rgba(46, 120, 197, 0.4);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    background: #F8FBFF;
+    border-color: #1E4C7C;
+    box-shadow: 0 12px 32px rgba(30, 76, 124, 0.25);
 }
 [data-theme="light"] .testimonial-quote-home {
     color: var(--diamond-white);
@@ -2669,11 +2704,6 @@ window.addEventListener('beforeunload', () => {
 <!-- Partners Logos -->
 <section id="partners-section" role="region" aria-labelledby="partners-heading" itemscope itemtype="https://schema.org/ItemList" style="padding:2rem 0;">
   <?php
-    try {
-      $partners = \App\Models\Partner::query()->active()->ordered()->get();
-    } catch (\Throwable $e) {
-      $partners = collect();
-    }
     $applyUrl = \Illuminate\Support\Facades\Route::has('partners.apply')
       ? route('partners.apply')
       : url('/partners/apply');
@@ -2726,12 +2756,13 @@ window.addEventListener('beforeunload', () => {
 
   /* Light Mode Partners */
   [data-theme="light"] #partners-section .partner-item {
-      background-color: #FFFFFF;
-      border: 1px solid rgba(46, 120, 197, 0.2);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      background-color: #F8FBFF;
+      border: 2px solid #1E4C7C;
+      box-shadow: 0 4px 16px rgba(46, 120, 197, 0.15);
   }
   [data-theme="light"] #partners-section .partner-item:hover {
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      border-color: #1E4C7C;
+      box-shadow: 0 8px 24px rgba(30, 76, 124, 0.2);
   }
   [data-theme="light"] #partners-section .partner-fallback {
       color: var(--primary-blue);
@@ -2773,12 +2804,13 @@ window.addEventListener('beforeunload', () => {
 
   /* Light Mode Events */
   [data-theme="light"] #events-section .card {
-      background-color: #FFFFFF;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(46, 120, 197, 0.15);
+      background-color: #F8FBFF;
+      box-shadow: 0 6px 24px rgba(46, 120, 197, 0.15);
+      border: 2px solid #1E4C7C;
   }
   [data-theme="light"] #events-section .card:hover {
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+      border-color: #1E4C7C;
+      box-shadow: 0 12px 32px rgba(30, 76, 124, 0.25);
   }
   [data-theme="light"] #events-section .card-title {
       color: var(--diamond-white);
@@ -2958,12 +2990,16 @@ window.addEventListener('beforeunload', () => {
 
   /* Light Mode FAQs */
   [data-theme="light"] #faq-section .faq-item {
-      background: #FFFFFF;
-      border: 1px solid rgba(46, 120, 197, 0.2);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      background: #F8FBFF;
+      border: 2px solid #1E4C7C;
+      box-shadow: 0 4px 16px rgba(46, 120, 197, 0.15);
+  }
+  [data-theme="light"] #faq-section .faq-item:hover {
+      border-color: #1E4C7C;
+      box-shadow: 0 8px 24px rgba(30, 76, 124, 0.2);
   }
   [data-theme="light"] #faq-section .faq-q {
-      color: var(--primary-blue);
+      color: var(--diamond-white);
   }
   [data-theme="light"] #faq-section .faq-q:after {
       color: var(--primary-blue);
@@ -3285,9 +3321,13 @@ window.addEventListener('beforeunload', () => {
 
   /* Light Mode Stats */
   [data-theme="light"] .stat-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(46, 120, 197, 0.2);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      background: #F8FBFF;
+      border: 2px solid #1E4C7C;
+      box-shadow: 0 4px 16px rgba(46, 120, 197, 0.15);
+  }
+  [data-theme="light"] .stat-card:hover {
+      border-color: #1E4C7C;
+      box-shadow: 0 8px 24px rgba(30, 76, 124, 0.2);
   }
   [data-theme="light"] .stat-value {
       color: var(--primary-blue);

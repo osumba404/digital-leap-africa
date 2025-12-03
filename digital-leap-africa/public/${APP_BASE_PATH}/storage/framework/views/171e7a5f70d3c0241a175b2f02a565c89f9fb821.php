@@ -10,16 +10,18 @@
 .lesson-header {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius);
+    /* border-radius: var(--radius); */
+    border-radius: 3px;
     padding: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .lesson-content {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius);
-    padding: 2rem;
+    /* border-radius: var(--radius); */
+    border-radius: 3px;
+    padding: 1.4rem;
     margin-bottom: 2rem;
 }
 
@@ -82,10 +84,10 @@
 .lesson-content-body h2,
 .lesson-content-body h3 {
     color: var(--diamond-white);
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
+    margin-top: 1.4rem;
+    margin-bottom: 0.5rem;
     font-weight: 600;
-    line-height: 1.3;
+    line-height: 1;
 }
 
 .lesson-content-body h1:first-child,
@@ -99,9 +101,10 @@
 .lesson-content-body h3 { font-size: 1.25rem; }
 
 .lesson-content-body p {
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
     color: var(--cool-gray);
-    line-height: 1.6;
+    line-height: 1.4;
+    font-size: 0.8rem;
 }
 
 .lesson-content-body p:empty {
@@ -113,7 +116,8 @@
     margin-bottom: 1rem;
     padding-left: 1.5rem;
     color: var(--cool-gray);
-    line-height: 1.6;
+    line-height: 1;
+    font-size: 0.8rem;
 }
 
 .lesson-content-body ol {
@@ -143,6 +147,7 @@
 .lesson-content-body li {
     margin-bottom: 0.25rem;
     line-height: 1.6;
+    font-size: 0.8rem;
 }
 
 .lesson-content-body li p {
@@ -172,6 +177,7 @@
     margin: 1rem 0;
     color: var(--cool-gray);
     font-style: italic;
+    font-size: 0.8rem;
 }
 
 .lesson-content-body a {
@@ -187,19 +193,48 @@
 .lesson-content-body img {
     max-width: 100%;
     height: auto;
-    border-radius: 8px;
+    border-radius: 4px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     margin: 1rem 0;
     display: block;
+}
+
+/* Video containers in content */
+.lesson-content-body .video-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    margin: 1.5rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+}
+
+.lesson-content-body .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.lesson-content-body video {
+    width: 100%;
+    max-height: 400px;
+    border-radius: 8px;
+    background: #000;
+    margin: 1.5rem 0;
 }
 
 /* Inline code */
 code {
     background: rgba(0, 0, 0, 0.35);
     padding: 0.2rem 0.4rem;
-    border-radius: 0.25rem;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9em;
+    border-radius: 0.2rem;
+    font-family: 'Courier New', monospace;   
+    font-size: 0.8rem !important;
 }
 
 /* Code blocks inside code-wrap don't get inline styling */
@@ -231,6 +266,14 @@ code {
 }
 
 [data-theme="light"] .lesson-content-body img {
+    border: 1px solid rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .lesson-content-body .video-container {
+    border: 1px solid rgba(46, 120, 197, 0.2);
+}
+
+[data-theme="light"] .lesson-content-body video {
     border: 1px solid rgba(46, 120, 197, 0.2);
 }
 
@@ -286,6 +329,7 @@ code {
     border-radius: var(--radius);
     padding: 2rem;
     text-align: center;
+    font-size: 0.8rem;
 }
 
 .completed-badge {
@@ -604,33 +648,15 @@ code {
             </p>
         </div>
 
+
         
-        <?php if($lesson->type === 'video' && $lesson->video_url): ?>
+        
+        <?php if($lesson->video_file_path): ?>
             <div class="lesson-content">
-                <div class="video-container">
-                    <?php
-                        // Extract YouTube video ID from various URL formats
-                        $videoId = null;
-                        if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $lesson->video_url, $matches)) {
-                            $videoId = $matches[1];
-                        }
-                    ?>
-                    
-                    <?php if($videoId): ?>
-                        <iframe src="https://www.youtube.com/embed/<?php echo e($videoId); ?>" 
-                                title="<?php echo e($lesson->title); ?>" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen>
-                        </iframe>
-                    <?php else: ?>
-                        <div style="background: var(--charcoal); display: flex; align-items: center; justify-content: center; height: 100%; color: var(--cool-gray);">
-                            <div style="text-align: center;">
-                                <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                                <p>Video content not available</p>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                </div>
+                <video controls style="width: 100%; max-height: 400px; border-radius: 8px; background: #000; margin: 1.5rem 0;">
+                    <source src="<?php echo e($lesson->video_file_path); ?>" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
             </div>
         <?php endif; ?>
 
@@ -639,8 +665,8 @@ code {
             <div class="lesson-content">
                 <div class="lesson-content-body">
                     <?php echo $lesson->content; ?>                    
-                      
                 </div>
+
             </div>
         <?php endif; ?>
 
@@ -979,6 +1005,63 @@ code {
         });
       });
     });
+
+    // Process video placeholders in lesson content
+    function processVideoContent() {
+      const contentBody = document.querySelector('.lesson-content-body');
+      if (!contentBody) return;
+
+      let html = contentBody.innerHTML;
+      console.log('Original HTML:', html);
+
+      // Process YouTube embeds: [YOUTUBE:VIDEO_ID] or [YOUTUBE:https://youtube.com/watch?v=VIDEO_ID]
+      html = html.replace(/\[YOUTUBE:([^\]]+)\]/gi, function(match, content) {
+        console.log('Found YouTube placeholder:', match, content);
+        let videoId = content;
+        
+        // Extract video ID from full YouTube URL if provided
+        const youtubeMatch = content.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+        if (youtubeMatch) {
+          videoId = youtubeMatch[1];
+        }
+        
+        console.log('Video ID:', videoId);
+        return `<div class="video-container" style="position: relative; width: 100%; height: 0; padding-bottom: 56.25%; margin: 1.5rem 0; border-radius: 8px; overflow: hidden; background: #000;">
+          <iframe src="https://www.youtube.com/embed/${videoId}" 
+                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen>
+          </iframe>
+        </div>`;
+      });
+
+      // Process video file placeholders: [VIDEO:filename.mp4]
+      html = html.replace(/\[VIDEO:([^\]]+)\]/gi, function(match, filename) {
+        console.log('Found video placeholder:', match, filename);
+        return `<div style="margin: 1.5rem 0;">
+          <video controls style="width: 100%; max-height: 400px; border-radius: 8px; background: #000;">
+            <source src="/storage/videos/${filename}" type="video/mp4">
+            <source src="/storage/videos/${filename}" type="video/webm">
+            Your browser does not support the video tag.
+          </video>
+        </div>`;
+      });
+
+      // Process image placeholders: [IMAGE:filename.jpg]
+      html = html.replace(/\[IMAGE:([^\]]+)\]/gi, function(match, filename) {
+        console.log('Found image placeholder:', match, filename);
+        return `<img src="/storage/images/${filename}" alt="${filename}" style="max-width: 100%; height: auto; border-radius: 8px; margin: 1rem 0; display: block;">`;
+      });
+
+      console.log('Processed HTML:', html);
+      contentBody.innerHTML = html;
+    }
+
+    // Process video content after DOM is ready
+    processVideoContent();
+    
+    // Also process after a short delay to ensure all content is loaded
+    setTimeout(processVideoContent, 500);
   });
 </script>
 <?php $__env->stopPush(); ?>

@@ -4,7 +4,7 @@
 
 <?php $__env->startPush('meta'); ?>
 <meta name="description" content="<?php echo e(strip_tags($course->short_description ?? $course->description ?? 'Learn ' . $course->title . ' with Digital Leap Africa. Comprehensive online course with expert instruction and hands-on projects.')); ?>">
-<meta name="keywords" content="<?php echo e(strtolower($course->title)); ?>, online course, <?php echo e($course->level ?? 'beginner'); ?> level, digital leap africa, programming course, web development, tech skills, e-learning, <?php echo e($course->instructor ?? 'expert instructor'); ?>">
+<meta name="keywords" content="<?php echo e(strtolower($course->title)); ?>, <?php echo e(strtolower(str_replace([' ', '-', '_'], ', ', $course->title))); ?>, online course, <?php echo e($course->level ?? 'beginner'); ?> level, digital leap africa, programming course, web development, tech skills, e-learning, <?php echo e($course->instructor ?? 'expert instructor'); ?>, course, training, certification, <?php echo e($course->category ?? 'technology'); ?>, web development kenya, programming courses africa">
 <meta name="author" content="<?php echo e($course->instructor ?? 'Digital Leap Africa'); ?>">
 <meta name="robots" content="index, follow">
 <meta name="googlebot" content="index, follow">
@@ -13,8 +13,10 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="<?php echo e(route('courses.show', $course)); ?>">
 <meta property="og:title" content="<?php echo e($course->title); ?> - Online Course | Digital Leap Africa">
-<meta property="og:description" content="<?php echo e(strip_tags($course->short_description ?? $course->description ?? 'Master ' . $course->title . ' with our comprehensive online course. Expert instruction, hands-on projects, and certificate of completion.')); ?>">
-<meta property="og:image" content="<?php echo e($course->image_url ?? asset('images/course-default-og.jpg')); ?>">
+<meta property="og:description" content="<?php echo e(Str::limit(strip_tags($course->short_description ?? $course->description ?? 'Master ' . $course->title . ' with our comprehensive online course. Expert instruction, hands-on projects, and certificate of completion.'), 160)); ?>">
+<meta property="og:image" content="<?php echo e($course->image_url ? (Str::startsWith($course->image_url, ['http://', 'https://']) ? $course->image_url : url($course->image_url)) : asset('images/course-default-og.jpg')); ?>">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:site_name" content="Digital Leap Africa">
 <meta property="og:locale" content="en_US">
 
@@ -22,9 +24,11 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="<?php echo e(route('courses.show', $course)); ?>">
 <meta name="twitter:title" content="<?php echo e($course->title); ?> - Digital Leap Africa">
-<meta name="twitter:description" content="<?php echo e(strip_tags($course->short_description ?? $course->description ?? 'Learn ' . $course->title . ' with expert instruction and hands-on projects.')); ?>">
-<meta name="twitter:image" content="<?php echo e($course->image_url ?? asset('images/course-default-og.jpg')); ?>">
+<meta name="twitter:description" content="<?php echo e(Str::limit(strip_tags($course->short_description ?? $course->description ?? 'Learn ' . $course->title . ' with expert instruction and hands-on projects.'), 200)); ?>">
+<meta name="twitter:image" content="<?php echo e($course->image_url ? (Str::startsWith($course->image_url, ['http://', 'https://']) ? $course->image_url : url($course->image_url)) : asset('images/course-default-og.jpg')); ?>">
 <meta name="twitter:image:alt" content="<?php echo e($course->title); ?> Course - Digital Leap Africa">
+<meta name="twitter:creator" content="@DigitalLeapKE">
+<meta name="twitter:site" content="@DigitalLeapKE">
 
 <!-- Course-specific meta tags -->
 <meta name="course:instructor" content="<?php echo e($course->instructor ?? 'Digital Leap Africa'); ?>">
@@ -35,6 +39,21 @@
 <?php endif; ?>
 <?php if(!$course->is_free && $course->price): ?>
 <meta name="course:price" content="KES <?php echo e(number_format($course->price, 0)); ?>">
+<?php endif; ?>
+
+<!-- Enhanced SEO Meta Tags -->
+<meta name="article:section" content="Education">
+<meta name="article:tag" content="Web Development,HTML,CSS,Programming,Online Course,Digital Skills">
+<meta property="product:price:amount" content="<?php echo e($course->price ?? '0'); ?>">
+<meta property="product:price:currency" content="KES">
+<meta name="twitter:label1" content="Level">
+<meta name="twitter:data1" content="<?php echo e(ucfirst($course->level ?? 'beginner')); ?>">
+<meta name="twitter:label2" content="Duration">
+<meta name="twitter:data2" content="<?php echo e($course->duration_weeks ? $course->duration_weeks . ' weeks' : 'Self-paced'); ?>">
+
+<!-- Preload course image -->
+<?php if($course->image_url): ?>
+<link rel="preload" as="image" href="<?php echo e(Str::startsWith($course->image_url, ['http://', 'https://']) ? $course->image_url : url($course->image_url)); ?>" fetchpriority="high">
 <?php endif; ?>
 
 <!-- Additional SEO Meta Tags -->
@@ -58,7 +77,7 @@
   "name": "<?php echo e($course->title); ?>",
   "description": "<?php echo e(strip_tags($course->description ?? $course->short_description ?? '')); ?>",
   "url": "<?php echo e(route('courses.show', $course)); ?>",
-  "image": "<?php echo e($course->image_url ?? asset('images/course-default.jpg')); ?>",
+  "image": "<?php echo e($course->image_url ? url($course->image_url) : asset('images/course-default.jpg')); ?>",
   "provider": {
     "@type": "EducationalOrganization",
     "name": "Digital Leap Africa",
@@ -161,7 +180,7 @@
     "name": "Digital Leap Africa",
     "url": "<?php echo e(url('/')); ?>"
   },
-  "image": "<?php echo e($course->image_url ?? asset('images/course-default.jpg')); ?>",
+  "image": "<?php echo e($course->image_url ? url($course->image_url) : asset('images/course-default.jpg')); ?>",
   <?php if(!$course->is_free && $course->price): ?>
   "offers": {
     "@type": "Offer",
@@ -388,6 +407,15 @@
                         <i class="fas fa-certificate me-1"></i>Certificate Included
                     </span>
                 <?php endif; ?>
+                
+                <?php if($course->slots): ?>
+                    <?php
+                        $remainingSlots = $course->getRemainingSlots();
+                    ?>
+                    <span style="background: rgba(<?php echo e($remainingSlots > 5 ? '16, 185, 129' : ($remainingSlots > 0 ? '251, 191, 36' : '239, 68, 68')); ?>, 0.2); color: <?php echo e($remainingSlots > 5 ? '#10b981' : ($remainingSlots > 0 ? '#f59e0b' : '#ef4444')); ?>; padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.9rem; font-weight: 500;">
+                        <i class="fas fa-users me-1"></i><?php echo e($remainingSlots); ?> slots remaining
+                    </span>
+                <?php endif; ?>
             </div>
             
             <?php if($course->course_type === 'cohort_based' && ($course->start_date || $course->end_date)): ?>
@@ -464,10 +492,17 @@
                 </div>
             <?php endif; ?>
         <?php else: ?>
-            <div class="enrollment-section">
-                <?php if($course->is_free): ?>
-                    
-                    <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Ready to Start Learning?</h3>
+            <?php if($course->slots && !$course->hasAvailableSlots()): ?>
+                <div class="enrollment-section">
+                    <i class="fas fa-users-slash" style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;"></i>
+                    <h3 style="color: var(--diamond-white); margin-bottom: 0.5rem;">Course Full</h3>
+                    <p style="color: var(--cool-gray);">This course has reached its maximum capacity of <?php echo e($course->slots); ?> students.</p>
+                </div>
+            <?php else: ?>
+                <div class="enrollment-section">
+                    <?php if($course->is_free): ?>
+                        
+                        <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Ready to Start Learning?</h3>
                     <p style="color: var(--cool-gray); margin-bottom: 2rem;">
                         <?php if($course->course_type === 'cohort_based'): ?>
                             Join this cohort-based course and learn with fellow students!
@@ -528,7 +563,8 @@
                         </div>
                     </div>
                 <?php endif; ?>
-            </div>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
     <?php else: ?>
         <div class="enrollment-section">
@@ -611,11 +647,47 @@
                             $isCompleted = Auth::user()->lessons()->where('lesson_id', $lesson->id)->exists();
                             $previousLesson = $index > 0 ? $topic->lessons[$index - 1] : null;
                             $isPreviousCompleted = $previousLesson ? Auth::user()->lessons()->where('lesson_id', $previousLesson->id)->exists() : true;
-                            $canAccessLesson = $canAccessContent && ($index === 0 || $isPreviousCompleted);
+                            
+                            // Check if all lessons in previous topics are completed
+                            $currentTopicIndex = $course->topics->search(function($t) use ($topic) {
+                                return $t->id === $topic->id;
+                            });
+                            
+                            $allPreviousTopicsCompleted = true;
+                            if ($currentTopicIndex > 0) {
+                                $previousTopics = $course->topics->slice(0, $currentTopicIndex);
+                                foreach ($previousTopics as $prevTopic) {
+                                    $topicLessonsCount = $prevTopic->lessons->count();
+                                    $completedLessonsCount = Auth::user()->lessons()
+                                        ->whereIn('lesson_id', $prevTopic->lessons->pluck('id'))
+                                        ->count();
+                                    if ($topicLessonsCount === 0 || $completedLessonsCount < $topicLessonsCount) {
+                                        $allPreviousTopicsCompleted = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            // For first lesson of topic, check if previous topics are completed
+                            // For other lessons, check if previous lesson is completed
+                            $canAccessLesson = $canAccessContent && 
+                                ($index === 0 ? $allPreviousTopicsCompleted : ($isPreviousCompleted && $allPreviousTopicsCompleted));
+                        ?>
+                        <?php
+                            $tooltipMessage = '';
+                            if (!$canAccessLesson) {
+                                if (!$allPreviousTopicsCompleted) {
+                                    $tooltipMessage = 'Complete all lessons in previous topics first';
+                                } elseif ($previousLesson && !$isPreviousCompleted) {
+                                    $tooltipMessage = "Complete '{$previousLesson->title}' first";
+                                } else {
+                                    $tooltipMessage = 'This lesson is currently locked';
+                                }
+                            }
                         ?>
                         <div class="lesson-item <?php echo e(!$canAccessLesson ? 'lesson-locked' : ''); ?>" 
-                             <?php if(!$canAccessLesson && $previousLesson): ?> 
-                                 data-tooltip="Complete '<?php echo e($previousLesson->title); ?>' first" 
+                             <?php if(!$canAccessLesson): ?> 
+                                 data-tooltip="<?php echo e($tooltipMessage); ?>" 
                              <?php endif; ?>>
                             <i class="fas <?php echo e($isCompleted ? 'fa-check-circle' : ($canAccessLesson ? 'fa-play-circle' : 'fa-lock')); ?>" 
                                style="color: <?php echo e($isCompleted ? '#10b981' : ($canAccessLesson ? 'var(--cool-gray)' : '#ef4444')); ?>; margin-right: 1rem;"></i>
@@ -627,7 +699,7 @@
                             <?php else: ?>
                                 <span class="lesson-link lesson-locked-text" 
                                       style="color: var(--cool-gray); opacity: 0.5; cursor: not-allowed;"
-                                      onclick="showLessonLockedMessage('<?php echo e($previousLesson ? $previousLesson->title : ''); ?>')">
+                                      onclick="showLessonLockedMessage('<?php echo e($tooltipMessage); ?>')">
                                     <?php echo e($lesson->title); ?>
 
                                     <?php if(!$canAccessContent): ?>
@@ -679,12 +751,12 @@
 </div>
 
 <script>
-function showLessonLockedMessage(previousLessonTitle) {
-    if (previousLessonTitle) {
+function showLessonLockedMessage(message) {
+    if (message) {
         // Create or update notification
         showNotification(
-            'Complete Previous Lesson', 
-            `Please complete "${previousLessonTitle}" before accessing this lesson.`,
+            'Lesson Locked', 
+            message,
             'warning'
         );
     } else {

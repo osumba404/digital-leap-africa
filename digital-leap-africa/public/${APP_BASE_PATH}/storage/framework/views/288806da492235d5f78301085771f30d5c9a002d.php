@@ -95,12 +95,18 @@
     <style>
         /* Prevent FOUC */
         html{visibility:visible;opacity:1;background:#0C121C}
+        [data-theme="light"] html{background:#F8FAFC}
         body{margin:0;background:linear-gradient(180deg,#07101a 0%,#0C121C 100%);color:#F5F7FA;font-family:system-ui,-apple-system,sans-serif;padding-top:4rem;min-height:100vh}
+        [data-theme="light"] body{background:linear-gradient(180deg,#E6F2FF 0%,#F8FAFC 100%) !important;color:#1a202c}
         main{background:var(--navy-bg,#0C121C)}
+        [data-theme="light"] main{background:#F8FAFC !important}
         .site-header{position:fixed;top:0;left:0;right:0;width:100%;background:linear-gradient(135deg,#252A32 0%,#0C121C 100%);z-index:1000;height:4rem;border-bottom:1px solid rgba(0,201,255,.2)}
+        [data-theme="light"] .site-header{background:#FFFFFF;border-bottom:1px solid rgba(46,120,197,.2)}
         .site-footer{margin-top:auto;background:linear-gradient(135deg,#252A32 0%,#0C121C 100%);border-top:1px solid rgba(255,255,255,.1)}
+        [data-theme="light"] .site-footer{background:#FFFFFF;border-top:1px solid rgba(46,120,197,.1)}
         .nav{display:flex;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto;width:90%;padding:0 1rem;height:100%}
         .brand{display:flex;align-items:center;gap:.75rem;color:#fff;text-decoration:none}
+        [data-theme="light"] .brand{color:#2E78C5}
         .brand h1{font-size:1.1rem;margin:0;font-weight:700}
         .container{width:90%;max-width:1100px;margin:0 auto;padding:2rem 0}
         /* Reserve space for images to prevent CLS */
@@ -135,7 +141,7 @@
         [data-theme="light"] {
             --primary-blue: <?php echo e($siteSettings['primary_color'] ?? '#2E78C5'); ?>;
             --deep-blue: 	#1E4C7C;
-            --navy-bg: 	    #F8FAFC;
+            --navy-bg: 	    #FFFFFF;
             --diamond-white:#1a202c;
             --cool-gray: 	#4A5568;
             --charcoal: 	#FFFFFF;
@@ -162,7 +168,29 @@
         }
         
         [data-theme="light"] body {
-            background: linear-gradient(180deg, #E6F2FF 0%, var(--navy-bg) 100%);
+            background: #FFFFFF !important;
+        }
+        
+        [data-theme="light"] main {
+            background: #FFFFFF !important;
+        }
+        
+        /* Force light mode backgrounds */
+        [data-theme="light"] * {
+            --navy-bg: #FFFFFF !important;
+            --charcoal: #FFFFFF !important;
+        }
+        
+        [data-theme="light"] .hero-section,
+        [data-theme="light"] .stats-section,
+        [data-theme="light"] .articles-section,
+        [data-theme="light"] .courses-section,
+        [data-theme="light"] section {
+            background: #FFFFFF !important;
+        }
+        
+        [data-theme="light"] .hero-background {
+            background: #FFFFFF !important;
         }
 
         .container {
@@ -273,8 +301,13 @@
             gap: 1rem;
         }
         
-        .menu-toggle-btn {
+        .mobile-nav-actions {
             display: none;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .menu-toggle-btn {
             background: rgba(255, 255, 255, 0.15);
             border: 2px solid rgba(255, 255, 255, 0.4);
             color: #ffffff;
@@ -554,6 +587,10 @@
             box-shadow: 0 8px 25px rgba(0, 201, 255, 0.4);
             color: #07101a;
         }
+        
+        .btn-primary i {
+            color: #ffffff;
+        }
 
         .btn-outline {
             background: transparent;
@@ -641,9 +678,9 @@
         }
         
         [data-theme="light"] .card {
-            background: #FFFFFF;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            background: #F8FBFF;
+            border: 2px solid var(--deep-blue);
+            box-shadow: 0 4px 16px rgba(46, 120, 197, 0.15);
         }
 
         .card:hover {
@@ -652,7 +689,8 @@
         }
         
         [data-theme="light"] .card:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-color: var(--deep-blue);
+            box-shadow: 0 12px 32px rgba(30, 76, 124, 0.25);
         }
 
         .form-group {
@@ -812,8 +850,8 @@
             position: fixed;
             top: 0;
             right: 0;
-            width: 320px;
-            max-width: 85vw;
+            width: 215px;
+            max-width: 75vw;
             max-height: 75vh;
             background: linear-gradient(180deg, var(--charcoal) 0%, var(--navy-bg) 100%);
             box-shadow: -4px 0 20px rgba(0, 0, 0, 0.7);
@@ -911,8 +949,9 @@
         .off-canvas-sidebar .nav-links a {
             display: flex;
             align-items: center;
+            gap: 0.75rem;
             padding: 0.75rem 1rem;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 500;
             transition: all 0.3s ease;
             border-radius: 0;
@@ -921,6 +960,14 @@
             width: 100%;
             position: relative;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .off-canvas-sidebar .nav-links a i {
+            width: 18px;
+            font-size: 0.9rem;
+            color: var(--cyan-accent);
+            opacity: 0.8;
+            flex-shrink: 0;
         }
         
         .off-canvas-sidebar .nav-links a::before {
@@ -954,6 +1001,43 @@
         
         .off-canvas-sidebar .nav-actions-group > * {
             width: 100%;
+        }
+        
+        .off-canvas-sidebar .btn-outline,
+        .off-canvas-sidebar .btn-primary {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 8px !important;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            justify-content: flex-start;
+        }
+        
+        .off-canvas-sidebar .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+        
+        .off-canvas-sidebar .btn-primary {
+            background: rgba(0, 201, 255, 0.1);
+            border: 1px solid rgba(0, 201, 255, 0.3);
+            color: var(--cyan-accent);
+        }
+        
+        .off-canvas-sidebar .btn-outline i,
+        .off-canvas-sidebar .btn-primary i {
+            width: 18px;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        
+        .off-canvas-sidebar .btn-primary i {
+            color: #ffffff;
         }
         
         /* Light Mode Mobile Menu Styles */
@@ -997,6 +1081,10 @@
             border: 1px solid rgba(46, 120, 197, 0.1);
         }
         
+        [data-theme="light"] .off-canvas-sidebar .nav-links a i {
+            color: var(--primary-blue);
+        }
+        
         [data-theme="light"] .off-canvas-sidebar .nav-links a:hover {
             background: rgba(46, 120, 197, 0.15);
             border-color: rgba(46, 120, 197, 0.3);
@@ -1017,7 +1105,7 @@
         }
         
         @media (max-width: 992px) {
-            .menu-toggle-btn {
+            .mobile-nav-actions {
                 display: flex !important;
             }
             .nav-main-group {
@@ -1026,7 +1114,7 @@
         }
         
         @media (min-width: 993px) {
-            .menu-toggle-btn {
+            .mobile-nav-actions {
                 display: none !important;
             }
             .nav-main-group {
@@ -1295,7 +1383,48 @@
                 gap: 1rem !important;
             }
             
-            /* Stats grid uses 2 columns on mobile - defined in index.blade.php */
+            /* Stats grid uses 2 columns on mobile */
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.75rem !important;
+            }
+            
+            .stat-card {
+                padding: 0.75rem !important;
+                min-height: auto !important;
+            }
+            
+            .stat-number {
+                font-size: 1.25rem !important;
+                margin-bottom: 0.15rem !important;
+            }
+            
+            .stat-label {
+                font-size: 0.65rem !important;
+                line-height: 1.2 !important;
+            }
+            
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.5rem !important;
+            }
+            
+            .action-card {
+                padding: 0.75rem 0.5rem !important;
+            }
+            
+            .action-icon {
+                font-size: 1.25rem !important;
+                margin-bottom: 0.4rem !important;
+            }
+            
+            .action-card h3 {
+                font-size: 0.75rem !important;
+            }
+            
+            .action-card p {
+                font-size: 0.7rem !important;
+            }
             
             .job-header,
             .course-header {
@@ -1725,6 +1854,10 @@
                 min-width: 320px;
                 right: -50px;
             }
+            
+            #mobileNotificationDropdown {
+                right: -20px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1732,6 +1865,12 @@
                 min-width: 280px;
                 max-width: 90vw;
                 right: -80px;
+            }
+            
+            #mobileNotificationDropdown {
+                min-width: 280px;
+                max-width: calc(100vw - 2rem);
+                right: -60px;
             }
         }
         
@@ -1763,10 +1902,89 @@
                 </div>
             </a>
 
-            <button class="menu-toggle-btn" aria-label="Toggle navigation" type="button" 
-                    onclick="document.querySelector('.off-canvas-sidebar').classList.add('is-open'); document.querySelector('.sidebar-overlay').classList.add('is-open')">
-                <i class="fas fa-bars"></i>
-            </button>
+            <div class="mobile-nav-actions" style="display: flex; align-items: center; gap: 0.5rem;">
+                <?php if(auth()->guard()->check()): ?>
+                    
+                    <div class="dropdown" style="position:relative;display:inline-block;">
+                        <a href="#" class="notification-bell" id="mobileNotificationBell" onclick="toggleNotifications(event)" style="width: 36px; height: 36px; font-size: 1rem;">
+                            <i class="fas fa-bell"></i>
+                            <?php
+                                try {
+                                    $unreadCount = auth()->check() ? auth()->user()->notifications()->where('is_read', false)->count() : 0;
+                                } catch (\Exception $e) {
+                                    $unreadCount = 0;
+                                }
+                            ?>
+                            <?php if($unreadCount > 0): ?>
+                                <span class="notification-badge"><?php echo e($unreadCount > 99 ? '99+' : $unreadCount); ?></span>
+                            <?php endif; ?>
+                        </a>
+                        
+                        <div class="notification-dropdown" id="mobileNotificationDropdown">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <?php if($unreadCount > 0): ?>
+                                    <a href="#" class="mark-all-read" onclick="markAllAsRead(event)">Mark all read</a>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <div class="notification-list">
+                                <?php
+                                    try {
+                                        $notifications = auth()->check() ? auth()->user()->notifications()->latest()->take(10)->get() : collect();
+                                    } catch (\Exception $e) {
+                                        $notifications = collect();
+                                    }
+                                ?>
+                                
+                                <?php $__empty_1 = true; $__currentLoopData = $notifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notification): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                    <a href="<?php echo e($notification->url); ?>" 
+                                       class="notification-item <?php echo e(!$notification->is_read ? 'unread' : ''); ?>" 
+                                       onclick="markAsRead(event, <?php echo e($notification->id); ?>)" 
+                                       style="display:flex;align-items:start;">
+                                        <div class="notification-icon <?php echo e($notification->type); ?>">
+                                            <?php if($notification->type === 'course_enrollment'): ?>
+                                                <i class="fas fa-graduation-cap"></i>
+                                            <?php elseif($notification->type === 'badge_earned'): ?>
+                                                <i class="fas fa-medal"></i>
+                                            <?php elseif($notification->type === 'testimonial_approved'): ?>
+                                                <i class="fas fa-check-circle"></i>
+                                            <?php elseif($notification->type === 'forum_reply'): ?>
+                                                <i class="fas fa-comment"></i>
+                                            <?php elseif($notification->type === 'new_course'): ?>
+                                                <i class="fas fa-book"></i>
+                                            <?php elseif($notification->type === 'new_article'): ?>
+                                                <i class="fas fa-newspaper"></i>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="notification-content">
+                                            <div class="notification-title"><?php echo e($notification->title); ?></div>
+                                            <div class="notification-message"><?php echo e($notification->message); ?></div>
+                                            <div class="notification-time"><?php echo e($notification->created_at->diffForHumans()); ?></div>
+                                        </div>
+                                    </a>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                    <div class="notification-empty">
+                                        <i class="fas fa-bell-slash"></i>
+                                        <p>No notifications yet</p>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <?php if($notifications->count() > 0): ?>
+                                <div class="notification-footer">
+                                    <a href="<?php echo e(route('notifications.index')); ?>" class="view-all-notifications">View all notifications</a>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                
+                <button class="menu-toggle-btn" aria-label="Toggle navigation" type="button" 
+                        onclick="document.querySelector('.off-canvas-sidebar').classList.add('is-open'); document.querySelector('.sidebar-overlay').classList.add('is-open')">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
 
             
 
@@ -1953,9 +2171,7 @@
                     <?php endif; ?>
                     
                     <!-- Theme Toggle -->
-                    <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark mode">
-                        <i class="fas fa-moon" id="themeIcon"></i>
-                    </button>
+                    
                 </div>
             </div>
         </nav>
@@ -1970,22 +2186,23 @@
         <div class="sidebar-content" style="padding-top: 1rem;">
             <ul class="nav-links">
                
-                <li><a href="<?php echo e(route('home')); ?>">Home</a></li>
-                <li><a href="<?php echo e(route('about')); ?>">About</a></li>
-                <li><a href="<?php echo e(route('courses.index')); ?>">Courses</a></li>
-                <li><a href="<?php echo e(route('elibrary.index')); ?>">eLibrary</a></li>
-                <li><a href="<?php echo e(route('events.index')); ?>">Events</a></li>
-                <li><a href="<?php echo e(route('blog.index')); ?>">Blog</a></li>
+                <li><a href="<?php echo e(route('home')); ?>"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="<?php echo e(route('about')); ?>"><i class="fas fa-info-circle"></i>About</a></li>
+                <li><a href="<?php echo e(route('courses.index')); ?>"><i class="fas fa-graduation-cap"></i>Courses</a></li>
+                <li><a href="<?php echo e(route('elibrary.index')); ?>"><i class="fas fa-book"></i>eLibrary</a></li>
+                <li><a href="<?php echo e(route('events.index')); ?>"><i class="fas fa-calendar-days"></i>Events</a></li>
+                <li><a href="<?php echo e(route('forum.index')); ?>"><i class="fas fa-comments"></i>Forum</a></li>
+                <li><a href="<?php echo e(route('blog.index')); ?>"><i class="fas fa-newspaper"></i>Blog</a></li>
 
 
                 <?php if(auth()->guard()->check()): ?>
-                    <li><a href="<?php echo e(route('dashboard')); ?>">Dashboard</a></li>
+                    <li><a href="<?php echo e(route('dashboard')); ?>"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
                 <?php endif; ?>
                 
                 <?php if(auth()->guard()->check()): ?>
                     <?php if(auth()->user()->role === 'admin'): ?>
                         <a href="<?php echo e(route('admin.dashboard')); ?>" class="btn-outline is-admin">
-                            <i class="fas fa-screwdriver-wrench me-1"></i> Admin
+                            <i class="fas fa-screwdriver-wrench"></i> Admin
                         </a>
                     <?php endif; ?>
                     
@@ -2009,14 +2226,18 @@
                         </button>
                     </form>
                 <?php else: ?>
-                    <a href="<?php echo e(route('login')); ?>" class="btn-outline">Log in</a>
-                    <a href="<?php echo e(route('register')); ?>" class="btn-primary">Sign up</a>
+                    <a href="<?php echo e(route('login')); ?>" class="btn btn-outline">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Log in</span>
+                    </a>
+                    <a href="<?php echo e(route('register')); ?>" class="btn btn-outline">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Sign up</span>
+                    </a>
                 <?php endif; ?>
                 
                 <!-- Theme Toggle Mobile -->
-                <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light/dark mode" style="margin-top: 1rem;">
-                    <i class="fas fa-moon" id="themeIconMobile"></i>
-                </button>
+                
             </div>
         </div>
     </div>
@@ -2244,23 +2465,54 @@
         // Notification Functions
         function toggleNotifications(event) {
             event.preventDefault();
-            const dropdown = document.getElementById('notificationDropdown');
-            dropdown.classList.toggle('show');
             
-            // Close dropdown when clicking outside
-            if (dropdown.classList.contains('show')) {
-                setTimeout(() => {
-                    document.addEventListener('click', closeNotificationsOnClickOutside);
-                }, 0);
+            // Determine which dropdown to toggle based on the clicked element
+            const clickedBell = event.currentTarget;
+            let dropdown;
+            
+            if (clickedBell.id === 'mobileNotificationBell') {
+                dropdown = document.getElementById('mobileNotificationDropdown');
+                // Close desktop dropdown if open
+                const desktopDropdown = document.getElementById('notificationDropdown');
+                if (desktopDropdown) desktopDropdown.classList.remove('show');
+            } else {
+                dropdown = document.getElementById('notificationDropdown');
+                // Close mobile dropdown if open
+                const mobileDropdown = document.getElementById('mobileNotificationDropdown');
+                if (mobileDropdown) mobileDropdown.classList.remove('show');
+            }
+            
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+                
+                // Close dropdown when clicking outside
+                if (dropdown.classList.contains('show')) {
+                    setTimeout(() => {
+                        document.addEventListener('click', closeNotificationsOnClickOutside);
+                    }, 0);
+                }
             }
         }
         
         function closeNotificationsOnClickOutside(event) {
-            const dropdown = document.getElementById('notificationDropdown');
-            const bell = document.getElementById('notificationBell');
+            const desktopDropdown = document.getElementById('notificationDropdown');
+            const mobileDropdown = document.getElementById('mobileNotificationDropdown');
+            const desktopBell = document.getElementById('notificationBell');
+            const mobileBell = document.getElementById('mobileNotificationBell');
             
-            if (!dropdown.contains(event.target) && !bell.contains(event.target)) {
-                dropdown.classList.remove('show');
+            let shouldClose = true;
+            
+            // Check if click is inside any dropdown or bell
+            if ((desktopDropdown && desktopDropdown.contains(event.target)) ||
+                (mobileDropdown && mobileDropdown.contains(event.target)) ||
+                (desktopBell && desktopBell.contains(event.target)) ||
+                (mobileBell && mobileBell.contains(event.target))) {
+                shouldClose = false;
+            }
+            
+            if (shouldClose) {
+                if (desktopDropdown) desktopDropdown.classList.remove('show');
+                if (mobileDropdown) mobileDropdown.classList.remove('show');
                 document.removeEventListener('click', closeNotificationsOnClickOutside);
             }
         }
