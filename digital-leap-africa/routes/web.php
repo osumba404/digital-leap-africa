@@ -488,6 +488,11 @@ Route::prefix('admin')
         Route::get('/courses/{course}/enrollments', [AdminCourseController::class, 'enrollments'])->name('courses.enrollments');
         Route::patch('/enrollments/{enrollment}/approve', [AdminCourseController::class, 'approveEnrollment'])->name('courses.enrollments.approve');
         Route::patch('/enrollments/{enrollment}/reject', [AdminCourseController::class, 'rejectEnrollment'])->name('courses.enrollments.reject');
+        Route::patch('/enrollments/{enrollment}/suspend', [AdminCourseController::class, 'suspendEnrollment'])->name('courses.enrollments.suspend');
+        Route::patch('/enrollments/{enrollment}/drop', [AdminCourseController::class, 'dropEnrollment'])->name('courses.enrollments.drop');
+        Route::patch('/enrollments/{enrollment}/reenroll', [AdminCourseController::class, 'reenrollStudent'])->name('courses.enrollments.reenroll');
+        Route::patch('/enrollments/{enrollment}/warn', [AdminCourseController::class, 'warnStudent'])->name('courses.enrollments.warn');
+        Route::delete('/enrollments/{enrollment}/unenroll', [AdminCourseController::class, 'unenrollStudent'])->name('courses.enrollments.unenroll');
 
         Route::resource('projects', AdminProjectController::class)->except(['show']);
         Route::resource('elibrary-resources', AdminELibraryResourceController::class);

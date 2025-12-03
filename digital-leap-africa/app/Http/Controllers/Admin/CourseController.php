@@ -189,6 +189,95 @@ class CourseController extends Controller
         return redirect()->back()->with('success', 'Enrollment rejected.');
     }
 
+    public function suspendEnrollment(Enrollment $enrollment)
+    {
+        $enrollment->update(['status' => 'suspended']);
+
+        Notification::createNotification(
+            $enrollment->user_id,
+            'course_enrollment_suspended',
+            'Enrollment Suspended',
+            "Your enrollment in {$enrollment->course->title} has been suspended. Please contact support for more information.",
+            route('courses.show', $enrollment->course_id)
+        );
+
+        EmailNotificationService::sendNotification('course_enrollment_suspended', $enrollment->user, ['course' => $enrollment->course]);
+
+        return redirect()->back()->with('success', 'Enrollment suspended successfully.');
+    }
+
+    public function dropEnrollment(Enrollment $enrollment)
+    {
+        $enrollment->update(['status' => 'dropped']);
+
+        Notification::createNotification(
+            $enrollment->user_id,
+            'course_enrollment_dropped',
+            'Dropped from Course',
+            "You have been dropped from {$enrollment->course->title}. Please contact support if you have questions.",
+            route('courses.show', $enrollment->course_id)
+        );
+
+        EmailNotificationService::sendNotification('course_enrollment_dropped', $enrollment->user, ['course' => $enrollment->course]);
+
+        return redirect()->back()->with('success', 'Student dropped from course.');
+    }
+
+    public function reenrollStudent(Enrollment $enrollment)
+    {
+        $enrollment->update(['status' => 'active']);
+
+        $gamification = new \App\Services\GamificationService();
+        $gamification->awardPoints($enrollment->user, 'course_reenroll', 'Re-enrolled in course: ' . $enrollment->course->title);
+
+        Notification::createNotification(
+            $enrollment->user_id,
+            'course_enrollment_reactivated',
+            'Enrollment Reactivated',
+            "Your enrollment in {$enrollment->course->title} has been reactivated. You can now access the course content again.",
+            route('courses.show', $enrollment->course_id)
+        );
+
+        EmailNotificationService::sendNotification('course_enrollment_reactivated', $enrollment->user, ['course' => $enrollment->course]);
+
+        return redirect()->back()->with('success', 'Student re-enrolled successfully.');
+    }
+
+    public function warnStudent(Enrollment $enrollment)
+    {
+        Notification::createNotification(
+            $enrollment->user_id,
+            'course_warning',
+            'Course Warning',
+            "You have received a warning regarding your enrollment in {$enrollment->course->title}. Please review your course participation and contact support if needed.",
+            route('courses.show', $enrollment->course_id)
+        );
+
+        EmailNotificationService::sendNotification('course_warning', $enrollment->user, ['course' => $enrollment->course]);
+
+        return redirect()->back()->with('success', 'Warning sent to student.');
+    }
+
+    public function unenrollStudent(Enrollment $enrollment)
+    {
+        $courseName = $enrollment->course->title;
+        $user = $enrollment->user;
+
+        Notification::createNotification(
+            $enrollment->user_id,
+            'course_unenrolled',
+            'Unenrolled from Course',
+            "You have been unenrolled from {$courseName}. All progress has been removed.",
+            route('courses.index')
+        );
+
+        EmailNotificationService::sendNotification('course_unenrolled', $user, ['course' => $enrollment->course]);
+
+        $enrollment->delete();
+
+        return redirect()->back()->with('success', 'Student unenrolled successfully.');
+    }
+
     public function destroy(Course $course)
     {
         if ($course->image_url) {
