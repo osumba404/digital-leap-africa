@@ -653,7 +653,7 @@ code {
         
         <?php if($lesson->video_file_path): ?>
             <div class="lesson-content">
-                <video controls style="width: 100%; max-height: 400px; border-radius: 8px; background: #000; margin: 1.5rem 0;">
+                <video controls style="width: 100%; height: 500px; border-radius: 8px; background: #000; margin: 1.5rem 0;">
                     <source src="<?php echo e($lesson->video_file_path); ?>" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
