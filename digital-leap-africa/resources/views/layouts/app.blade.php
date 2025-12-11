@@ -1877,6 +1877,10 @@
 
     </style>
 
+    <!-- AdSense Code -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5953090781208260"
+         crossorigin="anonymous"></script>
+    
     <!-- Theme Color -->
     <meta name="theme-color" content="#0a192f">
     
