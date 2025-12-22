@@ -1881,6 +1881,9 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5953090781208260"
          crossorigin="anonymous"></script>
     
+    <!-- Adsterra Social Bar -->
+    <script src="https://pl28310931.effectivegatecpm.com/c7/21/3c/c7213c9292ba5fe95629805a10735cf4.js"></script>
+    
     <!-- Theme Color -->
     <meta name="theme-color" content="#0a192f">
     
