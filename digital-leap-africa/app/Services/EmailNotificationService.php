@@ -71,6 +71,7 @@ class EmailNotificationService
 
     private static function getTemplate($type)
     {
+        
         return match($type) {
             'course_enrollment' => 'emails.course-enrollment',
             'course_enrollment_approved' => 'emails.course-approved',
