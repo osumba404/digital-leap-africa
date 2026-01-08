@@ -193,6 +193,25 @@ Route::get('/test-payment-email', function() {
 })->middleware('auth')->name('test.payment.email');
 
 // Test email notification route (remove in production)
+Route::get('/test-enrollment-email', function() {
+    if (!auth()->check()) {
+        return 'Please login first';
+    }
+    
+    $course = \App\Models\Course::first();
+    if (!$course) {
+        return 'No courses found to test with';
+    }
+    
+    try {
+        \App\Services\EmailNotificationService::sendNotification('course_enrollment_suspended', auth()->user(), ['course' => $course]);
+        return 'Enrollment suspension email sent successfully to ' . auth()->user()->email . '. Check storage/logs/laravel.log for email content.';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+})->middleware('auth')->name('test.enrollment.email');
+
+// Test email notification route (remove in production)
 Route::get('/test-email', function() {
     if (!auth()->check()) {
         return 'Please login first';

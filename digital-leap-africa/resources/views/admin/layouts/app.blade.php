@@ -11,8 +11,8 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -25,6 +25,9 @@
 </head>
 <body class="font-sans antialiased bg-gray-100" x-data="{ sidebarCollapsed: false }">
     <div class="min-h-screen">
+        <!-- Top Navigation -->
+        @include('admin.components.navigation')
+        
         <div class="flex">
             <aside :class="sidebarCollapsed ? 'w-16' : 'w-64'" class="bg-white border-r border-gray-200 h-[calc(100vh-4rem)] sticky top-16 transition-all duration-200 ease-in-out hidden md:flex flex-col">
                 <div class="flex items-center justify-between px-4 h-14 border-b border-gray-200">

@@ -28,12 +28,26 @@
         }
         
         .header {
-            background: linear-gradient(135deg, #2E78C5 0%, #1E4C7C 100%);
+            background-color: #2E78C5;
             padding: 30px 40px;
             text-align: center;
         }
         
         .logo {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #2E78C5;
+        }
+        
+        .company-name {
             color: #ffffff;
             font-size: 28px;
             font-weight: 700;
@@ -66,7 +80,7 @@
         
         .cta-button {
             display: inline-block;
-            background: linear-gradient(135deg, #00C9FF 0%, #2E78C5 100%);
+            background-color: #2E78C5;
             color: #ffffff;
             text-decoration: none;
             padding: 14px 28px;
@@ -74,11 +88,11 @@
             font-weight: 600;
             font-size: 16px;
             margin: 20px 0;
-            transition: transform 0.2s ease;
+            transition: background-color 0.2s ease;
         }
         
         .cta-button:hover {
-            transform: translateY(-2px);
+            background-color: #1E4C7C;
         }
         
         .info-box {
@@ -87,6 +101,35 @@
             padding: 20px;
             margin: 20px 0;
             border-radius: 0 8px 8px 0;
+        }
+        
+        .icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        .icon-success {
+            background-color: #10b981;
+            border-radius: 50%;
+        }
+        
+        .icon-warning {
+            background-color: #f59e0b;
+            border-radius: 3px;
+        }
+        
+        .icon-danger {
+            background-color: #ef4444;
+            border-radius: 3px;
+        }
+        
+        .regards {
+            margin-top: 30px;
+            font-size: 16px;
+            color: #555555;
         }
         
         .footer {
@@ -140,7 +183,7 @@
                 padding: 20px;
             }
             
-            .logo {
+            .company-name {
                 font-size: 24px;
             }
             
@@ -163,12 +206,18 @@
 <body>
     <div class="email-container">
         <div class="header">
-            <div class="logo">Digital Leap Africa</div>
+            <div class="logo">DLA</div>
+            <div class="company-name">Digital Leap Africa</div>
             <div class="tagline">Empowering African Youth Through Technology</div>
         </div>
         
         <div class="content">
             @yield('content')
+            
+            <div class="regards">
+                <p>Regards,<br>
+                <strong>Digital Leap Africa</strong></p>
+            </div>
         </div>
         
         <div class="footer">

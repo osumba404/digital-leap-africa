@@ -40,7 +40,6 @@ class TeamMembersTableSeeder extends Seeder
                 'role' => 'Lead Developer',
                 'bio' => 'Michael is a full-stack developer with expertise in building scalable web applications and e-learning platforms.',
                 'image_path' => 'team/michael-johnson.jpg',
-                'github_url' => 'https://github.com/michaeljohnson',
                 'linkedin_url' => 'https://linkedin.com/in/michaeljohnson',
                 'order' => 3,
                 'is_active' => true,

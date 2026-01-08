@@ -1,49 +1,57 @@
 @extends('emails.base')
 
 @section('content')
-<div class="greeting">Hello {{ $user->name }}! 🎉</div>
+<div class="greeting">
+    <span class="icon icon-success"></span>Hello {{ $user->name }}!
+</div>
 
 <div class="message">
-    Congratulations! You have successfully enrolled in <strong>{{ $course->title }}</strong>.
+    <p>Congratulations! You have successfully enrolled in <strong>{{ $course->title }}</strong>.</p>
 </div>
 
 <div class="info-box">
-    <strong>Course Details:</strong><br>
-    <strong>Title:</strong> {{ $course->title }}<br>
-    <strong>Duration:</strong> {{ $course->duration ?? 'Self-paced' }}<br>
-    <strong>Level:</strong> {{ ucfirst($course->level ?? 'Beginner') }}<br>
-    @if($course->price > 0)
-    <strong>Type:</strong> Premium Course<br>
-    @else
-    <strong>Type:</strong> Free Course<br>
-    @endif
+    <h3 style="margin-bottom: 10px; color: #252A32;">Course Details:</h3>
+    <ul style="list-style: none; padding: 0;">
+        <li style="margin-bottom: 5px;"><strong>Title:</strong> {{ $course->title }}</li>
+        <li style="margin-bottom: 5px;"><strong>Duration:</strong> {{ $course->duration ?? 'Self-paced' }}</li>
+        <li style="margin-bottom: 5px;"><strong>Level:</strong> {{ ucfirst($course->level ?? 'Beginner') }}</li>
+        @if($course->price > 0)
+        <li style="margin-bottom: 5px;"><strong>Type:</strong> Premium Course</li>
+        @else
+        <li style="margin-bottom: 5px;"><strong>Type:</strong> Free Course</li>
+        @endif
+    </ul>
 </div>
 
 <div class="message">
     @if($course->price > 0)
-    Your enrollment is currently <strong>pending approval</strong>. You'll receive another email once your enrollment is approved by our team.
+    <p>Your enrollment is currently <strong>pending approval</strong>. You'll receive another email once your enrollment is approved by our team.</p>
     @else
-    You can start learning immediately! Access your course content and begin your learning journey.
+    <p>You can start learning immediately! Access your course content and begin your learning journey.</p>
     @endif
 </div>
 
-<a href="{{ url('/courses/' . $course->id) }}" class="cta-button">
-    @if($course->price > 0)
-    View Course Details
-    @else
-    Start Learning Now
-    @endif
-</a>
-
-<div class="message">
-    <strong>What's Next?</strong><br>
-    • Complete lessons to earn points<br>
-    • Engage with the community forum<br>
-    • Track your progress on your dashboard<br>
-    • Earn badges and certificates
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ url('/courses/' . $course->id) }}" class="cta-button">
+        @if($course->price > 0)
+        View Course Details
+        @else
+        Start Learning Now
+        @endif
+    </a>
 </div>
 
 <div class="message">
-    Welcome to the Digital Leap Africa community! We're excited to support your learning journey.
+    <h4>What's Next?</h4>
+    <ul style="text-align: left; margin: 15px 0;">
+        <li>Complete lessons to earn points</li>
+        <li>Engage with the community forum</li>
+        <li>Track your progress on your dashboard</li>
+        <li>Earn badges and certificates</li>
+    </ul>
+</div>
+
+<div class="message">
+    <p>Welcome to the Digital Leap Africa community! We're excited to support your learning journey.</p>
 </div>
 @endsection

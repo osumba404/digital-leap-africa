@@ -139,13 +139,23 @@ class CourseController extends Controller
 
     public function enrollments(Course $course)
     {
-        $course->load('lessons');
+        $course->load(['lessons', 'topics.lessons']);
         $totalLessons = $course->lessons->count();
 
-        $enrollments = Enrollment::with('user')
+        $enrollments = Enrollment::with(['user', 'user.completedLessons'])
             ->where('course_id', $course->id)
             ->orderByDesc('enrolled_at')
             ->get();
+
+        // Calculate progress for each enrollment
+        foreach ($enrollments as $enrollment) {
+            $completedLessons = $enrollment->user->completedLessons()
+                ->whereIn('lesson_id', $course->lessons->pluck('id'))
+                ->count();
+            
+            $enrollment->completed_lessons = $completedLessons;
+            $enrollment->progress_percentage = $totalLessons > 0 ? round(($completedLessons / $totalLessons) * 100, 1) : 0;
+        }
 
         return view('admin.courses.enrollments', compact('course', 'enrollments', 'totalLessons'));
     }

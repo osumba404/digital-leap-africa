@@ -100,6 +100,19 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
+        .card-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--diamond-white);
+        }
+
         .card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
@@ -197,6 +210,18 @@
             display: flex;
         }
 
+        .justify-content-between {
+            justify-content: space-between;
+        }
+
+        .align-items-center {
+            align-items: center;
+        }
+
+        .align-items-start {
+            align-items: flex-start;
+        }
+
         .gap-2 {
             gap: 0.5rem;
         }
@@ -218,8 +243,37 @@
             padding-bottom: 1rem;
         }
 
+        .py-5 {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+
         .mt-4 {
             margin-top: 1rem;
+        }
+
+        .mb-0 {
+            margin-bottom: 0;
+        }
+
+        .mb-2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem;
+        }
+
+        .me-2 {
+            margin-right: 0.5rem;
+        }
+
+        .fw-medium {
+            font-weight: 500;
+        }
+
+        .rounded-circle {
+            border-radius: 50%;
         }
 
         .text-decoration-none {

@@ -14,10 +14,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // ... other seeders
-
         $this->call([
+            UsersSeeder::class,
             CourseSeeder::class,
+            CourseContentSeeder::class,
             ProjectSeeder::class,
             ELibraryResourceSeeder::class,
             JobSeeder::class,
@@ -26,6 +26,9 @@ class DatabaseSeeder extends Seeder
             AboutSectionsTableSeeder::class,
             TeamMembersTableSeeder::class,
             PartnersTableSeeder::class,
+            ArticlesSeeder::class,
+            TestimonialsSeeder::class,
+            FaqsSeeder::class,
         ]);
     }
 }

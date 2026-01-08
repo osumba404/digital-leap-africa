@@ -94,6 +94,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Alias for completed lessons.
+     */
+    public function completedLessons()
+    {
+        return $this->lessons();
+    }
+
+    /**
      * Badges/achievements earned by the user.
      */
     public function badges()
