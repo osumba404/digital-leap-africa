@@ -241,7 +241,10 @@
                 <td>
                     <div class="action-buttons">
                         <a href="{{ route('admin.courses.manage', $course) }}" class="btn-sm btn-view">
-                            <i class="fas fa-eye"></i>View
+                            <i class="fas fa-eye"></i>Manage
+                        </a>
+                        <a href="{{ route('admin.exams.index', $course) }}" class="btn-sm btn-edit" title="Add/edit pre-course, lesson, and final tests">
+                            <i class="fas fa-file-alt"></i>Tests
                         </a>
                         <a href="{{ route('admin.courses.enrollments', $course) }}" class="btn-sm btn-edit">
                             <i class="fas fa-users"></i>Enrollments

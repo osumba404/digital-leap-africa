@@ -38,4 +38,9 @@ class Lesson extends Model
     return $this->belongsToMany(User::class, 'lesson_user')->withTimestamps();
 }
 
+public function exam()
+{
+    return $this->hasOne(Exam::class)->where('type', Exam::TYPE_POST_LESSON)->where('is_enabled', true);
+}
+
 }

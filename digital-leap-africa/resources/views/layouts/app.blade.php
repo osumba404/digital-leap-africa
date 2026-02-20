@@ -151,7 +151,7 @@
 
         /* ========== Base ========== */
         * { box-sizing: border-box; }
-        html, body { height: 100%; }
+        html { min-height: 100%; overflow-y: auto; }
         body {
             margin: 0;
             font-family: "{{ $siteSettings['font_family'] ?? 'Inter' }}", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -2260,7 +2260,19 @@
     <main class="container">
         @if(session('success'))
             <div class="alert alert-success mb-4" role="alert">
-                {{ session('success') }}
+                {!! session('success') !!}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger mb-4" role="alert">
+                {!! session('error') !!}
+            </div>
+        @endif
+
+        @if(session('info'))
+            <div class="alert alert-info mb-4" role="alert">
+                {!! session('info') !!}
             </div>
         @endif
 

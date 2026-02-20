@@ -26,7 +26,25 @@ class CertificateController extends Controller
             abort(403);
         }
 
-        return view('certificates.download', compact('certificate'));
+        $settings = \App\Helpers\SettingsHelper::all();
+        $logoUrl = !empty($settings['logo_url']) ? url($settings['logo_url']) : asset('images/logo.png');
+
+        $instructorSignature = self::nameToSignature($certificate->course->instructor ?? '');
+        $directorName = 'Florence Ndinda';
+        $directorSignature = self::nameToSignature($directorName);
+        $directorTitle = 'Executive Director';
+
+        return view('certificates.download', compact('certificate', 'logoUrl', 'instructorSignature', 'directorSignature', 'directorName', 'directorTitle'));
+    }
+
+    /** Derive a signature-style form from a full name (e.g. "John Smith" -> "J. Smith"). */
+    private static function nameToSignature(string $name): string
+    {
+        $parts = preg_split('/\s+/', trim($name), -1, PREG_SPLIT_NO_EMPTY);
+        if (count($parts) >= 2) {
+            return strtoupper(mb_substr($parts[0], 0, 1)) . '. ' . $parts[count($parts) - 1];
+        }
+        return $name ?: '—';
     }
 
     public function verify($certificateNumber)

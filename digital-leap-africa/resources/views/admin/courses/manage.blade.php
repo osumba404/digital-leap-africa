@@ -10,6 +10,9 @@
     <a class="btn btn-edit" href="{{ route('admin.courses.topics.index', $course) }}">
       <i class="fas fa-list me-2"></i>Topics
     </a>
+    <a class="btn btn-edit" href="{{ route('admin.exams.index', $course) }}">
+      <i class="fas fa-file-alt me-2"></i>Tests
+    </a>
     <a class="btn btn-edit" href="{{ route('admin.courses.topics.index', $course) }}">
       <i class="fas fa-book-open me-2"></i>Lessons & Materials
     </a>

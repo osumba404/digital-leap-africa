@@ -1,220 +1,206 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Certificate - {{ $certificate->user->name }}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,700&family=Libre+Baskerville:wght@400;700&family=Dancing+Script:wght@500;600&display=swap">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Inter', 'Arial', sans-serif; 
-            background: #F5F7FA;
-            --primary-blue: #2E78C5;
-            --deep-blue: #1E4C7C;
-            --navy-bg: #0C121C;
-            --diamond-white: #F5F7FA;
-            --cool-gray: #AEB8C2;
-            --charcoal: #252A32;
-            --cyan-accent: #00C9FF;
-            --purple-accent: #7A5FFF;
+        body {
+            font-family: 'Libre Baskerville', Georgia, serif;
+            background: #0C121C;
+            --cert-navy: #0C121C;
+            --cert-deep-blue: #1E4C7C;
+            --cert-primary-blue: #2E78C5;
+            --cert-cyan: #00C9FF;
+            --cert-diamond-white: #F5F7FA;
+            --cert-charcoal: #252A32;
+            --cert-cool-gray: #AEB8C2;
         }
-        
+
         .certificate-container {
-            width: 1000px;
-            margin: 20px auto;
-            background: linear-gradient(135deg, var(--navy-bg) 0%, var(--deep-blue) 50%, var(--primary-blue) 100%);
-            border-radius: 24px;
-            padding: 30px;
-            position: relative;
-            box-shadow: 0 25px 50px rgba(12, 18, 28, 0.4);
+            width: 900px;
+            max-width: 100%;
+            margin: 24px auto;
+            background: var(--cert-navy);
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 201, 255, 0.2);
         }
-        
+
         .certificate-inner {
-            background: var(--diamond-white);
-            border-radius: 20px;
-            padding: 50px;
-            border: 4px solid var(--cyan-accent);
-            box-shadow: inset 0 0 0 2px var(--primary-blue);
+            background: var(--cert-charcoal);
+            border-radius: 8px;
+            padding: 48px 56px;
             position: relative;
+            border: 2px solid var(--cert-deep-blue);
         }
-        
-        .decorative-elements {
+
+        .certificate-inner::before {
+            content: '';
             position: absolute;
-            top: 30px;
-            left: 30px;
-            right: 30px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--cyan-accent), var(--purple-accent), var(--primary-blue));
-            border-radius: 2px;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            bottom: 12px;
+            border: 1px solid var(--cert-primary-blue);
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0.5;
         }
-        
-        .certificate-header { text-align: center; margin-bottom: 40px; }
-        
-        .certificate-logo {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--diamond-white);
-            font-size: 40px;
-            box-shadow: 0 8px 25px rgba(46, 120, 197, 0.3);
-            border: 3px solid var(--diamond-white);
+
+        .certificate-header { text-align: center; margin-bottom: 36px; }
+
+        .certificate-logo-wrap { margin-bottom: 20px; }
+        .certificate-logo-wrap img {
+            height: 72px;
+            width: auto;
+            max-width: 180px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
         }
-        
+
         .certificate-title {
-            font-size: 48px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-blue), var(--purple-accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-        }
-        
-        .certificate-subtitle {
-            font-size: 22px;
-            color: var(--deep-blue);
-            font-weight: 600;
-            margin-bottom: 30px;
-        }
-        
-        .certificate-body { text-align: center; margin: 40px 0; }
-        
-        .certificate-text {
-            font-size: 19px;
-            color: var(--charcoal);
-            line-height: 1.8;
-            margin-bottom: 25px;
-            font-weight: 500;
-        }
-        
-        .recipient-name {
-            font-size: 42px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-blue), var(--cyan-accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 30px 0;
-            text-decoration: underline;
-            text-decoration-color: var(--cyan-accent);
-            text-decoration-thickness: 3px;
-            text-underline-offset: 8px;
-        }
-        
-        .course-title {
-            font-size: 28px;
+            font-size: 2.25rem;
             font-weight: 700;
-            color: var(--deep-blue);
-            margin: 30px 0;
+            color: var(--cert-diamond-white);
+            margin-bottom: 6px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .certificate-subtitle {
+            font-size: 1.15rem;
+            color: var(--cert-cyan);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .certificate-body { text-align: center; margin: 32px 0 40px; }
+
+        .certificate-text {
+            font-size: 1.1rem;
+            color: var(--cert-cool-gray);
+            line-height: 1.85;
+            margin-bottom: 12px;
+        }
+
+        .recipient-name {
+            font-size: 2.25rem;
+            font-weight: 700;
             font-style: italic;
-            position: relative;
+            color: var(--cert-diamond-white);
+            margin: 24px 0;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            border-bottom: 2px solid var(--cert-cyan);
+            display: inline-block;
+            padding-bottom: 4px;
         }
-        
-        .course-title::before,
-        .course-title::after {
-            content: '"';
-            font-size: 32px;
-            color: var(--cyan-accent);
-            font-weight: 900;
+
+        .course-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--cert-cyan);
+            margin: 20px 0;
+            font-style: italic;
         }
-        
+
         .certificate-footer {
             display: flex;
             justify-content: space-between;
-            margin-top: 60px;
-            padding-top: 40px;
-            border-top: 3px solid var(--cyan-accent);
-            position: relative;
+            gap: 48px;
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 2px solid var(--cert-deep-blue);
         }
-        
-        .certificate-footer::before {
-            content: '';
-            position: absolute;
-            top: -1.5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: var(--purple-accent);
-        }
-        
+
         .signature-section { text-align: center; flex: 1; }
-        
+
         .signature-line {
-            border-bottom: 3px solid var(--primary-blue);
-            width: 220px;
-            margin: 0 auto 15px;
-            height: 50px;
-            position: relative;
+            border-bottom: 2px solid var(--cert-primary-blue);
+            width: 200px;
+            margin: 0 auto 10px;
+            height: 38px;
         }
-        
-        .signature-line::after {
-            content: '';
-            position: absolute;
-            bottom: -1.5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 3px;
-            background: var(--cyan-accent);
+
+        .signature-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--cert-cyan);
+            margin-bottom: 4px;
         }
-        
+
         .signature-label {
-            font-size: 15px;
-            color: var(--cool-gray);
+            font-size: 0.8rem;
+            color: var(--cert-cool-gray);
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
         }
-        
-        .signature-name {
-            font-weight: 700;
-            color: var(--charcoal);
-            margin-top: 8px;
-            font-size: 17px;
+
+        .signature-role-name {
+            font-size: 0.9rem;
+            color: var(--cert-diamond-white);
+            font-weight: 600;
+            margin-top: 4px;
         }
-        
+
+        .certificate-meta {
+            margin-top: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .certificate-date,
         .certificate-number {
-            position: absolute;
-            bottom: 20px;
-            right: 25px;
-            font-size: 14px;
-            color: var(--cool-gray);
-            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: var(--cert-cool-gray);
             font-weight: 600;
-            background: rgba(174, 184, 194, 0.1);
-            padding: 8px 15px;
-            border-radius: 8px;
-            border: 1px solid rgba(174, 184, 194, 0.3);
         }
-        
-        .certificate-date {
-            position: absolute;
-            bottom: 20px;
-            left: 25px;
-            font-size: 14px;
-            color: var(--cool-gray);
-            font-weight: 600;
-            background: rgba(174, 184, 194, 0.1);
-            padding: 8px 15px;
-            border-radius: 8px;
-            border: 1px solid rgba(174, 184, 194, 0.3);
+
+        .certificate-number { font-family: 'Courier New', monospace; letter-spacing: 0.5px; }
+
+        @media print {
+            @page { size: A4; margin: 12mm; }
+            body,
+            .certificate-container,
+            .certificate-inner,
+            .certificate-inner::before {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            body { background: #0C121C !important; margin: 0; padding: 0; }
+            .certificate-container {
+                margin: 0 auto;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            }
+            .certificate-inner { padding: 2.25rem 3rem; }
+            .certificate-header { margin-bottom: 1.75rem; }
+            .certificate-body { margin: 1.5rem 0 2rem; }
+            .certificate-footer {
+                margin-top: 2rem;
+                padding-top: 1.5rem;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                justify-content: space-between !important;
+                gap: 48px;
+            }
+            .certificate-footer .signature-section { flex: 1 1 auto; min-width: 0; }
+            .certificate-meta { margin-top: 1.5rem; }
         }
     </style>
 </head>
 <body>
     <div class="certificate-container">
         <div class="certificate-inner">
-            <div class="decorative-elements"></div>
-            
             <div class="certificate-header">
-                <div class="certificate-logo">🎓</div>
+                <div class="certificate-logo-wrap">
+                    <img src="{{ $logoUrl }}" alt="Digital Leap Africa">
+                </div>
                 <h1 class="certificate-title">{{ \App\Models\SiteSetting::getValue('certificate_title', 'Certificate of Completion') }}</h1>
                 <p class="certificate-subtitle">{{ \App\Models\SiteSetting::getValue('certificate_subtitle', 'Digital Leap Africa') }}</p>
             </div>
@@ -224,27 +210,29 @@
                 <div class="recipient-name">{{ $certificate->user->name }}</div>
                 <p class="certificate-text">{{ \App\Models\SiteSetting::getValue('certificate_completion_text', 'has successfully completed the course') }}</p>
                 <div class="course-title">{{ $certificate->certificate_title }}</div>
-                <p class="certificate-text">{{ \App\Models\SiteSetting::getValue('certificate_achievement_text', 'and has demonstrated exceptional proficiency in the subject matter through dedicated study, practical application, and commitment to excellence in digital learning.') }}</p>
+                <p class="certificate-text">{{ \App\Models\SiteSetting::getValue('certificate_achievement_text', 'and has demonstrated proficiency through dedicated study and commitment to excellence in digital learning.') }}</p>
             </div>
 
             <div class="certificate-footer">
                 <div class="signature-section">
-                    <div class="signature-line"></div>
+                    <div class="signature-line">
+                        <span class="signature-text">{{ $instructorSignature }}</span>
+                    </div>
                     <p class="signature-label">{{ \App\Models\SiteSetting::getValue('certificate_instructor_title', 'Course Instructor') }}</p>
-                    <p class="signature-name">{{ $certificate->course->instructor }}</p>
+                    <p class="signature-role-name">{{ $certificate->course->instructor }}</p>
                 </div>
                 <div class="signature-section">
-                    <div class="signature-line"></div>
-                    <p class="signature-label">{{ \App\Models\SiteSetting::getValue('certificate_director_title', 'Program Director') }}</p>
-                    <p class="signature-name">{{ \App\Models\SiteSetting::getValue('certificate_director_name', 'Digital Leap Africa') }}</p>
+                    <div class="signature-line">
+                        <span class="signature-text">{{ $directorSignature }}</span>
+                    </div>
+                    <p class="signature-label">{{ $directorTitle }}</p>
+                    <p class="signature-role-name">{{ $directorName }}</p>
                 </div>
             </div>
 
-            <div class="certificate-date">
-                📅 {{ $certificate->issued_at->format('F j, Y') }}
-            </div>
-            <div class="certificate-number">
-                🛡️ {{ $certificate->certificate_number }}
+            <div class="certificate-meta">
+                <div class="certificate-date">{{ $certificate->issued_at->format('F j, Y') }}</div>
+                <div class="certificate-number">{{ $certificate->certificate_number }}</div>
             </div>
         </div>
     </div>

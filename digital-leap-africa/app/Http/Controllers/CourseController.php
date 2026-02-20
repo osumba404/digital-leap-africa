@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Certificate;
 use App\Models\Course;
 use App\Models\GamificationPoint;
 use App\Models\Notification;
@@ -38,7 +39,94 @@ class CourseController extends Controller
 
     public function show(Course $course): View
     {
-        return view('pages.courses.show', ['course' => $course]);
+        $course->load(['exams' => fn ($q) => $q->where('is_enabled', true)]);
+        $enrollment = Auth::check()
+            ? Enrollment::where('user_id', Auth::id())->where('course_id', $course->id)->first()
+            : null;
+        $userCertificate = (Auth::check() && $course->has_certification)
+            ? Certificate::where('user_id', Auth::id())->where('course_id', $course->id)->first()
+            : null;
+        return view('pages.courses.show', [
+            'course' => $course,
+            'enrollment' => $enrollment,
+            'userCertificate' => $userCertificate,
+        ]);
+    }
+
+    /**
+     * Show the confirm-details form before enrollment (and optional pre-course test).
+     */
+    public function showEnrollForm(Course $course): View|\Illuminate\Http\RedirectResponse
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('intended', route('courses.enroll-form', $course));
+        }
+
+        $user = Auth::user();
+        if ($user->courses()->where('course_id', $course->id)->exists()) {
+            return redirect()->route('courses.show', $course)->with('error', 'You are already enrolled in this course.');
+        }
+
+        if (!$course->hasAvailableSlots()) {
+            return redirect()->route('courses.show', $course)->with('error', 'This course is full. No more slots available.');
+        }
+
+        $course->load(['exams' => fn ($q) => $q->where('is_enabled', true)]);
+        $preCourseTest = $course->exams->where('type', 'pre_course')->first();
+
+        return view('pages.courses.enroll-form', [
+            'course' => $course,
+            'preCourseTest' => $preCourseTest,
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Process confirmed details: create enrollment (pending_pre_test if pre-course test exists) and redirect.
+     */
+    public function confirmEnroll(Request $request, Course $course)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+        ]);
+
+        if ($user->courses()->where('course_id', $course->id)->exists()) {
+            return redirect()->route('courses.show', $course)->with('error', 'You are already enrolled in this course.');
+        }
+
+        if (!$course->hasAvailableSlots()) {
+            return redirect()->route('courses.show', $course)->with('error', 'This course is full. No more slots available.');
+        }
+
+        $preCourseTest = $course->exams()->where('type', 'pre_course')->where('is_enabled', true)->first();
+        $status = $preCourseTest ? 'pending_pre_test' : 'active';
+
+        $user->courses()->attach($course->id, [
+            'status' => $status,
+            'enrolled_at' => now(),
+        ]);
+
+        if ($status === 'active') {
+            $gamification = new GamificationService();
+            $gamification->awardPoints($user, 'course_enroll', 'Enrolled in course: ' . $course->title);
+
+            Notification::createNotification(
+                $user->id,
+                'course_enrollment',
+                'Course Enrollment Successful',
+                "You've successfully enrolled in {$course->title}",
+                route('courses.show', $course->slug)
+            );
+
+            EmailNotificationService::sendNotification('course_enrollment', $user, ['course' => $course]);
+
+            return redirect()->route('courses.show', $course)->with('success', 'You have successfully enrolled!');
+        }
+
+        return redirect()->route('exams.show', $preCourseTest)->with('info', 'Please complete the pre-course test to activate your enrollment.');
     }
 
     public function enroll(Request $request, Course $course)

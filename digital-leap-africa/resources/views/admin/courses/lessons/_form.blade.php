@@ -98,14 +98,6 @@
     <x-input-error :messages="$errors->get('video_file')" class="mt-2" />
   </div>
 
-  {{-- Test/Assignment Questions --}}
-  <div id="group-questions" class="form-group d-none">
-    <x-input-label for="questions" value="Test/Assignment Questions" class="form-label" />
-    <textarea id="questions" name="questions" rows="8" class="mt-1 block w-100 form-control" placeholder="Enter test questions or assignment instructions...">{{ old('questions', $lesson->questions ?? '') }}</textarea>
-    <small class="text-muted">Add questions for quiz/test or instructions for assignment.</small>
-    <x-input-error :messages="$errors->get('questions')" class="mt-2" />
-  </div>
-
   {{-- Resource files --}}
   <div id="group-resource" class="form-group">
     <x-input-label value="Resource Files (any type)" class="form-label" />
@@ -319,7 +311,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // Lesson type change handler
   const typeSelect = document.getElementById('type');
   const videoGroup = document.getElementById('group-video');
-  const questionsGroup = document.getElementById('group-questions');
   
   function toggleFieldsByType() {
     const selectedType = typeSelect.value;
@@ -329,13 +320,6 @@ document.addEventListener('DOMContentLoaded', function() {
       videoGroup.classList.remove('d-none');
     } else {
       videoGroup.classList.add('d-none');
-    }
-    
-    // Show/hide questions fields
-    if (selectedType === 'quiz' || selectedType === 'assignment') {
-      questionsGroup.classList.remove('d-none');
-    } else {
-      questionsGroup.classList.add('d-none');
     }
   }
   

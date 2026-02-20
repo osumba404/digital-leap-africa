@@ -61,6 +61,26 @@ public function certificates()
     return $this->hasMany(Certificate::class);
 }
 
+public function exams()
+{
+    return $this->hasMany(Exam::class);
+}
+
+public function preCourseExam()
+{
+    return $this->hasOne(Exam::class)->where('type', Exam::TYPE_PRE_COURSE)->where('is_enabled', true);
+}
+
+public function finalExam()
+{
+    return $this->hasOne(Exam::class)->where('type', Exam::TYPE_FINAL)->where('is_enabled', true);
+}
+
+public function lessonExams()
+{
+    return $this->hasMany(Exam::class)->where('type', Exam::TYPE_POST_LESSON)->where('is_enabled', true);
+}
+
 public function users()
 {
     return $this->belongsToMany(User::class, 'enrollments')

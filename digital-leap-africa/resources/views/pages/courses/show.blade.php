@@ -457,28 +457,94 @@
                     </div>
                 </div>
             @endif
+
+            {{-- Certificate (when program completed and course has certification) --}}
+            @if($course->has_certification && isset($userCertificate) && $userCertificate)
+                <div style="margin-top: 2rem; padding: 1.25rem; background: rgba(251, 191, 36, 0.12); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 12px;">
+                    <h4 style="color: #f59e0b; margin-bottom: 0.5rem; font-size: 1.1rem;">
+                        <i class="fas fa-certificate me-2"></i>Your certificate
+                    </h4>
+                    <p style="color: var(--cool-gray); margin-bottom: 1rem; font-size: 0.95rem;">You completed this program. View or download your certificate.</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+                        <a href="{{ route('certificates.show', $userCertificate) }}" class="btn-primary" style="padding: 0.6rem 1.25rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-eye"></i> View certificate
+                        </a>
+                        <a href="{{ route('certificates.download', $userCertificate) }}" class="btn-outline" style="padding: 0.6rem 1.25rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 
     {{-- Enrollment Section --}}
     @auth
         @php
-            $enrollment = Auth::user()->courses()->where('course_id', $course->id)->first();
+            $userCourse = Auth::user()->courses()->where('course_id', $course->id)->first();
+            if (!$enrollment && $userCourse) {
+                $enrollment = \App\Models\Enrollment::where('user_id', Auth::id())->where('course_id', $course->id)->first();
+            }
         @endphp
-        @if($enrollment)
-            @if($enrollment->pivot->status === 'active')
+        @if($userCourse)
+            @if($userCourse->pivot->status === 'pending_pre_test')
+                @php
+                    $preCourseTestPending = $course->exams->where('type', 'pre_course')->first();
+                @endphp
+                <div class="enrollment-section">
+                    <i class="fas fa-clipboard-check" style="font-size: 3rem; color: var(--cyan-accent); margin-bottom: 1rem;"></i>
+                    <h3 style="color: var(--diamond-white); margin-bottom: 0.5rem;">Complete your enrollment</h3>
+                    <p style="color: var(--cool-gray); margin-bottom: 1rem;">Take the pre-course test to activate your enrollment and access the course content.</p>
+                    @if($preCourseTestPending)
+                        <a href="{{ route('exams.show', $preCourseTestPending) }}" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem; display: inline-block; text-decoration: none;">
+                            <i class="fas fa-play me-2"></i>Take Pre-Course Test
+                        </a>
+                    @endif
+                </div>
+            @elseif($userCourse->pivot->status === 'active')
                 <div class="enrollment-section">
                     <i class="fas fa-check-circle" style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;"></i>
                     <h3 style="color: var(--diamond-white); margin-bottom: 0.5rem;">You're Enrolled!</h3>
                     <p style="color: var(--cool-gray);">Continue your learning journey below</p>
                 </div>
-            @elseif($enrollment->pivot->status === 'pending')
+
+                @php
+                    $enrollmentModel = $enrollment;
+                    $preCourseExam = $course->exams->where('type', 'pre_course')->first();
+                    $finalExam = $course->exams->where('type', 'final')->first();
+                    $allCourseworkDone = $enrollment ? $enrollment->hasCompletedAllCoursework() : false;
+                    $preCourseAttempt = $preCourseExam && $enrollmentModel ? \App\Models\ExamAttempt::where('exam_id', $preCourseExam->id)->where('enrollment_id', $enrollmentModel->id)->where('status', 'completed')->exists() : false;
+                    $finalAttempt = $finalExam && $enrollmentModel ? \App\Models\ExamAttempt::where('exam_id', $finalExam->id)->where('enrollment_id', $enrollmentModel->id)->where('status', 'completed')->exists() : false;
+                @endphp
+
+                @if($preCourseExam && !$preCourseAttempt)
+                    <div class="enrollment-section" style="margin-top: 1rem;">
+                        <i class="fas fa-clipboard-check" style="font-size: 2rem; color: var(--cyan-accent); margin-bottom: 0.75rem;"></i>
+                        <h4 style="color: var(--diamond-white); margin-bottom: 0.5rem;">Pre-Course Test</h4>
+                        <p style="color: var(--cool-gray); margin-bottom: 1rem;">Take this assessment before you begin. It does not count toward your final grade.</p>
+                        <a href="{{ route('exams.show', $preCourseExam) }}" class="btn-primary" style="padding: 0.75rem 1.5rem;">
+                            <i class="fas fa-play me-2"></i>Take Pre-Course Test
+                        </a>
+                    </div>
+                @endif
+
+                @if($finalExam && $allCourseworkDone && !$finalAttempt)
+                    <div class="enrollment-section" style="margin-top: 1rem;">
+                        <i class="fas fa-graduation-cap" style="font-size: 2rem; color: #f59e0b; margin-bottom: 0.75rem;"></i>
+                        <h4 style="color: var(--diamond-white); margin-bottom: 0.5rem;">Final Test</h4>
+                        <p style="color: var(--cool-gray); margin-bottom: 1rem;">You've completed all lessons and lesson tests. Take the final test to finish the course.</p>
+                        <a href="{{ route('exams.show', $finalExam) }}" class="btn-primary" style="padding: 0.75rem 1.5rem;">
+                            <i class="fas fa-play me-2"></i>Take Final Test
+                        </a>
+                    </div>
+                @endif
+            @elseif($userCourse->pivot->status === 'pending')
                 <div class="enrollment-section">
                     <i class="fas fa-clock" style="font-size: 3rem; color: #f59e0b; margin-bottom: 1rem;"></i>
                     <h3 style="color: var(--diamond-white); margin-bottom: 0.5rem;">Enrollment Pending</h3>
                     <p style="color: var(--cool-gray);">Your enrollment is awaiting admin approval. You'll be notified once approved.</p>
                 </div>
-            @elseif($enrollment->pivot->status === 'rejected')
+            @elseif($userCourse->pivot->status === 'rejected')
                 <div class="enrollment-section">
                     <i class="fas fa-times-circle" style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;"></i>
                     <h3 style="color: var(--diamond-white); margin-bottom: 0.5rem;">Enrollment Rejected</h3>
@@ -505,12 +571,9 @@
                         @endif
                         <br><small style="color: var(--cyan-accent);">+20 Points upon enrollment</small>
                     </p>
-                    <form method="POST" action="{{ route('courses.enroll', $course) }}">
-                        @csrf
-                        <button type="submit" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
-                            <i class="fas fa-play me-2"></i>Enroll Now - FREE (+20 Points)
-                        </button>
-                    </form>
+                    <a href="{{ route('courses.enroll-form', $course) }}" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem; display: inline-block; text-decoration: none;">
+                        <i class="fas fa-play me-2"></i>Enroll Now - FREE (+20 Points)
+                    </a>
                 @else
                     {{-- Premium Course - Show old payment form for now --}}
                     <div style="max-width: 500px; margin: 0 auto;">
@@ -581,12 +644,12 @@
     @endauth
 
     {{-- Course Curriculum Section --}}
-    @if(Auth::check() && (($enrollment && $enrollment->pivot->status === 'active') || !$course->is_free))
+    @if(Auth::check() && (($userCourse && $userCourse->pivot->status === 'active') || !$course->is_free))
         @php
             $now = now();
             $canAccessContent = true;
             $accessMessage = '';
-            $isEnrolled = $enrollment && $enrollment->pivot->status === 'active';
+            $isEnrolled = $userCourse && $userCourse->pivot->status === 'active';
             
             // Check if user is not enrolled in a paid course
             if(!$course->is_free && !$isEnrolled) {
@@ -637,42 +700,39 @@
                     
                     @forelse ($topic->lessons as $index => $lesson)
                         @php
-                            $isCompleted = Auth::user()->lessons()->where('lesson_id', $lesson->id)->exists();
+                            $isCompleted = $enrollment ? $enrollment->hasCompletedLesson($lesson) : Auth::user()->lessons()->where('lesson_id', $lesson->id)->exists();
                             $previousLesson = $index > 0 ? $topic->lessons[$index - 1] : null;
-                            $isPreviousCompleted = $previousLesson ? Auth::user()->lessons()->where('lesson_id', $previousLesson->id)->exists() : true;
-                            
-                            // Check if all lessons in previous topics are completed
-                            $currentTopicIndex = $course->topics->search(function($t) use ($topic) {
-                                return $t->id === $topic->id;
-                            });
-                            
+                            $isPreviousCompleted = $previousLesson
+                                ? ($enrollment ? $enrollment->hasCompletedLesson($previousLesson) : Auth::user()->lessons()->where('lesson_id', $previousLesson->id)->exists())
+                                : true;
+
+                            $currentTopicIndex = $course->topics->search(fn($t) => $t->id === $topic->id);
                             $allPreviousTopicsCompleted = true;
                             if ($currentTopicIndex > 0) {
                                 $previousTopics = $course->topics->slice(0, $currentTopicIndex);
                                 foreach ($previousTopics as $prevTopic) {
-                                    $topicLessonsCount = $prevTopic->lessons->count();
-                                    $completedLessonsCount = Auth::user()->lessons()
-                                        ->whereIn('lesson_id', $prevTopic->lessons->pluck('id'))
-                                        ->count();
-                                    if ($topicLessonsCount === 0 || $completedLessonsCount < $topicLessonsCount) {
-                                        $allPreviousTopicsCompleted = false;
-                                        break;
+                                    foreach ($prevTopic->lessons as $prevLesson) {
+                                        if ($enrollment ? !$enrollment->hasCompletedLesson($prevLesson) : !Auth::user()->lessons()->where('lesson_id', $prevLesson->id)->exists()) {
+                                            $allPreviousTopicsCompleted = false;
+                                            break 2;
+                                        }
                                     }
                                 }
                             }
-                            
-                            // For first lesson of topic, check if previous topics are completed
-                            // For other lessons, check if previous lesson is completed
-                            $canAccessLesson = $canAccessContent && 
+
+                            $canAccessLesson = $canAccessContent &&
                                 ($index === 0 ? $allPreviousTopicsCompleted : ($isPreviousCompleted && $allPreviousTopicsCompleted));
                         @endphp
                         @php
                             $tooltipMessage = '';
                             if (!$canAccessLesson) {
                                 if (!$allPreviousTopicsCompleted) {
-                                    $tooltipMessage = 'Complete all lessons in previous topics first';
+                                    $tooltipMessage = 'Complete all lessons (and their tests) in previous topics first';
                                 } elseif ($previousLesson && !$isPreviousCompleted) {
-                                    $tooltipMessage = "Complete '{$previousLesson->title}' first";
+                                    $hasTest = \App\Models\Exam::where('lesson_id', $previousLesson->id)->where('type', 'post_lesson')->where('is_enabled', true)->exists();
+                                    $tooltipMessage = $hasTest
+                                        ? "Complete '{$previousLesson->title}' and its lesson test first"
+                                        : "Complete '{$previousLesson->title}' first";
                                 } else {
                                     $tooltipMessage = 'This lesson is currently locked';
                                 }

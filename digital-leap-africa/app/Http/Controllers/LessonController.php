@@ -21,38 +21,81 @@ class LessonController extends Controller
         $course->load('topics.lessons');
 
         // Check if the authenticated user is enrolled in this course
-        if (!Auth::user()->courses()->where('course_id', $course->id)->exists()) {
-            // If not enrolled, redirect them away with an error.
+        $user = Auth::user();
+        $enrollment = \App\Models\Enrollment::where('user_id', $user->id)->where('course_id', $course->id)->first();
+        if (!$enrollment) {
             return redirect()->route('courses.show', $course)->with('error', 'You must be enrolled to view this lesson.');
         }
 
-        // Check sequential access - user must complete previous lessons first
+        // Check sequential access: previous lesson must be fully completed (including its test if any)
         $topic = $lesson->topic;
-        $topicLessons = $topic->lessons()->orderBy('created_at')->get();
-        $currentLessonIndex = $topicLessons->search(function($item) use ($lesson) {
-            return $item->id === $lesson->id;
-        });
+        $topicLessons = $topic->lessons()->orderBy('order')->orderBy('created_at')->get();
+        $currentLessonIndex = $topicLessons->search(fn ($item) => $item->id === $lesson->id);
 
-        // If this is not the first lesson, check if previous lesson is completed
         if ($currentLessonIndex > 0) {
             $previousLesson = $topicLessons[$currentLessonIndex - 1];
-            $isPreviousCompleted = Auth::user()->lessons()->where('lesson_id', $previousLesson->id)->exists();
-            
-            if (!$isPreviousCompleted) {
-                return redirect()->route('courses.show', $course)
-                    ->with('error', "Please complete '{$previousLesson->title}' before accessing this lesson.");
+            if (!$enrollment->hasCompletedLesson($previousLesson)) {
+                $msg = "Please complete '{$previousLesson->title}'";
+                $prevExam = \App\Models\Exam::where('lesson_id', $previousLesson->id)->where('type', 'post_lesson')->where('is_enabled', true)->first();
+                if ($prevExam) {
+                    $msg .= ' and pass its lesson test';
+                }
+                $msg .= ' before accessing this lesson.';
+                return redirect()->route('courses.show', $course)->with('error', $msg);
             }
         }
 
-        return view('pages.lessons.show', compact('lesson', 'course'));
+        // If not first lesson in course, check all previous topics' lessons are fully completed
+        $course->load(['topics' => fn ($q) => $q->orderBy('order')->with(['lessons' => fn ($q) => $q->orderBy('order')])]);
+        $currentTopicIndex = $course->topics->search(fn ($t) => $t->id === $topic->id);
+        if ($currentTopicIndex > 0) {
+            $previousTopics = $course->topics->slice(0, $currentTopicIndex);
+            foreach ($previousTopics as $prevTopic) {
+                foreach ($prevTopic->lessons as $prevLesson) {
+                    if (!$enrollment->hasCompletedLesson($prevLesson)) {
+                        $msg = "Please complete '{$prevLesson->title}'";
+                        $prevExam = \App\Models\Exam::where('lesson_id', $prevLesson->id)->where('type', 'post_lesson')->where('is_enabled', true)->first();
+                        if ($prevExam) {
+                            $msg .= ' and pass its lesson test';
+                        }
+                        $msg .= ' before accessing this lesson.';
+                        return redirect()->route('courses.show', $course)->with('error', $msg);
+                    }
+                }
+            }
+        }
+
+        return view('pages.lessons.show', compact('lesson', 'course', 'enrollment'));
     }
 
     /**
      * NEW: Handle marking a lesson as complete.
+     * If the lesson has an enabled post-lesson test, the user must have completed it first.
      */
     public function complete(Request $request, Lesson $lesson)
     {
         $user = Auth::user();
+        $course = $lesson->topic->course;
+        $enrollment = \App\Models\Enrollment::where('user_id', $user->id)->where('course_id', $course->id)->first();
+
+        if (!$enrollment) {
+            return redirect()->route('courses.show', $course)->with('error', 'You must be enrolled to mark lessons complete.');
+        }
+
+        // If this lesson has a post-lesson test, require it to be completed first
+        $lessonExam = \App\Models\Exam::where('lesson_id', $lesson->id)
+            ->where('type', \App\Models\Exam::TYPE_POST_LESSON)
+            ->where('is_enabled', true)
+            ->first();
+        if ($lessonExam) {
+            $completedAttempt = \App\Models\ExamAttempt::where('exam_id', $lessonExam->id)
+                ->where('enrollment_id', $enrollment->id)
+                ->where('status', \App\Models\ExamAttempt::STATUS_COMPLETED)
+                ->exists();
+            if (!$completedAttempt) {
+                return redirect()->back()->with('error', 'Please complete the lesson test before marking this lesson as complete.');
+            }
+        }
 
         // Check if already completed
         if ($user->lessons()->where('lesson_id', $lesson->id)->exists()) {

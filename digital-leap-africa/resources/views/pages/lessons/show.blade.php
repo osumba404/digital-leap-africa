@@ -668,22 +668,6 @@ code {
             </div>
         @endif
 
-        {{-- Test/Assignment Questions --}}
-        @if($lesson->questions && in_array($lesson->type, ['quiz', 'assignment']))
-            <div class="lesson-content">
-                <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">
-                    @if($lesson->type === 'quiz')
-                        <i class="fas fa-question-circle me-2"></i>Quiz Questions
-                    @else
-                        <i class="fas fa-tasks me-2"></i>Assignment Instructions
-                    @endif
-                </h3>
-                <div class="lesson-content-body">
-                    {!! nl2br(e($lesson->questions)) !!}
-                </div>
-            </div>
-        @endif
-
         {{-- Code Snippets --}}
         @php $snippets = (array) ($lesson->code_snippet ?? []); @endphp
         @if(!empty($snippets))
@@ -766,6 +750,38 @@ code {
             </div>
         @endif
 
+        {{-- Post-Lesson Test --}}
+        @php
+            $lessonExam = $lesson->exam;
+            $lessonExamAttempt = null;
+            if (!isset($enrollment)) {
+                $enrollment = Auth::check() ? \App\Models\Enrollment::where('user_id', Auth::id())->where('course_id', $lesson->topic->course_id)->first() : null;
+            }
+            if ($lessonExam && $enrollment) {
+                $lessonExamAttempt = \App\Models\ExamAttempt::where('exam_id', $lessonExam->id)->where('enrollment_id', $enrollment->id)->where('status', 'completed')->first();
+            }
+            $canMarkComplete = !$lessonExam || $lessonExamAttempt;
+            $isFullyCompleted = $enrollment && $enrollment->hasCompletedLesson($lesson);
+        @endphp
+        @if($lessonExam && Auth::check())
+            <div class="lesson-content" style="margin-bottom: 2rem;">
+                <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">
+                    <i class="fas fa-file-alt me-2"></i>Lesson Quiz
+                </h3>
+                @if($lessonExamAttempt)
+                    <p style="color: var(--cool-gray); margin-bottom: 1rem;">You've completed this lesson quiz. Score: {{ $lessonExamAttempt->total_points_earned }}/{{ $lessonExamAttempt->total_points_possible }} ({{ $lessonExamAttempt->percentage }}%)</p>
+                    <a href="{{ route('exams.result', $lessonExamAttempt) }}" class="btn-outline" style="padding: 0.75rem 1.5rem;">
+                        <i class="fas fa-chart-bar me-2"></i>View Results
+                    </a>
+                @else
+                    <p style="color: var(--cool-gray); margin-bottom: 1rem;">{{ $lessonExam->description ?? 'Test your understanding of this lesson.' }}</p>
+                    <a href="{{ route('exams.show', $lessonExam) }}" class="btn-primary" style="padding: 0.75rem 1.5rem;">
+                        <i class="fas fa-play me-2"></i>Take Lesson Quiz
+                    </a>
+                @endif
+            </div>
+        @endif
+
         {{-- Completion Section --}}
         @php
             $topic = $lesson->topic;
@@ -780,7 +796,7 @@ code {
         @endphp
         
         <div class="completion-section">
-            @if(Auth::check() && Auth::user()->lessons()->where('lesson_id', $lesson->id)->exists())
+            @if($isFullyCompleted)
                 <div class="completed-badge">
                     <i class="fas fa-check-circle"></i>
                     <span>Lesson Completed!</span>
@@ -788,33 +804,41 @@ code {
                 <p style="color: var(--cool-gray); margin-top: 1rem; margin-bottom: 0;">Great job! You've successfully completed this lesson.</p>
             @else
                 <h3 style="color: var(--diamond-white); margin-bottom: 1rem;">Ready to mark this lesson as complete?</h3>
-                <p style="color: var(--cool-gray); margin-bottom: 2rem;">Once you've finished reviewing the content, mark it as complete to track your progress.</p>
-                @auth
-                    <form method="POST" action="{{ route('lessons.complete', $lesson) }}" style="display: inline;">
-                        @csrf
-                        <button type="submit" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
-                            <i class="fas fa-check me-2"></i>Mark as Complete
-                        </button>
-                    </form>
+                @if($lessonExam && !$lessonExamAttempt)
+                    <p style="color: var(--cool-gray); margin-bottom: 1rem;">Complete the lesson quiz above before you can mark this lesson as complete.</p>
                 @else
-                    <a href="{{ route('login') }}" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
-                        <i class="fas fa-sign-in-alt me-2"></i>Log in to mark complete
-                    </a>
-                @endauth
+                    <p style="color: var(--cool-gray); margin-bottom: 2rem;">Once you've finished reviewing the content, mark it as complete to track your progress.</p>
+                    @auth
+                        <form method="POST" action="{{ route('lessons.complete', $lesson) }}" style="display: inline;">
+                            @csrf
+                            <button type="submit" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
+                                <i class="fas fa-check me-2"></i>Mark as Complete
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="btn-primary" style="padding: 0.75rem 2rem; font-size: 1.1rem;">
+                            <i class="fas fa-sign-in-alt me-2"></i>Log in to mark complete
+                        </a>
+                    @endauth
+                @endif
             @endif
-            
-            {{-- Navigation Buttons --}}
-            @if($previousLesson || $nextLesson)
+
+            {{-- Navigation: Next only when current lesson is fully completed --}}
+            @if($previousLesson || ($nextLesson && $isFullyCompleted))
                 <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
                     @if($previousLesson)
                         <a href="{{ route('lessons.show', $previousLesson) }}" class="btn-outline" style="padding: 0.75rem 1.5rem;">
                             <i class="fas fa-arrow-left me-2"></i>Previous Lesson
                         </a>
                     @endif
-                    @if($nextLesson)
+                    @if($nextLesson && $isFullyCompleted)
                         <a href="{{ route('lessons.show', $nextLesson) }}" class="btn-primary" style="padding: 0.75rem 1.5rem;">
                             Next Lesson<i class="fas fa-arrow-right ms-2"></i>
                         </a>
+                    @elseif($nextLesson)
+                        <span class="btn-outline" style="padding: 0.75rem 1.5rem; opacity: 0.7; cursor: not-allowed;" title="Complete this lesson and its quiz to unlock the next lesson.">
+                            Next Lesson<i class="fas fa-lock ms-2"></i>
+                        </span>
                     @endif
                 </div>
             @endif

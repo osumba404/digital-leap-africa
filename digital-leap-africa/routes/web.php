@@ -21,6 +21,7 @@ use App\Http\Controllers\{
 };
 
 use App\Http\Controllers\Admin\{
+    ExamController as AdminExamController,
     JobController as AdminJobController,
     CourseController as AdminCourseController,
     ProjectController as AdminProjectController,
@@ -337,6 +338,16 @@ Route::view('/terms-of-service', 'legal.terms')->name('terms.service');
 Route::post('/newsletter/subscribe', [\App\Http\Controllers\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
 
+// Exams (authenticated users)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/exams/{exam}', [\App\Http\Controllers\ExamController::class, 'show'])->name('exams.show');
+    Route::post('/exams/{exam}/start', [\App\Http\Controllers\ExamController::class, 'start'])->name('exams.start');
+    Route::get('/exams/attempt/{attempt}', [\App\Http\Controllers\ExamController::class, 'take'])->name('exams.take');
+    Route::post('/exams/attempt/{attempt}/submit', [\App\Http\Controllers\ExamController::class, 'submit'])->name('exams.submit');
+    Route::get('/exams/attempt/{attempt}/result', [\App\Http\Controllers\ExamController::class, 'result'])->name('exams.result');
+    Route::post('/exams/attempt/{attempt}/abandon', [\App\Http\Controllers\ExamController::class, 'abandonAttempt'])->name('exams.attempt.abandon');
+});
+
 // View a lesson
 Route::get('/lessons/{lesson}', [LessonController::class, 'show'])
     ->middleware('auth') // optional but recommended, since show() accesses Auth::user()
@@ -373,7 +384,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Course Enrollment
+    // Course Enrollment (confirm details → optional pre-course test → enroll)
+    Route::get('/courses/{course:slug}/enroll', [CourseController::class, 'showEnrollForm'])->name('courses.enroll-form');
+    Route::post('/courses/{course:slug}/confirm-enroll', [CourseController::class, 'confirmEnroll'])->name('courses.confirm-enroll');
     Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
     Route::post('/lessons/{lesson}/complete', [LessonController::class, 'complete'])->name('lessons.complete');
 
@@ -525,6 +538,18 @@ Route::prefix('admin')
 
 
         Route::get('/courses/{course}/manage', [AdminCourseController::class, 'manage'])->name('courses.manage');
+
+        // Exams (pre-course, post-lesson, final)
+        Route::get('/courses/{course}/exams', [AdminExamController::class, 'index'])->name('exams.index');
+        Route::get('/courses/{course}/exams/create', [AdminExamController::class, 'create'])->name('exams.create');
+        Route::post('/courses/{course}/exams', [AdminExamController::class, 'store'])->name('exams.store');
+        Route::get('/courses/{course}/exams/{exam}/edit', [AdminExamController::class, 'edit'])->name('exams.edit');
+        Route::put('/courses/{course}/exams/{exam}', [AdminExamController::class, 'update'])->name('exams.update');
+        Route::delete('/courses/{course}/exams/{exam}', [AdminExamController::class, 'destroy'])->name('exams.destroy');
+        Route::get('/courses/{course}/exams/{exam}/questions', [AdminExamController::class, 'questions'])->name('exams.questions');
+        Route::post('/courses/{course}/exams/{exam}/questions', [AdminExamController::class, 'storeQuestion'])->name('exams.questions.store');
+        Route::put('/courses/{course}/exams/{exam}/questions/{question}', [AdminExamController::class, 'updateQuestion'])->name('exams.questions.update');
+        Route::delete('/courses/{course}/exams/{exam}/questions/{question}', [AdminExamController::class, 'destroyQuestion'])->name('exams.questions.destroy');
         Route::get('courses/{course}/lessons', function(\App\Models\Course $course) {
             $topic = $course->topics()->orderBy('created_at')->first();
             if (!$topic) {
@@ -532,8 +557,18 @@ Route::prefix('admin')
                     ->route('admin.courses.topics.index', $course)
                     ->with('error', 'Create a topic first to manage lessons.');
             }
-            // Render the existing view that expects $topic
-            return view('admin.courses.lessons.index', compact('topic'));
+            $topic->load(['lessons' => fn ($q) => $q->orderBy('order')]);
+            $lessonIds = $topic->lessons->pluck('id');
+            $lessonExams = \App\Models\Exam::where('type', \App\Models\Exam::TYPE_POST_LESSON)
+                ->whereIn('lesson_id', $lessonIds)
+                ->get()
+                ->keyBy('lesson_id');
+            return view('admin.courses.lessons.index', [
+                'topic' => $topic,
+                'course' => $course,
+                'lessonExams' => $lessonExams,
+                'lesson' => new \App\Models\Lesson(),
+            ]);
         })->name('courses.lessons.index');
 
         Route::prefix('courses/{course}')->group(function () {
