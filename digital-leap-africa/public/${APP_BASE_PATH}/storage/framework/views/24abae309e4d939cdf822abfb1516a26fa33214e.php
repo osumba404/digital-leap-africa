@@ -1,13 +1,13 @@
-@extends('admin.layout')
 
-@section('admin-content')
+
+<?php $__env->startSection('admin-content'); ?>
 <div class="page-header">
     <h1 class="page-title">Email Templates</h1>
     <div class="page-actions">
-        <a href="{{ route('admin.email-templates.system-preview') }}" class="btn btn-outline-info me-2">
+        <a href="<?php echo e(route('admin.email-templates.system-preview')); ?>" class="btn btn-outline-info me-2">
             <i class="fas fa-eye me-2"></i>View system templates
         </a>
-        <a href="{{ route('admin.email-templates.create') }}" class="btn btn-primary">
+        <a href="<?php echo e(route('admin.email-templates.create')); ?>" class="btn btn-primary">
             <i class="fas fa-plus me-2"></i>Create Template
         </a>
     </div>
@@ -26,29 +26,29 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($templates as $template)
+                <?php $__empty_1 = true; $__currentLoopData = $templates; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $template): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                 <tr>
-                    <td>{{ $template->name }}</td>
-                    <td>{{ $template->subject }}</td>
+                    <td><?php echo e($template->name); ?></td>
+                    <td><?php echo e($template->subject); ?></td>
                     <td>
-                        @if($template->active)
+                        <?php if($template->active): ?>
                             <span class="badge bg-success">Active</span>
-                        @else
+                        <?php else: ?>
                             <span class="badge bg-warning">Inactive</span>
-                        @endif
+                        <?php endif; ?>
                     </td>
-                    <td>{{ $template->created_at->format('M d, Y') }}</td>
+                    <td><?php echo e($template->created_at->format('M d, Y')); ?></td>
                     <td>
                         <div class="d-flex gap-2">
-                            <a href="{{ route('admin.email-templates.show', $template) }}" class="btn btn-sm btn-outline-info">
+                            <a href="<?php echo e(route('admin.email-templates.show', $template)); ?>" class="btn btn-sm btn-outline-info">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('admin.email-templates.edit', $template) }}" class="btn btn-sm btn-edit">
+                            <a href="<?php echo e(route('admin.email-templates.edit', $template)); ?>" class="btn btn-sm btn-edit">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form method="POST" action="{{ route('admin.email-templates.destroy', $template) }}" class="d-inline">
-                                @csrf
-                                @method('DELETE')
+                            <form method="POST" action="<?php echo e(route('admin.email-templates.destroy', $template)); ?>" class="d-inline">
+                                <?php echo csrf_field(); ?>
+                                <?php echo method_field('DELETE'); ?>
                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this template?')">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -56,22 +56,23 @@
                         </div>
                     </td>
                 </tr>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <tr>
                     <td colspan="5" class="text-center py-4 text-muted">
-                        No email templates found. <a href="{{ route('admin.email-templates.create') }}">Create one</a>
+                        No email templates found. <a href="<?php echo e(route('admin.email-templates.create')); ?>">Create one</a>
                     </td>
                 </tr>
-                @endforelse
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
     
-    @if($templates->hasPages())
+    <?php if($templates->hasPages()): ?>
         <div class="mt-4">
-            {{ $templates->links() }}
+            <?php echo e($templates->links()); ?>
+
         </div>
-    @endif
+    <?php endif; ?>
 </div>
 
 <style>
@@ -101,4 +102,5 @@
     color: white;
 }
 </style>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin.layout', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\digital-leap-africa\digital-leap-africa\resources\views/admin/email-templates/index.blade.php ENDPATH**/ ?>

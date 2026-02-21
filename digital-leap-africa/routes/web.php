@@ -667,6 +667,8 @@ Route::prefix('admin')
         Route::post('contact-messages/{contactMessage}/reply', [\App\Http\Controllers\Admin\ContactMessageController::class, 'reply'])->name('contact-messages.reply');
 
         // Email Management
+        Route::get('email-templates/system-preview', [EmailTemplateController::class, 'systemPreview'])->name('email-templates.system-preview');
+        Route::get('email-templates/system-preview/{template}', [EmailTemplateController::class, 'systemPreviewShow'])->name('email-templates.system-preview.show');
         Route::resource('email-templates', EmailTemplateController::class)->names([
             'index' => 'email-templates.index',
             'create' => 'email-templates.create',

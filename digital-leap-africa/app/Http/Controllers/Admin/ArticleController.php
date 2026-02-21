@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\User;
 use App\Models\Notification;
+use App\Services\EmailNotificationService;
 use App\Traits\HasWebPImages;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -77,7 +78,7 @@ class ArticleController extends Controller
 
     $article = Article::create($payload);
 
-    // Notify all users about new article (only if published)
+    // Notify all users about new article (only if published) and send email
     if ($article->status === 'published') {
         $users = User::all();
         foreach ($users as $user) {
@@ -88,6 +89,7 @@ class ArticleController extends Controller
                 "New article: {$article->title}",
                 route('blog.show', $article->slug)
             );
+            EmailNotificationService::sendNotification('new_article', $user, ['article' => $article]);
         }
     }
 
@@ -155,6 +157,21 @@ public function update(Request $request, Article $article): RedirectResponse
     }
 
     $article->update($payload);
+
+    // If newly published, notify all users and send email
+    if ($article->status === 'published' && $article->wasChanged('status')) {
+        $users = User::all();
+        foreach ($users as $user) {
+            Notification::createNotification(
+                $user->id,
+                'new_article',
+                'New Article Published',
+                "New article: {$article->title}",
+                route('blog.show', $article->slug)
+            );
+            EmailNotificationService::sendNotification('new_article', $user, ['article' => $article]);
+        }
+    }
 
     return redirect()->route('admin.articles.index')->with('status', 'Article updated');
 }

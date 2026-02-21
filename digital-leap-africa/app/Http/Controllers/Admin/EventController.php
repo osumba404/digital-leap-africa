@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\User;
 use App\Models\Notification;
+use App\Services\EmailNotificationService;
 use App\Traits\HasWebPImages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -36,7 +37,7 @@ class EventController extends Controller
             'image_path' => $imageUrl,
         ]));
 
-        // Notify all users about new upcoming event
+        // Notify all users about new upcoming event and send email
         $eventDate = Carbon::parse($event->date);
         if ($eventDate->isFuture()) {
             $users = User::all();
@@ -46,8 +47,9 @@ class EventController extends Controller
                     'new_event',
                     'New Event: ' . $event->title,
                     "Join us on {$eventDate->format('M d, Y')} at {$event->location}",
-                    route('events.show', $event->id)
+                    route('events.show', $event->slug ?? $event->id)
                 );
+                EmailNotificationService::sendNotification('new_event', $user, ['event' => $event]);
             }
         }
 

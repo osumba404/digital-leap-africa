@@ -2760,7 +2760,8 @@ window.addEventListener('beforeunload', () => {
 
 <style>
   /* Events card styles (scoped) */
-  #events-section .cards-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(320px,1fr));gap:2rem}
+  #events-section .cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+  @media (max-width:992px){#events-section .cards-grid{grid-template-columns:repeat(2,1fr)}}
   #events-section .card{background-color:#112240;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(2,12,27,0.7);transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);position:relative;border:0;padding:0}
   #events-section .card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(2,12,27,0.9)}
   /* Image container to allow overlays */
@@ -2788,7 +2789,7 @@ window.addEventListener('beforeunload', () => {
   #events-section .event-date-badge{position:absolute;top:0.5rem;right:0.5rem;background:#3b82f6;color:#ffffff;width:64px;height:75px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-weight:800;line-height:1.1;z-index:2;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);box-shadow:0 4px 12px rgba(0,0,0,0.3)}
   #events-section .event-date-badge .day{font-size:1.35rem;display:block;margin-bottom:-2px;color:#ffffff}
   #events-section .event-date-badge .month{font-size:.75rem;display:block;font-weight:800;letter-spacing:.5px;color:#ffffff}
-  @media (max-width:768px){#events-section .cards-grid{grid-template-columns:repeat(auto-fill, minmax(280px,1fr));gap:1.25rem}#events-section .card-image{height:160px}#events-section .event-date-badge{width:60px;height:70px}#events-section .event-date-badge .day{font-size:1.2rem}#events-section .event-date-badge .month{font-size:.7rem}}
+  @media (max-width:768px){#events-section .cards-grid{grid-template-columns:1fr;gap:1.25rem}#events-section .card-image{height:160px}#events-section .event-date-badge{width:60px;height:70px}#events-section .event-date-badge .day{font-size:1.2rem}#events-section .event-date-badge .month{font-size:.7rem}}
 
   /* Light Mode Events */
   [data-theme="light"] #events-section .card {
@@ -2877,8 +2878,8 @@ window.addEventListener('beforeunload', () => {
             $month = $start ? strtoupper($start->format('M')) : '';
             $category = $event->topic ?? null;
             $excerpt = \Illuminate\Support\Str::limit(strip_tags($event->description ?? ''), 140);
-            $ctaUrl = !empty($event->registration_url) ? $event->registration_url : $showUrl;
-            $ctaText = !empty($event->registration_url) ? 'Join Event' : 'View Event';
+            $ctaUrl = $showUrl;
+            $ctaText = 'View Event';
           @endphp
 
           <article class="card card-style-2" itemscope itemtype="https://schema.org/Event" itemprop="itemListElement">
@@ -2916,7 +2917,7 @@ window.addEventListener('beforeunload', () => {
               @endif
               <a href="{{ $ctaUrl }}" class="card-button">{{ $ctaText }} <i class="fas fa-arrow-right"></i></a>
             </div>
-          </div>
+          </article>
         @endforeach
       </div>
     @else

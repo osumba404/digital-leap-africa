@@ -1,37 +1,37 @@
-@extends('layouts.app')
 
-@section('title', ($event->title ?? 'Event') . ' | Digital Leap Africa Events')
-@section('meta_description', Str::limit(strip_tags($event->description ?? ''), 160))
-@section('meta_keywords', implode(', ', array_merge([$event->topic ?? 'technology'], ['tech events', 'workshops', 'developer meetups', 'programming', 'digital transformation', 'Africa'])))
-@section('canonical', route('events.show', $event))
 
-@push('meta')
+<?php $__env->startSection('title', ($event->title ?? 'Event') . ' | Digital Leap Africa Events'); ?>
+<?php $__env->startSection('meta_description', Str::limit(strip_tags($event->description ?? ''), 160)); ?>
+<?php $__env->startSection('meta_keywords', implode(', ', array_merge([$event->topic ?? 'technology'], ['tech events', 'workshops', 'developer meetups', 'programming', 'digital transformation', 'Africa']))); ?>
+<?php $__env->startSection('canonical', route('events.show', $event)); ?>
+
+<?php $__env->startPush('meta'); ?>
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="event">
-<meta property="og:url" content="{{ route('events.show', $event) }}">
-<meta property="og:title" content="{{ $event->title ?? 'Event' }}">
-<meta property="og:description" content="{{ Str::limit(strip_tags($event->description ?? ''), 160) }}">
-<meta property="og:image" content="{{ $event->image_url ?? asset('images/event-default.jpg') }}">
+<meta property="og:url" content="<?php echo e(route('events.show', $event)); ?>">
+<meta property="og:title" content="<?php echo e($event->title ?? 'Event'); ?>">
+<meta property="og:description" content="<?php echo e(Str::limit(strip_tags($event->description ?? ''), 160)); ?>">
+<meta property="og:image" content="<?php echo e($event->image_url ?? asset('images/event-default.jpg')); ?>">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:site_name" content="Digital Leap Africa">
 <meta property="og:locale" content="en_US">
-@if($event->date)
-<meta property="event:start_time" content="{{ $event->date->toISOString() }}">
-@endif
-@if($event->ends_at)
-<meta property="event:end_time" content="{{ $event->ends_at->toISOString() }}">
-@endif
-@if($event->location)
-<meta property="event:location" content="{{ $event->location }}">
-@endif
+<?php if($event->date): ?>
+<meta property="event:start_time" content="<?php echo e($event->date->toISOString()); ?>">
+<?php endif; ?>
+<?php if($event->ends_at): ?>
+<meta property="event:end_time" content="<?php echo e($event->ends_at->toISOString()); ?>">
+<?php endif; ?>
+<?php if($event->location): ?>
+<meta property="event:location" content="<?php echo e($event->location); ?>">
+<?php endif; ?>
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="{{ route('events.show', $event) }}">
-<meta property="twitter:title" content="{{ $event->title ?? 'Event' }}">
-<meta property="twitter:description" content="{{ Str::limit(strip_tags($event->description ?? ''), 160) }}">
-<meta property="twitter:image" content="{{ $event->image_url ?? asset('images/event-default.jpg') }}">
+<meta property="twitter:url" content="<?php echo e(route('events.show', $event)); ?>">
+<meta property="twitter:title" content="<?php echo e($event->title ?? 'Event'); ?>">
+<meta property="twitter:description" content="<?php echo e(Str::limit(strip_tags($event->description ?? ''), 160)); ?>">
+<meta property="twitter:image" content="<?php echo e($event->image_url ?? asset('images/event-default.jpg')); ?>">
 <meta property="twitter:creator" content="@DigitalLeapAfrica">
 <meta property="twitter:site" content="@DigitalLeapAfrica">
 
@@ -41,7 +41,7 @@
 <meta name="publisher" content="Digital Leap Africa">
 <meta name="geo.region" content="KE">
 <meta name="geo.country" content="Kenya">
-<meta name="geo.placename" content="{{ $event->location ?? 'Nairobi' }}">
+<meta name="geo.placename" content="<?php echo e($event->location ?? 'Nairobi'); ?>">
 <meta name="language" content="English">
 <meta name="theme-color" content="#0a192f">
 <meta name="mobile-web-app-capable" content="yes">
@@ -59,53 +59,53 @@
 {
   "@context": "https://schema.org",
   "@type": "Event",
-  "name": "{{ addslashes($event->title ?? 'Event') }}",
-  "description": "{{ addslashes(Str::limit(strip_tags($event->description ?? ''), 200)) }}",
-  "url": "{{ route('events.show', $event) }}",
-  @if($event->date)
-  "startDate": "{{ $event->date->toISOString() }}",
-  @endif
-  @if($event->ends_at)
-  "endDate": "{{ $event->ends_at->toISOString() }}",
-  @endif
-  "eventStatus": "{{ $event->date && $event->date->isFuture() ? 'https://schema.org/EventScheduled' : ($event->date && $event->date->isPast() ? 'https://schema.org/EventPostponed' : 'https://schema.org/EventScheduled') }}",
-  "eventAttendanceMode": "{{ $event->location ? 'https://schema.org/OfflineEventAttendanceMode' : 'https://schema.org/OnlineEventAttendanceMode' }}",
-  @if($event->image_url)
+  "name": "<?php echo e(addslashes($event->title ?? 'Event')); ?>",
+  "description": "<?php echo e(addslashes(Str::limit(strip_tags($event->description ?? ''), 200))); ?>",
+  "url": "<?php echo e(route('events.show', $event)); ?>",
+  <?php if($event->date): ?>
+  "startDate": "<?php echo e($event->date->toISOString()); ?>",
+  <?php endif; ?>
+  <?php if($event->ends_at): ?>
+  "endDate": "<?php echo e($event->ends_at->toISOString()); ?>",
+  <?php endif; ?>
+  "eventStatus": "<?php echo e($event->date && $event->date->isFuture() ? 'https://schema.org/EventScheduled' : ($event->date && $event->date->isPast() ? 'https://schema.org/EventPostponed' : 'https://schema.org/EventScheduled')); ?>",
+  "eventAttendanceMode": "<?php echo e($event->location ? 'https://schema.org/OfflineEventAttendanceMode' : 'https://schema.org/OnlineEventAttendanceMode'); ?>",
+  <?php if($event->image_url): ?>
   "image": {
     "@type": "ImageObject",
-    "url": "{{ $event->image_url }}",
+    "url": "<?php echo e($event->image_url); ?>",
     "width": 1200,
     "height": 630
   },
-  @endif
-  @if($event->location)
+  <?php endif; ?>
+  <?php if($event->location): ?>
   "location": {
     "@type": "Place",
-    "name": "{{ addslashes($event->location) }}",
+    "name": "<?php echo e(addslashes($event->location)); ?>",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "{{ addslashes($event->location) }}",
+      "streetAddress": "<?php echo e(addslashes($event->location)); ?>",
       "addressCountry": "Kenya"
     }
   },
-  @else
+  <?php else: ?>
   "location": {
     "@type": "VirtualLocation",
-    "url": "{{ route('events.show', $event) }}"
+    "url": "<?php echo e(route('events.show', $event)); ?>"
   },
-  @endif
+  <?php endif; ?>
   "organizer": {
     "@type": "Organization",
     "name": "Digital Leap Africa",
-    "url": "{{ url('/') }}",
+    "url": "<?php echo e(url('/')); ?>",
     "logo": {
       "@type": "ImageObject",
-      "url": "{{ asset('images/logo.png') }}"
+      "url": "<?php echo e(asset('images/logo.png')); ?>"
     },
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer service",
-      "url": "{{ route('contact') }}"
+      "url": "<?php echo e(route('contact')); ?>"
     }
   },
   "offers": {
@@ -113,15 +113,15 @@
     "price": "0",
     "priceCurrency": "USD",
     "availability": "https://schema.org/InStock",
-    "url": "{{ $event->registration_url ?? route('events.show', $event) }}",
-    "validFrom": "{{ $event->created_at->toISOString() }}"
+    "url": "<?php echo e($event->registration_url ?? route('events.show', $event)); ?>",
+    "validFrom": "<?php echo e($event->created_at->toISOString()); ?>"
   },
-  @if($event->topic)
+  <?php if($event->topic): ?>
   "about": {
     "@type": "Thing",
-    "name": "{{ $event->topic }}"
+    "name": "<?php echo e($event->topic); ?>"
   },
-  @endif
+  <?php endif; ?>
   "performer": {
     "@type": "Organization",
     "name": "Digital Leap Africa"
@@ -145,19 +145,19 @@
       "@type": "ListItem",
       "position": 1,
       "name": "Home",
-      "item": "{{ url('/') }}"
+      "item": "<?php echo e(url('/')); ?>"
     },
     {
       "@type": "ListItem",
       "position": 2,
       "name": "Events",
-      "item": "{{ route('events.index') }}"
+      "item": "<?php echo e(route('events.index')); ?>"
     },
     {
       "@type": "ListItem",
       "position": 3,
-      "name": "{{ $event->title ?? 'Event' }}",
-      "item": "{{ route('events.show', $event) }}"
+      "name": "<?php echo e($event->title ?? 'Event'); ?>",
+      "item": "<?php echo e(route('events.show', $event)); ?>"
     }
   ]
 }
@@ -168,42 +168,42 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "{{ $event->title ?? 'Event' }}",
-  "description": "{{ Str::limit(strip_tags($event->description ?? ''), 160) }}",
-  "url": "{{ route('events.show', $event) }}",
+  "name": "<?php echo e($event->title ?? 'Event'); ?>",
+  "description": "<?php echo e(Str::limit(strip_tags($event->description ?? ''), 160)); ?>",
+  "url": "<?php echo e(route('events.show', $event)); ?>",
   "mainEntity": {
-    "@id": "{{ route('events.show', $event) }}#event"
+    "@id": "<?php echo e(route('events.show', $event)); ?>#event"
   },
   "breadcrumb": {
-    "@id": "{{ route('events.show', $event) }}#breadcrumb"
+    "@id": "<?php echo e(route('events.show', $event)); ?>#breadcrumb"
   },
   "isPartOf": {
     "@type": "WebSite",
     "name": "Digital Leap Africa",
-    "url": "{{ url('/') }}"
+    "url": "<?php echo e(url('/')); ?>"
   },
   "potentialAction": [
     {
       "@type": "ViewAction",
-      "target": "{{ route('events.show', $event) }}"
+      "target": "<?php echo e(route('events.show', $event)); ?>"
     },
     {
       "@type": "ShareAction",
-      "target": "{{ route('events.show', $event) }}"
+      "target": "<?php echo e(route('events.show', $event)); ?>"
     }
-    @if($event->registration_url)
+    <?php if($event->registration_url): ?>
     ,{
       "@type": "RegisterAction",
-      "target": "{{ $event->registration_url }}"
+      "target": "<?php echo e($event->registration_url); ?>"
     }
-    @endif
+    <?php endif; ?>
   ]
 }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
-@php
+<?php $__env->startSection('content'); ?>
+<?php
     // Model casts ensure $event->date and $event->ends_at are Carbon|null
     $start = $event->date;
     $end   = $event->ends_at;
@@ -218,7 +218,7 @@
     $isUpcoming = $start && $start->isFuture();
     $isPast = $end ? $end->isPast() : ($start && $start->isPast());
     $isOngoing = !$isUpcoming && !$isPast;
-@endphp
+?>
 
 <style>
     .event-hero {
@@ -512,95 +512,98 @@
 </style>
 
 <section class="container">
-    <a class="btn-back" href="{{ route('events.index') }}">
+    <a class="btn-back" href="<?php echo e(route('events.index')); ?>">
         <i class="fas fa-arrow-left"></i> Back to Events
     </a>
 
     <div class="event-hero">
         <div class="event-hero-content container">
-            <h1 class="event-title">{{ $event->title }}</h1>
+            <h1 class="event-title"><?php echo e($event->title); ?></h1>
             
             <div class="event-meta">
                 <div class="event-meta-item">
                     <i class="fas fa-calendar"></i>
-                    <span>{{ $whenText }}</span>
+                    <span><?php echo e($whenText); ?></span>
                 </div>
                 
-                @if(!empty($event->location))
+                <?php if(!empty($event->location)): ?>
                     <div class="event-meta-item">
                         <i class="fas fa-location-dot"></i>
-                        <span>{{ $event->location }}</span>
+                        <span><?php echo e($event->location); ?></span>
                     </div>
-                @endif
+                <?php endif; ?>
                 
                 <div>
-                    @if($isUpcoming)
+                    <?php if($isUpcoming): ?>
                         <span class="event-status-badge upcoming">
                             <i class="fas fa-clock"></i> Upcoming
                         </span>
-                    @elseif($isOngoing)
+                    <?php elseif($isOngoing): ?>
                         <span class="event-status-badge ongoing">
                             <i class="fas fa-circle" style="font-size: 0.5rem;"></i> Happening Now
                         </span>
-                    @else
+                    <?php else: ?>
                         <span class="event-status-badge past">
                             <i class="fas fa-check"></i> Completed
                         </span>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
             
-            @if(!empty($event->topic))
+            <?php if(!empty($event->topic)): ?>
                 <div>
                     <span class="event-topic-badge">
-                        <i class="fas fa-tag"></i> {{ $event->topic }}
+                        <i class="fas fa-tag"></i> <?php echo e($event->topic); ?>
+
                     </span>
                 </div>
-            @endif
+            <?php endif; ?>
         </div>
     </div>
 
-    @if(!empty($event->image_url))
+    <?php if(!empty($event->image_url)): ?>
         <div class="event-image-container">
-            <img class="event-image" src="{{ $event->image_url }}" alt="{{ $event->title }}">
+            <img class="event-image" src="<?php echo e($event->image_url); ?>" alt="<?php echo e($event->title); ?>">
         </div>
-    @endif
+    <?php endif; ?>
 
-    @if(!empty($event->description))
+    <?php if(!empty($event->description)): ?>
         <div class="event-content-card">
             <h2 style="color: var(--cyan-accent); margin-top: 0; margin-bottom: 1rem; font-size: 1.5rem;">
                 <i class="fas fa-info-circle"></i> About This Event
             </h2>
             <div class="event-description">
-                {!! nl2br(e($event->description)) !!}
+                <?php echo nl2br(e($event->description)); ?>
+
             </div>
         </div>
-    @endif
+    <?php endif; ?>
 
-    @if(!empty($event->registration_url))
+    <?php if(!empty($event->registration_url)): ?>
         <div class="event-content-card">
             <h2 style="color: var(--cyan-accent); margin-top: 0; margin-bottom: 1rem; font-size: 1.5rem;">
                 <i class="fas fa-user-plus"></i> Registration
             </h2>
             <p class="event-description" style="margin-bottom: 1.5rem;">
-                @if($isUpcoming)
+                <?php if($isUpcoming): ?>
                     Secure your spot at this event! Registration is now open.
-                @elseif($isOngoing)
+                <?php elseif($isOngoing): ?>
                     This event is currently happening. You may still be able to join!
-                @else
+                <?php else: ?>
                     This event has concluded. Check out our upcoming events.
-                @endif
+                <?php endif; ?>
             </p>
             <div class="event-actions">
-                <a class="btn-register" href="{{ $event->registration_url }}" target="_blank" rel="noopener">
+                <a class="btn-register" href="<?php echo e($event->registration_url); ?>" target="_blank" rel="noopener">
                     <i class="fas fa-external-link-alt"></i>
                     Join Event
                 </a>
-                <a class="btn-back" href="{{ route('events.index') }}" style="margin: 0;">
+                <a class="btn-back" href="<?php echo e(route('events.index')); ?>" style="margin: 0;">
                     <i class="fas fa-calendar-days"></i> View All Events
                 </a>
             </div>
         </div>
-    @endif
+    <?php endif; ?>
 </section>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\digital-leap-africa\digital-leap-africa\resources\views/pages/events/show.blade.php ENDPATH**/ ?>

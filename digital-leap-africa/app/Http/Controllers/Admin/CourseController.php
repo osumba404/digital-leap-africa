@@ -51,7 +51,7 @@ class CourseController extends Controller
             'slots' => 'nullable|integer|min:1',
         ]);
 
-        $validated['slug'] = Str::slug($validated['title']);
+        $validated['slug'] = $this->uniqueCourseSlug(Str::slug($validated['title']));
         $validated['active'] = $request->boolean('active');
         $validated['is_free'] = $request->boolean('is_free');
         $validated['price'] = $validated['is_free'] ? 0 : ($validated['price'] ?? 0);
@@ -71,7 +71,7 @@ class CourseController extends Controller
                     'new_course',
                     'New Course Available',
                     "Check out our new course: {$course->title}",
-                    route('courses.show', $course->id)
+                    route('courses.show', $course)
                 );
 
                 // Send email notification
@@ -107,7 +107,7 @@ class CourseController extends Controller
             'slots' => 'nullable|integer|min:1',
         ]);
 
-        $validated['slug'] = Str::slug($validated['title']);
+        $validated['slug'] = $this->uniqueCourseSlug(Str::slug($validated['title']), $course->id);
         $validated['active'] = $request->boolean('active');
         $validated['is_free'] = $request->boolean('is_free');
         $validated['price'] = $validated['is_free'] ? 0 : ($validated['price'] ?? 0);
@@ -119,7 +119,23 @@ class CourseController extends Controller
             $validated['image_url'] = $this->storeWebPImage($request->file('image_url'), 'courses');
         }
 
+        $wasInactive = !$course->active;
         $course->update($validated);
+
+        // When course is made active (was inactive), notify all users and send email
+        if ($wasInactive && $course->active) {
+            $users = User::all();
+            foreach ($users as $user) {
+                Notification::createNotification(
+                    $user->id,
+                    'new_course',
+                    'New Course Available',
+                    "Check out our new course: {$course->title}",
+                    route('courses.show', $course)
+                );
+                EmailNotificationService::sendNotification('new_course', $user, ['course' => $course]);
+            }
+        }
 
         return redirect()->route('admin.courses.index')->with('success', 'Course updated successfully.');
     }
@@ -295,5 +311,21 @@ class CourseController extends Controller
         }
         $course->delete();
         return redirect()->route('admin.courses.index')->with('success', 'Course deleted successfully.');
+    }
+
+    /** Generate a unique slug for courses. When updating, pass the current course id to exclude it. */
+    private function uniqueCourseSlug(string $baseSlug, ?int $excludeCourseId = null): string
+    {
+        $slug = $baseSlug;
+        $i = 2;
+        while (
+            Course::where('slug', $slug)
+                ->when($excludeCourseId, fn ($q) => $q->where('id', '!=', $excludeCourseId))
+                ->exists()
+        ) {
+            $slug = $baseSlug . '-' . $i;
+            $i++;
+        }
+        return $slug;
     }
 }
