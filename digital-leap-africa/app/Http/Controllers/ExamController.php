@@ -104,7 +104,7 @@ class ExamController extends Controller
 
     public function take(ExamAttempt $attempt)
     {
-        if ($attempt->user_id !== Auth::id()) {
+        if ((int) $attempt->user_id !== (int) Auth::id()) {
             return redirect()->route('courses.index')
                 ->with('error', 'This test attempt is not available for your account.');
         }
@@ -120,7 +120,7 @@ class ExamController extends Controller
 
     public function submit(Request $request, ExamAttempt $attempt)
     {
-        if ($attempt->user_id !== Auth::id()) {
+        if ((int) $attempt->user_id !== (int) Auth::id()) {
             return redirect()->route('courses.index')
                 ->with('error', 'You are not authorized to submit this test attempt.');
         }
@@ -230,7 +230,7 @@ class ExamController extends Controller
 
     public function result(ExamAttempt $attempt)
     {
-        if ($attempt->user_id !== Auth::id()) {
+        if ((int) $attempt->user_id !== (int) Auth::id()) {
             return redirect()->route('courses.index')
                 ->with('error', 'This test result is not available for your account.');
         }
@@ -245,7 +245,7 @@ class ExamController extends Controller
      */
     public function abandonAttempt(ExamAttempt $attempt)
     {
-        if ($attempt->user_id !== Auth::id()) {
+        if ((int) $attempt->user_id !== (int) Auth::id()) {
             return redirect()->route('courses.index')
                 ->with('error', 'You are not authorized to manage this test attempt.');
         }
