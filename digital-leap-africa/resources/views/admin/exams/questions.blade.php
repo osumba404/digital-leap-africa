@@ -375,9 +375,10 @@
   inset: 0;
   z-index: 9999;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 1rem;
+  overflow-y: auto;
 }
 .exam-popup-overlay[hidden] {
   display: none !important;
@@ -396,6 +397,7 @@
   max-height: calc(100vh - 2rem);
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
 }
 .exam-popup-close {
   background: none;
@@ -430,8 +432,13 @@
   padding: 1.5rem;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: min(65vh, 520px);
+  max-height: calc(100vh - 220px);
   -webkit-overflow-scrolling: touch;
+}
+@media (max-width: 768px) {
+  .exam-popup-overlay { padding: 0.75rem; }
+  .exam-popup-dialog { max-height: calc(100vh - 1.5rem); }
+  .exam-modal-body { max-height: calc(100vh - 200px); }
 }
 .exam-modal-footer {
   border-top: 1px solid rgba(255,255,255,0.1);

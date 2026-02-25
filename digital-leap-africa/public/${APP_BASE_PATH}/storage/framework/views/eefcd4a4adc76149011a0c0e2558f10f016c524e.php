@@ -20,7 +20,7 @@
   <div class="card">
     <div class="card-body">
       <p class="text-muted mb-4">
-        Manage tests at the beginning of the course, after each lesson, and at the end. Toggle <strong>Enabled</strong> to show/hide each test from students.
+        Manage pre-course and final tests here. <strong>Lesson tests</strong> are added and edited from each topic’s <strong>Lessons</strong> page (open a topic, then use the Lesson test column).
       </p>
 
       <div class="table-responsive">
@@ -75,6 +75,11 @@
                   <?php endif; ?>
                 </td>
                 <td>
+                  <?php if($exam->type === 'post_lesson' && $exam->lesson): ?>
+                    <a href="<?php echo e(route('admin.topics.lessons.index', [$course, $exam->lesson->topic])); ?>" class="btn btn-sm btn-primary" title="Manage this lesson test from the Lessons page">
+                      <i class="fas fa-book-open me-1"></i>Manage from Lessons
+                    </a>
+                  <?php endif; ?>
                   <a href="<?php echo e(route('admin.exams.questions', [$course, $exam])); ?>" class="btn btn-sm btn-outline">
                     <i class="fas fa-list me-1"></i>Questions
                   </a>
@@ -103,8 +108,13 @@
 
   <div class="card mt-4">
     <div class="card-body">
-      <h3 class="h5 mb-3">Add Post-Lesson Test</h3>
-      <p class="text-muted mb-3">Create a test that appears after a specific lesson.</p>
+      <h3 class="h5 mb-3">Lesson tests</h3>
+      <p class="text-muted mb-3">Add and edit lesson tests from the <strong>Lessons</strong> page for each topic. Go to <a href="<?php echo e(route('admin.courses.topics.index', $course)); ?>">Topics</a>, open a topic, then use the <strong>Lesson test</strong> column to add or manage tests.</p>
+      <a href="<?php echo e(route('admin.courses.topics.index', $course)); ?>" class="btn btn-outline">
+        <i class="fas fa-book-open me-2"></i>Go to Topics &amp; Lessons
+      </a>
+      <hr class="my-3">
+      <p class="text-muted small mb-2">Or create a lesson test by selecting a lesson below (you will be redirected to the lessons page after creating it):</p>
       <form method="GET" action="<?php echo e(route('admin.exams.create', $course)); ?>" class="d-flex gap-2 flex-wrap align-items-end">
         <input type="hidden" name="type" value="post_lesson">
         <div class="flex-grow-1" style="min-width: 200px;">

@@ -29,7 +29,7 @@
       <?php echo csrf_field(); ?>
 
       <?php $__currentLoopData = $attempt->exam->questions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $question): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-        <section class="exam-question-card" data-question="<?php echo e($index + 1); ?>">
+        <section class="exam-question-card" data-question="<?php echo e($index + 1); ?>" data-question-id="<?php echo e($question->id); ?>" data-question-type="<?php echo e($question->question_type); ?>">
           <div class="exam-question-header">
             <span class="exam-question-num">Question <?php echo e($index + 1); ?> of <?php echo e($attempt->exam->questions->count()); ?></span>
             <span class="exam-question-points"><?php echo e($question->points); ?> pt<?php echo e($question->points !== 1 ? 's' : ''); ?></span>
@@ -84,12 +84,22 @@
   var secondsLeft = minutes * 60;
   var display = document.getElementById('timer-display');
   var timerEl = document.getElementById('timer');
+  var abandonUrl = '<?php echo e(route("exams.attempt.abandon", $attempt)); ?>';
+  var examShowUrl = '<?php echo e(route("exams.show", $attempt->exam)); ?>';
+  var csrfToken = document.querySelector('input[name="_token"]').value;
+  var timerInterval = null;
 
   function pad(n) { return n < 10 ? '0' + n : n; }
 
   function tick() {
     if (secondsLeft <= 0) {
-      form.submit();
+      if (timerInterval) clearInterval(timerInterval);
+      // Time's up: do not submit answers; abandon attempt and redirect to start again
+      fetch(abandonUrl, {
+        method: 'POST',
+        headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      }).then(function() { window.location.href = examShowUrl; }).catch(function() { window.location.href = examShowUrl; });
       return;
     }
     var m = Math.floor(secondsLeft / 60);
@@ -104,23 +114,47 @@
   }
 
   tick();
-  setInterval(tick, 1000);
+  timerInterval = setInterval(tick, 1000);
 })();
-
-document.getElementById('exam-form').addEventListener('submit', function(e) {
-  if (!confirm('Submit your test? You cannot change answers after submitting.')) e.preventDefault();
-});
-</script>
-<?php $__env->stopPush(); ?>
-<?php else: ?>
-<?php $__env->startPush('scripts'); ?>
-<script>
-document.getElementById('exam-form').addEventListener('submit', function(e) {
-  if (!confirm('Submit your test? You cannot change answers after submitting.')) e.preventDefault();
-});
 </script>
 <?php $__env->stopPush(); ?>
 <?php endif; ?>
+<?php $__env->startPush('scripts'); ?>
+<script>
+(function() {
+  var form = document.getElementById('exam-form');
+  var questionCards = form.querySelectorAll('.exam-question-card[data-question-id]');
+
+  function allQuestionsAttempted() {
+    for (var i = 0; i < questionCards.length; i++) {
+      var card = questionCards[i];
+      var qId = card.getAttribute('data-question-id');
+      var qType = card.getAttribute('data-question-type');
+      if (qType === 'text') {
+        var textarea = form.querySelector('textarea[name="answer_' + qId + '"]');
+        if (!textarea || !textarea.value || !textarea.value.trim()) return false;
+      } else if (qType === 'single_choice') {
+        var checked = form.querySelector('input[name="answer_' + qId + '"]:checked');
+        if (!checked) return false;
+      } else {
+        var checkboxes = form.querySelectorAll('input[name="answer_' + qId + '[]"]:checked');
+        if (!checkboxes.length) return false;
+      }
+    }
+    return true;
+  }
+
+  form.addEventListener('submit', function(e) {
+    if (!allQuestionsAttempted()) {
+      e.preventDefault();
+      alert('Please attempt all questions before submitting.');
+      return;
+    }
+    if (!confirm('Submit your test? You cannot change answers after submitting.')) e.preventDefault();
+  });
+})();
+</script>
+<?php $__env->stopPush(); ?>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startPush('styles'); ?>
