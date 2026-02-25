@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Course;
+use App\Models\Enrollment;
+use App\Models\ExamAttempt;
 use App\Services\GamificationService;
 use App\Traits\HasWebPImages;
 use Illuminate\Http\RedirectResponse;
@@ -100,5 +103,45 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    /**
+     * Show course transcript summary for the authenticated learner.
+     */
+    public function transcript(Request $request, Course $course): View
+    {
+        $user = $request->user();
+
+        $enrollment = Enrollment::with(['course.topics.lessons'])
+            ->where('user_id', $user->id)
+            ->where('course_id', $course->id)
+            ->firstOrFail();
+
+        $attempts = ExamAttempt::with('exam')
+            ->where('enrollment_id', $enrollment->id)
+            ->where('user_id', $user->id)
+            ->where('status', ExamAttempt::STATUS_COMPLETED)
+            ->orderByDesc('completed_at')
+            ->get();
+
+        $courseLessonIds = $course->lessons()->pluck('lessons.id');
+        $completedLessons = $user->lessons()->whereIn('lesson_id', $courseLessonIds)->count();
+        $totalLessons = $courseLessonIds->count();
+
+        $attemptGroups = $attempts->groupBy(function ($attempt) {
+            return optional($attempt->exam)->type ?? 'other';
+        });
+
+        $finalAttempt = optional($attemptGroups->get('final'))->first();
+
+        return view('profile.transcript', [
+            'course' => $course,
+            'enrollment' => $enrollment,
+            'attempts' => $attempts,
+            'attemptGroups' => $attemptGroups,
+            'finalAttempt' => $finalAttempt,
+            'completedLessons' => $completedLessons,
+            'totalLessons' => $totalLessons,
+        ]);
     }
 }

@@ -28,6 +28,9 @@ class EmailTemplateController extends Controller
             'course-reactivated' => 'Course Reactivated',
             'course-unenrolled-simple' => 'Course Unenrolled',
             'course-warning-simple' => 'Course Warning',
+            'course-inactivity-reminder' => 'Course Inactivity Reminder',
+            'course-inactivity-warning' => 'Formal Inactivity Warning',
+            'course-auto-unenrolled' => 'Course Auto Unenrolled',
             'new-course' => 'New Course Available',
             'new-article' => 'New Article Published',
             'new-event' => 'New Event',
@@ -100,6 +103,10 @@ class EmailTemplateController extends Controller
             'message' => 'This is a sample message for the email template preview.',
             'actionUrl' => url('/dashboard'),
             'actionText' => 'View Dashboard',
+            'days_inactive' => 10,
+            'milestone' => 10,
+            'course_url' => route('courses.show', $course->slug),
+            'courses_url' => route('courses.index'),
         ];
         return view('emails.' . $template, $data);
     }

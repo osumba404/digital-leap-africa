@@ -881,13 +881,14 @@
             @if($user->courses->count())
                 <div class="mobile-course-table">
                     <div class="desktop-table" style="border-spacing:0; display: block;">
-                        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:0.5rem; padding:0.75rem 0; color: var(--cool-gray); border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap:0.5rem; padding:0.75rem 0; color: var(--cool-gray); border-bottom:1px solid rgba(255,255,255,0.1);">
                             <div><i class="fas fa-book" style="margin-right: 0.5rem;"></i>Course</div>
                             <div><i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>Status</div>
                             <div><i class="fas fa-calendar" style="margin-right: 0.5rem;"></i>Enrolled</div>
+                            <div><i class="fas fa-file-alt" style="margin-right: 0.5rem;"></i>Transcript</div>
                         </div>
                         @foreach($user->courses as $course)
-                            <div class="desktop-course-row" style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:0.5rem; padding:0.9rem 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <div class="desktop-course-row" style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap:0.5rem; padding:0.9rem 0; border-bottom:1px solid rgba(255,255,255,0.05);">
                                 <div style="font-weight:600;">{{ $course->title ?? $course->name ?? 'Course' }}</div>
                                 <div>
                                     <span class="reply-count">
@@ -902,6 +903,11 @@
                                     </span>
                                 </div>
                                 <div>{{ optional($course->pivot->enrolled_at)->format('M d, Y') }}</div>
+                                <div>
+                                    <a href="{{ route('profile.transcript', $course) }}" class="btn-outline" style="text-decoration:none; padding:.3rem .6rem; font-size:.8rem;">
+                                        View Transcript
+                                    </a>
+                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -922,6 +928,11 @@
                                     {{ ucfirst($course->pivot->status ?? 'enrolled') }}
                                 </span>
                                     <span>{{ optional($course->pivot->enrolled_at)->format('M d, Y') }}</span>
+                                </div>
+                                <div style="margin-top:.6rem;">
+                                    <a href="{{ route('profile.transcript', $course) }}" class="btn-outline" style="text-decoration:none; padding:.35rem .6rem; font-size:.8rem; display:inline-block;">
+                                        View Transcript
+                                    </a>
                                 </div>
                             </div>
                         @endforeach

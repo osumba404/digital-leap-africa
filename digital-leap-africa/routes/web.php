@@ -381,6 +381,7 @@ Route::get('/user/{user}', [ProfileController::class, 'show'])->name('profile.sh
 Route::middleware(['auth', 'verified'])->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/transcript/{course:slug}', [ProfileController::class, 'transcript'])->name('profile.transcript');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 

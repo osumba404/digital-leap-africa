@@ -131,6 +131,14 @@ class LessonController extends Controller
             ->count();
 
         if ($totalLessons > 0 && $completedLessons >= $totalLessons) {
+            // Mark enrollment complete so transcript/end-of-program state is explicit.
+            if ($enrollment->status !== 'completed') {
+                $enrollment->update([
+                    'status' => 'completed',
+                    'completed_at' => now(),
+                ]);
+            }
+
             // User completed the entire course!
             $gamification->awardPoints($user, 'course_complete', 'Completed course: ' . $course->title);
 

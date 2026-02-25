@@ -216,6 +216,13 @@ class ExamController extends Controller
 
         $enrollment->calculateFinalGrade();
 
+        if ($attempt->exam->type === Exam::TYPE_FINAL && $enrollment->status !== 'completed') {
+            $enrollment->update([
+                'status' => 'completed',
+                'completed_at' => now(),
+            ]);
+        }
+
         return redirect()->route('exams.result', $attempt)->with('success', 'Test submitted successfully!');
     }
 

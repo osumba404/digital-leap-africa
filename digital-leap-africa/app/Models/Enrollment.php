@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class Enrollment extends Model
 {
@@ -111,5 +113,32 @@ class Enrollment extends Model
             'final_grade_percentage' => $percentage,
             'final_grade_calculated_at' => now(),
         ]);
+    }
+
+    /**
+     * Resolve the learner's last meaningful activity timestamp in this enrollment.
+     * Activity = lesson completion OR exam interaction; fallback to enrollment start.
+     */
+    public function getLastActivityAt(): Carbon
+    {
+        $lessonActivity = DB::table('lesson_user')
+            ->join('lessons', 'lessons.id', '=', 'lesson_user.lesson_id')
+            ->join('topics', 'topics.id', '=', 'lessons.topic_id')
+            ->where('lesson_user.user_id', $this->user_id)
+            ->where('topics.course_id', $this->course_id)
+            ->max('lesson_user.updated_at');
+
+        $examActivity = ExamAttempt::where('enrollment_id', $this->id)
+            ->where('user_id', $this->user_id)
+            ->max(DB::raw('COALESCE(completed_at, started_at, created_at)'));
+
+        $lastActivity = collect([
+            $lessonActivity,
+            $examActivity,
+            optional($this->enrolled_at)->toDateTimeString(),
+            optional($this->created_at)->toDateTimeString(),
+        ])->filter()->max();
+
+        return Carbon::parse($lastActivity ?? now());
     }
 }
