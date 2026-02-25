@@ -2615,6 +2615,22 @@
                 })
                 .catch(error => console.error('Error:', error));
         }
+
+        // Basic anti-inspect hardening (client-side only).
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+        document.addEventListener('keydown', function(e) {
+            const key = (e.key || '').toLowerCase();
+            const blocked =
+                key === 'f12' ||
+                (e.ctrlKey && e.shiftKey && ['i', 'j', 'c', 'k'].includes(key)) ||
+                (e.ctrlKey && ['u', 's'].includes(key));
+            if (blocked) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }, true);
     </script>
 </body>
 </html>

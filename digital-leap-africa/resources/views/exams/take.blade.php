@@ -155,6 +155,37 @@
 })();
 </script>
 @endpush
+
+@push('scripts')
+<script>
+(function() {
+  var examRoot = document.querySelector('.exam-take-page');
+  if (!examRoot) return;
+
+  function blockEvent(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  }
+
+  // Prevent right click + copy/cut/paste/select on exam attempt page.
+  ['contextmenu', 'copy', 'cut', 'paste', 'dragstart', 'selectstart'].forEach(function(evt) {
+    examRoot.addEventListener(evt, blockEvent, true);
+  });
+
+  examRoot.addEventListener('keydown', function(e) {
+    var key = (e.key || '').toLowerCase();
+    var blockedCombo =
+      (e.ctrlKey && ['c', 'x', 'v', 'u', 's', 'p'].includes(key)) ||
+      (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(key)) ||
+      key === 'f12';
+    if (blockedCombo) {
+      blockEvent(e);
+    }
+  }, true);
+})();
+</script>
+@endpush
 @endsection
 
 @push('styles')
@@ -163,6 +194,19 @@
   max-width: 720px;
   margin: 0 auto;
   padding: 1.5rem 1rem 4rem;
+}
+
+/* Prevent highlighting/copying question content during test. */
+.exam-take-page,
+.exam-take-page .exam-question-card,
+.exam-take-page .exam-question-text,
+.exam-take-page .exam-option-text,
+.exam-take-page .exam-question-num,
+.exam-take-page .exam-question-points {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .exam-take-header {
