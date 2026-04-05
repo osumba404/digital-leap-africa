@@ -447,11 +447,13 @@
             <?php if(Auth::check() && Auth::user()->courses()->where('course_id', $course->id)->exists()): ?>
                 <?php
                     // Calculate progress - you may need to implement this method in User model
+                    $userCourseForProgress = Auth::user()->courses()->where('course_id', $course->id)->first();
+                    $isCompletedForProgress = $userCourseForProgress && $userCourseForProgress->pivot->status === 'completed';
                     $totalLessons = $course->topics->sum(function($topic) { return $topic->lessons->count(); });
                     $completedLessons = Auth::user()->lessons()->whereIn('lesson_id', 
                         $course->topics->flatMap->lessons->pluck('id')
                     )->count();
-                    $progress = $totalLessons > 0 ? ($completedLessons / $totalLessons) * 100 : 0;
+                    $progress = $isCompletedForProgress ? 100 : ($totalLessons > 0 ? ($completedLessons / $totalLessons) * 100 : 0);
                 ?>
                 <div style="margin-top: 2rem;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
@@ -477,6 +479,9 @@
                         </a>
                         <a href="<?php echo e(route('certificates.download', $userCertificate)); ?>" class="btn-outline" style="padding: 0.6rem 1.25rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
                             <i class="fas fa-download"></i> Download
+                        </a>
+                        <a href="#curriculum" class="btn-outline" style="padding: 0.6rem 1.25rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); color: #3b82f6;">
+                            <i class="fas fa-list-ul"></i> View Course Content
                         </a>
                     </div>
                 </div>
@@ -650,12 +655,13 @@
     <?php endif; ?>
 
     
-    <?php if(Auth::check() && (($userCourse && $userCourse->pivot->status === 'active') || !$course->is_free)): ?>
+    <?php if(Auth::check() && (($userCourse && in_array($userCourse->pivot->status, ['active', 'completed'])) || !$course->is_free)): ?>
         <?php
             $now = now();
             $canAccessContent = true;
             $accessMessage = '';
-            $isEnrolled = $userCourse && $userCourse->pivot->status === 'active';
+            $isEnrolled = $userCourse && in_array($userCourse->pivot->status, ['active', 'completed']);
+            $isCompleted = $userCourse && $userCourse->pivot->status === 'completed';
             
             // Check if user is not enrolled in a paid course
             if(!$course->is_free && !$isEnrolled) {
@@ -675,7 +681,7 @@
         ?>
         
         <div style="margin-top: 3rem;">
-            <h2 style="font-size: 2rem; font-weight: 600; margin-bottom: 2rem; color: var(--diamond-white);">
+            <h2 id="curriculum" style="font-size: 2rem; font-weight: 600; margin-bottom: 2rem; color: var(--diamond-white);">
                 <i class="fas fa-list-ul me-2"></i>Course Curriculum
             </h2>
             
@@ -728,7 +734,7 @@
                             }
 
                             $canAccessLesson = $canAccessContent &&
-                                ($index === 0 ? $allPreviousTopicsCompleted : ($isPreviousCompleted && $allPreviousTopicsCompleted));
+                                ($isCompleted || ($index === 0 ? $allPreviousTopicsCompleted : ($isPreviousCompleted && $allPreviousTopicsCompleted)));
                         ?>
                         <?php
                             $tooltipMessage = '';
