@@ -1,746 +1,662 @@
-# Digital Leap Africa 🚀
+# Digital Leap Africa — E-Learning Platform
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Laravel-10.x-red?style=for-the-badge&logo=laravel" alt="Laravel">
-  <img src="https://img.shields.io/badge/PHP-8.1+-blue?style=for-the-badge&logo=php" alt="PHP">
-  <img src="https://img.shields.io/badge/Status-Complete-green?style=for-the-badge" alt="Status">
-</p>
+Digital Leap Africa is a full-stack e-learning and community platform built with Laravel 9. It provides a comprehensive suite of tools for managing and delivering educational content, tracking learner progress, facilitating community engagement, and administering the platform. Everything — from the public-facing website to the advanced admin panel — is fully dynamic and database-driven.
 
-**Empowering African youth through technology education, collaboration, and professional opportunities.**
+---
 
-A comprehensive Laravel-based learning management system designed to bridge the digital skills gap in Africa through expert-led courses, real-world projects, job opportunities, and community engagement.
+## Table of Contents
 
-## 🌟 Project Status: **COMPLETE** ✅
+1. [Tech Stack](#tech-stack)
+2. [Authentication & Registration](#authentication--registration)
+3. [Role-Based Access Control](#role-based-access-control)
+4. [User / Student Journey](#user--student-journey)
+5. [Course Structure](#course-structure)
+6. [Enrollment System](#enrollment-system)
+7. [Lesson Access & Sequential Restrictions](#lesson-access--sequential-restrictions)
+8. [Exam System](#exam-system)
+9. [Gamification & Points](#gamification--points)
+10. [Badges & Achievements](#badges--achievements)
+11. [Certificates](#certificates)
+12. [Payments (M-Pesa)](#payments-m-pesa)
+13. [Community — Forum](#community--forum)
+14. [Blog / Articles](#blog--articles)
+15. [eLibrary](#elibrary)
+16. [Events](#events)
+17. [Job Board](#job-board)
+18. [Projects Showcase](#projects-showcase)
+19. [Leaderboard](#leaderboard)
+20. [Notifications](#notifications)
+21. [Profile & Transcript](#profile--transcript)
+22. [Admin Panel Overview](#admin-panel-overview)
+23. [Course Management (Admin)](#course-management-admin)
+24. [Student Management (Admin)](#student-management-admin)
+25. [Content Management (Admin)](#content-management-admin)
+26. [Site Settings](#site-settings)
+27. [Email Notification System](#email-notification-system)
+28. [Getting Started](#getting-started)
 
-All major features have been implemented with modern design, full mobile responsiveness, and engaging animations.
+---
 
-## 🎯 Key Features
+## Tech Stack
 
-### 🎓 **Learning Management System**
-- **ALX-Style Enrollment**: Free courses (immediate access) vs Premium courses (admin approval)
-- **Expert-Led Courses**: Comprehensive course catalog with dual enrollment system
-- **Progress Tracking**: User dashboard with learning analytics and completion rates
-- **Interactive Content**: Lessons, topics, and structured learning paths
-- **Gamification**: Points system to encourage engagement and completion
+| Layer       | Technology                                |
+|-------------|-------------------------------------------|
+| Backend     | PHP 8.2 / Laravel 9                       |
+| Frontend    | Blade, Tailwind CSS, Alpine.js            |
+| Database    | MySQL                                     |
+| Auth        | Laravel Breeze + Laravel Socialite (Google OAuth) |
+| Payments    | M-Pesa STK Push (Safaricom Daraja API)    |
+| Email       | SMTP via custom mail server               |
+| Images      | WebP conversion & optimisation            |
+| Storage     | Local disk (public) / Laravel Storage     |
 
-### 💼 **Career Development**
-- **Job Board**: Curated tech job opportunities with application tracking
-- **Project Showcase**: Portfolio building with real-world project examples
-- **Skills Assessment**: Track learning progress and skill development
+---
 
-### 📚 **Digital Resources**
-- **eLibrary**: Comprehensive digital resource collection
-- **Blog/Articles**: Educational content and industry insights
-- **Community Forum**: Discussion threads with reply functionality
+## Authentication & Registration
 
-### 👥 **Community Features**
-- **User Profiles**: Personalized dashboards and progress tracking
-- **Forum Discussions**: Thread creation and community interaction (with points)
-- **Events System**: Community events and workshops
-- **Gamification**: Complete point system with automatic rewards and badge earning
-- **Point Redemption**: Spend points on premium features and privileges
+### Standard Registration
+Users register with their **name, email, and password**. Registered users are assigned the `user` role by default.
 
-### 🛠 **Advanced Admin Management**
-- **Complete CMS**: Full content management for all resources
-- **User Management**: Admin controls and role-based access
-- **Analytics Dashboard**: Platform statistics and insights
-- **Badge Management**: Create and assign badges with automatic awarding
-- **Gamification Controls**: Monitor points, levels, and user progression
-- **Comprehensive Site Configuration**: Advanced settings system with 8 organized sections
+### Google OAuth
+Users can sign in or register via **Google OAuth** (Laravel Socialite). On first Google login:
+- A new account is created automatically with a temporary default password (`@africa1`).
+- The user is prompted immediately to update their password on the profile page.
+- Subsequent Google logins are matched by email address, so no duplicate accounts are created.
 
-### ⚙️ **Comprehensive Site Settings**
-- **Basic Information**: Site name, tagline, contact details, language settings
-- **Appearance Customization**: Dynamic theme colors, font selection, background modes
-- **Social Media Integration**: Complete social platform linking (Facebook, Instagram, LinkedIn, YouTube, Twitter/X, TikTok)
-- **SEO & Metadata**: Meta tags, keywords, OpenGraph images, Google Analytics integration
-- **Security & Access Control**: Maintenance mode, registration controls, admin notifications
-- **Legal Compliance**: Privacy policy and terms of service management
-- **API Integrations**: SMTP configuration, M-Pesa payment gateway, social login options
-- **File Management**: Logo, favicon, hero banner, and OpenGraph image uploads
+### Login
+Standard email/password login is supported. Sessions are managed via Laravel's cookie-based session system.
 
-## 🎨 Design & User Experience
+### Password Reset
+Users can request a password reset link via email. The link expires after 60 minutes and is sent through the platform's SMTP email service.
 
-### **Modern Dark Theme**
-- **Color Palette**: Navy, charcoal, cyan, and purple accents
-- **Typography**: Inter font family for optimal readability
-- **Consistent Branding**: Professional design system throughout
+### Email Verification
+Email verification is enforced for access to certain authenticated routes (enrollments, forum posting, testimonials, etc.).
 
-### **Responsive Design**
-- **Mobile-First**: Optimized for all device sizes
-- **Touch-Friendly**: Intuitive mobile navigation with hamburger menu
-- **Adaptive Layouts**: Flexible grids and responsive components
+---
 
-### **Engaging Animations**
-- **Page Transitions**: Smooth fade-in and slide animations
-- **Interactive Elements**: Hover effects and micro-interactions
-- **Loading States**: Professional loading and transition effects
-- **Scroll Effects**: Dynamic header behavior and parallax elements
+## Role-Based Access Control
 
-## 🏗 Technical Architecture
+The platform uses a two-tier role system stored in the `users.role` column:
 
-### **Backend (Laravel 10.x)**
+| Role    | Access Level                                          |
+|---------|-------------------------------------------------------|
+| `user`  | Public pages, dashboard, courses, forum, profile, etc.|
+| `admin` | Everything above + full Admin Panel                   |
+
+Access is enforced by a custom `RoleMiddleware`. All admin routes are protected by `auth` + `role:admin`. Admins access the panel at `/admin/dashboard`.
+
+To promote a user to admin, update their `role` column in the database from `user` to `admin`.
+
+---
+
+## User / Student Journey
+
+1. **Discovery** — User browses the public course catalogue at `/courses`.
+2. **Registration / Login** — User creates an account or logs in (including via Google).
+3. **Course Page** — User views full course details: description, instructor, topics, lessons, pricing, and available slots.
+4. **Enrollment** — User clicks "Enroll":
+   - For **free courses**: User is taken to a confirmation form to verify their name and email, then enrolled immediately (or directed to the pre-course test first if one exists).
+   - For **premium courses**: User initiates an M-Pesa STK Push payment. On successful payment, enrollment is automatically activated.
+5. **Pre-Course Test** (if enabled) — Before accessing lessons, the user must complete the pre-course exam. Passing it activates the enrollment.
+6. **Learning** — User accesses lessons sequentially. Lessons are locked until the previous one (and its post-lesson test, if any) is completed.
+7. **Post-Lesson Tests** — After each lesson, if a post-lesson test is configured, the user must complete it before they can mark the lesson complete or proceed.
+8. **Mark Complete** — User marks each lesson as complete after reading/watching it and passing any associated test.
+9. **Final Exam** — Once all lessons and post-lesson tests are completed, the user can attempt the final exam.
+10. **Course Completion** — Completing all lessons (and passing the final exam if enabled) marks the enrollment as `completed`, awards bonus points, and issues a certificate if the course has certification enabled.
+11. **Certificate** — User can view and download their certificate. It is also verifiable publicly via a unique certificate number.
+
+---
+
+## Course Structure
+
+Courses follow a three-level hierarchy:
+
 ```
-├── Models & Relationships
-│   ├── User (with roles & gamification)
-│   ├── Course → Topics → Lessons
-│   ├── Project, Job, Article, Event
-│   └── Forum → Thread → Reply
-├── Controllers
-│   ├── Public Controllers (Courses, Jobs, etc.)
-│   ├── Admin Controllers (Full CRUD)
-│   └── Auth & Profile Management
-├── Middleware & Security
-│   ├── Role-based access control
-│   ├── CSRF protection
-│   └── Input validation
-└── Database
-    ├── Migrations for all entities
-    ├── Seeders for sample data
-    └── Relationships & constraints
-```
-
-### **Frontend Architecture**
-```
-├── Layouts
-│   ├── Main App Layout (with navigation)
-│   ├── Admin Layout (dashboard style)
-│   └── Guest Layout (auth pages)
-├── Components
-│   ├── Responsive Navigation
-│   ├── Mobile Sidebar
-│   ├── Form Components
-│   └── Data Tables
-├── Styling
-│   ├── CSS Variables (design system)
-│   ├── Responsive Breakpoints
-│   ├── Animation Keyframes
-│   └── Component Styles
-└── JavaScript
-    ├── Mobile Menu Interactions
-    ├── Scroll Effects
-    └── Form Enhancements
+Course
+ └── Topics (Modules/Sections, ordered)
+      └── Lessons (ordered within each topic)
+           └── Post-Lesson Exam (optional, per lesson)
 ```
 
-## 📱 Pages & Functionality
+### Course Types
+- **Self-Paced** — No fixed start/end dates. Students learn at their own pace.
+- **Cohort-Based** — Has a defined `start_date`, `end_date`, and `duration_weeks`. Designed for group learning with limited `slots`.
 
-### **Public Pages**
-- ✅ **Homepage**: Hero section, features, statistics with animations
-- ✅ **Courses**: Course catalog with search, enrollment and progress tracking
-- ✅ **Projects**: Project showcase with filtering and details
-- ✅ **Jobs**: Job board with application links and filtering
-- ✅ **eLibrary**: Digital resources with categorization
-- ✅ **Forum**: Discussion threads with reply functionality
-- ✅ **Blog**: Articles with commenting system
-- ✅ **Auth Pages**: Modern login/register with animations
-- ✅ **Legal Pages**: Privacy Policy and Terms of Service with responsive design
+### Course Fields
+- Title, slug, description, instructor name, cover image (WebP optimised)
+- Free/premium toggle with price (KES)
+- Active/inactive toggle
+- Certification enabled/disabled with custom certificate title
+- Slot limit (maximum enrollments)
 
-### **User Dashboard**
-- ✅ **Personal Dashboard**: Progress tracking, enrolled courses, quick actions
-- ✅ **Profile Management**: Account settings, password update, gamification stats
-- ✅ **Course Progress**: Detailed learning analytics and completion tracking
+### Lessons
+Each lesson supports multiple content types:
+- **Notes** — Rich text content (Quill editor with image upload support)
+- **Video** — YouTube/Vimeo embed URL or direct video file upload
+- **Code Snippets** — Syntax-highlighted code blocks
+- **Resources** — Downloadable resource files (multiple)
+- **Attachments** — Downloadable attachment images (multiple)
+- **Questions** — Built-in question field per lesson
 
-### **Advanced Admin Panel**
-- ✅ **Admin Dashboard**: Statistics, quick actions, recent activity
-- ✅ **Content Management**: Full CRUD for all content types
-- ✅ **User Management**: Role assignment and user oversight
-- ✅ **Forum Management**: Complete thread and reply administration
-- ✅ **Rich Content Editor**: Quill.js integration with image uploads
-- ✅ **Comprehensive Site Settings**: 8 organized sections with 50+ configuration options
-  - Basic Information & Contact Details
-  - Appearance & Theme Customization
-  - Social Media Integration
-  - SEO & Metadata Management
-  - Security & Access Controls
-  - Legal Page Management
-  - API & Integration Settings
-  - File Upload Management
+---
 
-## 🚀 Installation & Setup
+## Enrollment System
+
+### Free Course Enrollment Flow
+1. User visits the course page and clicks "Enroll".
+2. User is shown a confirmation form to verify their name and email.
+3. If a **pre-course test** exists and is enabled, enrollment status is set to `pending_pre_test` and the user is redirected to take the test.
+4. Once the pre-course test is submitted, enrollment is automatically set to `active` and the user is notified by email and in-app notification.
+5. If no pre-course test exists, enrollment is immediately set to `active`.
+
+### Premium Course Enrollment Flow
+1. User clicks "Enroll" on a premium course.
+2. User is prompted to enter their M-Pesa phone number.
+3. An STK Push is sent to the user's phone.
+4. Upon successful payment confirmation (via M-Pesa callback), the user is enrolled with `active` status and awarded points.
+
+### Enrollment Statuses
+
+| Status             | Description                                                    |
+|--------------------|----------------------------------------------------------------|
+| `pending_pre_test` | Enrollment created; user must complete the pre-course test     |
+| `pending`          | Awaiting admin approval (legacy/manual flow)                   |
+| `active`           | Full access to course content                                  |
+| `suspended`        | Temporarily suspended by admin; access revoked                 |
+| `dropped`          | Student dropped from the course by admin                       |
+| `rejected`         | Enrollment rejected by admin                                   |
+| `completed`        | Student has completed all course requirements                  |
+
+---
+
+## Lesson Access & Sequential Restrictions
+
+The platform enforces **strict sequential lesson access**:
+
+- A student **cannot skip** to a later lesson without completing all prior lessons in order.
+- To fully complete a lesson, the student must:
+  1. Open and read/watch the lesson content.
+  2. **Complete the post-lesson test** (if the lesson has one enabled).
+  3. Click "Mark as Complete".
+- If a lesson has an enabled post-lesson test and the student has not completed it, the "Mark as Complete" button is blocked and the next lesson is locked.
+- The restriction applies across topics: all lessons in earlier topics must be fully completed before the first lesson of the next topic becomes accessible.
+- The **final exam** is locked until every single lesson in the course (and every post-lesson test) is completed.
+
+---
+
+## Exam System
+
+The platform supports three exam types:
+
+### 1. Pre-Course Exam
+- Administered before the student gains full access to a course.
+- Does **not** count toward the final grade.
+- On submission, if the enrollment is `pending_pre_test`, it is automatically promoted to `active`.
+
+### 2. Post-Lesson Exam
+- Attached to a specific lesson.
+- Must be completed before the student can mark the lesson as complete and proceed.
+- **Counts toward the final grade.**
+
+### 3. Final Exam
+- Unlocked only after the student has completed all lessons and all post-lesson tests.
+- Counts toward the final grade.
+- On submission, the enrollment is marked as `completed` (if not already).
+
+### Question Types
+- **Single Choice** — One correct answer from multiple options.
+- **Multiple Choice** — Multiple correct answers required.
+- **Text** — Free-text answer (manually reviewed; auto-scored as 0).
+
+### Grading
+- Each question has a configurable points value.
+- Auto-graded for choice-based questions; text answers are awarded 0 points automatically.
+- The final grade percentage is calculated from all attempts that count toward the final grade (post-lesson tests + final exam).
+- Grade breakdown is stored: `final_grade_points_earned`, `final_grade_points_possible`, `final_grade_percentage`.
+
+### Attempt Management
+- A student can retake exams (previous in-progress attempts are marked as `abandoned` on a new start).
+- Time limits can be set per exam (in minutes). If time runs out, the attempt is auto-abandoned.
+
+---
+
+## Gamification & Points
+
+Users earn points for completing activities on the platform:
+
+| Action           | Points |
+|------------------|--------|
+| Course enroll    | 20     |
+| Lesson complete  | 50 (via GamificationService) |
+| Course complete  | 200    |
+| Forum post       | 10     |
+| Forum reply      | 5      |
+| Testimonial      | 25     |
+| Profile complete | 100    |
+| Daily login      | 5      |
+
+Points are recorded in the `gamification_points` table. A user's **level** is determined by their cumulative points:
+
+| Level | Points Required |
+|-------|----------------|
+| 1     | 0              |
+| 2     | 100            |
+| 3     | 250            |
+| 4     | 500            |
+| 5     | 1,000          |
+| 6     | 2,000          |
+| 7     | 3,500          |
+| 8     | 5,000          |
+| 9     | 7,500          |
+| 10    | 10,000         |
+
+Users can also **spend points** through the Point Redemption system (`/points`).
+
+---
+
+## Badges & Achievements
+
+Badges are automatically awarded when a user meets certain milestones:
+
+| Badge              | Condition                        |
+|--------------------|----------------------------------|
+| First Steps        | Accumulate 100+ points           |
+| Lesson Master      | Complete 10+ lessons             |
+| Course Completer   | Complete 1+ courses              |
+| Dedicated Learner  | Complete 5+ courses              |
+| Point Collector    | Accumulate 500+ points           |
+| Expert Learner     | Accumulate 1,000+ points         |
+
+Admins can also manually create, assign, and manage badges from the admin panel.
+
+---
+
+## Certificates
+
+- Courses can have certification enabled with a custom certificate title.
+- A certificate is automatically issued when a student completes all course requirements.
+- Certificates have a unique certificate number and are publicly verifiable at `/verify-certificate/{number}`.
+- Students can view and download their certificates from their profile.
+- Admins can manage certificate templates from the admin panel.
+
+---
+
+## Payments (M-Pesa)
+
+Premium course payments are processed via **Safaricom M-Pesa STK Push** (Daraja API):
+
+1. User enters their M-Pesa phone number (format: `2547XXXXXXXX`).
+2. An STK Push notification is sent to their phone.
+3. The user approves the payment on their phone.
+4. M-Pesa sends a callback to `/mpesa/callback`.
+5. On a `ResultCode: 0` (success), the payment is marked as complete and the user is automatically enrolled.
+6. Enrollment points (20) and premium purchase points (100) are awarded.
+7. An email notification is sent to the user.
+
+Payments are tracked in the `payments` table with statuses: `pending`, `completed`, `failed`.
+
+---
+
+## Community — Forum
+
+The community forum at `/forum` allows authenticated users to engage with peers:
+
+- **Threads** — Users can create discussion threads on any topic.
+- **Replies** — Users can reply to threads.
+- **Points** — Posting a thread earns 10 points; replying earns 5 points.
+- Admins can moderate (view, delete) all threads and replies from the admin panel.
+
+---
+
+## Blog / Articles
+
+The platform features a full blog at `/blog`:
+
+- Articles are organized with titles, slugs, featured images, tags, and categories.
+- Rich text content (stored as longtext).
+- **Likes**, **bookmarks**, and **shares** per article (authenticated users).
+- **Comments** — Authenticated users can comment on articles.
+- **Status** — Articles can be `draft` or `published`.
+- Admins manage articles (create, edit, publish, delete) from the admin panel.
+
+---
+
+## eLibrary
+
+The eLibrary at `/elibrary` is a curated collection of learning resources:
+
+- Resources include titles, descriptions, file links/URLs, and categories.
+- Accessible to all public visitors.
+- Full CRUD management from the admin panel.
+
+---
+
+## Events
+
+The events section at `/events` lists upcoming and past learning events:
+
+- Event fields: title, slug, description, date/time, location, registration URL, cover image.
+- Public-facing event listing and detail pages.
+- Admin CRUD for creating, editing, and deleting events.
+
+---
+
+## Job Board
+
+The job board at `/jobs` lists tech-related job opportunities:
+
+- Job listings with title, company, description, type, location, and application details.
+- Publicly accessible.
+- Full CRUD management in the admin panel.
+
+---
+
+## Projects Showcase
+
+The projects section at `/projects` showcases student and organisational projects:
+
+- Project fields: title, slug, description, image, link.
+- Publicly accessible.
+- Admin CRUD for managing projects.
+
+---
+
+## Leaderboard
+
+The public leaderboard at `/leaderboard` ranks users by their accumulated gamification points, encouraging healthy competition and motivation.
+
+---
+
+## Notifications
+
+The platform has a built-in in-app notification system:
+
+- Notifications are created for key events: course enrollment, lesson completion, course completion, badge earned, payment success, admin actions (approve, reject, suspend, drop, warn).
+- Users access notifications from the top navigation bar with an unread count indicator.
+- Notifications can be marked as read individually or all at once.
+- All notifications link to a relevant page (course, profile, etc.).
+
+---
+
+## Profile & Transcript
+
+### Profile Page (`/profile`)
+- Update name, email, phone number, bio, and profile photo.
+- View accumulated points, level, and earned badges.
+- View all enrolled courses and their statuses.
+- View earned certificates.
+- Change password.
+
+### Transcript (`/profile/transcript/{course}`)
+- Detailed per-course academic transcript.
+- Lists all lessons, completion status, and exam scores.
+- Displays the final grade percentage.
+
+### Public Profile (`/user/{user}`)
+- Other users can view a public version of any user's profile.
+
+---
+
+## Admin Panel Overview
+
+Accessible at `/admin/dashboard`, the admin panel provides centralised control over the entire platform. It uses a collapsible dark-themed sidebar with the following sections:
+
+| Menu Item     | Description                                      |
+|---------------|--------------------------------------------------|
+| Dashboard     | Summary stats: courses, users, enrollments, jobs |
+| About         | Manage about sections, team members, partners    |
+| Articles      | Blog/article CRUD and publishing                 |
+| Courses       | Full course and enrollment management            |
+| Projects      | Projects showcase CRUD                           |
+| Jobs          | Job board CRUD                                   |
+| Events        | Events CRUD                                      |
+| Forum         | Forum moderation                                 |
+| eLibrary      | eLibrary resources CRUD                          |
+| Testimonials  | Testimonial moderation and approval              |
+| Badges        | Badge creation and manual assignment             |
+| Users         | User management and verification                 |
+| FAQs          | FAQ CRUD                                         |
+| Messages      | Contact message inbox and reply                  |
+| Certificates  | Certificate management                           |
+| Settings      | Site-wide settings                               |
+
+---
+
+## Course Management (Admin)
+
+### Creating a Course (`/admin/courses/create`)
+Admins fill in:
+- Title, description, instructor name, cover image (auto-converted to WebP)
+- Course type: `self_paced` or `cohort_based`
+- Free/premium toggle and price
+- Active/inactive toggle
+- Duration (weeks), start date, end date (cohort-based)
+- Slot limit
+- Certification toggle and certificate title
+
+On creation, if the course is active, all users are notified via email and in-app notification.
+
+### Managing Topics (`/admin/courses/{course}/topics`)
+- Create, edit, reorder (via order field), and delete topics.
+- Each topic acts as a module/section of the course.
+
+### Managing Lessons (`/admin/courses/{course}/topics/{topic}/lessons`)
+- Create lessons within a topic with rich content (Quill editor), video, code snippets, resources, and attachments.
+- Set lesson order.
+- Attach a post-lesson exam directly from the lesson management page.
+- Delete individual resource files and attachment images without deleting the whole lesson.
+
+### Managing Exams (`/admin/courses/{course}/exams`)
+- Create pre-course, post-lesson, or final exams.
+- Enable/disable individual exams.
+- Set time limits.
+- Toggle whether the exam counts toward the final grade.
+- Add questions of type: single choice, multiple choice, or text.
+- Set points per question.
+- Manage (add, edit, delete) answer options for choice questions.
+
+### Enrollment Management (`/admin/courses/{course}/enrollments`)
+Admins have full control over every student enrolled in a course:
+
+| Action       | Description                                              | Email Sent |
+|--------------|----------------------------------------------------------|------------|
+| Approve      | Activates a pending enrollment                           | Yes        |
+| Reject       | Rejects a pending enrollment                             | Yes        |
+| Suspend      | Temporarily revokes course access                        | Yes        |
+| Drop         | Drops the student from the course                        | Yes        |
+| Re-enroll    | Reactivates a suspended or dropped enrollment            | Yes        |
+| Warn         | Sends a formal warning to the student                    | Yes        |
+| Unenroll     | Permanently removes the student and all progress data    | Yes        |
+
+The enrollments page also shows:
+- Student name, email, level, and points
+- Enrollment status badge
+- Lesson progress bar (completed lessons / total lessons, percentage)
+- Enrolled date
+
+---
+
+## Student Management (Admin)
+
+### User List (`/admin/users`)
+- View all registered users with their name, email, role, and verification status.
+- **Verify** a user (sets `email_verified_at`).
+- **Unverify** a user (removes email verification).
+
+### Badges (`/admin/badges`)
+- Create new badges with name, description, and icon.
+- Manually assign badges to specific users.
+
+### Point Transactions (`/admin/point-transactions`)
+- View all point transactions across the platform.
+- Manually award points to users.
+
+### Point Rules (`/admin/point-rules`)
+- Configure the points awarded for each gamification action.
+
+---
+
+## Content Management (Admin)
+
+### Articles (`/admin/articles`)
+- Create, edit, publish, and delete blog articles.
+- Rich text editor with image support.
+- Set status to `draft` or `published`.
+- Manage tags and featured images.
+
+### Jobs (`/admin/jobs`)
+- Full CRUD for job listings.
+
+### Projects (`/admin/projects`)
+- Full CRUD for project showcases.
+
+### eLibrary Resources (`/admin/elibrary-resources`)
+- Full CRUD for eLibrary entries.
+
+### Events (`/admin/events`)
+- Full CRUD for events with image upload support.
+
+### Testimonials (`/admin/testimonials`)
+- View all user-submitted testimonials.
+- **Approve** testimonials to display them publicly.
+- **Unpublish** approved testimonials.
+- **Delete** testimonials.
+
+### FAQs (`/admin/faqs`)
+- Full CRUD for Frequently Asked Questions displayed on the public site.
+
+### Contact Messages (`/admin/contact-messages`)
+- View all messages submitted through the contact form.
+- Reply to messages directly from the admin panel.
+- Delete messages.
+
+### About Page (`/admin/about`)
+- Manage about sections (content blocks for the About page).
+- Manage team members (name, role, bio, photo, email, social links).
+- Manage partners (logo, name, website link).
+
+---
+
+## Site Settings
+
+Accessible at `/admin/settings`, admins can configure global platform settings:
+
+- **Site Name** — Displayed throughout the site and in email templates.
+- **Logo** — Upload a custom logo (displayed in the header and emails).
+- **Footer Links** — Manage social media and footer navigation links.
+- **Other branding** settings as needed.
+
+Settings are stored in the `site_settings` table and injected globally into all views via a view composer.
+
+---
+
+## Email Notification System
+
+The platform sends transactional emails via SMTP for all key events. Templates are built on a shared base layout (`emails.base`) with consistent branding.
+
+### Triggers
+
+| Event                        | Recipient  |
+|------------------------------|------------|
+| Course enrolled              | Student    |
+| Course enrollment approved   | Student    |
+| Course enrollment rejected   | Student    |
+| Course enrollment suspended  | Student    |
+| Student dropped from course  | Student    |
+| Enrollment re-activated      | Student    |
+| Warning issued               | Student    |
+| Permanently unenrolled       | Student    |
+| Lesson completed             | Student    |
+| Course completed             | Student    |
+| Payment successful           | Student    |
+| New course published         | All users  |
+
+### Configuration (`.env`)
+```dotenv
+MAIL_MAILER=smtp
+MAIL_HOST=mail.digitalleap.africa
+MAIL_PORT=465
+MAIL_USERNAME=notification@digitalleap.africa
+MAIL_PASSWORD=your-password
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS=notification@digitalleap.africa
+MAIL_FROM_NAME="Digital Leap Africa"
+```
+
+---
+
+## Getting Started
 
 ### Prerequisites
-- PHP 8.1+ (tested with PHP 8.2.12)
+- PHP >= 8.1
 - Composer
-- Node.js & NPM
-- MySQL/PostgreSQL
-- Laravel 10.x
+- Node.js & npm
+- MySQL (via XAMPP, WAMP, or Laragon)
 
-### Installation Steps
+### Installation
 
-1. **Clone Repository**
+**1. Clone the repository**
 ```bash
-git clone https://github.com/your-username/digital-leap-africa.git
+git clone https://github.com/osumba404/digital-leap-africa.git
 cd digital-leap-africa
 ```
 
-2. **Install Dependencies**
+**2. Install dependencies**
 ```bash
 composer install
 npm install
 ```
 
-3. **Environment Setup**
+**3. Configure environment**
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-4. **Database Configuration**
+Update `.env` with your database credentials, mail settings, Google OAuth keys, and M-Pesa API keys.
+
+**4. Run migrations and seeders**
 ```bash
-# Configure database in .env file
-php artisan migrate
-php artisan db:seed
+php artisan migrate:fresh --seed
 ```
 
-5. **Build Assets**
+**5. Create storage link**
 ```bash
-npm run build
+php artisan storage:link
 ```
 
-6. **Start Development Server**
+**6. Compile assets**
+```bash
+npm run dev
+```
+
+**7. Serve the application**
 ```bash
 php artisan serve
 ```
 
-## 🔧 Configuration
+The application runs at **http://127.0.0.1:8000**.
 
-### **Environment Variables**
-```env
-APP_NAME="Digital Leap Africa"
-APP_URL=http://localhost:8000
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=digital_leap_africa
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
+### Admin Access
 
-# Email Configuration (Required for notifications & password reset)
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-app-password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS="noreply@digitaleapafrica.com"
-MAIL_FROM_NAME="${APP_NAME}"
+1. Register a new user account on the site.
+2. In your database tool, find the user in the `users` table.
+3. Change the `role` column from `user` to `admin`.
+4. Log in — you will now see the **Admin Panel** link in the navigation.
 
-# Google OAuth (Optional - for social login)
+### Google OAuth Setup
+```dotenv
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 GOOGLE_REDIRECT_URI=http://127.0.0.1:8000/auth/google/callback
+```
 
-# M-Pesa Payment Gateway (Optional - for premium features)
+### M-Pesa Setup
+```dotenv
 MPESA_ENV=sandbox
-MPESA_CONSUMER_KEY=your-mpesa-consumer-key
-MPESA_CONSUMER_SECRET=your-mpesa-consumer-secret
+MPESA_CONSUMER_KEY=your-consumer-key
+MPESA_CONSUMER_SECRET=your-consumer-secret
 MPESA_SHORTCODE=your-shortcode
 MPESA_PASSKEY=your-passkey
-MPESA_BASE_URL=https://sandbox.safaricom.co.ke
-MPESA_CALLBACK_URL=your-callback-url
-MPESA_SANDBOX=true
+MPESA_CALLBACK_URL=https://yourdomain.com/mpesa/callback
 ```
-
-### **Course Search Configuration**
-The search functionality is automatically enabled and searches through:
-- Course titles
-- Course descriptions
-- Real-time results with pagination
-- Mobile-responsive interface
-- Clear search and empty state handling
-
-### **Advanced Site Configuration**
-All site settings are now managed through the comprehensive admin settings panel:
-
-**Access**: Admin Panel → Site Settings
-
-**Available Sections**:
-1. **Basic Information** - Site identity and contact details
-2. **General Information** - Logo and favicon management
-3. **Appearance** - Theme colors, fonts, and visual settings
-4. **Social Media Links** - Complete social platform integration
-5. **SEO & Metadata** - Search engine optimization settings
-6. **Security & Access** - Site security and access controls
-7. **Legal Pages** - Privacy policy and terms management
-8. **Integrations & APIs** - Third-party service configurations
-
-**Dynamic Features**:
-- Real-time theme color updates
-- Font family customization
-- Social media link management
-- SEO metadata control
-- Maintenance mode toggle
-- File upload management
-
-### **Admin Account**
-Create an admin user:
-```bash
-php artisan tinker
-User::create([
-    'name' => 'Admin User',
-    'email' => 'admin@digitaleapafrica.com',
-    'password' => Hash::make('password'),
-    'role' => 'admin',
-    'email_verified_at' => now()
-]);
-```
-
-### **Email Configuration**
-
-#### **SMTP Setup (Required for Email Notifications)**
-1. **Gmail Setup**: Enable 2FA and generate App Password
-2. **Update .env**: Replace `your-email@gmail.com` and `your-app-password`
-3. **Cache Config**: Run `php artisan config:cache`
-4. **Test Email**: Visit `/test-email` while logged in to test email delivery
-
-#### **Google OAuth Setup (Optional)**
-1. **Google Console**: Create project at https://console.developers.google.com
-2. **OAuth Credentials**: Create OAuth 2.0 client ID
-3. **Authorized Redirects**: Add `http://127.0.0.1:8000/auth/google/callback`
-4. **Update .env**: Add your Google client ID and secret
-
-#### **M-Pesa Integration (Optional)**
-1. **Safaricom Developer**: Register at https://developer.safaricom.co.ke
-2. **Create App**: Get consumer key and secret
-3. **Sandbox Testing**: Use sandbox environment for development
-4. **Update .env**: Configure M-Pesa credentials and callback URL
-
-#### **Password Reset System**
-- **Secure Token-Based**: Only registered users receive reset emails
-- **Professional Emails**: Branded reset emails with action buttons
-- **Database Validation**: System validates email exists before sending
-- **Privacy Protection**: Same response whether email exists or not
-- **Single-Use Tokens**: Tokens expire after successful password reset
-
-### **User Verification System**
-- **Admin Panel**: `/admin/users` - Manage user verification status
-- **Gold Badges**: Verified users get gold medal badges on avatars
-- **Notifications**: Automatic notifications for verification changes
-
-## 🆕 Latest Updates & Features
-
-### **Version 9.0 - Professional Certification System** 🆕 **LATEST**
-- **Complete Certification System**: Professional digital certificates with Digital Leap Africa branding
-- **Cohort-Based Courses**: Support for both self-paced and cohort-based learning with schedules
-- **Certificate CMS**: Admin interface to customize certificate design, content, and signatures
-- **Automatic Certificate Issuance**: Certificates automatically issued upon course completion
-- **Professional Certificate Design**: Modern design with brand colors, gradients, and animations
-- **Certificate Verification**: Public certificate verification system with unique certificate numbers
-- **Dashboard Integration**: Certificates displayed in user dashboard with view/download options
-- **Mobile Responsive**: Certificate design optimized for all devices and printing
-
-### **Version 8.0 - Comprehensive Email Notification System**
-- **Complete Email Infrastructure**: Professional email notifications for all platform activities
-- **10 Email Notification Types**: Course enrollment, completion, verification, payments, forum replies, etc.
-- **Secure Password Reset**: Token-based email reset system for registered users only
-- **Professional Email Templates**: Responsive, branded email design with action buttons
-- **Centralized Email Service**: Single service manages all email types with error handling
-- **Database Integration**: Emails automatically sent to user's registered email address
-- **Security Features**: Only registered users receive password reset emails, no email disclosure
-
-### **Version 7.0 - Search & Legal Pages**
-- **Course Search Functionality**: Real-time search with filters, pagination, and results counter
-- **Legal Pages**: Complete Privacy Policy and Terms of Service pages with modern design
-- **Enhanced Mobile Responsiveness**: Fixed text overflow issues across all testimonial pages
-- **Footer Integration**: Legal pages properly linked in footer navigation
-- **Search UX**: Clear search option, empty states, and mobile-optimized interface
-
-### **Version 6.0 - User Verification & Password Reset System**
-- **Admin User Verification**: Manual verify/unverify users with gold medal badges
-- **Gold Medal Badges**: Premium verification badges on user avatars (Twitter/WhatsApp style)
-- **Dual Password Reset**: Email-based and direct reset (no email required)
-- **User Management Panel**: Complete admin interface for user verification
-- **Automatic Notifications**: Users notified of verification status changes
-- **Gmail SMTP Integration**: Ready-to-use email configuration for password resets
-
-### **Version 5.0 - ALX-Style Enrollment System**
-- **Dual Enrollment Flow**: Free courses (immediate access) vs Premium courses (admin approval required)
-- **Smart Course Management**: Automatic enrollment handling based on course type (free/premium)
-- **Admin Enrollment Control**: Complete approval/rejection system with notifications
-- **Status-Based Access**: Course content access controlled by enrollment status
-- **Enhanced User Experience**: Clear status indicators (pending, active, rejected) with appropriate messaging
-- **Integrated Notifications**: Automatic notifications for enrollment status changes
-
-### **Version 4.0 - Complete Gamification System**
-- **Automatic Point Awarding**: Points earned for lessons (50), courses (200), enrollment (20), forum activity (5-10)
-- **Auto Badge System**: Badges automatically awarded based on achievements and milestones
-- **Point Redemption Store**: Spend points on premium courses (500), forum privileges (250), job priority (300), mentorship (500), certifications (1000)
-- **User Level Progression**: 5-tier system from Beginner (0) to Master (5000+ points)
-- **Daily Login Rewards**: 5 points per day for active engagement
-- **Gamification Service**: Centralized service handling all point/badge logic
-
-### **Version 3.0 - Production Ready & Fully Functional**
-- **Complete Admin Forum Management**: Full CRUD operations for forum threads and replies
-- **Rich Text Editor Integration**: Quill.js with dark theme and image upload support
-- **Database Migration Fixes**: Resolved all table/column conflicts and errors
-- **Error Handling Enhancement**: Graceful fallbacks for missing database tables
-- **Google OAuth Integration**: Complete social login functionality
-- **Comprehensive Email System**: Professional email notifications for all platform activities
-- **Secure Password Reset**: Token-based email reset for registered users only
-- **Mobile Navigation Fixes**: Professional responsive navigation with smooth animations
-- **Production Deployment Ready**: All critical bugs fixed and tested
-
-### **Version 2.0 - Comprehensive Settings System**
-- **Advanced Admin Settings**: 8 organized sections with 50+ configuration options
-- **Dynamic Theme Engine**: Real-time color and font customization
-- **Social Media Integration**: Complete platform linking with dynamic footer
-- **SEO Enhancement**: Meta tags, keywords, and Google Analytics integration
-- **Security Controls**: Maintenance mode, registration controls, admin notifications
-- **File Management**: Multi-file upload system for logos, favicons, banners
-- **API Framework**: SMTP, M-Pesa, and social login integrations
-- **Performance Optimization**: Advanced caching system for settings
-
-### **Settings Architecture**
-```php
-// Easy settings access throughout the application
-SettingsHelper::get('primary_color', '#2E78C5')
-SettingsHelper::get('maintenance_mode', false)
-SettingsHelper::all() // Get all settings
-```
-
-### **Dynamic Theme System**
-- CSS variables automatically updated from admin settings
-- Real-time color scheme changes
-- Font family selection with Google Fonts integration
-- Background mode controls (Light/Dark/Auto)
-
-### **Social Media Integration**
-- Dynamic footer links based on admin settings
-- Support for Facebook, Instagram, LinkedIn, YouTube, Twitter/X, TikTok
-- Automatic icon rendering and link validation
-
-## 📊 Features Breakdown
-
-### **Completed Features** ✅
-- [x] User Authentication & Authorization (Google OAuth included)
-- [x] **ALX-Style Enrollment System** (free vs premium course flows)
-- [x] **Course Search System** (real-time search with pagination and filters)
-- [x] **Professional Certification System** (automatic certificate issuance with customizable design)
-- [x] **Cohort-Based Learning** (support for both self-paced and scheduled cohort courses)
-- [x] **Certificate CMS Management** (admin interface to customize certificate content and design)
-- [x] Course Management System (with rich text editor)
-- [x] Project Showcase Platform
-- [x] Job Board with Applications
-- [x] Digital Library (eLibrary)
-- [x] Community Forum with Replies (admin management included)
-- [x] Blog/Articles System
-- [x] User Dashboard & Profiles
-- [x] Advanced Admin Panel (Complete CMS with enrollment management)
-- [x] **Complete Gamification System** (automatic points, badges, levels, redemption)
-- [x] Mobile Responsive Design (professional navigation)
-- [x] Modern Animations & Interactions
-- [x] Comprehensive Site Configuration System
-- [x] Dynamic Theme Customization
-- [x] Social Media Integration
-- [x] SEO & Analytics Integration
-- [x] Maintenance Mode System
-- [x] Advanced Security Controls
-- [x] Multi-language Support
-- [x] File Management System
-- [x] API Integration Framework
-- [x] Notification System Infrastructure
-- [x] Rich Text Content Editor (Quill.js)
-- [x] Database Migration System (conflict-free)
-- [x] Error Handling & Graceful Fallbacks
-- [x] **Automatic Point System** (lesson completion, course enrollment, forum participation)
-- [x] **Badge Auto-Awarding** (achievement-based badge earning)
-- [x] **Point Redemption Store** (spend points on premium features)
-- [x] **User Level Progression** (Beginner → Learner → Contributor → Expert → Master)
-- [x] **Daily Login Rewards** (5 points per day)
-- [x] **Admin Enrollment Management** (approve/reject premium course enrollments)
-- [x] **Status-Based Course Access** (content access controlled by enrollment status)
-- [x] **Dual Course Types** (free courses with immediate access, premium with approval)
-- [x] **Admin User Verification System** (manual verify/unverify users with notifications)
-- [x] **Gold Medal Verification Badges** (Twitter/WhatsApp-style badges on user avatars)
-- [x] **Secure Password Reset System** (email-based token reset for registered users only)
-- [x] **Comprehensive Email Notification System** (10 notification types with professional templates)
-- [x] **Professional Email Templates** (responsive, branded email design with action buttons)
-- [x] **Email Security Features** (database validation, token-based reset, privacy protection)
-- [x] **User Management Interface** (admin panel for user verification and management)
-- [x] **Legal Pages System** (Privacy Policy and Terms of Service with modern design)
-- [x] **Enhanced Mobile Responsiveness** (fixed text overflow and card layout issues)
-- [x] **Certificate Verification System** (public certificate verification with unique numbers)
-- [x] **Dashboard Certificate Integration** (certificates displayed with view/download options)
-
-### **Technical Achievements** 🏆
-- [x] Role-based Access Control
-- [x] RESTful API Architecture
-- [x] Database Relationships & Migrations (conflict-free)
-- [x] Advanced Form Validation & Security
-- [x] Comprehensive File Upload & Management
-- [x] Responsive CSS Grid Layouts
-- [x] JavaScript Interactions
-- [x] SEO-Friendly URLs
-- [x] Error Handling & Logging
-- [x] Settings Caching System
-- [x] Dynamic Theme Engine
-- [x] Maintenance Mode Middleware
-- [x] Social Media API Integration
-- [x] Google Analytics Integration
-- [x] Advanced Security Middleware
-- [x] Multi-file Upload System
-- [x] Settings Helper Architecture
-- [x] Rich Text Editor Integration (Quill.js)
-- [x] Google OAuth Authentication
-- [x] Admin Forum Management System
-- [x] Notification Infrastructure
-- [x] Mobile-First Responsive Design
-- [x] Production-Ready Deployment
-- [x] Git Repository Management
-- [x] Database Migration Conflict Resolution
-
-## 🎨 Design System
-
-### **Color Palette**
-```css
-:root {
-    --primary-blue: #2E78C5;
-    --deep-blue: #1E4C7C;
-    --navy-bg: #0C121C;
-    --diamond-white: #F5F7FA;
-    --cool-gray: #AEB8C2;
-    --charcoal: #252A32;
-    --cyan-accent: #00C9FF;
-    --purple-accent: #7A5FFF;
-}
-```
-
-### **Typography**
-- **Font Family**: Inter (Google Fonts)
-- **Headings**: 700 weight with gradient text effects
-- **Body**: 400-500 weight for optimal readability
-- **UI Elements**: 600 weight for emphasis
-
-### **Components**
-- **Cards**: Glass morphism with subtle borders
-- **Buttons**: Gradient backgrounds with hover animations
-- **Forms**: Dark theme with cyan accent focus states
-- **Navigation**: Fixed header with scroll effects
-
-## 📱 Mobile Experience
-
-### **Responsive Breakpoints**
-- **Desktop**: 1200px+ (Full layout)
-- **Tablet**: 768px-1199px (Adapted layout)
-- **Mobile**: <768px (Stacked layout with hamburger menu)
-- **Small Mobile**: <480px (Optimized spacing)
-
-### **Mobile Features**
-- **Hamburger Menu**: Smooth slide-in navigation
-- **Touch Gestures**: Swipe and tap interactions
-- **Optimized Forms**: Mobile-friendly input sizes
-- **Readable Text**: Appropriate font scaling
-
-## 🏅 User Verification & Password Reset
-
-### **🥇 Gold Medal Verification Badges**
-- **Visual Design**: Gold gradient badges with medal icons on user avatars
-- **Responsive Sizing**: 14px for navigation, 24px for profile pages
-- **Theme Adaptive**: Border colors adapt to light/dark themes
-- **Conditional Display**: Only shows for verified users (`email_verified_at` not null)
-
-### **👨‍💼 Admin Verification Controls**
-- **User Management**: `/admin/users` - view all users with verification status
-- **One-Click Actions**: Verify/Unverify buttons with confirmation
-- **Dual Notifications**: Users receive both in-app and email notifications
-- **Status Indicators**: Green (verified) and yellow (unverified) badges in admin panel
-
-### **📧 Comprehensive Email Notification System**
-
-#### **🎯 Email Notification Types**
-1. **Course Enrollment** - Welcome emails for successful enrollments
-2. **Course Approval/Rejection** - Admin decision notifications
-3. **Account Verification** - Gold badge verification emails
-4. **Lesson Completion** - Progress celebration emails
-5. **Course Completion** - Achievement milestone emails
-6. **New Course Announcements** - Platform-wide course launches
-7. **Payment Success** - Transaction confirmation emails
-8. **Forum Replies** - Community engagement notifications
-9. **Testimonial Approval** - Content moderation updates
-10. **Password Reset** - Secure token-based reset emails
-
-#### **🔐 Secure Password Reset System**
-- **Database Validation**: Only sends emails to registered users in database
-- **Token-Based Security**: Secure token generation and validation
-- **Professional Emails**: Branded reset emails with action buttons
-- **Privacy Protection**: Doesn't reveal if email exists in system
-- **Single-Use Tokens**: Tokens expire after successful password reset
-
-```env
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-app-password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS="noreply@digitaleapafrica.com"
-MAIL_FROM_NAME="Digital Leap Africa"
-```
-
-## 🛠 Recent Critical Fixes & Improvements
-
-### **Database & Migration Fixes**
-- ✅ **Migration Conflicts Resolved**: Fixed duplicate table/column creation errors
-- ✅ **Notifications Table**: Created with proper error handling for missing tables
-- ✅ **Articles Table**: Resolved conflicting migrations with existence checks
-- ✅ **Profile Photo Column**: Fixed duplicate column addition errors
-- ✅ **Testimonials Table**: Added proper table existence validation
-
-### **Admin Panel Enhancements**
-- ✅ **Forum Management**: Created complete Admin ForumController with CRUD operations
-- ✅ **Admin Layout**: Built professional admin interface layout
-- ✅ **Rich Text Editor**: Integrated Quill.js with dark theme and image upload
-- ✅ **Navigation Fixes**: Professional responsive navigation with smooth animations
-
-### **Authentication & Integration**
-- ✅ **Google OAuth**: Complete social login functionality implemented
-- ✅ **Laravel Socialite**: Installed and configured for social authentication
-- ✅ **Error Handling**: Graceful fallbacks for missing database components
-
-### **Production Readiness**
-- ✅ **Git Repository**: Synchronized with GitHub, resolved merge conflicts
-- ✅ **Code Quality**: All critical bugs fixed and tested
-- ✅ **Mobile Optimization**: Professional mobile-first responsive design
-- ✅ **Performance**: Optimized queries and caching systems
-
-## 🔒 Advanced Security Features
-
-- **CSRF Protection**: All forms protected
-- **Input Validation**: Comprehensive server-side validation for all inputs
-- **Role-based Access Control**: Advanced admin/user role separation
-- **Password Hashing**: Secure password storage with bcrypt
-- **SQL Injection Prevention**: Eloquent ORM protection
-- **Maintenance Mode**: Site-wide maintenance control
-- **Registration Controls**: Admin-controlled user registration
-- **File Upload Security**: Secure file validation and storage
-- **Settings Access Control**: Protected admin-only configuration
-- **Session Management**: Secure session handling
-- **API Security**: Protected API endpoints with validation
-- **Error Handling**: Graceful fallbacks prevent application crashes
-
-## 🚀 Performance Optimizations
-
-- **Settings Caching**: Advanced caching system for site settings
-- **Lazy Loading**: Efficient database queries
-- **CSS Optimization**: Minimal and organized stylesheets
-- **JavaScript**: Vanilla JS for lightweight interactions
-- **Image Optimization**: Responsive image handling with multiple formats
-- **Database Optimization**: Indexed queries and relationship optimization
-- **File Management**: Efficient file storage and retrieval system
-- **Cache Management**: Automatic cache invalidation for settings updates
-
-## 📧 Email Notification Architecture
-
-### **Email Service Structure**
-```php
-// Centralized email service
-App\Services\EmailNotificationService::sendNotification($type, $user, $data);
-
-// Email classes
-app/Mail/
-├── BaseNotification.php              # Base email template
-├── CourseEnrollmentNotification.php   # Course enrollment emails
-├── CourseApprovalNotification.php     # Course approval/rejection
-├── AccountVerificationNotification.php # Account verification
-├── LessonCompletionNotification.php   # Lesson completion
-├── CourseCompletionNotification.php   # Course completion
-├── NewCourseNotification.php          # New course announcements
-└── PasswordResetNotification.php      # Password reset emails
-```
-
-### **Email Template Features**
-- **Responsive Design**: Works on all devices and email clients
-- **Professional Branding**: Digital Leap Africa colors and logo
-- **Action Buttons**: Call-to-action buttons for user engagement
-- **Consistent Styling**: Matches platform design system
-- **Mobile Optimized**: Proper scaling for mobile devices
-
-### **Integration Points**
-Email notifications are automatically sent from:
-- CourseController (enrollment notifications)
-- LessonController (completion notifications)
-- PaymentController (payment success)
-- Admin\UserController (verification notifications)
-- Admin\CourseController (approval & new course notifications)
-- Admin\TestimonialController (approval notifications)
-- ForumController (reply notifications)
-
-### **Testing Features**
-- `/test-email` - Test general email notifications (requires login)
-- `/test-password-reset` - Test password reset emails (requires login)
-
-## 🔍 Search Features
-
-### **Course Search System**
-- **Real-time Search**: Instant results as you type
-- **Database Queries**: Searches course titles and descriptions
-- **Pagination Support**: Maintains search parameters across pages
-- **Mobile Optimized**: Touch-friendly interface with responsive design
-- **Results Counter**: Shows number of courses found
-- **Empty States**: Helpful messages when no results found
-- **Clear Search**: Easy option to reset search and view all courses
-
-### **Search Implementation**
-```php
-// Controller handles search parameter
-public function index(Request $request): View
-{
-    $search = $request->get('search');
-    $query = Course::query()->where('active', true);
-    
-    if ($search) {
-        $query->where(function($q) use ($search) {
-            $q->where('title', 'LIKE', "%{$search}%")
-              ->orWhere('description', 'LIKE', "%{$search}%");
-        });
-    }
-    
-    $courses = $query->latest()->paginate(9)->appends(['search' => $search]);
-    return view('pages.courses.index', compact('courses', 'search'));
-}
-```
-
-## 📄 Legal Pages
-
-### **Privacy Policy & Terms of Service**
-- **Modern Design**: Consistent with site theme and responsive layout
-- **Comprehensive Content**: Professional legal content covering all aspects
-- **Easy Navigation**: Linked in footer and accessible via direct URLs
-- **Mobile Responsive**: Optimized for all device sizes
-- **Light/Dark Theme**: Supports both theme modes
-- **Dynamic Dates**: Shows current date as "Last updated"
-
-### **Legal Pages Routes**
-```php
-Route::view('/privacy-policy', 'legal.privacy')->name('privacy.policy');
-Route::view('/terms-of-service', 'legal.terms')->name('terms.service');
-```
-
-## 🤝 Contributing
-
-This project is complete but open for enhancements:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/enhancement`)
-3. Commit changes (`git commit -am 'Add enhancement'`)
-4. Push to branch (`git push origin feature/enhancement`)
-5. Create Pull Request
-
-## 📄 License
-
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-## 👨‍💻 Developer
-
-**Collins Otieno**
-- Email: otienocollins0549@gmail.com
-- GitHub: [@osumba404](https://github.com/osumba404)
-
----
-
-<p align="center">
-  <strong>🌍 Empowering African Youth Through Technology 🚀</strong>
-</p>
-
-<p align="center">
-  Built with ❤️ using Laravel, modern CSS, and JavaScript
-</p>
